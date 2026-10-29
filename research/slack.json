@@ -1,0 +1,61 @@
+{
+  "provider": "Slack",
+  "slug": "slack",
+  "researchedAt": "2026-10-29",
+  "scenario": "A customer-facing agent that installs into multiple Slack workspaces using a developer-owned OAuth app",
+  "verdict": "Straightforward to test; commercial launch has a substantial review and product-eligibility gate.",
+  "difficulty": "High for public commercial launch",
+  "firstDecision": "Check Marketplace eligibility before investing in a broad off-platform agent: an MCP-only app without meaningful Slack functionality is unsuitable under current guidelines.",
+  "testVsProduction": {
+    "test": "Create in a development workspace, configure scopes, and install there. Enable public distribution plus an OAuth handler for an early-customer pilot.",
+    "production": "Commercial distribution belongs in the Slack Marketplace. Do not treat unlisted distribution or customer-created templated apps as a general commercial workaround.",
+    "caveat": "The FAQ still describes unlisted apps as installable via a shared URL; newer distribution and policy documentation adds commercial restrictions. Installation capability does not establish commercial eligibility."
+  },
+  "timing": {
+    "activeSetup": {"value": "1–3 hours", "basis": "Planning estimate for configuration and a first install, assuming a workspace and working HTTPS OAuth callback; not measured or promised by Slack."},
+    "productionPreparation": {"value": "Several days plus pilot recruitment", "basis": "Planning estimate for onboarding, least-privilege justification, policies, QA, and review materials; depends strongly on existing product maturity."},
+    "providerWait": {"value": "Up to 10 business days preliminary review, then up to 10 weeks functional review for new submissions", "basis": "Provider-published estimates, not guarantees. The app settings submission page can show a more current queue estimate.", "sourceIds": ["review"]},
+    "unboundedDependency": "Reaching and retaining 10 active-workspace installs can dominate the schedule before submission. No reliable total launch date can be promised."
+  },
+  "requirements": [
+    {"text": "A Slack workspace where you can create and install the app; customer admins can impose separate installation restrictions.", "sourceIds": ["create", "distribution"]},
+    {"text": "An HTTPS OAuth callback; minimum bot scopes; client ID and client secret held server-side. Validate state and protect tokens.", "sourceIds": ["oauth", "guidelines"]},
+    {"text": "For Marketplace: a working, externally installable product, tested installation/onboarding/uninstallation, support and policy links, scope justification, and review access with dummy data.", "sourceIds": ["review"]},
+    {"text": "Keep at least 10 active-workspace installations throughout review. Current guidelines also mention 10 weekly active users; confirm both before submitting.", "sourceIds": ["install-threshold", "guidelines"]}
+  ],
+  "steps": [
+    {"title": "Check product eligibility", "owner": "Developer", "detail": "Compare the intended agent experience with Marketplace suitability rules before selecting scopes. If the experience is only an external MCP server, redesign the Slack-facing functionality or ask Slack for clarification.", "sourceIds": ["guidelines"]},
+    {"title": "Create the development app", "owner": "Developer with agent assistance", "url": "https://api.slack.com/apps", "detail": "Sign in, choose Create an app / Blank app, give it a name, and choose the development workspace. UI labels are documented rather than tested behind login.", "sourceIds": ["create", "setup-attempt"]},
+    {"title": "Configure least-privilege OAuth", "owner": "Agent can prepare; developer applies", "detail": "Under OAuth & Permissions add the HTTPS redirect URL and only scopes needed by implemented actions. Prefer bot scopes; request user scopes only for a specific user-acting requirement. Keep Sign in with Slack scopes in a separate flow.", "sourceIds": ["oauth", "create"]},
+    {"title": "Wire the callback and test one workspace", "owner": "Agent implements; developer authorizes", "detail": "Send customers to /oauth/v2/authorize; validate state in the callback and exchange the code using oauth.v2.access server-side. Use the same redirect_uri in authorization and exchange when supplied. Install, exercise an intended action, then uninstall.", "sourceIds": ["oauth", "guidelines"]},
+    {"title": "Run an external pilot", "owner": "Developer recruits; agent supports QA", "detail": "Complete Manage Distribution > Share Your App with Other Workspaces checklist and activate public distribution. Test a fresh customer's install. Gather the required active installations; customer admin approval remains a separate dependency.", "sourceIds": ["distribution", "install-threshold"]},
+    {"title": "Prepare and submit for Marketplace review", "owner": "Developer submits; agent drafts evidence", "detail": "Use Submit to the Slack Marketplace, provide listing details, scope rationale, a working install path, and dummy-data test access. Address automated findings and reviewer feedback. Record the dashboard's current queue estimate.", "sourceIds": ["review"]}
+  ],
+  "blockers": [
+    {"trigger": "Only an external MCP server or no meaningful in-Slack functionality", "nextAction": "Revisit product eligibility before promising commercial launch. Contact Slack with a concrete UX description if interpretation is unclear.", "sourceIds": ["guidelines"]},
+    {"trigger": "History ingestion is too slow in an unlisted pilot", "nextAction": "New commercial unlisted apps and new installations can receive only one conversations.history/replies request per minute with 15 results. Design the pilot accordingly and pursue Marketplace review; internal customer-built apps are treated differently.", "sourceIds": ["rate-limits"]},
+    {"trigger": "Install requires admin approval", "nextAction": "Have the customer request workspace admin approval. Provider Marketplace review does not replace customer workspace approval.", "sourceIds": ["distribution"]},
+    {"trigger": "Automation-platform use case", "nextAction": "Check the special rules: paid Slack workspaces only, enforced with team.billing:read and revocation when needed; user-history/file collection has restrictions. This is a use-case rule, not a universal prerequisite for every Slack app.", "sourceIds": ["guidelines"]},
+    {"trigger": "Wrong redirect or scopes", "nextAction": "Match the configured redirect URL and authorization/exchange redirect_uri; request only implemented scopes and reinstall when permissions change.", "sourceIds": ["oauth"]}
+  ],
+  "agentCanDo": ["Research current official rules and flag contradictions", "Draft a minimal manifest, scope mapping, OAuth callback, and review checklist", "Implement token storage and installation handling in the developer's backend", "Prepare QA scripts and draft scope justifications or a review demo outline"],
+  "humanMustDo": ["Sign in, choose the owning workspace, and authorize installs", "Handle client secrets through a secret manager", "Approve policy statements and submit the provider review", "Recruit pilot workspaces and answer provider feedback"],
+  "attempts": [
+    {"date": "2026-10-29", "action": "Read public app dashboard entry point https://api.slack.com/apps", "observation": "The retrieved page displayed Your Apps and required sign-in to create an application.", "result": "Blocked by authentication", "tested": "Public setup entry point only", "notTested": "Authenticated app creation, scope configuration, token exchange, actual installation, submission, or approval", "sourceIds": ["setup-attempt"]}
+  ],
+  "corrections": [
+    {"before": "Older Slack material used a temporary five-workspace threshold", "after": "September 2026 changelog confirms 10 active workspaces since July 2026 and maintenance throughout review", "sourceIds": ["install-threshold"]},
+    {"before": "OAuth distribution enabled means ready for a commercial launch", "after": "Public distribution enables pilot installation; current policy routes commercial distribution through Marketplace", "sourceIds": ["distribution", "rate-limits"]}
+  ],
+  "uncertainties": ["Exact private dashboard flow and current queue estimate were not inspected after sign-in", "No provider decision on this hypothetical agent's eligibility was obtained", "Effort ranges are planning estimates, not timed setup results", "No approval or production token exchange completed"],
+  "sources": [
+    {"id": "create", "title": "Creating an app from app settings", "url": "https://docs.slack.dev/app-management/quickstart-app-settings/", "retrievedAt": "2026-10-29", "supports": "App creation in a development workspace, bot scopes, install flow, protecting tokens."},
+    {"id": "oauth", "title": "Installing via OAuth authorization code flow", "url": "https://docs.slack.dev/authentication/installing-with-oauth/", "retrievedAt": "2026-10-29", "supports": "Slack v2 OAuth; bot versus user scopes; HTTPS redirects; code exchange; redirect consistency; separate Sign in with Slack scope flow."},
+    {"id": "distribution", "title": "App lifecycle and distribution", "url": "https://docs.slack.dev/app-management/distribution/", "retrievedAt": "2026-10-29", "supports": "Single-workspace defaults; unlisted pilots; public distribution checklist; customer admin policies; commercial Marketplace path."},
+    {"id": "review", "title": "Slack Marketplace review process", "url": "https://docs.slack.dev/slack-marketplace/slack-marketplace-review-guide/", "retrievedAt": "2026-10-29", "supports": "Review readiness, external QA, test access, preliminary and functional review time estimates, feedback and publication."},
+    {"id": "install-threshold", "title": "Updated installation requirement for Slack Marketplace apps", "url": "https://docs.slack.dev/changelog/2026/09/01/slack-marketplace-install-requirement/", "publishedAt": "2026-09-01", "retrievedAt": "2026-10-29", "supports": "Ten active-workspace installations required since July 2026 and throughout review."},
+    {"id": "rate-limits", "title": "Rate limit changes for non-Marketplace apps", "url": "https://docs.slack.dev/changelog/2025/05/29/rate-limit-changes-for-non-marketplace-apps/", "retrievedAt": "2026-10-29", "supports": "Commercial distribution policy, including templated customer-created apps; affected history/replies limits and internal-app distinction."},
+    {"id": "guidelines", "title": "Submission guidelines and requirements", "url": "https://docs.slack.dev/slack-marketplace/slack-marketplace-app-guidelines-and-requirements/", "retrievedAt": "2026-10-29", "supports": "MCP-only eligibility, weekly usage, automation-platform-specific rules, state and credential protection."},
+    {"id": "setup-attempt", "title": "Slack app dashboard (public entry point)", "url": "https://api.slack.com/apps", "retrievedAt": "2026-10-29", "supports": "Observed sign-in boundary before app creation."}
+  ]
+}

@@ -1,0 +1,863 @@
+[
+  {
+    "id": "github",
+    "name": "GitHub",
+    "website": "https://github.com",
+    "category": "Developer tools",
+    "color": "#222625",
+    "initials": "GH",
+    "difficulty": "moderate",
+    "difficultyLabel": "Customer admin gates",
+    "headline": "The documented registration-to-authorization path has no general provider review gate. An individual customer's organization may still need to approve access. For a new repository agent, evaluate GitHub Apps first.",
+    "summary": "Fast registration; organization permissions can remain a customer-side dependency.",
+    "scenario": "A developer-facing AI agent using a GitHub OAuth app for user identity and public repository information; private organization repositories are a separate approval case.",
+    "nextAction": "For fine-grained repository access or independent automation, evaluate GitHub Apps. Continue with an OAuth app if user-delegated access and your integration platform require it.",
+    "checkedAt": "2026-10-29",
+    "status": "reviewed",
+    "evidenceLabel": "Setup entry point tested",
+    "effort": "30–60 minutes",
+    "effortBasis": "Product estimate. Existing verified GitHub account, callback handler or integration platform, basic product URL ready. Excludes building agent functionality and organization security review.",
+    "wait": "No standard provider review",
+    "waitBasis": "No provider review step in the documented standard path. Organization owner approval and SSO are customer-specific; no reliable wait estimate. Basis: Inference from documented registration and authorization flow",
+    "test": "Register the app and authorize a test account. A successful connection still needs an actual API call and refresh test.",
+    "production": "Follow the registration and authorization path, then validate access in the customer’s actual organization. No general review stage is described in that path; this is not a guarantee against account-specific enforcement.",
+    "steps": [
+      {
+        "title": "Confirm OAuth app is the right model",
+        "detail": "For fine-grained repository access or independent automation, evaluate GitHub Apps. Continue with an OAuth app if user-delegated access and your integration platform require it.",
+        "owner": "Developer",
+        "sourceIds": [
+          "G5"
+        ]
+      },
+      {
+        "title": "Register under the right owner",
+        "detail": "Settings → Developer settings → OAuth apps → New OAuth App. Enter public-safe name, homepage and callback URL. Current docs support up to 10 callbacks. Keep expiring tokens enabled when the integration supports refresh.",
+        "owner": "Developer",
+        "sourceIds": [
+          "G1"
+        ]
+      },
+      {
+        "title": "Choose least access",
+        "detail": "For public information, start without additional scope. Add permissions only for specific actions. repo is broad read/write, so do not describe it as read-only code access.",
+        "owner": "Developer + agent",
+        "sourceIds": [
+          "G3"
+        ]
+      },
+      {
+        "title": "Wire and test the connection",
+        "detail": "Store credentials server-side or in the integration platform. Configure state and S256 PKCE where supported; exchange the code, confirm the returned user identity and verify refresh. Use exact callbacks rather than wildcard matching where possible.",
+        "owner": "Developer + agent",
+        "sourceIds": [
+          "G2"
+        ]
+      },
+      {
+        "title": "Test the actual customer boundary",
+        "detail": "Verify a personal-account connection first, then access to the intended organization repository. Customer owner approval and an active SAML session may be necessary even when OAuth login succeeds.",
+        "owner": "Developer + customer admin",
+        "sourceIds": [
+          "G4"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "trigger": "Login succeeds but private organization data is unavailable",
+        "action": "Ask the member to request organization approval from Settings → Applications → Authorized OAuth Apps → app → Request access. An organization owner decides access.",
+        "owner": "Customer organization owner",
+        "sourceIds": [
+          "G4",
+          "G6"
+        ]
+      },
+      {
+        "trigger": "Approved app still cannot reach an SSO-protected organization",
+        "action": "Establish the organization's active SAML session and reauthorize the app. Verify organization approval separately.",
+        "owner": "End user",
+        "sourceIds": [
+          "G4"
+        ]
+      },
+      {
+        "trigger": "Redirect mismatch",
+        "action": "Check registered callback and redirect_uri. With wildcard matching disabled, exact matching applies.",
+        "owner": "Developer",
+        "sourceIds": [
+          "G2"
+        ]
+      },
+      {
+        "trigger": "Consent asks for more access than expected",
+        "action": "Compare the requested scope to the needed API action. For narrow repository permissions, revisit GitHub Apps rather than claiming repo is read-only.",
+        "owner": "Developer",
+        "sourceIds": [
+          "G3",
+          "G5"
+        ]
+      }
+    ],
+    "agentCan": [
+      "Map agent actions to minimum scopes and explain the GitHub App alternative.",
+      "Prepare callback and refresh implementation checks.",
+      "Diagnose redirect, consent and organization-policy symptoms using redacted errors."
+    ],
+    "humanMust": [
+      "Sign in, choose app ownership and register the application.",
+      "Create and store credentials privately.",
+      "Consent as a user; customer admins approve access to organization resources."
+    ],
+    "attempts": [
+      {
+        "action": "Opened https://github.com/settings/applications/new in a logged-out in-app browser; independently checked the HTTP redirect.",
+        "observation": "HTTP 200 after redirect to https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fsettings%2Fapplications%2Fnew. Browser heading: Sign in to GitHub, with username and password inputs.",
+        "result": "Stopped at human sign-in. No OAuth app registered, client secret generated, consent granted or token tested."
+      }
+    ],
+    "corrections": [
+      {
+        "after": "Old single-callback guidance is stale: current docs allow up to 10 callbacks."
+      },
+      {
+        "after": "Current GitHub OAuth docs recommend PKCE and support expiring token pairs."
+      },
+      {
+        "after": "An OAuth success does not prove customer organization access."
+      }
+    ],
+    "uncertainties": [
+      "Absence of a standard provider review is inferred from official flows; not a guarantee against account-specific policy or enforcement.",
+      "No completed OAuth round trip or organization-admin approval was tested.",
+      "Marketplace publication and paid plans are outside this direct-distribution guide."
+    ],
+    "sources": [
+      {
+        "id": "G1",
+        "title": "Creating an OAuth app",
+        "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app",
+        "retrievedAt": "2026-10-29",
+        "supports": "An app can be owned by a personal account or administered organization. Register from Developer settings → OAuth apps. Name, homepage and callback are required; up to 10 callback URLs are supported. Expiring access tokens are enabled by default."
+      },
+      {
+        "id": "G2",
+        "title": "Authorizing OAuth apps: building flow",
+        "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps",
+        "retrievedAt": "2026-10-29",
+        "supports": "Web flow redirects to GitHub, receives code, exchanges it server-side and validates user identity. State and S256 PKCE are strongly recommended. Token refresh rotates tokens. Callback exact matching applies when wildcard matching is disabled."
+      },
+      {
+        "id": "G3",
+        "title": "Scopes for OAuth apps",
+        "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps",
+        "retrievedAt": "2026-10-29",
+        "supports": "No scope grants read-only public information; repo grants broad read/write access to public and private repositories. Scopes never expand beyond the user's own permissions."
+      },
+      {
+        "id": "G4",
+        "title": "Authorizing OAuth apps: end-user access",
+        "url": "https://docs.github.com/en/apps/oauth-apps/using-oauth-apps/authorizing-oauth-apps",
+        "retrievedAt": "2026-10-29",
+        "supports": "Email must be verified. Organization access restrictions can require owner approval; without approval only public organization resources are available. SAML-protected organizations require an active SAML session during authorization."
+      },
+      {
+        "id": "G5",
+        "title": "Differences between GitHub Apps and OAuth apps",
+        "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps",
+        "retrievedAt": "2026-10-29",
+        "supports": "GitHub recommends considering GitHub Apps, which provide fine-grained permissions and repository selection; OAuth apps act on behalf of users."
+      },
+      {
+        "id": "G6",
+        "title": "Requesting organization approval for OAuth apps",
+        "url": "https://docs.github.com/en/account-and-profile/how-tos/organization-membership/requesting-organization-approval-for-oauth-apps",
+        "retrievedAt": "2026-10-29",
+        "supports": "After personal authorization, users can open Authorized OAuth Apps, choose the app, and request access next to the organization."
+      }
+    ]
+  },
+  {
+    "id": "notion",
+    "name": "Notion",
+    "website": "https://www.notion.com",
+    "category": "Knowledge",
+    "color": "#222625",
+    "initials": "N",
+    "difficulty": "low",
+    "difficultyLabel": "Direct distribution",
+    "headline": "Use a public connection for customer OAuth. Marketplace listing is optional and is not a launch gate.",
+    "summary": "OAuth distribution and optional Marketplace discovery are separate paths.",
+    "scenario": "A SaaS AI agent that reads pages selected by each customer through a public OAuth connection, distributed directly rather than through Marketplace.",
+    "nextAction": "For customers connecting their accounts, create a public connection in Developer portal → Build → Public connections. An internal static token is not the customer OAuth flow.",
+    "checkedAt": "2026-10-29",
+    "status": "reviewed",
+    "evidenceLabel": "Setup entry point tested",
+    "effort": "45–90 minutes",
+    "effortBasis": "Product estimate. Existing Notion account, callback handler or integration platform, hosting and basic product identity ready. Excludes implementing the entire integration.",
+    "wait": "No mandatory listing wait",
+    "waitBasis": "No mandatory Marketplace wait for direct OAuth distribution. Marketplace: expect a first response within 5–10 business days, not guaranteed approval. Basis: Documented",
+    "test": "Register the app and authorize a test account. A successful connection still needs an actual API call and refresh test.",
+    "production": "Direct OAuth distribution is documented without a Marketplace listing. Choose Any workspace at creation for broad distribution.",
+    "steps": [
+      {
+        "title": "Choose the right connection",
+        "detail": "For customers connecting their accounts, create a public connection in Developer portal → Build → Public connections. An internal static token is not the customer OAuth flow.",
+        "owner": "Developer",
+        "sourceIds": [
+          "N1",
+          "N3"
+        ]
+      },
+      {
+        "title": "Decide installation scope before creation",
+        "detail": "Choose Any workspace for a broadly available product. Selected workspaces only is suitable for an intentionally restricted rollout. Changing this later requires a new connection.",
+        "owner": "Developer",
+        "sourceIds": [
+          "N1"
+        ]
+      },
+      {
+        "title": "Register the app",
+        "detail": "Fill name, development workspace, exact callback URI(s), and minimum capabilities such as read content. Retrieve client ID and client secret from Configuration, putting secrets only in the integration platform or backend secret store.",
+        "owner": "Developer",
+        "sourceIds": [
+          "N1"
+        ]
+      },
+      {
+        "title": "Test a customer connection",
+        "detail": "Use the authorization URL, let a tester select pages, then complete the server-side code exchange and store the token pair. Test page access, cancellation, reauthorization and token refresh. This is a proposed acceptance test, not a completed setup attempt.",
+        "owner": "Developer + agent",
+        "sourceIds": [
+          "N3"
+        ]
+      },
+      {
+        "title": "Distribute directly; list later if useful",
+        "detail": "A Marketplace listing is optional. If pursuing discovery, prepare name, description, category, images and logo, then submit the separate listing for review. Treat the published response range as feedback timing.",
+        "owner": "Developer",
+        "sourceIds": [
+          "N2"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "trigger": "A customer's workspace cannot install",
+        "action": "Check the connection's installation scope. If it was created for selected workspaces and the product needs broad distribution, create a new Any workspace connection.",
+        "owner": "App owner",
+        "sourceIds": [
+          "N1"
+        ]
+      },
+      {
+        "trigger": "A page is missing or inaccessible",
+        "action": "Check page sharing and the authorizing user's access. The OAuth page picker is limited to pages they can fully access. Reauthorize with the intended pages.",
+        "owner": "End user",
+        "sourceIds": [
+          "N3"
+        ]
+      },
+      {
+        "trigger": "Unclear review requirement in the dashboard",
+        "action": "Current Marketplace docs explicitly separate optional listing from OAuth use. The Authorization page still contains an image caption implying an authorization URL follows review submission. Treat this as documentation inconsistency and inspect the signed-in portal before promising a precise creation flow.",
+        "owner": "Developer",
+        "sourceIds": [
+          "N2",
+          "N3"
+        ]
+      }
+    ],
+    "agentCan": [
+      "Research current requirements and map minimum capabilities to the use case.",
+      "Prepare callback configuration and a runnable connection acceptance checklist.",
+      "Draft Marketplace copy and organize reviewer evidence if the developer opts in."
+    ],
+    "humanMust": [
+      "Sign in and select the development workspace and immutable installation scope.",
+      "Create the connection and manage its client secret privately.",
+      "Authorize access to actual pages and submit any listing under the owner's identity."
+    ],
+    "attempts": [
+      {
+        "action": "Opened https://app.notion.com/developers/connections in the in-app browser without credentials.",
+        "observation": "Redirected to https://app.notion.com/login?redirectURL=%2Fdevelopers%2Fconnections. Rendered heading: Log in to your Notion account; email and identity-provider controls present.",
+        "result": "Human sign-in required. No account created, form submitted, OAuth consent granted or token tested."
+      }
+    ],
+    "corrections": [
+      {
+        "after": "Do not describe optional Notion Marketplace review as a mandatory prerequisite for all public OAuth installs."
+      },
+      {
+        "after": "Do not assume installation scope can be changed later."
+      },
+      {
+        "after": "Current token guidance includes refresh tokens; avoid older permanent-token assumptions."
+      }
+    ],
+    "uncertainties": [
+      "Signed-in creation fields were not inspected; account-specific requirements may differ.",
+      "No OAuth round trip or successful API call was performed.",
+      "Active effort is an estimate; optional review response is documented, not measured."
+    ],
+    "sources": [
+      {
+        "id": "N1",
+        "title": "Public connections",
+        "url": "https://developers.notion.com/guides/get-started/public-connections",
+        "retrievedAt": "2026-10-29",
+        "supports": "Public connections use OAuth; select Any workspace or Selected workspaces only at creation. Installation scope cannot later be changed. Creation requires name, development workspace, redirect URIs and capabilities; OAuth credentials are in Configuration."
+      },
+      {
+        "id": "N2",
+        "title": "List on the Marketplace",
+        "url": "https://developers.notion.com/guides/get-started/marketplace-listing",
+        "retrievedAt": "2026-10-29",
+        "supports": "Public connections work without Marketplace listing. Only Any workspace connections qualify for listings. First response after listing submission is expected within 5–10 business days; reviewer feedback can require resubmission."
+      },
+      {
+        "id": "N3",
+        "title": "Authorization",
+        "url": "https://developers.notion.com/guides/get-started/authorization",
+        "retrievedAt": "2026-10-29",
+        "supports": "Internal connections have static workspace credentials, while public connections use OAuth. The user selects pages; server exchanges code at /v1/oauth/token with Basic authentication. Current docs describe access and refresh token storage and rotation."
+      }
+    ]
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "website": "https://api.slack.com/apps",
+    "category": "Communication",
+    "color": "#694068",
+    "initials": "#",
+    "difficulty": "high",
+    "difficultyLabel": "Marketplace review",
+    "headline": "Straightforward to test; commercial launch has a substantial review and product-eligibility gate.",
+    "summary": "A pilot install and a commercial launch are different milestones. Check product eligibility before investing in review.",
+    "scenario": "A customer-facing agent that installs into multiple Slack workspaces using a developer-owned OAuth app",
+    "nextAction": "Check Marketplace eligibility before investing in a broad off-platform agent: an MCP-only app without meaningful Slack functionality is unsuitable under current guidelines.",
+    "checkedAt": "2026-10-29",
+    "status": "reviewed",
+    "evidenceLabel": "Setup entry point tested",
+    "effort": "1–3 hours",
+    "effortBasis": "Planning estimate for configuration and a first install, assuming a workspace and working HTTPS OAuth callback; not measured or promised by Slack.",
+    "wait": "Up to 10 business days + 10 weeks",
+    "waitBasis": "Up to 10 business days preliminary review, then up to 10 weeks functional review for new submissions. Provider-published estimates, not guarantees. The app settings submission page can show a more current queue estimate. Reaching and retaining 10 active-workspace installs can dominate the schedule before submission. No reliable total launch date can be promised.",
+    "preparation": "Several days plus pilot recruitment — Planning estimate for onboarding, least-privilege justification, policies, QA, and review materials; depends strongly on existing product maturity.",
+    "test": "Create in a development workspace, configure scopes, and install there. Enable public distribution plus an OAuth handler for an early-customer pilot.",
+    "production": "Commercial distribution belongs in the Slack Marketplace. Do not treat unlisted distribution or customer-created templated apps as a general commercial workaround.",
+    "caveat": "The FAQ still describes unlisted apps as installable via a shared URL; newer distribution and policy documentation adds commercial restrictions. Installation capability does not establish commercial eligibility.",
+    "steps": [
+      {
+        "title": "Check product eligibility",
+        "owner": "Developer",
+        "detail": "Compare the intended agent experience with Marketplace suitability rules before selecting scopes. If the experience is only an external MCP server, redesign the Slack-facing functionality or ask Slack for clarification.",
+        "sourceIds": [
+          "guidelines"
+        ]
+      },
+      {
+        "title": "Create the development app",
+        "owner": "Developer with agent assistance",
+        "url": "https://api.slack.com/apps",
+        "detail": "Sign in, choose Create an app / Blank app, give it a name, and choose the development workspace. UI labels are documented rather than tested behind login.",
+        "sourceIds": [
+          "create",
+          "setup-attempt"
+        ]
+      },
+      {
+        "title": "Configure least-privilege OAuth",
+        "owner": "Agent can prepare; developer applies",
+        "detail": "Under OAuth & Permissions add the HTTPS redirect URL and only scopes needed by implemented actions. Prefer bot scopes; request user scopes only for a specific user-acting requirement. Keep Sign in with Slack scopes in a separate flow.",
+        "sourceIds": [
+          "oauth",
+          "create"
+        ]
+      },
+      {
+        "title": "Wire the callback and test one workspace",
+        "owner": "Agent implements; developer authorizes",
+        "detail": "Send customers to /oauth/v2/authorize; validate state in the callback and exchange the code using oauth.v2.access server-side. Use the same redirect_uri in authorization and exchange when supplied. Install, exercise an intended action, then uninstall.",
+        "sourceIds": [
+          "oauth",
+          "guidelines"
+        ]
+      },
+      {
+        "title": "Run an external pilot",
+        "owner": "Developer recruits; agent supports QA",
+        "detail": "Complete Manage Distribution > Share Your App with Other Workspaces checklist and activate public distribution. Test a fresh customer's install. Gather the required active installations; customer admin approval remains a separate dependency.",
+        "sourceIds": [
+          "distribution",
+          "install-threshold"
+        ]
+      },
+      {
+        "title": "Prepare and submit for Marketplace review",
+        "owner": "Developer submits; agent drafts evidence",
+        "detail": "Use Submit to the Slack Marketplace, provide listing details, scope rationale, a working install path, and dummy-data test access. Address automated findings and reviewer feedback. Record the dashboard's current queue estimate.",
+        "sourceIds": [
+          "review"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "trigger": "Only an external MCP server or no meaningful in-Slack functionality",
+        "action": "Revisit product eligibility before promising commercial launch. Contact Slack with a concrete UX description if interpretation is unclear.",
+        "sourceIds": [
+          "guidelines"
+        ]
+      },
+      {
+        "trigger": "History ingestion is too slow in an unlisted pilot",
+        "action": "New commercial unlisted apps and new installations can receive only one conversations.history/replies request per minute with 15 results. Design the pilot accordingly and pursue Marketplace review; internal customer-built apps are treated differently.",
+        "sourceIds": [
+          "rate-limits"
+        ]
+      },
+      {
+        "trigger": "Install requires admin approval",
+        "action": "Have the customer request workspace admin approval. Provider Marketplace review does not replace customer workspace approval.",
+        "sourceIds": [
+          "distribution"
+        ]
+      },
+      {
+        "trigger": "Automation-platform use case",
+        "action": "Check the special rules: paid Slack workspaces only, enforced with team.billing:read and revocation when needed; user-history/file collection has restrictions. This is a use-case rule, not a universal prerequisite for every Slack app.",
+        "sourceIds": [
+          "guidelines"
+        ]
+      },
+      {
+        "trigger": "Wrong redirect or scopes",
+        "action": "Match the configured redirect URL and authorization/exchange redirect_uri; request only implemented scopes and reinstall when permissions change.",
+        "sourceIds": [
+          "oauth"
+        ]
+      }
+    ],
+    "agentCan": [
+      "Research current official rules and flag contradictions",
+      "Draft a minimal manifest, scope mapping, OAuth callback, and review checklist",
+      "Implement token storage and installation handling in the developer's backend",
+      "Prepare QA scripts and draft scope justifications or a review demo outline"
+    ],
+    "humanMust": [
+      "Sign in, choose the owning workspace, and authorize installs",
+      "Handle client secrets through a secret manager",
+      "Approve policy statements and submit the provider review",
+      "Recruit pilot workspaces and answer provider feedback"
+    ],
+    "attempts": [
+      {
+        "action": "Read public app dashboard entry point https://api.slack.com/apps",
+        "observation": "The retrieved page displayed Your Apps and required sign-in to create an application.",
+        "result": "Blocked by authentication",
+        "notTested": "Authenticated app creation, scope configuration, token exchange, actual installation, submission, or approval"
+      }
+    ],
+    "corrections": [
+      {
+        "before": "Older Slack material used a temporary five-workspace threshold",
+        "after": "September 2026 changelog confirms 10 active workspaces since July 2026 and maintenance throughout review",
+        "sourceIds": [
+          "install-threshold"
+        ]
+      },
+      {
+        "before": "OAuth distribution enabled means ready for a commercial launch",
+        "after": "Public distribution enables pilot installation; current policy routes commercial distribution through Marketplace",
+        "sourceIds": [
+          "distribution",
+          "rate-limits"
+        ]
+      }
+    ],
+    "uncertainties": [
+      "Exact private dashboard flow and current queue estimate were not inspected after sign-in",
+      "No provider decision on this hypothetical agent's eligibility was obtained",
+      "Effort ranges are planning estimates, not timed setup results",
+      "No approval or production token exchange completed"
+    ],
+    "sources": [
+      {
+        "id": "create",
+        "title": "Creating an app from app settings",
+        "url": "https://docs.slack.dev/app-management/quickstart-app-settings/",
+        "retrievedAt": "2026-10-29",
+        "supports": "App creation in a development workspace, bot scopes, install flow, protecting tokens."
+      },
+      {
+        "id": "oauth",
+        "title": "Installing via OAuth authorization code flow",
+        "url": "https://docs.slack.dev/authentication/installing-with-oauth/",
+        "retrievedAt": "2026-10-29",
+        "supports": "Slack v2 OAuth; bot versus user scopes; HTTPS redirects; code exchange; redirect consistency; separate Sign in with Slack scope flow."
+      },
+      {
+        "id": "distribution",
+        "title": "App lifecycle and distribution",
+        "url": "https://docs.slack.dev/app-management/distribution/",
+        "retrievedAt": "2026-10-29",
+        "supports": "Single-workspace defaults; unlisted pilots; public distribution checklist; customer admin policies; commercial Marketplace path."
+      },
+      {
+        "id": "review",
+        "title": "Slack Marketplace review process",
+        "url": "https://docs.slack.dev/slack-marketplace/slack-marketplace-review-guide/",
+        "retrievedAt": "2026-10-29",
+        "supports": "Review readiness, external QA, test access, preliminary and functional review time estimates, feedback and publication."
+      },
+      {
+        "id": "install-threshold",
+        "title": "Updated installation requirement for Slack Marketplace apps",
+        "url": "https://docs.slack.dev/changelog/2026/09/01/slack-marketplace-install-requirement/",
+        "publishedAt": "2026-09-01",
+        "retrievedAt": "2026-10-29",
+        "supports": "Ten active-workspace installations required since July 2026 and throughout review."
+      },
+      {
+        "id": "rate-limits",
+        "title": "Rate limit changes for non-Marketplace apps",
+        "url": "https://docs.slack.dev/changelog/2025/05/29/rate-limit-changes-for-non-marketplace-apps/",
+        "retrievedAt": "2026-10-29",
+        "supports": "Commercial distribution policy, including templated customer-created apps; affected history/replies limits and internal-app distinction."
+      },
+      {
+        "id": "guidelines",
+        "title": "Submission guidelines and requirements",
+        "url": "https://docs.slack.dev/slack-marketplace/slack-marketplace-app-guidelines-and-requirements/",
+        "retrievedAt": "2026-10-29",
+        "supports": "MCP-only eligibility, weekly usage, automation-platform-specific rules, state and credential protection."
+      },
+      {
+        "id": "setup-attempt",
+        "title": "Slack app dashboard (public entry point)",
+        "url": "https://api.slack.com/apps",
+        "retrievedAt": "2026-10-29",
+        "supports": "Observed sign-in boundary before app creation."
+      }
+    ]
+  },
+  {
+    "id": "gmail",
+    "name": "Gmail",
+    "website": "https://developers.google.com/workspace/gmail",
+    "category": "Email",
+    "color": "#c45444",
+    "initials": "M",
+    "difficulty": "high",
+    "difficultyLabel": "Security assessment",
+    "headline": "You can test before review. Public Gmail read access is a restricted-scope launch project.",
+    "summary": "Reading mail requires a restricted scope. A server that can access restricted data ordinarily adds third-party security assessment and recurring compliance work.",
+    "scenario": "External server-based AI agent that reads and summarizes a user's Gmail messages using gmail.readonly; public SaaS distribution, not an internal-only Workspace tool.",
+    "nextAction": "Confirm whether the agent truly needs mailbox reading, or whether send-only or user-triggered add-on access satisfies the feature.",
+    "checkedAt": "2026-10-29",
+    "status": "reviewed",
+    "evidenceLabel": "Console form inspected",
+    "effort": "45–90 min",
+    "effortBasis": "45–90 minutes active effort (author estimate; assumes account/project access and a working OAuth backend).",
+    "wait": "~6 weeks review; assessment varies",
+    "waitBasis": "Google FAQ baseline: restricted scopes about 6 weeks; sensitive scopes about 10 business days; branding about 2–3 business days. Estimates are not guaranteed and depend on responsiveness. Current restricted-scope guide describes automated brand review finishing in minutes when checks pass, with manual review possible. Do not add the review stages into a guaranteed launch date.",
+    "preparation": "1–3 days active preparation (author estimate); engineering and CASA remediation can add substantially more.",
+    "test": "Use External + Testing and explicitly add test accounts; Google documents a 100-user allowlist cap. Gmail-scope refresh tokens expire after 7 days in this state, so long-running tests must handle reconnects.",
+    "production": "Publishing alone is insufficient for public restricted-scope launch. Complete brand and scope verification, and the applicable security assessment.",
+    "caveat": "An Internal app owned by a Workspace/Cloud Identity organization is a separate path for that organization's users only. It is not a shortcut for external customers. Workspace admins can block even verified apps; provider verification does not override customer admin controls.",
+    "steps": [
+      {
+        "title": "Establish the test project",
+        "detail": "Select or create a dedicated non-production Cloud project with appropriate access; enable Gmail API. Use a separate production project for launch.",
+        "owner": "Human",
+        "doneWhen": "Gmail API is enabled in the intended test project.",
+        "sourceIds": [
+          "quickstart",
+          "compliance"
+        ]
+      },
+      {
+        "title": "Configure consent and audience",
+        "detail": "Google Auth platform → Branding → Get Started. Set app name, support/contact emails and External audience. Review the policy yourself. In Audience add authorized test accounts.",
+        "owner": "Human with agent-prepared copy",
+        "doneWhen": "Branding is configured and your test account is allowlisted.",
+        "sourceIds": [
+          "consent"
+        ]
+      },
+      {
+        "title": "Declare exactly the scopes the feature uses",
+        "detail": "Data Access → Add or remove scopes. Select gmail.readonly only if the summarization feature needs it. Confirm its restricted classification.",
+        "owner": "Agent proposes; developer approves",
+        "doneWhen": "Declared scopes match the real authorization request.",
+        "sourceIds": [
+          "consent",
+          "scopes"
+        ]
+      },
+      {
+        "title": "Create the server OAuth client",
+        "detail": "Clients → Create Client → Web application. Add your integration runtime's exact callback in Authorized redirect URIs. Inspect the AI-powered agent option; use a separate client for mixed standard and agent workflows. Store returned confidential client configuration in your backend secret manager.",
+        "owner": "Human",
+        "doneWhen": "The runtime has the intended client configuration and callback; secrets stay outside guides and source control.",
+        "sourceIds": [
+          "clients",
+          "webserver"
+        ]
+      },
+      {
+        "title": "Connect one test user",
+        "detail": "Run the authorization-code flow through your integration runtime; for background access request offline access, verify state and securely exchange/store tokens. Confirm a read succeeds with minimum data and reconnect works.",
+        "owner": "Developer and test user",
+        "doneWhen": "A test user grants consent and a real Gmail read succeeds. This investigation did not execute that test.",
+        "sourceIds": [
+          "webserver"
+        ]
+      },
+      {
+        "title": "Prepare public-launch evidence",
+        "detail": "Prepare public homepage/privacy information, domain ownership, scope justification and a working reviewer demonstration. For automation platforms demonstrate workflows and data direction. Explain AI data processing and deletion.",
+        "owner": "Agent drafts; developer records and reviews",
+        "doneWhen": "A reviewer can follow the user journey and see why each scope is needed.",
+        "sourceIds": [
+          "restricted",
+          "policy"
+        ]
+      },
+      {
+        "title": "Submit and resolve review",
+        "detail": "In production, publish verified branding before requesting data access review in Verification Center. If restricted data is accessible from/through servers, follow Google's approved-assessor process. Track requests in contact email and Verification Center.",
+        "owner": "Human / provider / assessor",
+        "doneWhen": "Required verification and assessment are approved, then production connection tests succeed. Neither approval nor this final test was attempted.",
+        "sourceIds": [
+          "restricted"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "trigger": "Access blocked for a tester",
+        "action": "Confirm the selected Google account is in the External Testing allowlist. Check customer Workspace admin restrictions as a separate cause.",
+        "sourceIds": [
+          "state"
+        ]
+      },
+      {
+        "trigger": "redirect_uri_mismatch",
+        "action": "Copy the exact callback from the actual auth runtime and match scheme, host, port and path in the correct client's redirect list. Google notes settings can take 5 minutes to hours to propagate.",
+        "sourceIds": [
+          "clients",
+          "webserver"
+        ]
+      },
+      {
+        "trigger": "Agent disconnects after a week",
+        "action": "Check External + Testing token expiry before treating it as a refresh implementation defect. Reconnect for testing; complete the production path for launch.",
+        "sourceIds": [
+          "oauth"
+        ]
+      },
+      {
+        "trigger": "Review paused or evidence rejected",
+        "action": "Use Verification Center and Google's email request to identify the missing evidence. Fix the scoped issue and respond; avoid changing scopes mid-review without reassessing impact.",
+        "sourceIds": [
+          "restricted",
+          "faq"
+        ]
+      },
+      {
+        "trigger": "CASA budget or schedule blocks launch",
+        "action": "Get an assessor quote and review data architecture. Reduce scopes only when the narrower feature actually satisfies user needs; never represent server-hosted processing as on-device.",
+        "sourceIds": [
+          "restricted"
+        ]
+      }
+    ],
+    "agentCan": [
+      "Find official requirements and scope categories",
+      "Prepare a scope-to-feature justification and review checklist",
+      "Draft consent, policy and reviewer-demo materials for human review",
+      "Inspect accessible setup UI and identify exact human handoff"
+    ],
+    "humanMust": [
+      "Choose the production owner and app identity",
+      "Review and accept provider agreements",
+      "Create credentials and keep them in a secure runtime",
+      "Grant test-account consent and approve access",
+      "Attest to privacy/data handling, submit review, and engage an assessor"
+    ],
+    "attempts": [
+      {
+        "action": "Inspected Google Auth platform → Clients → Create client → Web application",
+        "observation": "Current navigation uses Branding, Audience, Clients, Data Access and Verification Center; Web form exposes Name, Authorized JavaScript origins, Authorized redirect URIs; Form exposes Use this client for an AI-powered agent; Tooltip recommends separate OAuth clients for AI-agent and standard features, and calls out Google MCP tools; Form warns settings may take 5 minutes to hours to take effect",
+        "result": "Stopped before Create; no credentials generated, copied, submitted or stored. Existing project/account details are intentionally excluded from this shareable dossier.",
+        "notTested": "New-project or consent-screen creation; OAuth consent/token exchange; Gmail API call; Review submission; CASA assessment or provider approval"
+      }
+    ],
+    "corrections": [
+      {
+        "before": "Read-only sounds like an easy approval path.",
+        "after": "gmail.readonly and gmail.metadata are both restricted. Send-only is sensitive, and changes the product's capabilities.",
+        "sourceIds": [
+          "scopes"
+        ]
+      },
+      {
+        "before": "Creating a client means the app is launch-ready.",
+        "after": "The console form can be reached quickly while public restricted-data use still has verification and assessment gates.",
+        "sourceIds": [
+          "restricted"
+        ]
+      },
+      {
+        "before": "Generic OAuth client instructions cover agents.",
+        "after": "Live UI and current client help expose explicit AI-agent declaration and isolation guidance. This does not grant scopes or remove verification.",
+        "sourceIds": [
+          "clients"
+        ]
+      },
+      {
+        "before": "AI mail summaries are inherently disallowed.",
+        "after": "Workspace policy lists generative summaries as an email-productivity use case, subject to Limited Use, disclosure and AI-data restrictions. A reviewer must assess the actual design.",
+        "sourceIds": [
+          "policy"
+        ]
+      }
+    ],
+    "uncertainties": [
+      "No approval duration measured first-hand; timing is provider-published guidance.",
+      "Active effort ranges are planning estimates, not provider SLAs.",
+      "No security assessor price, remediation effort or current assessment tier verified.",
+      "Official credential guidance differs in phrasing about web client secrets; follow the confidential server client's current configuration and applicable runtime contract.",
+      "Provider rules can change; recheck sources before submitting."
+    ],
+    "sources": [
+      {
+        "id": "scopes",
+        "title": "Choose Gmail API scopes",
+        "url": "https://developers.google.com/workspace/gmail/api/auth/scopes",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Gmail scope classifications and server assessment trigger."
+      },
+      {
+        "id": "restricted",
+        "title": "Restricted scope verification",
+        "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Public restricted-scope review, annual server assessment, evidence and verification sequence."
+      },
+      {
+        "id": "faq",
+        "title": "OAuth verification FAQ",
+        "url": "https://support.google.com/cloud/answer/13463817?hl=en",
+        "retrievedAt": "2026-10-29",
+        "type": "Official help",
+        "supports": "Non-guaranteed review-time baselines and review behavior."
+      },
+      {
+        "id": "state",
+        "title": "OAuth app state overview",
+        "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/overview",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Testing/production access boundaries, test cap and admin restrictions."
+      },
+      {
+        "id": "oauth",
+        "title": "Using OAuth 2.0 to Access Google APIs",
+        "url": "https://developers.google.com/identity/protocols/oauth2",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Testing refresh-token lifetime and client/token distinction."
+      },
+      {
+        "id": "consent",
+        "title": "Configure OAuth consent and scopes",
+        "url": "https://developers.google.com/workspace/guides/configure-oauth-consent",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Branding, audience, test-user and Data Access setup."
+      },
+      {
+        "id": "clients",
+        "title": "Manage OAuth Clients",
+        "url": "https://support.google.com/cloud/answer/15549257#agentic-client",
+        "retrievedAt": "2026-10-29",
+        "type": "Official help + live form corroboration",
+        "supports": "Web fields, redirect validation, agent client isolation, secret handling and propagation."
+      },
+      {
+        "id": "webserver",
+        "title": "Using OAuth 2.0 for Web Server Applications",
+        "url": "https://developers.google.com/identity/protocols/oauth2/web-server",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Authorization-code flow, state, offline access and refresh-token handling."
+      },
+      {
+        "id": "quickstart",
+        "title": "Gmail Python quickstart",
+        "url": "https://developers.google.com/workspace/gmail/api/quickstart/python",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Enable Gmail API prerequisite; quickstart explicitly targets testing."
+      },
+      {
+        "id": "compliance",
+        "title": "Comply with OAuth 2.0 policies",
+        "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/policy-compliance",
+        "retrievedAt": "2026-10-29",
+        "type": "Official documentation",
+        "supports": "Separate test/production projects and production readiness."
+      },
+      {
+        "id": "policy",
+        "title": "Google Workspace user data and developer policy",
+        "url": "https://developers.google.com/workspace/workspace-api-user-data-developer-policy",
+        "retrievedAt": "2026-10-29",
+        "type": "Official policy",
+        "supports": "Permitted email productivity use, disclosures, Limited Use and restrictions on AI model data use."
+      }
+    ],
+    "scopes": [
+      {
+        "scope": "https://www.googleapis.com/auth/gmail.readonly",
+        "category": "Restricted",
+        "purpose": "Read mailbox messages; matches this guide's scenario.",
+        "sourceIds": [
+          "scopes"
+        ]
+      },
+      {
+        "scope": "https://www.googleapis.com/auth/gmail.metadata",
+        "category": "Restricted",
+        "purpose": "Headers/metadata only; reducing content does not remove restricted review.",
+        "sourceIds": [
+          "scopes"
+        ]
+      },
+      {
+        "scope": "https://www.googleapis.com/auth/gmail.send",
+        "category": "Sensitive",
+        "purpose": "Send-only feature may avoid restricted scopes, but cannot read or summarize messages.",
+        "sourceIds": [
+          "scopes"
+        ]
+      },
+      {
+        "scope": "https://www.googleapis.com/auth/gmail.labels",
+        "category": "Non-sensitive",
+        "purpose": "Label management; cannot replace message-reading access.",
+        "sourceIds": [
+          "scopes"
+        ]
+      }
+    ]
+  }
+]

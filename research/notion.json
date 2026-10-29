@@ -1,0 +1,33 @@
+{
+  "id": "notion",
+  "name": "Notion",
+  "website": "https://www.notion.com",
+  "checkedAt": "2026-10-29",
+  "scope": "A SaaS AI agent that reads pages selected by each customer through a public OAuth connection, distributed directly rather than through Marketplace.",
+  "difficulty": "Low friction, with a creation-time decision",
+  "verdict": "Use a public connection for customer OAuth. Marketplace listing is optional and is not a launch gate.",
+  "effort": {"value": "45–90 minutes", "kind": "Product estimate", "assumptions": "Existing Notion account, callback handler or integration platform, hosting and basic product identity ready. Excludes implementing the entire integration."},
+  "wait": {"value": "No mandatory Marketplace wait for direct OAuth distribution", "kind": "Documented", "optional": "Marketplace: expect a first response within 5–10 business days, not guaranteed approval."},
+  "sources": [
+    {"id":"N1","title":"Public connections","url":"https://developers.notion.com/guides/get-started/public-connections","retrievedAt":"2026-10-29","supports":"Public connections use OAuth; select Any workspace or Selected workspaces only at creation. Installation scope cannot later be changed. Creation requires name, development workspace, redirect URIs and capabilities; OAuth credentials are in Configuration."},
+    {"id":"N2","title":"List on the Marketplace","url":"https://developers.notion.com/guides/get-started/marketplace-listing","retrievedAt":"2026-10-29","supports":"Public connections work without Marketplace listing. Only Any workspace connections qualify for listings. First response after listing submission is expected within 5–10 business days; reviewer feedback can require resubmission."},
+    {"id":"N3","title":"Authorization","url":"https://developers.notion.com/guides/get-started/authorization","retrievedAt":"2026-10-29","supports":"Internal connections have static workspace credentials, while public connections use OAuth. The user selects pages; server exchanges code at /v1/oauth/token with Basic authentication. Current docs describe access and refresh token storage and rotation."}
+  ],
+  "steps": [
+    {"title":"Choose the right connection","owner":"Developer","detail":"For customers connecting their accounts, create a public connection in Developer portal → Build → Public connections. An internal static token is not the customer OAuth flow.","sources":["N1","N3"]},
+    {"title":"Decide installation scope before creation","owner":"Developer","detail":"Choose Any workspace for a broadly available product. Selected workspaces only is suitable for an intentionally restricted rollout. Changing this later requires a new connection.","sources":["N1"]},
+    {"title":"Register the app","owner":"Developer","detail":"Fill name, development workspace, exact callback URI(s), and minimum capabilities such as read content. Retrieve client ID and client secret from Configuration, putting secrets only in the integration platform or backend secret store.","sources":["N1"]},
+    {"title":"Test a customer connection","owner":"Developer + agent","detail":"Use the authorization URL, let a tester select pages, then complete the server-side code exchange and store the token pair. Test page access, cancellation, reauthorization and token refresh. This is a proposed acceptance test, not a completed setup attempt.","sources":["N3"]},
+    {"title":"Distribute directly; list later if useful","owner":"Developer","detail":"A Marketplace listing is optional. If pursuing discovery, prepare name, description, category, images and logo, then submit the separate listing for review. Treat the published response range as feedback timing.","sources":["N2"]}
+  ],
+  "blockers": [
+    {"problem":"A customer's workspace cannot install","next":"Check the connection's installation scope. If it was created for selected workspaces and the product needs broad distribution, create a new Any workspace connection.","owner":"App owner","sources":["N1"]},
+    {"problem":"A page is missing or inaccessible","next":"Check page sharing and the authorizing user's access. The OAuth page picker is limited to pages they can fully access. Reauthorize with the intended pages.","owner":"End user","sources":["N3"]},
+    {"problem":"Unclear review requirement in the dashboard","next":"Current Marketplace docs explicitly separate optional listing from OAuth use. The Authorization page still contains an image caption implying an authorization URL follows review submission. Treat this as documentation inconsistency and inspect the signed-in portal before promising a precise creation flow.","owner":"Developer","sources":["N2","N3"]}
+  ],
+  "agentCan": ["Research current requirements and map minimum capabilities to the use case.","Prepare callback configuration and a runnable connection acceptance checklist.","Draft Marketplace copy and organize reviewer evidence if the developer opts in."],
+  "humanMust": ["Sign in and select the development workspace and immutable installation scope.","Create the connection and manage its client secret privately.","Authorize access to actual pages and submit any listing under the owner's identity."],
+  "attempts": [{"date":"2026-10-29","action":"Opened https://app.notion.com/developers/connections in the in-app browser without credentials.","observed":"Redirected to https://app.notion.com/login?redirectURL=%2Fdevelopers%2Fconnections. Rendered heading: Log in to your Notion account; email and identity-provider controls present.","result":"Human sign-in required. No account created, form submitted, OAuth consent granted or token tested."}],
+  "uncertainties": ["Signed-in creation fields were not inspected; account-specific requirements may differ.","No OAuth round trip or successful API call was performed.","Active effort is an estimate; optional review response is documented, not measured."],
+  "corrections": ["Do not describe optional Notion Marketplace review as a mandatory prerequisite for all public OAuth installs.","Do not assume installation scope can be changed later.","Current token guidance includes refresh tokens; avoid older permanent-token assumptions."]
+}
