@@ -1,26 +1,37 @@
-# OAuth Atlas
+# OAuth Launch Advisor
 
-**[Working experience](https://oauth-atlas.mossystar19.chatgpt.site) · [Source](https://github.com/infiniym/oauth-atlas)**
+**[Working experience](https://oauth-atlas.mossystar19.chatgpt.site) · [Source repository](https://github.com/infiniym/oauth-atlas)**
 
-A developer field guide for the work between “the provider supports OAuth” and “our customers can connect.” Four researched examples and live research for unfamiliar apps. No API keys required.
+Describe an integration, confirm its requirements, and get an authentication architecture, permission map and launch checklist. The core works without API keys or signing into a provider.
 
-![Responsive preview](docs/screenshots/preview.jpg)
-
-**[Open a live-generated Linear draft](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9)** — created on the deployed service from four newly fetched official sources.
-
-**[Decision log in the app](https://oauth-atlas.mossystar19.chatgpt.site/?view=decisions) · [Decision log as Markdown](docs/DECISIONS.md) · [Composio design reference](DESIGN.md)**
+![Advisor](docs/screenshots/preview.jpg)
 
 ## Try it
 
-1. Compare **GitHub, Notion, Slack, and Gmail** in the library. Open a guide for its scoped launch plan, timing, blockers, handoffs, and sources.
-2. Check off a step, save the guide, download Markdown, or copy its public share link.
-3. Select **Research an app**. Enter `Linear` or an official website such as `https://www.todoist.com`. The agent fetches current sources and streams its real progress. Generated drafts get persistent public URLs.
-4. Open **Evidence & sources** to see what was observed, corrected, and left unverified.
-5. Open **Decision log** to map all 10 requirements to 15 decisions, objectives, alternatives and limits.
+1. Enter “An AI assistant that reads Gmail messages and drafts replies for customers,” or choose Gmail, Slack or GitHub.
+2. Review the suggested actions, then answer the contextual launch questions. “Not sure” stays an open question.
+3. Generate the recommendation. Inspect **Why this recommendation?**, permissions, conditional approval dependencies, sources and the ordered checklist.
+4. Edit Gmail to **send only** and regenerate. Restricted scopes and the restricted-data assessment dependency disappear; sensitive-scope guidance remains where applicable.
+5. Try the Slack customer pilot or GitHub PR reviewer scenarios. A limited Slack pilot differs from commercial distribution; selected-repository background work leads to a GitHub App and a separate installation flow.
+6. Copy, download Markdown, print or share the assessment. Sharing includes the description/answers, omits personal checkmarks, and recomputes with current rules. Markdown is the dated snapshot.
+7. Search the **Provider directory**, or select **Research an app** for an unfamiliar provider.
+
+## Coverage and evidence
+
+| Coverage | What it means |
+| --- | --- |
+| 3 deep assessments | Gmail, Slack and GitHub, with source-backed rules for the listed actions and contexts |
+| 1,694 catalog entries | Real toolkit names and Composio documentation links, captured 30 October 2026; catalog-only auth methods and managed availability are unverified |
+| 4 setup reference guides | Earlier researched GitHub, Notion, Slack and Gmail guides, including setup observations and corrections |
+| Live research drafts | Bounded public-source discovery/extraction for unfamiliar providers; incomplete, unreviewed and explicitly uncertain |
+
+The intended 100 reviewed OAuth-guide library is **not complete**. Catalog breadth is not validated-guide breadth. [Open an existing hosted Linear research draft](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9).
+
+The advisor checks official provider and Composio documentation. It has not registered apps, exchanged OAuth tokens, executed customer tools or obtained approvals. Previous setup observations reached public sign-in gates and inspected Google's client creation form without submission. The advisor adds planning depth, not an approval certification.
 
 ## Run locally
 
-Requires Node **22.13+** and npm. Cloudflare's local Worker runtime is installed with dependencies. No cloud account, API key, or provider credentials are needed for local use.
+Node **22.13+**, npm. No API keys or cloud/provider accounts required.
 
 ```sh
 npm ci
@@ -29,7 +40,7 @@ node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1
 npm run dev -- --port 5173
 ```
 
-Open `http://localhost:5173`. Apply that migration once per fresh local database. `npm start -- --port 5173` serves the production build locally. Local and hosted guide databases are separate.
+Open `http://localhost:5173`. Apply the migration once per fresh local database. Local and hosted D1 stores are separate. The advisor uses browser-local drafts and checkmarks; D1 stores public unfamiliar-provider research drafts and anonymous rate limits.
 
 ```sh
 npm test
@@ -37,39 +48,59 @@ npm run typecheck
 npm run build
 ```
 
-## Key decisions
+## Deterministic rules versus AI
 
-- **Start with “do I need my own app?”** Managed OAuth may remove registration work. The app explains provider registration → integration configuration → each user's consent, then focuses on the custom-app path.
-- **Four different launch risks, not four similar tutorials.** GitHub illustrates customer-admin gates; Notion separates optional listing from direct distribution; Slack exposes commercial eligibility and a long review; Gmail exposes restricted-data verification and assessment.
-- **Separate work from waiting.** Setup effort is an author estimate with assumptions. Provider-published turnaround is separately cited and never represented as a launch SLA. Test and public-launch milestones differ.
-- **Evidence is part of the product.** Each curated step links to official sources. Setup attempts, corrections, and unknowns remain visible. Checklist completion is the developer's local record, not proof of approval.
-- **Live generation is honest and keyless.** A bounded, deterministic source-reading agent discovers a provider, follows public documentation, extracts evidence, identifies gaps, and builds a draft. It is **not an LLM**. It performs real network research; it does not return a cached example for unfamiliar inputs. If it cannot identify the provider or read sources, it asks for a direct docs URL. Unknown time and approval requirements remain unknown.
-- **Share the guide, keep credentials out.** Generated guides are public and stored in D1. Browser-only saves and checklist progress remain local. Inputs explicitly request public information; never enter secrets.
+**Deterministic:** typed capability mappings, app-model selection, managed/custom suitability, permission classification, conditional dependencies, explanation IDs, checklist and export. Rules include source IDs and check dates. Tool restrictions are kept separate from provider grants. Managed OAuth availability never proves the necessary scope/token fit.
 
-## Implementation
+**Optional AI:** the server-side Responses structured-output adapter interprets the use-case description into known capabilities and unresolved questions. It cannot supply new scopes or approval rules. Model output is schema-validated and always editable. No key, invalid output, refusal, rate limit or timeout preserves the structured workflow with labeled local keyword suggestions.
 
-React + TypeScript on Vinext/Vite, deployed as a Cloudflare Worker through Sites. D1 stores generated guide snapshots and anonymous hourly rate-limit counters. The frontend consumes an NDJSON progress stream and retrieves shared drafts by ID.
+**Live research:** the existing keyless reader performs real public network discovery and extraction, limited to four successful sources and a 58-second deadline. It is not an LLM policy interpreter. Missing timing, scope applicability and approvals remain unverified.
 
-- `app/page.tsx`: library, launch plans, blockers, evidence, live research UI, export/share.
-- `lib/research.ts`: source discovery, public-page reading, topic extraction and gap analysis.
-- `data/guides.json`: normalized curated guides; `research/`: original agent dossiers.
-- `scripts/prepare-guides.py`: regenerate curated data after research edits.
-- `db/schema.ts` and `drizzle/`: persistent guide schema and migration.
-- `docs/VALIDATION.md`: tested behavior, source checks, corrections, and limits.
-- `data/decisions.json`: single source for the in-app decision log and generated Markdown. Run `npm run prepare:decisions` after editing it; builds also regenerate the log.
-- `docs/DECISIONS.md`: requirement coverage and rationale for 15 decisions.
-- `DESIGN.md`: observed Composio design evidence, adapted tokens and terminology.
+## Optional configuration
 
-## Composio design revision
+The public demo does not configure AI or authenticated Composio API access. Both adapters are tested with controlled responses; live credentialed calls remain unverified.
 
-The UI references Composio’s current [homepage](https://composio.dev/), [OAuth guide directory](https://composio.dev/auth), and [authentication concepts](https://docs.composio.dev/docs/authentication). Dark surfaces, fine borders, Geist type, mono labels, square actions and a blue context strip replace the earlier mint/serif workspace. Library, saved guides, launch plans, evidence, blockers, dialogs and product notes share the same system. The connection model uses provider OAuth app → auth config → connected account. OAuth Atlas remains an independent prototype.
+| Server-side binding | Behavior |
+| --- | --- |
+| `OPENAI_API_KEY` + `OPENAI_MODEL` | Enable optional intent interpretation. Choose a model in your account supporting Responses structured outputs; no model is silently selected. `store: false`; input is the developer's description and a constrained capability map. |
+| `COMPOSIO_API_KEY` | Read `/api/v3.1/toolkits/{slug}` metadata for the selected assessment/Slackbot variant. Checks exact `composio_managed_auth_schemes`; does not infer granted scope coverage. |
 
-## Limitations
+For Vite/Cloudflare development, copy [.dev.vars.example](.dev.vars.example) to an ignored `.dev.vars` and provide server-side values using Cloudflare's local bindings facility. Configure equivalent Worker runtime secrets for hosting. Never put these values in client bundles or `NEXT_PUBLIC_` variables. Missing/failed metadata retains the dated docs snapshot instead of declaring managed OAuth unavailable. Optional AI has an anonymous limit of 20 requests per connection/hour; live research retains its limit of 10.
 
-This is a working slice, not a completed 100-app library. Live drafts are less detailed than reviewed guides. The source-reader uses topic heuristics, a maximum of four successful source pages, and a 58-second deadline; search engines can block automation, JS-only pages may not render, and name matching can select the wrong provider. Supply the official docs URL for better results. It does not semantically resolve every policy, estimate unknown timing, or perform authenticated setup.
+## Architecture
 
-No OAuth token exchange, completed provider approval, or security assessment was performed. Agents reached public setup gates and inspected Google's client creation form without submission. No credentials were generated or retained. Requirements can change after the stated check date.
+React + TypeScript on the existing Vinext/Vite stack, hosted as a Cloudflare Worker through Sites. No framework replacement or new account system.
 
-Preview safeguards include input bounds, public-HTTPS and DNS checks, redirect revalidation, response/time limits, and 10 runs per hour per connection. DNS checks are not resolver pinning. This does not constitute a hardened, large-scale research service. Production would need a maintained public-suffix list, stronger egress controls, global quotas, abuse handling, content revalidation, and draft moderation/retention controls.
+| Module | Responsibility |
+| --- | --- |
+| `components/advisor.tsx` | Discovery, assessment, recommendation, checklist, edit/share/export |
+| `lib/advisor/types.ts`, `providers.ts` | Typed requirements, capabilities, official sources and dated metadata |
+| `lib/advisor/rules-engine.ts` | Compositional provider decisions with stable explanation IDs |
+| `lib/advisor/assessment.ts` | Strict input validation, local intent suggestions, versioned share codec and progress keys |
+| `lib/advisor/intent-parser.ts` | Optional server-only constrained AI adapter and fallback |
+| `lib/advisor/metadata.ts` | Current Composio metadata adapter and conservative snapshot fallback |
+| `app/api/advisor/` | Bounded interpretation and metadata endpoints; secrets stay server-side |
+| `lib/advisor/export.ts` | Input context, rule results, sources and unchecked checklist as Markdown |
+| `data/catalog.json` | Dated names/links snapshot; `scripts/sync-catalog.mjs` refreshes it from public docs |
+| `lib/research.ts`, `app/api/research/` | Existing live source-reading flow and streamed progress |
+| `data/guides.json`, `research/` | Original normalized reference guides and agent dossiers |
 
-Public drafts contain only the supplied app/use case and extracted public evidence. There is no user account or cross-device personal checklist. No generated guide is silently promoted into the reviewed library.
+Refresh catalog metadata with `node scripts/sync-catalog.mjs`. It refuses incomplete extraction rather than replacing a valid snapshot. This is a maintainer command, not automated monitoring.
+
+## Product and design decisions
+
+The Composio [quickstart documentation](https://docs.composio.dev/docs/quickstart) is the primary reading reference: persistent grouped navigation, restrained headings, focused text and section links. Assessment forms use the same workspace. The earlier marketing-directory treatment is superseded. [DESIGN.md](DESIGN.md) records the observed reference and adaptations.
+
+[The in-app decision log](https://oauth-atlas.mossystar19.chatgpt.site/?view=decisions) and [Markdown log](docs/DECISIONS.md) map 20 decisions to 15 requirements. D14 explains the design correction; D16–D20 explain the new advisor scope, deterministic/AI boundary, coverage, portable assessments and evaluation. Builds regenerate the log from `data/decisions.json`.
+
+## Validation and limits
+
+See [the validation notebook](docs/VALIDATION.md) for automated results, browser journeys, source corrections and verification limits.
+
+Capability maps are deliberately scoped. Arbitrary special requirements are retained as open questions; not semantically interpreted. GitHub general conversation comments, branch writes and enterprise-wide APIs need additional mappings. Gmail exceptions depend on the complete architecture; calling a product internal or device-only is not sufficient proof. Slack identity, token scopes, channel membership and distribution-specific rate limits need representative tests.
+
+Shared links are readable input bundles and may be long. They recompute with current rules. There is no private multi-user workspace or cross-device checklist. Research drafts are public and have no self-service moderation/deletion interface. Browser storage can be cleared.
+
+The source reader uses bounded traversal, HTTPS/DNS checks and redirect revalidation; these are not resolver pinning or a security audit. Real OAuth flows, authenticated AI/Composio calls, provider approvals, complete browser/device coverage and developer comprehension studies remain outside the validated slice.
+
+Next improvements: exercise credentialed adapters and real representative grants, add endpoint/tool permission coverage, validate draft guidance with developers, and expand the reviewed guide library before claiming 100-app depth.

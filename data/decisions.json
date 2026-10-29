@@ -1,191 +1,807 @@
 {
-  "updatedAt": "2026-10-29",
-  "summary": "The product is designed to help a developer make a launch decision, take the next useful action, and see the evidence behind the guidance.",
-  "readingNote": "This is a retrospective log of the implemented slice, followed by the changes requested in this revision. It explains the rationale and constraints; it does not imply that user research or product metrics were measured.",
+  "updatedAt": "2026-10-30",
+  "summary": "Help developers choose an authentication architecture for their use case, follow a source-backed launch plan and inspect the decisions behind the product.",
+  "readingNote": "The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study.",
   "objectives": [
-    {"id":"O1","title":"Reduce launch uncertainty","description":"Reveal effort, waiting time and approval risk before a developer commits to an integration."},
-    {"id":"O2","title":"Keep the developer moving","description":"Turn a requirement or blocker into a concrete next action with an owner."},
-    {"id":"O3","title":"Make trust inspectable","description":"Separate sourced rules, observations, estimates and unknowns; keep human decisions explicit."},
-    {"id":"O4","title":"Make knowledge reusable","description":"Support app lookup, unfamiliar-app research and guides that work without a verbal explanation."},
-    {"id":"O5","title":"Fit the Composio mental model","description":"Use recognizable product language and interaction patterns while preserving the guide's purpose."}
+    {
+      "id": "O1",
+      "title": "Reduce launch uncertainty",
+      "description": "Reveal effort, waiting time and approval risk before a developer commits to an integration."
+    },
+    {
+      "id": "O2",
+      "title": "Keep the developer moving",
+      "description": "Turn a requirement or blocker into a concrete next action with an owner."
+    },
+    {
+      "id": "O3",
+      "title": "Make trust inspectable",
+      "description": "Separate sourced rules, observations, estimates and unknowns; keep human decisions explicit."
+    },
+    {
+      "id": "O4",
+      "title": "Make knowledge reusable",
+      "description": "Support app lookup, unfamiliar-app research and guides that work without a verbal explanation."
+    },
+    {
+      "id": "O5",
+      "title": "Fit the Composio mental model",
+      "description": "Use recognizable product language and interaction patterns while preserving the guide's purpose."
+    }
   ],
   "requirements": [
-    {"id":"R1","requirement":"Understand provider OAuth apps, integrations and user connections","status":"Demonstrated","approach":"Introduce the provider app → auth config → connected account flow, then explain managed versus custom auth before app registration.","why":"It prevents a developer from treating one client registration as an approval or connection for all users.","decisions":["D01","D02","D14"]},
-    {"id":"R2","requirement":"Look up OAuth apps; design for a library of 100","status":"Partial","approach":"Four researched examples share one guide schema and searchable comparison view. The path to 100 is documented, not presented as completed.","why":"The take-home permits a focused slice. Four contrasting approval paths are more useful evidence than 100 shallow entries.","decisions":["D03","D13"]},
-    {"id":"R3","requirement":"Explain difficulty, active work and approval waiting time","status":"Demonstrated","approach":"Show scenario-specific launch gates, separately labeled effort estimates and provider waits, plus testing versus production requirements.","why":"Calendar delay, engineering effort and customer-admin policy are different dependencies; a single score or date hides them.","decisions":["D04","D05","D06"]},
-    {"id":"R4","requirement":"Explain nuances, next steps and blocker recovery","status":"Demonstrated","approach":"Use an ordered checklist, completion criteria, a next-move panel and symptom → remedy blockers.","why":"A developer needs to know how to make progress, including when the next action belongs to someone else.","decisions":["D06","D07"]},
-    {"id":"R5","requirement":"Use agents practically and show the human handoff","status":"Demonstrated","approach":"Research agents checked sources and reachable setup flows. Each guide distinguishes agent preparation from account ownership, consent, credentials and submission.","why":"Research can be automated; an approval, legal attestation or customer access grant cannot be assumed from it.","decisions":["D08","D09"]},
-    {"id":"R6","requirement":"Generate a shareable guide live for an unfamiliar app","status":"Partial","approach":"A live source reader discovers and fetches documentation, streams progress and saves a public draft. It is extractive and does not reliably interpret every provider policy.","why":"The slice works without model or research API credentials. That constraint limits guide completeness and must remain visible.","decisions":["D10","D11","D12"]},
-    {"id":"R7","requirement":"Check guidance against real sources or setup attempts","status":"Demonstrated","approach":"Cite official sources beside curated steps; retain attempted actions, corrections and untested boundaries in the evidence notebook.","why":"A linked document, a form inspected and a successful OAuth round trip prove different things.","decisions":["D08","D09"]},
-    {"id":"R8","requirement":"Provide a working link, source repository and setup instructions","status":"Demonstrated","approach":"Publish the app and repository; document local setup, tests, architecture, sample results and limitations in the README and validation notes.","why":"Reviewers can run and evaluate the submission without a guided explanation.","decisions":["D11","D12"]},
-    {"id":"R9","requirement":"Explain each decision, objective and requirement mapping","status":"Demonstrated","approach":"This decision log is available in the app and as Markdown, using one structured source of truth.","why":"The reasoning should be reviewable alongside the experience, including the partial requirements.","decisions":["D15"]},
-    {"id":"R10","requirement":"Mirror Composio's UI/UX and OAuth descriptions","status":"Demonstrated","approach":"Reference the current homepage, OAuth directory and auth documentation; apply the dark, bordered, mono-accented design system throughout the app.","why":"The requested reference includes interaction structure and terminology, not just a palette change.","decisions":["D01","D14"]}
+    {
+      "id": "R1",
+      "requirement": "Understand provider OAuth apps, integrations and user connections",
+      "status": "Demonstrated",
+      "approach": "Introduce the provider app → auth config → connected account flow, then explain managed versus custom auth before app registration.",
+      "why": "It prevents a developer from treating one client registration as an approval or connection for all users.",
+      "decisions": [
+        "D01",
+        "D02",
+        "D14"
+      ]
+    },
+    {
+      "id": "R2",
+      "requirement": "Look up OAuth apps; design for a library of 100",
+      "status": "Partial",
+      "approach": "The original four-guide library remains, plus three contextual assessments, a searchable 1,694-name catalog snapshot and live research drafts. The intended 100 reviewed OAuth guides are not complete.",
+      "why": "The take-home permits a focused slice. Four contrasting approval paths are more useful evidence than 100 shallow entries.",
+      "decisions": [
+        "D03",
+        "D13"
+      ]
+    },
+    {
+      "id": "R3",
+      "requirement": "Explain difficulty, active work and approval waiting time",
+      "status": "Demonstrated",
+      "approach": "Show scenario-specific launch gates, separately labeled effort estimates and provider waits, plus testing versus production requirements.",
+      "why": "Calendar delay, engineering effort and customer-admin policy are different dependencies; a single score or date hides them.",
+      "decisions": [
+        "D04",
+        "D05",
+        "D06"
+      ]
+    },
+    {
+      "id": "R4",
+      "requirement": "Explain nuances, next steps and blocker recovery",
+      "status": "Demonstrated",
+      "approach": "Use an ordered checklist, completion criteria, a next-move panel and symptom → remedy blockers.",
+      "why": "A developer needs to know how to make progress, including when the next action belongs to someone else.",
+      "decisions": [
+        "D06",
+        "D07"
+      ]
+    },
+    {
+      "id": "R5",
+      "requirement": "Use agents practically and show the human handoff",
+      "status": "Demonstrated",
+      "approach": "Research agents checked sources and reachable setup flows. Each guide distinguishes agent preparation from account ownership, consent, credentials and submission.",
+      "why": "Research can be automated; an approval, legal attestation or customer access grant cannot be assumed from it.",
+      "decisions": [
+        "D08",
+        "D09"
+      ]
+    },
+    {
+      "id": "R6",
+      "requirement": "Generate a shareable guide live for an unfamiliar app",
+      "status": "Partial",
+      "approach": "A live source reader discovers and fetches documentation, streams progress and saves a public draft. It is extractive and does not reliably interpret every provider policy.",
+      "why": "The slice works without model or research API credentials. That constraint limits guide completeness and must remain visible.",
+      "decisions": [
+        "D10",
+        "D11",
+        "D12"
+      ]
+    },
+    {
+      "id": "R7",
+      "requirement": "Check guidance against real sources or setup attempts",
+      "status": "Demonstrated",
+      "approach": "Cite official sources beside curated steps; retain attempted actions, corrections and untested boundaries in the evidence notebook.",
+      "why": "A linked document, a form inspected and a successful OAuth round trip prove different things.",
+      "decisions": [
+        "D08",
+        "D09"
+      ]
+    },
+    {
+      "id": "R8",
+      "requirement": "Provide a working link, source repository and setup instructions",
+      "status": "Demonstrated",
+      "approach": "Publish the app and repository; document local setup, tests, architecture, sample results and limitations in the README and validation notes.",
+      "why": "Reviewers can run and evaluate the submission without a guided explanation.",
+      "decisions": [
+        "D11",
+        "D12"
+      ]
+    },
+    {
+      "id": "R9",
+      "requirement": "Explain each decision, objective and requirement mapping",
+      "status": "Demonstrated",
+      "approach": "This decision log is available in the app and as Markdown, using one structured source of truth.",
+      "why": "The reasoning should be reviewable alongside the experience, including the partial requirements.",
+      "decisions": [
+        "D15"
+      ]
+    },
+    {
+      "id": "R10",
+      "requirement": "Mirror Composio's UI/UX and OAuth descriptions",
+      "status": "Demonstrated",
+      "approach": "Use Composio’s documentation UI as the primary reading reference: persistent provider navigation, a focused content column, section links, restrained headings and readable body text. Keep search, comparison and progress controls in the catalog.",
+      "why": "Developers need to read and perform setup work. A promotional website layout creates unnecessary navigation and reading friction.",
+      "decisions": [
+        "D01",
+        "D14"
+      ]
+    },
+    {
+      "id": "R11",
+      "requirement": "Turn integration intent into an editable contextual assessment",
+      "status": "Demonstrated",
+      "approach": "Natural-language intake and provider selection converge on action and launch-context forms for Gmail, Slack and GitHub. Inputs and checklist state persist in the browser.",
+      "why": "Developers should not need to know which OAuth questions matter before starting. Editable interpretation prevents assumptions becoming invisible.",
+      "decisions": [
+        "D16",
+        "D19"
+      ]
+    },
+    {
+      "id": "R12",
+      "requirement": "Use optional AI for interpretation with a functional keyless fallback",
+      "status": "Partial",
+      "approach": "A server-side structured-output parser selects only known capabilities. Missing credentials, refusal, timeout or invalid output falls back to labeled keyword suggestions. Mocked AI and fallback paths are tested; live AI is not tested or enabled in the public demo.",
+      "why": "AI can help interpret intent, but must not create provider facts. The product must remain usable without external credentials.",
+      "decisions": [
+        "D17"
+      ]
+    },
+    {
+      "id": "R13",
+      "requirement": "Recommend app models, permissions and launch dependencies from verified rules",
+      "status": "Demonstrated",
+      "approach": "Typed provider capabilities and compositional rules distinguish Gmail sensitivity/data handling, Slack identity/distribution and GitHub App installation. Each rule has sources, an ID and a check date.",
+      "why": "Managed availability, permission fit and provider application model are independent decisions. A generic OAuth guide cannot safely collapse them.",
+      "decisions": [
+        "D16",
+        "D17"
+      ]
+    },
+    {
+      "id": "R14",
+      "requirement": "Discover at least 100 real integrations without overstating guide coverage",
+      "status": "Demonstrated",
+      "approach": "A dated public Composio catalog snapshot supplies 1,694 names and documentation links. Three entries have assessments; catalog-only auth and managed status remain unverified. Optional server-side Composio metadata is checked for the selected assessment method.",
+      "why": "Names provide useful discovery without pretending that every listed integration has a validated setup guide.",
+      "decisions": [
+        "D18"
+      ]
+    },
+    {
+      "id": "R15",
+      "requirement": "Evaluate real scenarios and recalculate after changed answers",
+      "status": "Demonstrated",
+      "approach": "Golden cases cover the three providers, conditional verification, pilot versus commercial distribution, selected-repository access and failure paths. Browser checks verify input edits, regenerated scopes/dependencies, exports and sharing.",
+      "why": "A plan must change with the developer’s actual requirements. Testing only that UI components render would miss incorrect advice.",
+      "decisions": [
+        "D19",
+        "D20"
+      ]
+    }
   ],
   "decisions": [
     {
-      "id":"D01","title":"Model three separate things: provider app, auth config and connected account","category":"Product","phase":"Initial decision, clarified in this revision","objectives":["O1","O5"],"requirements":["R1","R10"],
-      "decision":"Make the relationship visible in the library and explain it in the guide's Composio handoff.",
-      "reason":"The developer registers an app with a provider. Composio's auth config tells a toolkit which method, permissions and app configuration to use. A user's authorization then creates their connected account. Confusing these objects leads to false readiness claims and callback mistakes.",
-      "implementation":"The connection diagram uses Composio's entity names. The handoff distinguishes the provider redirect URI from the return callback after a Connect Link. This UI explains configuration; it does not create it.",
-      "alternative":"A generic OAuth tutorial or the earlier 'your integration' label would be shorter but leaves the configuration boundary ambiguous.",
-      "tradeoff":"Composio-specific guidance is an optional layer; provider guides still apply when a developer uses another runtime.",
-      "evidence":"Composio authentication and managed/custom-auth documentation establish these objects and their relationship.",
-      "check":"A reader should be able to explain which object is shared configuration and which represents one user's grant. This is an acceptance criterion, not a measured usability result.",
-      "links":[{"label":"Authentication concepts","url":"https://docs.composio.dev/docs/authentication"},{"label":"Managed vs custom auth","url":"https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app"}]
+      "id": "D01",
+      "title": "Model three separate things: provider app, auth config and connected account",
+      "category": "Product",
+      "phase": "Initial decision; terminology clarified in an earlier revision",
+      "objectives": [
+        "O1",
+        "O5"
+      ],
+      "requirements": [
+        "R1",
+        "R10"
+      ],
+      "decision": "Make the relationship visible in the library and explain it in the guide's Composio handoff.",
+      "reason": "The developer registers an app with a provider. Composio's auth config tells a toolkit which method, permissions and app configuration to use. A user's authorization then creates their connected account. Confusing these objects leads to false readiness claims and callback mistakes.",
+      "implementation": "The connection diagram uses Composio's entity names. The handoff distinguishes the provider redirect URI from the return callback after a Connect Link. This UI explains configuration; it does not create it.",
+      "alternative": "A generic OAuth tutorial or the earlier 'your integration' label would be shorter but leaves the configuration boundary ambiguous.",
+      "tradeoff": "Composio-specific guidance is an optional layer; provider guides still apply when a developer uses another runtime.",
+      "evidence": "Composio authentication and managed/custom-auth documentation establish these objects and their relationship.",
+      "check": "A reader should be able to explain which object is shared configuration and which represents one user's grant. This is an acceptance criterion, not a measured usability result.",
+      "links": [
+        {
+          "label": "Authentication concepts",
+          "url": "https://docs.composio.dev/docs/authentication"
+        },
+        {
+          "label": "Managed vs custom auth",
+          "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app"
+        }
+      ]
     },
     {
-      "id":"D02","title":"Ask whether custom OAuth is needed before showing registration work","category":"Product","phase":"Initial decision","objectives":["O1","O2"],"requirements":["R1"],
-      "decision":"Put managed versus custom auth at the beginning of the journey.",
-      "reason":"Avoidable setup is the fastest setup. A developer may be able to test using a Composio-managed app, then choose their own app for identity, scopes, quota or unsupported managed methods.",
-      "implementation":"A prominent managed-auth entry point links to the official directory. The custom-app guides state their scope rather than claiming every developer needs provider registration.",
-      "alternative":"Start every developer at 'Create an OAuth app'. That can send someone through a long approval path before establishing whether it is necessary.",
-      "tradeoff":"The prototype links to the live managed-auth directory instead of pretending to know every current provider/method availability flag.",
-      "evidence":"The assignment explicitly points to managed OAuth as the starting point. Composio documents custom credentials as a separate choice.",
-      "check":"Managed-auth availability must be checked per OAuth method before treating registration as required.",
-      "links":[{"label":"Managed OAuth directory","url":"https://docs.composio.dev/toolkits/managed-auth"}]
+      "id": "D02",
+      "title": "Ask whether custom OAuth is needed before showing registration work",
+      "category": "Product",
+      "phase": "Initial decision",
+      "objectives": [
+        "O1",
+        "O2"
+      ],
+      "requirements": [
+        "R1"
+      ],
+      "decision": "Put managed versus custom auth at the beginning of the journey.",
+      "reason": "Avoidable setup is the fastest setup. A developer may be able to test using a Composio-managed app, then choose their own app for identity, scopes, quota or unsupported managed methods.",
+      "implementation": "A prominent managed-auth entry point links to the official directory. The custom-app guides state their scope rather than claiming every developer needs provider registration.",
+      "alternative": "Start every developer at 'Create an OAuth app'. That can send someone through a long approval path before establishing whether it is necessary.",
+      "tradeoff": "The prototype links to the live managed-auth directory instead of pretending to know every current provider/method availability flag.",
+      "evidence": "The assignment explicitly points to managed OAuth as the starting point. Composio documents custom credentials as a separate choice.",
+      "check": "Managed-auth availability must be checked per OAuth method before treating registration as required.",
+      "links": [
+        {
+          "label": "Managed OAuth directory",
+          "url": "https://docs.composio.dev/toolkits/managed-auth"
+        }
+      ]
     },
     {
-      "id":"D03","title":"Choose four apps by the launch risks they expose","category":"Product","phase":"Initial decision","objectives":["O1","O4"],"requirements":["R2","R3"],
-      "decision":"Use GitHub, Notion, Slack and Gmail as contrasting examples.",
-      "reason":"GitHub exposes customer organization gates, Notion separates optional listing from direct OAuth, Slack adds commercial eligibility and a long review, and Gmail adds restricted-data verification and assessment. This tests whether the experience handles different kinds of friction.",
-      "implementation":"Every sample uses the same guide structure but has a different scenario, launch gate, blocker set and evidence notebook.",
-      "alternative":"Pick four easy providers or generate 100 similar pages. Neither demonstrates judgment across approval paths.",
-      "tradeoff":"Breadth is limited to four reviewed guides. The assignment permits a focused working slice; the 100-guide library is still incomplete.",
-      "evidence":"Provider dossiers and source links in the Evidence log record the distinctions. They do not establish completed approvals.",
-      "check":"Each sample should add a materially different developer decision, rather than only changing logos.",
-      "links":[{"label":"GitHub example","url":"/?guide=github"},{"label":"Notion example","url":"/?guide=notion"},{"label":"Slack example","url":"/?guide=slack"},{"label":"Gmail example","url":"/?guide=gmail"}]
+      "id": "D03",
+      "title": "Choose four apps by the launch risks they expose",
+      "category": "Product",
+      "phase": "Initial decision",
+      "objectives": [
+        "O1",
+        "O4"
+      ],
+      "requirements": [
+        "R2",
+        "R3"
+      ],
+      "decision": "Use GitHub, Notion, Slack and Gmail as contrasting examples.",
+      "reason": "GitHub exposes customer organization gates, Notion separates optional listing from direct OAuth, Slack adds commercial eligibility and a long review, and Gmail adds restricted-data verification and assessment. This tests whether the experience handles different kinds of friction.",
+      "implementation": "Every sample uses the same guide structure but has a different scenario, launch gate, blocker set and evidence notebook.",
+      "alternative": "Pick four easy providers or generate 100 similar pages. Neither demonstrates judgment across approval paths.",
+      "tradeoff": "Breadth is limited to four reviewed guides. The assignment permits a focused working slice; the 100-guide library is still incomplete.",
+      "evidence": "Provider dossiers and source links in the Evidence log record the distinctions. They do not establish completed approvals.",
+      "check": "Each sample should add a materially different developer decision, rather than only changing logos.",
+      "links": [
+        {
+          "label": "GitHub example",
+          "url": "/?guide=github"
+        },
+        {
+          "label": "Notion example",
+          "url": "/?guide=notion"
+        },
+        {
+          "label": "Slack example",
+          "url": "/?guide=slack"
+        },
+        {
+          "label": "Gmail example",
+          "url": "/?guide=gmail"
+        }
+      ]
     },
     {
-      "id":"D04","title":"Describe the launch gate instead of inventing a universal difficulty score","category":"Product","phase":"Initial decision","objectives":["O1","O3"],"requirements":["R3"],
-      "decision":"Use contextual labels such as customer-admin gates, Marketplace review and security assessment.",
-      "reason":"The same provider can be easy for one test account and hard for a public product. A single numerical score creates false precision and hides the reason for the difficulty.",
-      "implementation":"Comparison rows pair a scenario-specific launch label with effort and waiting time. Unknown live drafts are labeled 'Needs verification'.",
-      "alternative":"A provider-wide 'easy / medium / hard' score without the scenario would be simpler to scan but easy to misuse.",
-      "tradeoff":"Labels require reading a few words; they do not provide an automatic ranking for every possible feature.",
-      "evidence":"The curated data states the audience and use case. Difficulty changes when scopes, distribution or customer policy change.",
-      "check":"A reader can name the dependency creating friction; an unknown case never defaults to 'easy'.",
-      "links":[{"label":"Guide data","url":"https://github.com/infiniym/oauth-atlas/blob/main/data/guides.json"}]
+      "id": "D04",
+      "title": "Describe the launch gate instead of inventing a universal difficulty score",
+      "category": "Product",
+      "phase": "Initial decision",
+      "objectives": [
+        "O1",
+        "O3"
+      ],
+      "requirements": [
+        "R3"
+      ],
+      "decision": "Use contextual labels such as customer-admin gates, Marketplace review and security assessment.",
+      "reason": "The same provider can be easy for one test account and hard for a public product. A single numerical score creates false precision and hides the reason for the difficulty.",
+      "implementation": "Comparison rows pair a scenario-specific launch label with effort and waiting time. Unknown live drafts are labeled 'Needs verification'.",
+      "alternative": "A provider-wide 'easy / medium / hard' score without the scenario would be simpler to scan but easy to misuse.",
+      "tradeoff": "Labels require reading a few words; they do not provide an automatic ranking for every possible feature.",
+      "evidence": "The curated data states the audience and use case. Difficulty changes when scopes, distribution or customer policy change.",
+      "check": "A reader can name the dependency creating friction; an unknown case never defaults to 'easy'.",
+      "links": [
+        {
+          "label": "Guide data",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/data/guides.json"
+        }
+      ]
     },
     {
-      "id":"D05","title":"Separate active setup effort from provider waiting time","category":"Product","phase":"Initial decision","objectives":["O1","O3"],"requirements":["R3"],
-      "decision":"Present distinct fields with their basis and assumptions; avoid a promised launch date.",
-      "reason":"Forty-five minutes of configuration and several weeks of review can both be true. Assessor work, pilot recruitment, remediation and customer-admin approval may add dependencies that cannot be reduced to one countdown.",
-      "implementation":"Author estimates are labeled as planning estimates. Provider-published waits are separately described and linked. Gmail's display says review is approximately six weeks and assessment varies; it does not imply a verified sequence.",
-      "alternative":"One 'time to launch' value is convenient but would imply evidence we do not have.",
-      "tradeoff":"The product is more candid than predictive. Live drafts keep unverified effort and waits unknown.",
-      "evidence":"Published provider timing and author effort assumptions are retained separately in the guide data and dossiers.",
-      "check":"Every displayed estimate has a basis; a provider range is not described as an SLA or a measured setup result.",
-      "links":[{"label":"Validation notes","url":"https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"}]
+      "id": "D05",
+      "title": "Separate active setup effort from provider waiting time",
+      "category": "Product",
+      "phase": "Initial decision",
+      "objectives": [
+        "O1",
+        "O3"
+      ],
+      "requirements": [
+        "R3"
+      ],
+      "decision": "Present distinct fields with their basis and assumptions; avoid a promised launch date.",
+      "reason": "Forty-five minutes of configuration and several weeks of review can both be true. Assessor work, pilot recruitment, remediation and customer-admin approval may add dependencies that cannot be reduced to one countdown.",
+      "implementation": "Author estimates are labeled as planning estimates. Provider-published waits are separately described and linked. Gmail's display says review is approximately six weeks and assessment varies; it does not imply a verified sequence.",
+      "alternative": "One 'time to launch' value is convenient but would imply evidence we do not have.",
+      "tradeoff": "The product is more candid than predictive. Live drafts keep unverified effort and waits unknown.",
+      "evidence": "Published provider timing and author effort assumptions are retained separately in the guide data and dossiers.",
+      "check": "Every displayed estimate has a basis; a provider range is not described as an SLA or a measured setup result.",
+      "links": [
+        {
+          "label": "Validation notes",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"
+        }
+      ]
     },
     {
-      "id":"D06","title":"Scope each guide and distinguish testing from production","category":"Product","phase":"Initial decision","objectives":["O1","O2"],"requirements":["R3","R4"],
-      "decision":"State the audience and feature before the launch plan, then show separate testing and production requirements.",
-      "reason":"A test installation does not establish public commercial eligibility. Gmail reading versus sending, Notion direct distribution versus listing, and Slack pilots versus commercial launch have different consequences.",
-      "implementation":"Each guide opens with its scenario and verdict. Feature/scope comparisons and production caveats explain when the guidance stops applying.",
-      "alternative":"One provider setup recipe would be shorter but could apply the wrong review path to a developer's product.",
-      "tradeoff":"The prototype does not implement a full scenario configurator; developers must compare their case with the stated assumptions.",
-      "evidence":"Provider sources distinguish scopes, audiences, distribution modes and customer controls.",
-      "check":"Testing instructions cannot be mistaken for confirmation that a public product is approved.",
-      "links":[{"label":"Gmail scenario and scopes","url":"/?guide=gmail"},{"label":"Slack distribution example","url":"/?guide=slack"}]
+      "id": "D06",
+      "title": "Scope each guide and distinguish testing from production",
+      "category": "Product",
+      "phase": "Initial decision",
+      "objectives": [
+        "O1",
+        "O2"
+      ],
+      "requirements": [
+        "R3",
+        "R4"
+      ],
+      "decision": "State the audience and feature before the launch plan, then show separate testing and production requirements.",
+      "reason": "A test installation does not establish public commercial eligibility. Gmail reading versus sending, Notion direct distribution versus listing, and Slack pilots versus commercial launch have different consequences.",
+      "implementation": "Each guide opens with its scenario and verdict. Feature/scope comparisons and production caveats explain when the guidance stops applying.",
+      "alternative": "One provider setup recipe would be shorter but could apply the wrong review path to a developer's product.",
+      "tradeoff": "The prototype does not implement a full scenario configurator; developers must compare their case with the stated assumptions.",
+      "evidence": "Provider sources distinguish scopes, audiences, distribution modes and customer controls.",
+      "check": "Testing instructions cannot be mistaken for confirmation that a public product is approved.",
+      "links": [
+        {
+          "label": "Gmail scenario and scopes",
+          "url": "/?guide=gmail"
+        },
+        {
+          "label": "Slack distribution example",
+          "url": "/?guide=slack"
+        }
+      ]
     },
     {
-      "id":"D07","title":"Turn guidance into next actions, completion criteria and blocker remedies","category":"Product","phase":"Initial decision","objectives":["O2","O4"],"requirements":["R4"],
-      "decision":"Use an ordered launch plan, a next-move panel, checkmarks and symptom-specific recovery advice.",
-      "reason":"A document is useful only if the developer can act on it. Identifying the owner and completion condition reduces ambiguity when the next move belongs to the developer, customer admin, provider or assessor.",
-      "implementation":"Steps contain an owner and, where available, 'Done when'. Blockers map symptoms to remedies. Checkmarks persist locally and explicitly do not verify provider state.",
-      "alternative":"A long prose article can explain the topic but makes it harder to resume work or locate the remedy for a specific error.",
-      "tradeoff":"Progress is self-reported, local to the browser and not synchronized with provider dashboards.",
-      "evidence":"The guide schema supports steps, blockers, next action and owner fields. Browser checks verified checklist persistence.",
-      "check":"After reading a blocker, a developer should know one action and who can perform it. This has not been measured with user testing.",
-      "links":[{"label":"Guide schema","url":"https://github.com/infiniym/oauth-atlas/blob/main/lib/guide.ts"}]
+      "id": "D07",
+      "title": "Turn guidance into next actions, completion criteria and blocker remedies",
+      "category": "Product",
+      "phase": "Initial decision",
+      "objectives": [
+        "O2",
+        "O4"
+      ],
+      "requirements": [
+        "R4"
+      ],
+      "decision": "Use an ordered launch plan, a next-move panel, checkmarks and symptom-specific recovery advice.",
+      "reason": "A document is useful only if the developer can act on it. Identifying the owner and completion condition reduces ambiguity when the next move belongs to the developer, customer admin, provider or assessor.",
+      "implementation": "Steps contain an owner and, where available, 'Done when'. Blockers map symptoms to remedies. Checkmarks persist locally and explicitly do not verify provider state.",
+      "alternative": "A long prose article can explain the topic but makes it harder to resume work or locate the remedy for a specific error.",
+      "tradeoff": "Progress is self-reported, local to the browser and not synchronized with provider dashboards.",
+      "evidence": "The guide schema supports steps, blockers, next action and owner fields. Browser checks verified checklist persistence.",
+      "check": "After reading a blocker, a developer should know one action and who can perform it. This has not been measured with user testing.",
+      "links": [
+        {
+          "label": "Guide schema",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/guide.ts"
+        }
+      ]
     },
     {
-      "id":"D08","title":"Expose evidence levels and corrections instead of using a generic verified badge","category":"Evidence","phase":"Initial decision","objectives":["O3"],"requirements":["R5","R7"],
-      "decision":"Separate official rules, setup observations, author estimates and unresolved questions.",
-      "reason":"Reading a provider document does not prove that a token exchange works. An inspected form does not prove approval. The developer needs to see exactly what supports a claim.",
-      "implementation":"Sources sit beside curated steps; the Evidence tab records actual attempts and boundaries. Research corrections include Notion's optional Marketplace listing and Slack's current installation threshold.",
-      "alternative":"One 'verified' label would feel reassuring but overstate the validation performed.",
-      "tradeoff":"Evidence takes space and ongoing maintenance. Checked dates can become stale; the prototype has no automatic source-change review pipeline.",
-      "evidence":"Original agent dossiers, normalized source IDs and the validation notebook retain provenance. Citation checks run automatically.",
-      "check":"A reader can distinguish an observation from a recommendation, and find the supporting source without leaving the context of the step.",
-      "links":[{"label":"Original research dossiers","url":"https://github.com/infiniym/oauth-atlas/tree/main/research"},{"label":"Validation notes","url":"https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"}]
+      "id": "D08",
+      "title": "Expose evidence levels and corrections instead of using a generic verified badge",
+      "category": "Evidence",
+      "phase": "Initial decision",
+      "objectives": [
+        "O3"
+      ],
+      "requirements": [
+        "R5",
+        "R7"
+      ],
+      "decision": "Separate official rules, setup observations, author estimates and unresolved questions.",
+      "reason": "Reading a provider document does not prove that a token exchange works. An inspected form does not prove approval. The developer needs to see exactly what supports a claim.",
+      "implementation": "Sources sit beside curated steps; the Evidence tab records actual attempts and boundaries. Research corrections include Notion's optional Marketplace listing and Slack's current installation threshold.",
+      "alternative": "One 'verified' label would feel reassuring but overstate the validation performed.",
+      "tradeoff": "Evidence takes space and ongoing maintenance. Checked dates can become stale; the prototype has no automatic source-change review pipeline.",
+      "evidence": "Original agent dossiers, normalized source IDs and the validation notebook retain provenance. Citation checks run automatically.",
+      "check": "A reader can distinguish an observation from a recommendation, and find the supporting source without leaving the context of the step.",
+      "links": [
+        {
+          "label": "Original research dossiers",
+          "url": "https://github.com/infiniym/oauth-atlas/tree/main/research"
+        },
+        {
+          "label": "Validation notes",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"
+        }
+      ]
     },
     {
-      "id":"D09","title":"Attempt reachable setup while keeping identity, consent and submission with humans","category":"Evidence","phase":"Initial decision","objectives":["O2","O3"],"requirements":["R5","R7"],
-      "decision":"Use agents for public research and accessible form inspection; stop at account, credential, agreement and approval boundaries.",
-      "reason":"The assignment asks for practical attempts, but does not require paid accounts or completed approval. A human must own the app identity, approve access and attest to policies. An agent cannot promise a provider decision.",
-      "implementation":"Agents reached the Slack, Notion and GitHub sign-in gates. Google's Web application client form was inspected without submission. Guides state what an agent can prepare and where a human takes over.",
-      "alternative":"Claiming app setup success after finding a dashboard would give a misleading demonstration. Creating production registrations without the owning developer would introduce unapproved state.",
-      "tradeoff":"No completed OAuth token exchange, user-data API action, review or assessment was tested. Those remain necessary acceptance checks for a real integration.",
-      "evidence":"Setup observations and untested actions are recorded per provider; no provider credentials were generated or stored in the submission.",
-      "check":"Every setup claim is limited to the actual observed action; proposed verification steps are not reported as executed.",
-      "links":[{"label":"Setup attempt boundaries","url":"https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"}]
+      "id": "D09",
+      "title": "Attempt reachable setup while keeping identity, consent and submission with humans",
+      "category": "Evidence",
+      "phase": "Initial decision",
+      "objectives": [
+        "O2",
+        "O3"
+      ],
+      "requirements": [
+        "R5",
+        "R7"
+      ],
+      "decision": "Use agents for public research and accessible form inspection; stop at account, credential, agreement and approval boundaries.",
+      "reason": "The assignment asks for practical attempts, but does not require paid accounts or completed approval. A human must own the app identity, approve access and attest to policies. An agent cannot promise a provider decision.",
+      "implementation": "Agents reached the Slack, Notion and GitHub sign-in gates. Google's Web application client form was inspected without submission. Guides state what an agent can prepare and where a human takes over.",
+      "alternative": "Claiming app setup success after finding a dashboard would give a misleading demonstration. Creating production registrations without the owning developer would introduce unapproved state.",
+      "tradeoff": "No completed OAuth token exchange, user-data API action, review or assessment was tested. Those remain necessary acceptance checks for a real integration.",
+      "evidence": "Setup observations and untested actions are recorded per provider; no provider credentials were generated or stored in the submission.",
+      "check": "Every setup claim is limited to the actual observed action; proposed verification steps are not reported as executed.",
+      "links": [
+        {
+          "label": "Setup attempt boundaries",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"
+        }
+      ]
     },
     {
-      "id":"D10","title":"Ship a keyless source-reading agent and label its output as a draft","category":"Implementation","phase":"Constraint-driven initial decision","objectives":["O3","O4"],"requirements":["R6"],
-      "decision":"Use a bounded discovery/read/classify workflow instead of pretending to have an LLM research service.",
-      "reason":"The available Firecrawl anonymous service rejected requests, and no model API credentials were configured. A deterministic source reader could still perform real live network investigation without asking reviewers to create accounts. This was a delivery constraint, not evidence that extractive rules are the best long-term agent architecture.",
-      "implementation":"The runtime resolves a name or accepts a website, follows provider docs, records actual fetch progress, extracts limited evidence and scopes, and saves an unreviewed draft. Failed discovery asks for an official docs URL.",
-      "alternative":"Require reviewer-supplied keys, stop at a mock, or return hardcoded unknown-app guides. Those would respectively add setup friction, fail the working-flow demonstration, or misrepresent live research.",
-      "tradeoff":"This only partially meets the rich live-guide objective. Keyword heuristics do not reliably interpret policies, resolve contradictions or produce provider-specific setup details. Unknown effort and review time remain unknown.",
-      "evidence":"Live sample runs for Linear and Todoist are recorded separately from fixture-based unit tests. Negative/missing OAuth evidence tests prevent unsupported readiness claims.",
-      "check":"A new input must cause actual source reads, and the output must preserve failures and gaps. A future model-backed agent still needs claim-to-source validation and human review before promotion.",
-      "links":[{"label":"Live research implementation","url":"https://github.com/infiniym/oauth-atlas/blob/main/lib/research.ts"},{"label":"Research tests","url":"https://github.com/infiniym/oauth-atlas/blob/main/tests/research.test.ts"}]
+      "id": "D10",
+      "title": "Ship a keyless source-reading agent and label its output as a draft",
+      "category": "Implementation",
+      "phase": "Constraint-driven initial decision",
+      "objectives": [
+        "O3",
+        "O4"
+      ],
+      "requirements": [
+        "R6"
+      ],
+      "decision": "Use a bounded discovery/read/classify workflow instead of pretending to have an LLM research service.",
+      "reason": "The available Firecrawl anonymous service rejected requests, and no model API credentials were configured. A deterministic source reader could still perform real live network investigation without asking reviewers to create accounts. This was a delivery constraint, not evidence that extractive rules are the best long-term agent architecture.",
+      "implementation": "The runtime resolves a name or accepts a website, follows provider docs, records actual fetch progress, extracts limited evidence and scopes, and saves an unreviewed draft. Failed discovery asks for an official docs URL.",
+      "alternative": "Require reviewer-supplied keys, stop at a mock, or return hardcoded unknown-app guides. Those would respectively add setup friction, fail the working-flow demonstration, or misrepresent live research.",
+      "tradeoff": "This only partially meets the rich live-guide objective. Keyword heuristics do not reliably interpret policies, resolve contradictions or produce provider-specific setup details. Unknown effort and review time remain unknown.",
+      "evidence": "Live sample runs for Linear and Todoist are recorded separately from fixture-based unit tests. Negative/missing OAuth evidence tests prevent unsupported readiness claims.",
+      "check": "A new input must cause actual source reads, and the output must preserve failures and gaps. A future model-backed agent still needs claim-to-source validation and human review before promotion.",
+      "links": [
+        {
+          "label": "Live research implementation",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/research.ts"
+        },
+        {
+          "label": "Research tests",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/tests/research.test.ts"
+        }
+      ]
     },
     {
-      "id":"D11","title":"Make guides portable while keeping personal progress separate","category":"Product","phase":"Initial decision","objectives":["O4","O3"],"requirements":["R6","R8"],
-      "decision":"Persist public generated snapshots, offer Markdown export and store saves/checkmarks only in the browser.",
-      "reason":"A reviewer or teammate should open the guide without relying on the author's session. Personal work-in-progress does not belong in the shared guide, and adding accounts would increase friction for this take-home.",
-      "implementation":"D1 stores generated guides by ID. Share dialogs expose a public URL with manual-copy fallback. Exports include sources and uncertainties. Inputs disclose that drafts are public.",
-      "alternative":"Browser-only drafts cannot be shared reliably; an authenticated team product adds permissions and account setup beyond the focused slice.",
-      "tradeoff":"Guides are public; users must submit public app information only. Checklists do not sync across devices. Moderation, deletion and retention controls remain unfinished.",
-      "evidence":"The deployed service generated a Linear draft and returned the same ID from a separate retrieval request. Browser checks covered sharing, export and local persistence.",
-      "check":"A share URL opens in a fresh session, and the shared guide does not include personal checkmarks.",
-      "links":[{"label":"Live-generated example","url":"/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9"}]
+      "id": "D11",
+      "title": "Make guides portable while keeping personal progress separate",
+      "category": "Product",
+      "phase": "Initial decision",
+      "objectives": [
+        "O4",
+        "O3"
+      ],
+      "requirements": [
+        "R6",
+        "R8"
+      ],
+      "decision": "Persist public generated snapshots, offer Markdown export and store saves/checkmarks only in the browser.",
+      "reason": "A reviewer or teammate should open the guide without relying on the author's session. Personal work-in-progress does not belong in the shared guide, and adding accounts would increase friction for this take-home.",
+      "implementation": "D1 stores generated guides by ID. Share dialogs expose a public URL with manual-copy fallback. Exports include sources and uncertainties. Inputs disclose that drafts are public.",
+      "alternative": "Browser-only drafts cannot be shared reliably; an authenticated team product adds permissions and account setup beyond the focused slice.",
+      "tradeoff": "Guides are public; users must submit public app information only. Checklists do not sync across devices. Moderation, deletion and retention controls remain unfinished.",
+      "evidence": "The deployed service generated a Linear draft and returned the same ID from a separate retrieval request. Browser checks covered sharing, export and local persistence.",
+      "check": "A share URL opens in a fresh session, and the shared guide does not include personal checkmarks.",
+      "links": [
+        {
+          "label": "Live-generated example",
+          "url": "/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9"
+        }
+      ]
     },
     {
-      "id":"D12","title":"Use a Worker, D1 and streamed progress for a small working slice","category":"Implementation","phase":"Initial decision","objectives":["O2","O4"],"requirements":["R6","R8"],
-      "decision":"Build the UI with React/TypeScript and a server route that streams real progress, with D1 for guide snapshots.",
-      "reason":"A static mock cannot investigate unfamiliar apps or preserve shared results. A server boundary also keeps source fetching and rate limits out of the client, while streaming makes long source reads understandable.",
-      "implementation":"Vinext/Vite builds a Cloudflare Worker through Sites. NDJSON carries actual research events. Input, source size, public HTTPS/DNS, redirect, page-count, time and hourly-run bounds limit the preview workload.",
-      "alternative":"A static app would be simpler but fail live research/persistence. A general browser-agent platform would expand infrastructure and authenticated-action scope.",
-      "tradeoff":"Four-page and 58-second limits can miss material policy. DNS checks are not resolver pinning, and public preview limits are not a hardened abuse-control system.",
-      "evidence":"Automated tests, type checks, builds and deployed generation/retrieval checks are documented. These technical checks are not usability or OAuth approval validation.",
-      "check":"Progress corresponds to completed/attempted work; errors are actionable; unsuccessful research is never reported as a saved success.",
-      "links":[{"label":"Research route","url":"https://github.com/infiniym/oauth-atlas/blob/main/app/api/research/route.ts"}]
+      "id": "D12",
+      "title": "Use a Worker, D1 and streamed progress for a small working slice",
+      "category": "Implementation",
+      "phase": "Initial decision",
+      "objectives": [
+        "O2",
+        "O4"
+      ],
+      "requirements": [
+        "R6",
+        "R8"
+      ],
+      "decision": "Build the UI with React/TypeScript and a server route that streams real progress, with D1 for guide snapshots.",
+      "reason": "A static mock cannot investigate unfamiliar apps or preserve shared results. A server boundary also keeps source fetching and rate limits out of the client, while streaming makes long source reads understandable.",
+      "implementation": "Vinext/Vite builds a Cloudflare Worker through Sites. NDJSON carries actual research events. Input, source size, public HTTPS/DNS, redirect, page-count, time and hourly-run bounds limit the preview workload.",
+      "alternative": "A static app would be simpler but fail live research/persistence. A general browser-agent platform would expand infrastructure and authenticated-action scope.",
+      "tradeoff": "Four-page and 58-second limits can miss material policy. DNS checks are not resolver pinning, and public preview limits are not a hardened abuse-control system.",
+      "evidence": "Automated tests, type checks, builds and deployed generation/retrieval checks are documented. These technical checks are not usability or OAuth approval validation.",
+      "check": "Progress corresponds to completed/attempted work; errors are actionable; unsuccessful research is never reported as a saved success.",
+      "links": [
+        {
+          "label": "Research route",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/app/api/research/route.ts"
+        }
+      ]
     },
     {
-      "id":"D13","title":"Treat expansion to 100 as an editorial and maintenance workflow","category":"Implementation","phase":"Initial scope decision; expansion planned","objectives":["O3","O4"],"requirements":["R2"],
-      "decision":"Create a reusable guide contract and citation checks before expanding the reviewed library.",
-      "reason":"The hard part is maintaining useful, scenario-specific evidence as provider rules change. Generating 96 more pages would not establish accuracy or readiness.",
-      "implementation":"The four guides share one schema with steps, dependencies, sources, attempts, corrections and uncertainties. Generated drafts remain separate from the reviewed catalog.",
-      "alternative":"Use provider count as the main success measure or silently promote every draft into the library.",
-      "tradeoff":"There is no completed 100-app library, review queue, automatic recrawl or revision-history UI. These are next work, not delivered capabilities.",
-      "evidence":"The assignment permits a focused slice. The current repository contains four curated guide records and a separate public-draft store.",
-      "check":"Before scaling, define source freshness, reviewer ownership and publication criteria. Proposed metrics are useful-next-action rate and verified claim coverage, not raw page count.",
-      "links":[{"label":"Guide schema","url":"https://github.com/infiniym/oauth-atlas/blob/main/lib/guide.ts"}]
+      "id": "D13",
+      "title": "Treat expansion to 100 as an editorial and maintenance workflow",
+      "category": "Implementation",
+      "phase": "Initial scope decision; catalog discovery expanded in D18",
+      "objectives": [
+        "O3",
+        "O4"
+      ],
+      "requirements": [
+        "R2"
+      ],
+      "decision": "Create a reusable guide contract and citation checks before expanding the reviewed library.",
+      "reason": "The hard part is maintaining useful, scenario-specific evidence as provider rules change. Generating 96 more pages would not establish accuracy or readiness.",
+      "implementation": "The four guides share one schema with steps, dependencies, sources, attempts, corrections and uncertainties. Generated drafts remain separate from the reviewed catalog.",
+      "alternative": "Use provider count as the main success measure or silently promote every draft into the library.",
+      "tradeoff": "There is no completed 100-app library, review queue, automatic recrawl or revision-history UI. These are next work, not delivered capabilities.",
+      "evidence": "The assignment permits a focused slice. The current repository contains four curated guide records and a separate public-draft store.",
+      "check": "Before scaling, define source freshness, reviewer ownership and publication criteria. Proposed metrics are useful-next-action rate and verified claim coverage, not raw page count.",
+      "links": [
+        {
+          "label": "Guide schema",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/guide.ts"
+        }
+      ]
     },
     {
-      "id":"D14","title":"Replace the original dashboard style with Composio's current design language","category":"Design","phase":"New in this revision","objectives":["O5","O2"],"requirements":["R1","R10"],
-      "decision":"Apply Composio's dark surfaces, fine borders, large Geist headings, mono labels, square controls and blue accent across the entire experience.",
-      "reason":"The earlier mint/serif workspace gave the prototype an independent identity. The new request explicitly asks it to mirror Composio, including the OAuth mental model. Matching only one button color would not satisfy that request.",
-      "implementation":"A horizontal navigation and bordered directory replace the persistent workspace rail. Guides, blockers, evidence, saved states, dialogs and this log use the same tokens. Terminology uses toolkit, auth config, Connect Link and connected account where applicable.",
-      "alternative":"Retain the original dashboard or copy the homepage as a marketing landing page. The first misses the requested reference; the second would hide the developer's working guide behind presentation.",
-      "tradeoff":"This mirrors the observed system rather than claiming pixel-perfect reconstruction. OAuth Atlas retains its own identity and does not imply official affiliation. Responsive behavior is adapted for guide use.",
-      "evidence":"Current homepage and OAuth directory screenshots plus DOM-computed typography and button styles are retained in DESIGN.md and docs/references. Firecrawl capture failed; browser inspection supplied the evidence.",
-      "check":"The visual system is consistent across primary and secondary flows; active effort, provider wait and evidence remain readable on mobile.",
-      "links":[{"label":"Composio OAuth directory","url":"https://composio.dev/auth"},{"label":"Composio homepage","url":"https://composio.dev/"},{"label":"Design reference and tokens","url":"https://github.com/infiniym/oauth-atlas/blob/main/DESIGN.md"}]
+      "id": "D14",
+      "title": "Use Composio’s docs layout for reading and application controls for work",
+      "category": "Design",
+      "phase": "Revised after correcting the reference choice",
+      "objectives": [
+        "O5",
+        "O2"
+      ],
+      "requirements": [
+        "R1",
+        "R10"
+      ],
+      "decision": "Use the Composio quickstart and documentation UI as the primary reference for guides, research notes and the decision log. Keep the library as a compact searchable catalog.",
+      "reason": "The earlier revision used Composio’s marketing OAuth directory because it matched the subject matter. That over-weighted brand resemblance and produced oversized headings, small metadata and too much promotional space. The actual task is sustained reading, finding requirements and resuming setup. The docs reference is a better fit for that workflow.",
+      "implementation": "A fixed top bar and grouped provider sidebar give persistent orientation. Guides use continuous anchored sections, an on-page contents outline, 28px page headings and 16px/28px reading text. The library opens directly to search and comparison rows. Global search works from every page. Requirement coverage uses readable disclosures instead of a wide prose table. The advisor adds restrained task forms and a recommendation workspace in this documentation shell.",
+      "alternative": "The earlier marketing-style treatment is superseded. Copying the docs wholesale into the app library would also be a poor fit: comparison, saved state and research progress still need application controls.",
+      "tradeoff": "This adapts documented reading patterns rather than recreating an authenticated Composio dashboard. Brand alignment is retained through restrained color and typography. Browser checks establish layout behavior and text sizes; user testing is still needed to establish improved task performance.",
+      "evidence": "The linked Composio quickstart was inspected in the browser: grouped left navigation, a focused article, right-hand contents, a 28px medium-weight heading, and 16px body text with 28px line spacing. The user identified the readability problem in the previous reference choice.",
+      "check": "App lookup is available without a promotional hero. A developer can move between providers and jump to a guide section without losing orientation. Guide and decision-body copy remain at a readable size on desktop and mobile. No measured usability result is implied.",
+      "links": [
+        {
+          "label": "Primary reference: Composio quickstart",
+          "url": "https://docs.composio.dev/docs/quickstart"
+        },
+        {
+          "label": "Documentation auth concepts",
+          "url": "https://docs.composio.dev/docs/authentication"
+        },
+        {
+          "label": "Previous marketing reference (superseded)",
+          "url": "https://composio.dev/auth"
+        },
+        {
+          "label": "Design reference and implementation",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/DESIGN.md"
+        }
+      ]
     },
     {
-      "id":"D15","title":"Make the rationale and incomplete requirements visible in the product","category":"Product","phase":"New in this revision","objectives":["O1","O3","O4"],"requirements":["R9"],
-      "decision":"Add a first-class decision log with objective IDs, requirement coverage, alternatives, constraints and tradeoffs.",
-      "reason":"The original implementation had product notes, but not an explicit explanation of how each requirement was addressed. The follow-up asks for the causal link between an action, its objective and the chosen approach.",
-      "implementation":"One structured file powers this page and downloadable Markdown. Each decision identifies its phase; the requirement map marks the 100-guide library and rich live generation as partial.",
-      "alternative":"Write a retrospective that lists features as successes without alternatives, evidence or limits. That would not help evaluate the underlying judgment.",
-      "tradeoff":"The rationale explains choices; it is not proof of user preference or measured product outcomes. The log should change when constraints or evidence change.",
-      "evidence":"The assignment, implemented artifacts, validation notes and this follow-up form the basis. No customer study or conversion result is claimed.",
-      "check":"A reviewer can trace a requirement to a decision, its implementation, a tradeoff and an honest completion state.",
-      "links":[{"label":"Decision log source","url":"https://github.com/infiniym/oauth-atlas/blob/main/data/decisions.json"}]
+      "id": "D15",
+      "title": "Make the rationale and incomplete requirements visible in the product",
+      "category": "Product",
+      "phase": "Added in the decision-log revision",
+      "objectives": [
+        "O1",
+        "O3",
+        "O4"
+      ],
+      "requirements": [
+        "R9"
+      ],
+      "decision": "Add a first-class decision log with objective IDs, requirement coverage, alternatives, constraints and tradeoffs.",
+      "reason": "The original implementation had product notes, but not an explicit explanation of how each requirement was addressed. The follow-up asks for the causal link between an action, its objective and the chosen approach.",
+      "implementation": "One structured file powers this page and downloadable Markdown. Each decision identifies its phase; the requirement map marks the 100-guide library and rich live generation as partial.",
+      "alternative": "Write a retrospective that lists features as successes without alternatives, evidence or limits. That would not help evaluate the underlying judgment.",
+      "tradeoff": "The rationale explains choices; it is not proof of user preference or measured product outcomes. The log should change when constraints or evidence change.",
+      "evidence": "The assignment, implemented artifacts, validation notes and this follow-up form the basis. No customer study or conversion result is claimed.",
+      "check": "A reviewer can trace a requirement to a decision, its implementation, a tradeoff and an honest completion state.",
+      "links": [
+        {
+          "label": "Decision log source",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/data/decisions.json"
+        }
+      ]
+    },
+    {
+      "id": "D16",
+      "title": "Make a use-case assessment the primary entry point",
+      "category": "Product",
+      "phase": "Added for the advisor MVP brief",
+      "objectives": [
+        "O1",
+        "O2",
+        "O5"
+      ],
+      "requirements": [
+        "R11",
+        "R13"
+      ],
+      "decision": "Lead with intent and contextual requirements, then generate the setup path. Keep static guides as research references.",
+      "reason": "The new brief asks what architecture fits a developer’s feature. A provider-only guide cannot distinguish a send-only Gmail tool from a mailbox reader, or a public GitHub profile reader from an installation-based reviewer.",
+      "implementation": "A description or selected provider leads to editable capabilities and a contextual launch form. Recommendation sections cover the model, managed fit, permissions, dependencies, next action and grouped checklist.",
+      "alternative": "Keep adding conditional paragraphs to a single provider article. That shifts the work of selecting the applicable path back to the developer.",
+      "tradeoff": "The map covers selected actions for three providers, not every endpoint or enterprise topology. Unknown inputs remain open questions and arbitrary special requirements are not interpreted by the rules.",
+      "evidence": "The supplied advisor brief and the existing reference-library limitations motivated this change. Official provider sources support the scoped mappings.",
+      "check": "Changing Gmail read/draft to send-only removes restricted scopes and the corresponding assessment dependency.",
+      "links": [
+        {
+          "label": "Assessment UI",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/components/advisor.tsx"
+        },
+        {
+          "label": "Capability map",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/providers.ts"
+        }
+      ]
+    },
+    {
+      "id": "D17",
+      "title": "Let AI suggest inputs while deterministic rules own provider conclusions",
+      "category": "Implementation",
+      "phase": "Added for the advisor MVP brief",
+      "objectives": [
+        "O1",
+        "O3",
+        "O5"
+      ],
+      "requirements": [
+        "R12",
+        "R13"
+      ],
+      "decision": "Keep capability interpretation, facts and recommendation logic separate. AI can suggest inputs but cannot generate scopes or approval rules.",
+      "reason": "The same verified requirements should produce the same decision, regardless of model availability or wording. Editable suggestions also make ambiguity visible.",
+      "implementation": "A typed assessment feeds compositional provider rules with source IDs. Optional server-side OpenAI structured output is schema-validated against the capability map. Missing or failed AI uses a clearly labeled local parser. Composio metadata checks methods without treating availability as scope suitability.",
+      "alternative": "Generate the complete plan with an unconstrained LLM on every request. That makes scope invention and inconsistent approval advice harder to detect.",
+      "tradeoff": "Keyword fallback handles limited language and deliberately declines negated or multi-provider descriptions. Live OpenAI and authenticated Composio calls were not exercised without keys; controlled responses verify their adapters.",
+      "evidence": "Google classifies compose/read as restricted and send as sensitive. Slack documents separate distribution/admin gates. Composio’s current GitHub FAQ confirms custom GitHub App support with a separate installation link.",
+      "check": "Golden cases reject invented capabilities, preserve unknown managed scope fit, and choose a GitHub App for repository-scoped background review.",
+      "links": [
+        {
+          "label": "Rule engine",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/rules-engine.ts"
+        },
+        {
+          "label": "Intent parser",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/intent-parser.ts"
+        },
+        {
+          "label": "GitHub toolkit FAQ",
+          "url": "https://docs.composio.dev/toolkits/github"
+        }
+      ]
+    },
+    {
+      "id": "D18",
+      "title": "Use real catalog breadth with explicit coverage levels",
+      "category": "Product",
+      "phase": "Added for the advisor MVP brief",
+      "objectives": [
+        "O3",
+        "O4",
+        "O5"
+      ],
+      "requirements": [
+        "R2",
+        "R6",
+        "R14"
+      ],
+      "decision": "Separate catalog names, deep assessments, reference guides and live research drafts.",
+      "reason": "The new brief asks for discoverability across many integrations, while the original assignment asks for a maintained guide library. A searchable name does not establish verified OAuth behavior.",
+      "implementation": "A public docs snapshot contains 1,694 real names and toolkit links. Three providers have rule-backed assessments; other methods and managed availability are unverified. Unknown providers can enter the existing live source reader. Optional Composio API metadata checks exact managed schemes for the selected deep provider.",
+      "alternative": "Create 100 generic OAuth cards or infer managed availability from presence in a toolkit index. Both make the directory look more complete than its evidence.",
+      "tradeoff": "Catalog-only entries include non-OAuth methods and are labeled accordingly. This satisfies discovery breadth, but the 100 reviewed OAuth-guide library remains partial. Catalog updates are manual and the parser may fail if source markup changes.",
+      "evidence": "The official toolkit catalog was read directly. Per-toolkit docs establish OAuth2 managed availability for Gmail, Slack, GitHub and the Slackbot variant; exact scope grants remain a separate check.",
+      "check": "Search resolves a real catalog provider, coverage is visible, and a catalog-only entry starts research rather than a fabricated assessment.",
+      "links": [
+        {
+          "label": "Catalog snapshot",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/data/catalog.json"
+        },
+        {
+          "label": "Refresh script",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/scripts/sync-catalog.mjs"
+        },
+        {
+          "label": "Managed method semantics",
+          "url": "https://docs.composio.dev/toolkits/managed-auth"
+        }
+      ]
+    },
+    {
+      "id": "D19",
+      "title": "Share assessment inputs and export a dated plan snapshot",
+      "category": "Implementation",
+      "phase": "Added for the advisor MVP brief",
+      "objectives": [
+        "O2",
+        "O3",
+        "O4"
+      ],
+      "requirements": [
+        "R11",
+        "R15"
+      ],
+      "decision": "Store working inputs locally; encode validated inputs in share URLs; export the rendered plan as Markdown.",
+      "reason": "A reviewer should reproduce the recommendation without an account or a new database service. Input changes must also invalidate stale personal checklist progress.",
+      "implementation": "Strictly validated versioned input links regenerate with current rules. Markdown preserves the current output and evidence. Browser checklist keys depend on assessment inputs, engine version and recommendation route. The share dialog states that descriptions and answers are included.",
+      "alternative": "Silently publish every assessment into the existing public research database. That is unnecessary for the core workflow and would store user product details by default.",
+      "tradeoff": "Share URLs can be long and are readable by anyone receiving them. They recompute with current rules rather than freezing a historical conclusion; Markdown is the snapshot format. There is no multi-device private assessment account.",
+      "evidence": "Browser checks verify share round-trip, Unicode input validation, checklist reload and changed-answer reset. Personal progress is absent from the exported/shared input format.",
+      "check": "A changed capability produces new permissions, dependencies and checkmarks; a shared link reconstructs the assessment with an explicit current-rules notice.",
+      "links": [
+        {
+          "label": "Assessment codec and validation",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/assessment.ts"
+        },
+        {
+          "label": "Markdown export",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/export.ts"
+        }
+      ]
+    },
+    {
+      "id": "D20",
+      "title": "Evaluate recommendation correctness with golden scenarios",
+      "category": "Implementation",
+      "phase": "Added for the advisor MVP brief",
+      "objectives": [
+        "O1",
+        "O3"
+      ],
+      "requirements": [
+        "R7",
+        "R15"
+      ],
+      "decision": "Test provider decisions and false positives, then verify the full product journeys in the browser.",
+      "reason": "A polished interface can still recommend the wrong app model or introduce an unnecessary approval blocker. Decision cases expose those errors more directly than implementation-mirroring UI tests.",
+      "implementation": "Golden provider scenarios and edge cases exercise scope classification, internal exceptions, Slack pilot/commercial boundaries, GitHub installations, changed answers and AI/metadata failures. Browser checks cover intake through results, persistence, editing, directory, export and sharing.",
+      "alternative": "Treat generated prose, screenshots or a successful build as sufficient correctness evidence. None establishes that the recommendation applies to the input.",
+      "tradeoff": "Automated fixtures are not provider approvals or measured developer comprehension. Authenticated metadata/AI and real OAuth execution require separate live validation.",
+      "evidence": "The evaluation set follows the cases in the supplied MVP brief and uses source-linked rules. No user task-completion metric is claimed.",
+      "check": "All automated cases pass, the three browser journeys produce their expected decisions, and limitations are stated in the validation notes.",
+      "links": [
+        {
+          "label": "Golden cases",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/tests/advisor.test.ts"
+        },
+        {
+          "label": "Validation notebook",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"
+        }
+      ]
     }
   ]
 }

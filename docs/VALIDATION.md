@@ -68,3 +68,39 @@ Browser checks in this revision covered:
 - Narrow-layout navigation, guide rendering and a requirement table that scrolls inside its container. At a 390px viewport, the guide and decision pages each had a 390px document width; the table scrolled internally.
 
 The new visual language and decision log do not expand the prototype's provider-approval capabilities. This remains an independent OAuth Atlas submission.
+
+## Documentation workspace correction — 30 October 2026
+
+The earlier homepage/OAuth-directory design reference above is superseded. The Composio quickstart documentation is the primary reading reference. The implementation uses a fixed top bar, grouped sidebar, 28px reading headings, 16px/28px primary text, continuous reference-guide sections and a desktop contents outline. Requirement disclosures replace the wide prose matrix. D14 records why the original reference was a workflow mismatch.
+
+Browser checks confirmed guide reading styles, command search, reference-guide section anchors, decision filters/direct hash expansion, preserved local checkmarks, share dialogs and downloaded Markdown. The Gmail export retains scope choices, production preparation, the Composio handoff and sources. The docs changes do not establish measured usability gains.
+
+## Advisor MVP — 30 October 2026
+
+### Source checks and corrections
+
+- Gmail scope classification was rechecked against the official scope table. Read, metadata and compose remain restricted; send-only is sensitive. Verification exceptions and server-data assessment are separate conditional rules. “My team” and “device-only” are answers to investigate, not automatic proof of an exception.
+- Slack's distribution guide distinguishes a single workspace, an unlisted early-customer pilot and commercial Marketplace distribution. Workspace administration remains a separate installation gate. History access depends on token role, membership and the current app-category limits.
+- GitHub's app-model and API documentation support installation-based repository access and fine-grained Contents/Pull requests permissions. The **current Composio GitHub FAQ** documents bringing a GitHub App's client ID/secret, separate repository installation, and a developer-supplied installation link. The advisor therefore does not claim GitHub Apps are unsupported, or assume managed OAuth supplies the requested installation model.
+- The Slack and Slackbot toolkit descriptions differ in token emphasis. The advisor exposes that choice and requires checking the actual bot/user grants for selected tools, rather than claiming a bot connection grants only bot access.
+- Composio's current reference uses **`/api/v3.1/toolkits/{slug}`**. The optional adapter reads the exact managed schemes. Auth-method presence and managed availability remain distinct from tested scope suitability.
+- A direct public toolkit-index read supplied **1,694 names and documentation links**. Catalog-only entries intentionally carry no inferred OAuth or managed-auth facts. The snapshot and refresh script retain provenance; incomplete future extraction does not overwrite the snapshot.
+
+### Automated evaluation
+
+**46 tests pass** across the advisor, original research flow, curated sources and decision-log integrity. The advisor adds 33 cases, including 16 provider scenarios plus false positives, changed-answer behavior, conditional assessment/exception handling, metadata failure and multiple methods, strict Unicode share decoding, AI success/invalid output/failure/missing key, and catalog provenance.
+
+AI and metadata tests use controlled responses. They verify the adapters' requests, schema checks and fallbacks; they are not successful live credentialed calls. The demo has no configured OpenAI or Composio API keys.
+
+### Browser journeys
+
+- **Gmail:** description → labeled local suggestions → editable read/draft capabilities → external production/custom branding/server-handling answers → restricted scope and conditional verification/assessment guidance. Changing actions to send-only removed read/compose and the restricted-data dependencies, produced `gmail.send`/sensitive verification, and started a new checklist state.
+- **Slack:** selected read/post, customer pilot, bot identity, custom branding and restricted workspace. The plan showed `channels:history`/`chat:write`, unlisted distribution and administrator/history dependencies without making Marketplace approval a prerequisite for the pilot.
+- **GitHub:** searched the directory, selected the deep assessment, chose code/PR reads plus PR reviews, background execution and selected repositories. The plan recommended a GitHub App, Contents read/Pull requests write, custom Composio setup and a separate installation link.
+- A checklist step survived reload. Shared assessment inputs reconstructed the read/draft plan with a current-rules notice. A downloaded Gmail launch-plan Markdown file includes input context, the recommendation, conditional dependencies, unchecked checklist and official sources. Personal checkmarks are absent from the share codec/export.
+
+### Remaining verification limits
+
+No live credentialed intent/metadata call, representative provider token exchange, GitHub installation, Slack installation, Gmail assessment, or provider approval was completed. Configuration sketches use the current session API shape but have not been executed against a Composio account. Printing has a print stylesheet; system printer/PDF behavior and a full browser/device matrix have not been certified. Golden cases demonstrate the implemented decision rules, not measured developer comprehension or task-completion performance.
+
+Narrow-screen checks confirmed the assessment/result/directory/decision pages have no document overflow at the observed 354px CSS viewport. The mobile navigation drawer and result section disclosure work. A section-anchor bug caused by nested history updates was corrected; permission links and reload land approximately 88px below the fixed-header origin without resetting assessment state. Catalog-only Linear launched a successful live source-reading draft through the new directory. Desktop layouts were also checked at the observed 1163px CSS viewport.

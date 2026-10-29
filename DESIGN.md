@@ -1,53 +1,58 @@
-# OAuth Atlas — Composio design reference
+# OAuth Atlas — Documentation workspace
 
-Captured 29 October 2026. This is an independent submission prototype using Composio's visual language, not an official Composio page.
+Updated 30 October 2026. OAuth Atlas is an independent submission prototype. Its primary design reference is Composio's documentation UI, rather than the public marketing directory.
 
-## Sources and inspected evidence
+## Primary reference and measured evidence
 
-- [Composio homepage](https://composio.dev/): browser screenshot and DOM-backed computed styles.
-- [OAuth2 Guides](https://composio.dev/auth): browser screenshot, layout, headings, links, computed type and card styles.
-- [Developer platform](https://composio.dev/developers): product language and OAuth/token-refresh description.
-- [Managed OAuth apps](https://docs.composio.dev/toolkits/managed-auth), [managed vs custom auth](https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app), [authentication](https://docs.composio.dev/docs/authentication): entity names and flow.
+[Composio quickstart](https://docs.composio.dev/docs/quickstart) was inspected directly in the browser. The page uses a fixed top bar, grouped navigation on the left, a focused article, and an on-page contents list on the right. The inspected heading was **28px / weight 500**; paragraph text was **16px with 28px line spacing**. The inspected article measured approximately 743px wide and the left sidebar approximately 269px. These are observations at the captured viewport, not universal source breakpoints.
 
-Firecrawl branding/screenshot capture was attempted but anonymous access was unavailable. Screenshots and measured values below come from direct browser inspection; missing measurements are marked as design choices.
+![Composio quickstart reference](docs/references/composio-quickstart.jpg)
 
-![Composio OAuth directory reference](docs/references/composio-auth.jpg)
+The [authentication documentation](https://docs.composio.dev/docs/authentication) and [managed/custom auth guide](https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app) remain the terminology references for provider OAuth app, auth config, Connect Link and connected account.
 
-![Composio homepage reference](docs/references/composio-home.jpg)
+## Correction to the earlier design
 
-## Observed system
+The previous revision copied the visual language of the homepage and public OAuth directory. Subject similarity was mistaken for workflow fit. Oversized headings, promotional space and small display metadata made the working guide harder to read. That treatment is superseded; the original captures remain in `docs/references/` as historical evidence, not implementation targets.
 
-- Both the homepage hero and OAuth directory use an almost-black surface, white text, fine dark grid borders and low-radius or square controls. The site's body CSS also declares a light `#f6f6f6` canvas for other sections; the OAuth reference itself is dark.
-- Geist Sans is the observed body and heading family. The homepage heading is 64px/69.12px at weight 400 with -1.6px tracking; the OAuth directory heading is 72px, weight 400 at the inspected desktop viewport.
-- Navigation/CTA type is JetBrains Mono, 14px on inspected homepage buttons. Primary homepage buttons are white with black text and 0px radius. The OAuth directory uses spacious horizontal rows and a right-hand category rail.
-- A saturated blue announcement bar, uppercase mono labels, plain action verbs and explicit developer concepts create the recognizable contrast. The exact source blue and all spacing were not measured; implementation approximations follow.
+D14 in the decision log records the earlier assumption, the correction and its limits. This change does not claim measured usability gains or authenticated-dashboard fidelity.
 
-## Implementation tokens
+## Implemented layout
 
-| Role | Value | Basis |
+- **Top bar:** persistent identity, a global guide/page search with Cmd/Ctrl+K, and a research action.
+- **Left navigation:** grouped provider links, saved guides, research notes, the decision log and source references. A mobile drawer preserves the same navigation.
+- **Catalog:** compact heading, a managed-auth prompt, immediate search/filter controls, and comparable launch effort/wait fields. There is no promotional hero.
+- **Reading pages:** a focused column with 28px page headings and 16px/28px primary reading text. Guides have continuous anchored sections rather than hidden content tabs.
+- **On-page navigation:** a sticky right outline on wide screens and a compact section disclosure on smaller screens.
+- **Decision log:** readable single-column explanations, objective rows and requirement disclosures replace the wide prose matrix and split-column rationale.
+- **Research/sharing:** compact dialogs with normal-case labels, readable inputs, actual progress and explicit failure states.
+
+## Tokens and adaptations
+
+| Role | Value / approach | Basis |
 | --- | --- | --- |
-| Base | `#0f0f0f` | Observed dark-surface approximation |
-| Raised surface | `#171717` | Implementation choice, consistent with observed layering |
-| Main text | `#f5f5f5` | Implementation choice matching observed white text |
-| Muted text | `#a3a3a3` | Readability choice for the dense guide UI |
-| Border | `#2c2c2c` | Observed button-border color; reused for rails |
-| Accent | `#1600ff` | Visual approximation of reference blue |
-| Primary action | White background, black text | Observed |
-| Corners | 0–2px | Observed 0px primary controls; 2px is a UI-specific choice |
-| Fonts | Geist + JetBrains Mono, system fallbacks | Observed families; Google Fonts distribution used by prototype |
-| Container | 1240px with 24px outer gutters | Implementation choice from visible reference proportions |
-| Spacing | 4, 8, 12, 16, 24, 32, 48, 64px | Proposed reusable scale |
+| Page background | `#0c0c0d` | Adaptation of observed dark docs theme |
+| Sidebar | `#101011` | Implementation choice |
+| Main text | `#ededf0` | Readability choice |
+| Reading text | 16px / 28px | Matches inspected reference values |
+| Main heading | 28px / 36px, weight 550 | Reference-derived; 550 is an adaptation |
+| Section heading | 22px / 31px | Proposed hierarchy |
+| Metadata and navigation | 11–14px | Secondary hierarchy, distinct from reading text |
+| Accent | `#85a4ff` with restrained blue surfaces | Approximation of docs links/active states |
+| Borders | `#28282c` | Implementation choice |
+| Typography | Geist with system fallback; mono for code/IDs | Existing brand-aligned family retained |
+| Corners | 4–7px on controls/callouts | Adapted documentation controls |
+| Sidebar width | 248px; 264px on large screens | Adaptation of observed 269px sidebar |
+| Reading column | Up to 760px | Adaptation of observed article width |
 
-## Apply across the product
+## Quality criteria
 
-Use a blue context strip, a dark horizontal brand/navigation bar, bordered page rails and a large left-aligned title. Remove the persistent mint workspace sidebar and decorative rotated cards. Keep dense comparison rows because effort and waiting time are core assignment decisions. On small screens retain those fields in stacked rows.
+Verify that the catalog exposes search without scrolling through a hero; guide and decision body text stays at 16px/28px; navigation remains available while scrolling; section anchors preserve guide state; the research and share flows still work; and the page has no horizontal overflow on narrow screens. These checks establish implementation behavior, not user preference or task-completion performance.
 
-Use the same dark surfaces, square buttons, readable copy and mono metadata on guide tabs, checklists, blocker disclosures, evidence notebooks, dialogs, empty/error/loading states, saved guides, product notes, and the new decision log. Status colors communicate evidence or dependencies, not decoration. Use explicit text labels alongside colors.
 
-## Product language
+## Advisor workflow extension
 
-Use provider OAuth app for provider registration, auth config for the toolkit's authentication blueprint, and connected account for one user's grant. Managed auth may avoid registration; custom auth uses the developer's own app. A provider redirect URI differs from the application callback after a Connect Link. Do not suggest that this prototype creates an auth config or connects accounts.
+The later MVP brief makes a contextual assessment the primary workflow. The same docs shell now contains a restrained use-case input, three provider entry points, editable capability suggestions, a two-part contextual form and a recommendation article with a desktop section outline. The entry heading is 33px on desktop and 28px on narrow screens; recommendation headings retain the 28px reading hierarchy. Primary explanations, checklist details and permission descriptions use 16px/28px text.
 
-## Fidelity boundary
+The provider directory distinguishes rule-backed assessments from catalog-only names. Unknown metadata is visible beside each catalog row rather than hidden behind a generic verified badge. The recommendation separates the app model, managed-method availability, permission fit, conditional launch dependencies, personal checkmarks and actual provider outcomes.
 
-This mirrors the observed visual system and vocabulary while retaining OAuth Atlas's identity. It does not copy Composio's logo, marketing animations, customer claims, account access or product capabilities. Mobile layouts and hover/focus states are implementation choices, not measured source behavior.
+Sharing explicitly includes assessment answers. A portable URL recomputes with current rules; Markdown captures the current plan. No approval score, fictitious elapsed time or account-connection status is used to decorate the result.

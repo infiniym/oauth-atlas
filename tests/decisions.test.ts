@@ -7,7 +7,7 @@ test('requirement and objective traceability has no broken references or unexpla
  const objectives=new Set(log.objectives.map((o:{id:string})=>o.id));
  const requirements=new Set(log.requirements.map((r:{id:string})=>r.id));
  const decisions=new Set(log.decisions.map((d:{id:string})=>d.id));
- assert.equal(requirements.size,10);assert.equal(decisions.size,15);
+ assert.equal(requirements.size,15);assert.equal(decisions.size,20);
  for(const d of log.decisions){
   assert.ok(d.objectives.length&&d.requirements.length);
   for(const id of d.objectives)assert.ok(objectives.has(id),`${d.id}: missing ${id}`);
@@ -23,4 +23,8 @@ test('published decision log preserves honest gaps and matches the downloadable 
  assert.equal(doc,readFileSync(new URL('public/decision-log.md',root),'utf8'));
  for(const d of log.decisions){assert.ok(doc.includes(`## ${d.id} — ${d.title}`));assert.ok(doc.includes(d.tradeoff));}
  assert.match(doc,/not.*LLM|not.*best long-term agent|does not.*interpret/i);
+ const design=log.decisions.find((d:{id:string})=>d.id==='D14');
+ assert.ok(design.links.some((l:{url:string})=>l.url==='https://docs.composio.dev/docs/quickstart'));
+ assert.match(design.reason,/earlier revision|earlier.*marketing/i);
+ assert.match(design.tradeoff,/user testing|user study/i);
 });

@@ -1,0 +1,20 @@
+export const PROVIDERS=['gmail','slack','github'] as const;
+export type ProviderId=typeof PROVIDERS[number];
+export type Choice='yes'|'no'|'unknown';
+export type Assessment={
+ version:1;provider:ProviderId;description:string;capabilities:string[];
+ audience:'personal'|'organization'|'pilot'|'public'|'unknown';
+ stage:'test'|'production'|'unknown';branding:Choice;background:Choice;
+ dataHandling:'servers'|'device'|'unknown';workspaceOnly:Choice;
+ slackIdentity:'bot'|'user'|'unknown';repoAccess:'public'|'selected'|'all'|'unknown';
+ orgPolicy:'restricted'|'standard'|'unknown';managedScopes:'unknown'|'supported'|'unsupported';
+ customScopes:Choice;dedicatedQuota:Choice;customInstance:Choice;special:string;
+};
+export type Source={id:string;title:string;url:string;publisher:string;checkedAt:string};
+export type Capability={id:string;name:string;description:string;sourceIds:string[]};
+export type Permission={identifier:string;kind:'Provider OAuth scope'|'GitHub App permission';purpose:string;classification:string;sourceIds:string[]};
+export type RuleResult={id:string;title:string;detail:string;status:'Verified requirement'|'Conditional requirement'|'Recommendation'|'Not verified';sourceIds:string[];verifiedAt:string};
+export type ChecklistItem={id:string;group:'Application setup'|'Permission configuration'|'Approval and distribution'|'Composio configuration'|'Testing and validation';title:string;detail:string;owner:'Developer'|'Developer + admin'|'Provider';sourceIds:string[]};
+export type ManagedMetadata={provider:ProviderId;toolkitSlug?:string;authMethods:string[];managedMethods:string[];origin:'Documentation snapshot'|'Live Composio API';checkedAt:string;scopeCoverage:'unknown';note?:string};
+export type Recommendation={version:string;provider:ProviderId;title:string;summary:string;appModel:string;route:'managed-candidate'|'custom'|'architecture-check';managed:ManagedMetadata;managedSuitability:string;permissions:Permission[];rules:RuleResult[];dependencies:RuleResult[];unknowns:string[];alternatives:{title:string;detail:string;sourceIds:string[]}[];checklist:ChecklistItem[];sources:Source[];nextAction:string;effort:string;wait:string;composioCode:string|null;};
+export type Intent={provider:ProviderId|null;capabilities:string[];background:Choice;audience:Assessment['audience'];repoAccess:Assessment['repoAccess'];slackIdentity:Assessment['slackIdentity'];unresolved:string[]};

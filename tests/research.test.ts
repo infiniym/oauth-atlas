@@ -1,6 +1,5 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-// @ts-expect-error Node's native TypeScript test runner requires the explicit extension.
 import { researchProvider, validateInput, validatePublicUrl } from '../lib/research.ts';
 
 test('normalizes name, website, and website-only input', () => {
