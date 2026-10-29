@@ -6,6 +6,8 @@ A developer field guide for the work between “the provider supports OAuth” a
 
 ![Responsive preview](docs/screenshots/preview.jpg)
 
+**[Open a live-generated Linear draft](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9)** — created on the deployed service from four newly fetched official sources.
+
 ## Try it
 
 1. Compare **GitHub, Notion, Slack, and Gmail** in the library. Open a guide for its scoped launch plan, timing, blockers, handoffs, and sources.

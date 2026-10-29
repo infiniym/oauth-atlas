@@ -47,3 +47,9 @@ The share dialog exposes the URL for manual copying as well as clipboard copy, s
 ## Limits of this validation
 
 Unit network tests use controlled fixtures; live sample checks are separate. Browser behavior has been checked in the Codex in-app browser, not a full browser/device matrix. No end-to-end OAuth integration is implied. DNS screening is not resolver pinning, and this demo has not undergone a security audit. Public research storage has no self-service moderation/deletion workflow yet.
+
+## Hosted verification
+
+The deployed public homepage returned HTTP 200 without authentication. A production `POST /api/research` for Linear streamed actual source fetches, read four official pages, and saved a draft to hosted D1. A separate `GET /api/guides/:id` returned HTTP 200 and the matching guide ID.
+
+[Open the resulting guide](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9). Its source notebook includes the provider index, OAuth setup, and customer third-party-app approvals. Effort and approval wait remain unverified. The public GitHub repository contains the same published source commit.
