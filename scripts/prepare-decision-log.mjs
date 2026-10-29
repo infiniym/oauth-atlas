@@ -1,0 +1,9 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+const root=new URL('../',import.meta.url);
+const log=JSON.parse(readFileSync(new URL('data/decisions.json',root),'utf8'));
+const titles=Object.fromEntries(log.objectives.map(o=>[o.id,o.title]));
+const lines=['# OAuth Atlas — Decision log','',`Updated ${log.updatedAt}.`,'',log.summary,'',log.readingNote,'','## Product objectives','',...log.objectives.map(o=>`- **${o.id}: ${o.title}.** ${o.description}`),'','## Requirement coverage','','| ID | Requirement | State | Approach and reason | Decisions |','| --- | --- | --- | --- | --- |',...log.requirements.map(r=>`| ${r.id} | ${r.requirement} | ${r.status} | ${r.approach} ${r.why} | ${r.decisions.join(', ')} |`),'','Demonstrated means the behavior exists in the focused slice; it does not mean provider approval or a measured user outcome. Partial requirements remain unfinished.','',...log.decisions.flatMap(d=>[`## ${d.id} — ${d.title}`,'',`**Phase:** ${d.phase}  `,`**Objectives:** ${d.objectives.map(id=>`${id} · ${titles[id]}`).join('; ')}  `,`**Assignment requirements:** ${d.requirements.join(', ')}`,'',`**Decision.** ${d.decision}`,'',`**Why this approach.** ${d.reason}`,'',`**How it is implemented.** ${d.implementation}`,'',`**Alternative considered.** ${d.alternative}`,'',`**Tradeoff / remaining gap.** ${d.tradeoff}`,'',`**Evidence and constraints.** ${d.evidence}`,'',`**Acceptance criterion.** ${d.check}`,'',...d.links.map(l=>`- [${l.label}](${l.url.startsWith('/')?'https://oauth-atlas.mossystar19.chatgpt.site'+l.url:l.url})`),''])];
+const markdown=lines.join('\n')+'\n';
+writeFileSync(new URL('docs/DECISIONS.md',root),markdown);
+writeFileSync(new URL('public/decision-log.md',root),markdown);
+console.log(`Prepared ${log.decisions.length} decisions mapped to ${log.requirements.length} requirements.`);

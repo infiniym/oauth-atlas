@@ -35,7 +35,7 @@ These checks establish a working research flow for samples, not universal provid
 
 ## Application verification
 
-- **11 automated tests:** public URL validation; private DNS; unsafe redirects; input normalization; name-discovery failure; bounded source traversal and citations; excerpt limits; missing/negative OAuth evidence; customer-admin versus provider review; curated citation coverage; case-specific production boundaries.
+- **13 automated tests:** public URL validation; private DNS; unsafe redirects; input normalization; name-discovery failure; bounded source traversal and citations; excerpt limits; missing/negative OAuth evidence; customer-admin versus provider review; curated citation coverage; case-specific production boundaries.
 - **TypeScript check:** passed.
 - **Production Worker build:** passed.
 - **Browser:** library and guide rendering; live Linear generation; checklist survives reload; save/unsave; blockers and evidence tabs; public share dialog; Markdown download.
@@ -53,3 +53,18 @@ Unit network tests use controlled fixtures; live sample checks are separate. Bro
 The deployed public homepage returned HTTP 200 without authentication. A production `POST /api/research` for Linear streamed actual source fetches, read four official pages, and saved a draft to hosted D1. A separate `GET /api/guides/:id` returned HTTP 200 and the matching guide ID.
 
 [Open the resulting guide](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9). Its source notebook includes the provider index, OAuth setup, and customer third-party-app approvals. Effort and approval wait remain unverified. The public GitHub repository contains the same published source commit.
+
+## Decision-log and Composio design revision
+
+This revision adds 15 decisions mapped to five product objectives and 10 assignment/follow-up requirements. The requirement map explicitly marks the 100-guide library and rich unfamiliar-provider interpretation as partial. Two additional tests verify complete cross-reference coverage and parity between the source log and downloadable Markdown.
+
+The design reference is Composio's current homepage and OAuth guide directory, inspected through browser screenshots and DOM-computed styles on 29 October 2026. The earlier mint/serif dashboard was replaced across the catalog, saved state, guide, evidence, blockers, product notes, dialogs, loading/error states and decision log. Source captures and measurement boundaries are documented in `DESIGN.md`.
+
+Browser checks in this revision covered:
+
+- Requirement links opening the relevant decision and displaying its tradeoff; category/search filters; downloadable Markdown matching `docs/DECISIONS.md`; direct decision-page URLs and expanded hash targets after reload.
+- The Composio handoff, blocker/evidence tabs, share URL, and downloaded Gmail guide containing the new handoff and retained scope/preparation details.
+- Invalid public-source input producing an actionable error, followed by recovery to a successful live Linear draft with unknown timing retained.
+- Narrow-layout navigation, guide rendering and a requirement table that scrolls inside its container. At a 390px viewport, the guide and decision pages each had a 390px document width; the table scrolled internally.
+
+The new visual language and decision log do not expand the prototype's provider-approval capabilities. This remains an independent OAuth Atlas submission.

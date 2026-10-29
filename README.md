@@ -8,12 +8,15 @@ A developer field guide for the work between “the provider supports OAuth” a
 
 **[Open a live-generated Linear draft](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9)** — created on the deployed service from four newly fetched official sources.
 
+**[Decision log in the app](https://oauth-atlas.mossystar19.chatgpt.site/?view=decisions) · [Decision log as Markdown](docs/DECISIONS.md) · [Composio design reference](DESIGN.md)**
+
 ## Try it
 
 1. Compare **GitHub, Notion, Slack, and Gmail** in the library. Open a guide for its scoped launch plan, timing, blockers, handoffs, and sources.
 2. Check off a step, save the guide, download Markdown, or copy its public share link.
 3. Select **Research an app**. Enter `Linear` or an official website such as `https://www.todoist.com`. The agent fetches current sources and streams its real progress. Generated drafts get persistent public URLs.
 4. Open **Evidence & sources** to see what was observed, corrected, and left unverified.
+5. Open **Decision log** to map all 10 requirements to 15 decisions, objectives, alternatives and limits.
 
 ## Run locally
 
@@ -53,7 +56,13 @@ React + TypeScript on Vinext/Vite, deployed as a Cloudflare Worker through Sites
 - `scripts/prepare-guides.py`: regenerate curated data after research edits.
 - `db/schema.ts` and `drizzle/`: persistent guide schema and migration.
 - `docs/VALIDATION.md`: tested behavior, source checks, corrections, and limits.
-- `docs/DECISIONS.md`: product rationale and path to 100 guides.
+- `data/decisions.json`: single source for the in-app decision log and generated Markdown. Run `npm run prepare:decisions` after editing it; builds also regenerate the log.
+- `docs/DECISIONS.md`: requirement coverage and rationale for 15 decisions.
+- `DESIGN.md`: observed Composio design evidence, adapted tokens and terminology.
+
+## Composio design revision
+
+The UI references Composio’s current [homepage](https://composio.dev/), [OAuth guide directory](https://composio.dev/auth), and [authentication concepts](https://docs.composio.dev/docs/authentication). Dark surfaces, fine borders, Geist type, mono labels, square actions and a blue context strip replace the earlier mint/serif workspace. Library, saved guides, launch plans, evidence, blockers, dialogs and product notes share the same system. The connection model uses provider OAuth app → auth config → connected account. OAuth Atlas remains an independent prototype.
 
 ## Limitations
 
