@@ -433,7 +433,7 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 ## D17 — Let AI suggest inputs while deterministic rules own provider conclusions
 
-**Phase:** Added for the advisor MVP brief
+**Phase:** Advisor architecture; revised for Anthropic support
 
 **Objectives:** O1 · Reduce launch uncertainty; O3 · Make trust inspectable; O5 · Fit the Composio mental model
 
@@ -443,19 +443,21 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Why this approach.** The same verified requirements should produce the same decision, regardless of model availability or wording. Editable suggestions also make ambiguity visible.
 
-**How it is implemented.** A typed assessment feeds compositional provider rules with source IDs. Optional server-side OpenAI structured output is schema-validated against the capability map. Missing or failed AI uses a clearly labeled local parser. Composio metadata checks methods without treating availability as scope suitability.
+**How it is implemented.** A typed assessment feeds compositional provider rules with source IDs. Optional server-side Anthropic Messages or OpenAI Responses structured output is schema-validated against the capability map. AI_PROVIDER selects the vendor; without it, exactly one complete key/model pair is required. Invalid configuration, failed calls, refusal and truncation return labeled local suggestions without trying another vendor. No model is silently selected. Composio metadata checks methods without treating availability as scope suitability.
 
 **Alternative considered.** Generate the complete plan with an unconstrained LLM on every request. That makes scope invention and inconsistent approval advice harder to detect.
 
-**Tradeoff / remaining gap.** Keyword fallback handles limited language and deliberately declines negated or multi-provider descriptions. Live OpenAI and authenticated Composio calls were not exercised without keys; controlled responses verify their adapters.
+**Tradeoff / remaining gap.** Keyword fallback handles limited language and deliberately declines negated or multi-provider descriptions. Live Anthropic, OpenAI and authenticated Composio calls were not exercised without keys. Controlled responses verify provider selection, wire formats, complete-response checks, local validation and failure behavior.
 
-**Evidence and constraints.** Google classifies compose/read as restricted and send as sensitive. Slack documents separate distribution/admin gates. Composio’s current GitHub FAQ confirms custom GitHub App support with a separate installation link.
+**Evidence and constraints.** Google classifies compose/read as restricted and send as sensitive. Slack documents separate distribution/admin gates. Composio’s current GitHub FAQ confirms custom GitHub App support with a separate installation link. Anthropic’s current structured-output and version-migration documentation was checked on 30 October 2026; the adapter uses output_config.format and API version 2026-10-21.
 
 **Acceptance criterion.** Golden cases reject invented capabilities, preserve unknown managed scope fit, and choose a GitHub App for repository-scoped background review.
 
 - [Rule engine](https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/rules-engine.ts)
 - [Intent parser](https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/intent-parser.ts)
 - [GitHub toolkit FAQ](https://docs.composio.dev/toolkits/github)
+- [Anthropic structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs)
+- [Anthropic Messages version migration](https://platform.claude.com/docs/en/api/migration-2026-10-21)
 
 ## D18 — Use real catalog breadth with explicit coverage levels
 

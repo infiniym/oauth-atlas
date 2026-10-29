@@ -1,6 +1,12 @@
-# Optional server-side Worker bindings. Leave blank for the fully keyless demo.
-# Do not use NEXT_PUBLIC_ variables for these secrets.
+# Optional server-side Cloudflare Worker bindings. Never use NEXT_PUBLIC_ for secrets.
+# Leave keys/models blank for the fully keyless demo.
+# Select anthropic, openai, or none. A selected provider never falls back to another.
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=
+# Set an exact model ID available to your Anthropic account with structured output support.
+ANTHROPIC_MODEL=
+# Optional alternative; only used when selected or the only complete pair with no selector.
 OPENAI_API_KEY=
-# Set a model available to your API account that supports Responses structured output.
 OPENAI_MODEL=
+# Independent optional provider metadata lookup.
 COMPOSIO_API_KEY=

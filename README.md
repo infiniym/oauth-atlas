@@ -52,20 +52,32 @@ npm run build
 
 **Deterministic:** typed capability mappings, app-model selection, managed/custom suitability, permission classification, conditional dependencies, explanation IDs, checklist and export. Rules include source IDs and check dates. Tool restrictions are kept separate from provider grants. Managed OAuth availability never proves the necessary scope/token fit.
 
-**Optional AI:** the server-side Responses structured-output adapter interprets the use-case description into known capabilities and unresolved questions. It cannot supply new scopes or approval rules. Model output is schema-validated and always editable. No key, invalid output, refusal, rate limit or timeout preserves the structured workflow with labeled local keyword suggestions.
+**Optional AI:** the server-side Anthropic Messages or OpenAI Responses structured-output adapter interprets the use-case description into known capabilities and unresolved questions. It cannot supply new scopes or approval rules. Model output is schema-validated and always editable. No key, invalid output, refusal, rate limit or timeout preserves the structured workflow with labeled local keyword suggestions.
 
 **Live research:** the existing keyless reader performs real public network discovery and extraction, limited to four successful sources and a 58-second deadline. It is not an LLM policy interpreter. Missing timing, scope applicability and approvals remain unverified.
 
 ## Optional configuration
 
-The public demo does not configure AI or authenticated Composio API access. Both adapters are tested with controlled responses; live credentialed calls remain unverified.
+The public demo does not configure AI or authenticated Composio API access. The AI-provider and metadata adapters are tested with controlled responses; live credentialed calls remain unverified. No API key is required to run the structured assessment.
 
 | Server-side binding | Behavior |
 | --- | --- |
-| `OPENAI_API_KEY` + `OPENAI_MODEL` | Enable optional intent interpretation. Choose a model in your account supporting Responses structured outputs; no model is silently selected. `store: false`; input is the developer's description and a constrained capability map. |
+| `AI_PROVIDER` | Select `anthropic`, `openai`, or `none` (local suggestions only). If omitted, exactly one complete key/model pair is selected; two complete pairs require an explicit selection. |
+| `ANTHROPIC_API_KEY` + `ANTHROPIC_MODEL` | Enable Anthropic Messages intent interpretation. Supply an exact model ID available to your account with JSON structured-output support. No model is silently selected. |
+| `OPENAI_API_KEY` + `OPENAI_MODEL` | Optional alternative for intent interpretation. Choose a model in your account supporting Responses structured outputs; no model is silently selected. `store: false`; input is the developer's description and a constrained capability map. |
 | `COMPOSIO_API_KEY` | Read `/api/v3.1/toolkits/{slug}` metadata for the selected assessment/Slackbot variant. Checks exact `composio_managed_auth_schemes`; does not infer granted scope coverage. |
 
-For Vite/Cloudflare development, copy [.dev.vars.example](.dev.vars.example) to an ignored `.dev.vars` and provide server-side values using Cloudflare's local bindings facility. Configure equivalent Worker runtime secrets for hosting. Never put these values in client bundles or `NEXT_PUBLIC_` variables. Missing/failed metadata retains the dated docs snapshot instead of declaring managed OAuth unavailable. Optional AI has an anonymous limit of 20 requests per connection/hour; live research retains its limit of 10.
+For Anthropic, the server-side configuration is:
+
+```dotenv
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=your_key_in_the_ignored_local_file
+ANTHROPIC_MODEL=your_available_claude_model_id
+```
+
+The adapter calls Anthropic directly with a fixed capability schema via `output_config.format` and API version `2026-10-21`. It accepts complete message responses only, then checks the known provider/capability mapping locally. It has an 18-second deadline and a 2,048-token output bound. Refusal, truncation, unsupported output, timeout or an API error returns local suggestions. It never silently sends the description to another vendor. See [Anthropic structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and [Messages API version migration](https://platform.claude.com/docs/en/api/migration-2026-10-21).
+
+For Vite/Cloudflare development, copy [.dev.vars.example](.dev.vars.example) to an ignored `.dev.vars` and provide server-side values using Cloudflare's local bindings facility. Configure equivalent Worker runtime secrets for hosting. Never put these values in client bundles or `NEXT_PUBLIC_` variables. Missing/failed metadata retains the dated docs snapshot instead of declaring managed OAuth unavailable. Restart the local server after changing bindings. Optional AI has an anonymous limit of 20 requests per connection/hour; live research retains its limit of 10.
 
 ## Architecture
 
@@ -77,7 +89,8 @@ React + TypeScript on the existing Vinext/Vite stack, hosted as a Cloudflare Wor
 | `lib/advisor/types.ts`, `providers.ts` | Typed requirements, capabilities, official sources and dated metadata |
 | `lib/advisor/rules-engine.ts` | Compositional provider decisions with stable explanation IDs |
 | `lib/advisor/assessment.ts` | Strict input validation, local intent suggestions, versioned share codec and progress keys |
-| `lib/advisor/intent-parser.ts` | Optional server-only constrained AI adapter and fallback |
+| `lib/advisor/ai-config.ts` | Server-side provider selection, explicit disablement and key/model pairing |
+| `lib/advisor/intent-parser.ts` | Anthropic Messages/OpenAI Responses interpretation and local fallback |
 | `lib/advisor/metadata.ts` | Current Composio metadata adapter and conservative snapshot fallback |
 | `app/api/advisor/` | Bounded interpretation and metadata endpoints; secrets stay server-side |
 | `lib/advisor/export.ts` | Input context, rule results, sources and unchecked checklist as Markdown |

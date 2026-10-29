@@ -104,3 +104,14 @@ AI and metadata tests use controlled responses. They verify the adapters' reques
 No live credentialed intent/metadata call, representative provider token exchange, GitHub installation, Slack installation, Gmail assessment, or provider approval was completed. Configuration sketches use the current session API shape but have not been executed against a Composio account. Printing has a print stylesheet; system printer/PDF behavior and a full browser/device matrix have not been certified. Golden cases demonstrate the implemented decision rules, not measured developer comprehension or task-completion performance.
 
 Narrow-screen checks confirmed the assessment/result/directory/decision pages have no document overflow at the observed 354px CSS viewport. The mobile navigation drawer and result section disclosure work. A section-anchor bug caused by nested history updates was corrected; permission links and reload land approximately 88px below the fixed-header origin without resetting assessment state. Catalog-only Linear launched a successful live source-reading draft through the new directory. Desktop layouts were also checked at the observed 1163px CSS viewport.
+
+
+## Anthropic intent adapter — 30 October 2026
+
+Added direct server-side Anthropic Messages support alongside the existing OpenAI adapter, using the official [structured-output contract](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and [API version migration](https://platform.claude.com/docs/en/api/migration-2026-10-21). The adapter uses `output_config.format`, `Authorization: Bearer`, an explicit `anthropic-version: 2026-10-21`, and no deprecated sampling or beta options. An exact model ID must be configured by the deployer; no default model or price is assumed.
+
+**63 automated tests pass**, including 17 new provider-adapter cases. They verify Anthropic-only and explicit selection, existing OpenAI compatibility, ambiguity/disablement/incomplete configuration, endpoint and header shape, complete structured responses, refusal and token truncation, invalid or cross-provider capabilities, empty/malformed output, network failures and error redaction. A selected provider never fails over to a different vendor. These are controlled-response checks, not a live paid API invocation.
+
+Credentials remain server-side. No live Anthropic key or model has been configured or tested. The core rules and keyless fallback remain available. The public hosting connector currently reports the existing Site as not found and returns no accessible Sites; this follow-up must not be described as deployed until access is restored and publication succeeds.
+
+The follow-up production Worker build and TypeScript check passed. A local POST to `/api/advisor/interpret` returned HTTP 200 with labeled local suggestions and the expected Gmail read/draft actions without configured credentials. Live Anthropic remains unverified.
