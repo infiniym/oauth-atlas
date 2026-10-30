@@ -14,11 +14,13 @@ export const sources:Source[]=[
  source('gmail-scopes','Gmail scope classifications','https://developers.google.com/workspace/gmail/api/auth/scopes','Google'),
  source('google-sensitive','Sensitive scope verification','https://developers.google.com/identity/protocols/oauth2/production-readiness/sensitive-scope-verification','Google'),
  source('google-restricted','Restricted scope verification and exceptions','https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification','Google'),
+ source('google-timing','OAuth verification timing estimates','https://support.google.com/cloud/answer/13463817?hl=en','Google'),
  source('slack-distribution','App lifecycle and distribution','https://docs.slack.dev/app-management/distribution/','Slack'),
  source('slack-history','Public channel history scope','https://docs.slack.dev/reference/scopes/channels.history/','Slack'),
  source('slack-private','Private channel history scope','https://docs.slack.dev/reference/scopes/groups.history/','Slack'),
  source('slack-write','Post message scope','https://docs.slack.dev/reference/scopes/chat.write/','Slack'),
  source('slack-review','Marketplace requirements','https://docs.slack.dev/slack-marketplace/slack-marketplace-app-guidelines-and-requirements/','Slack'),
+ source('slack-review-timing','Marketplace review stages and timing','https://docs.slack.dev/slack-marketplace/slack-marketplace-review-guide/','Slack'),
  source('slack-limits','Conversations history rate limits','https://docs.slack.dev/reference/methods/conversations.history/','Slack'),
  source('github-model','Choosing a GitHub App','https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/deciding-when-to-build-a-github-app','GitHub'),
  source('github-scopes','OAuth App scopes','https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps','GitHub'),
@@ -27,6 +29,7 @@ export const sources:Source[]=[
  source('github-reviews','Pull request review API permissions','https://docs.github.com/en/rest/pulls/reviews','GitHub'),
  source('github-install','Install on selected repositories','https://docs.github.com/en/apps/using-github-apps/installing-your-own-github-app','GitHub'),
  source('github-register','Register a GitHub App','https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app','GitHub'),
+ source('github-oauth-register','Register an OAuth App','https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app','GitHub'),
 ];
 export const providerNames:Record<ProviderId,string>={gmail:'Gmail',slack:'Slack',github:'GitHub'};
 const cap=(id:string,name:string,description:string,...sourceIds:string[]):Capability=>({id,name,description,sourceIds});

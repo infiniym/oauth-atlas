@@ -1,0 +1,1 @@
+Slack, GitHub and Notion marks come from [Devicon](https://github.com/devicons/devicon/tree/master/icons), under the included MIT license. Brand marks remain the property of their respective owners. They are bundled locally, so loading a provider list does not contact a third party. Gmail retains the multicolor envelope SVG in `components/provider-mark.tsx`.

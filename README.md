@@ -4,15 +4,17 @@
 
 Describe an integration, confirm its requirements, and get an authentication architecture, permission map and launch checklist. The core works without API keys or signing into a provider.
 
+The latest flow and Anthropic adapter are available locally/in source. The public deployment is older: the connected Sites account currently cannot access the existing project to publish this revision.
+
 ![Advisor](docs/screenshots/preview.jpg)
 
 ## Try it
 
 1. Enter “An AI assistant that reads Gmail messages and drafts replies for customers,” or choose Gmail, Slack or GitHub.
-2. Review the suggested actions, then answer the contextual launch questions. “Not sure” stays an open question.
-3. Generate the recommendation. Inspect **Why this recommendation?**, permissions, conditional approval dependencies, sources and the ordered checklist.
+2. Confirm actions and the required setup choices on one screen. Questions that cannot change the path are omitted; customer policy checks become tasks. The original request stays read-only until **Change request** reruns and previews suggestions.
+3. Create the plan. Read the hands-on setup estimate and separately sourced review guidance, then inspect reasoning, permissions, conditional dependencies and the checklist. Estimates are scoped planning ranges, not timed results or a launch date.
 4. Edit Gmail to **send only** and regenerate. Restricted scopes and the restricted-data assessment dependency disappear; sensitive-scope guidance remains where applicable.
-5. Try the Slack customer pilot or GitHub PR reviewer scenarios. A limited Slack pilot differs from commercial distribution; selected-repository background work leads to a GitHub App and a separate installation flow.
+5. Use the Slack or GitHub example prompts, then confirm their actual requirements. A limited Slack pilot differs from commercial distribution; selected-repository background work leads to a GitHub App and a separate installation flow.
 6. Copy, download Markdown, print or share the assessment. Sharing includes the description/answers, omits personal checkmarks, and recomputes with current rules. Markdown is the dated snapshot.
 7. Search the **Provider directory**, or select **Research an app** for an unfamiliar provider.
 
@@ -87,6 +89,7 @@ React + TypeScript on the existing Vinext/Vite stack, hosted as a Cloudflare Wor
 | --- | --- |
 | `components/advisor.tsx` | Discovery, assessment, recommendation, checklist, edit/share/export |
 | `lib/advisor/types.ts`, `providers.ts` | Typed requirements, capabilities, official sources and dated metadata |
+| `lib/advisor/requirements.ts`, `timing.ts` | Required setup choices, question relevance and scoped timing guidance |
 | `lib/advisor/rules-engine.ts` | Compositional provider decisions with stable explanation IDs |
 | `lib/advisor/assessment.ts` | Strict input validation, local intent suggestions, versioned share codec and progress keys |
 | `lib/advisor/ai-config.ts` | Server-side provider selection, explicit disablement and key/model pairing |
@@ -104,7 +107,7 @@ Refresh catalog metadata with `node scripts/sync-catalog.mjs`. It refuses incomp
 
 The Composio [quickstart documentation](https://docs.composio.dev/docs/quickstart) is the primary reading reference: persistent grouped navigation, restrained headings, focused text and section links. Assessment forms use the same workspace. The earlier marketing-directory treatment is superseded. [DESIGN.md](DESIGN.md) records the observed reference and adaptations.
 
-[The in-app decision log](https://oauth-atlas.mossystar19.chatgpt.site/?view=decisions) and [Markdown log](docs/DECISIONS.md) map 20 decisions to 15 requirements. D14 explains the design correction; D16–D20 explain the new advisor scope, deterministic/AI boundary, coverage, portable assessments and evaluation. Builds regenerate the log from `data/decisions.json`.
+[The in-app decision log](https://oauth-atlas.mossystar19.chatgpt.site/?view=decisions) and [Markdown log](docs/DECISIONS.md) map 23 decisions to 15 requirements. D14 explains the design correction; D16–D20 explain the new advisor scope, deterministic/AI boundary, coverage, portable assessments and evaluation. D21–D23 record the simplified journey, timing and navigation/readability changes. Builds regenerate the log from `data/decisions.json`. Read the plain-language [product walkthrough](docs/PRODUCT-WALKTHROUGH.md) for the current journey and the reason for each section.
 
 ## Validation and limits
 

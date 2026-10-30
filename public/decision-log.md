@@ -4,7 +4,7 @@ Updated 2026-10-30.
 
 Help developers choose an authentication architecture for their use case, follow a source-backed launch plan and inspect the decisions behind the product.
 
-The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study.
+The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback.
 
 ## Product objectives
 
@@ -20,19 +20,19 @@ The log preserves the original guide-library decisions and records the move to a
 | --- | --- | --- | --- | --- |
 | R1 | Understand provider OAuth apps, integrations and user connections | Demonstrated | Introduce the provider app → auth config → connected account flow, then explain managed versus custom auth before app registration. It prevents a developer from treating one client registration as an approval or connection for all users. | D01, D02, D14 |
 | R2 | Look up OAuth apps; design for a library of 100 | Partial | The original four-guide library remains, plus three contextual assessments, a searchable 1,694-name catalog snapshot and live research drafts. The intended 100 reviewed OAuth guides are not complete. The take-home permits a focused slice. Four contrasting approval paths are more useful evidence than 100 shallow entries. | D03, D13 |
-| R3 | Explain difficulty, active work and approval waiting time | Demonstrated | Show scenario-specific launch gates, separately labeled effort estimates and provider waits, plus testing versus production requirements. Calendar delay, engineering effort and customer-admin policy are different dependencies; a single score or date hides them. | D04, D05, D06 |
+| R3 | Explain difficulty, active work and approval waiting time | Demonstrated | Show scenario-specific implementation estimates with their exclusions, applicable published provider-review figures and separate administrator checks. These are planning guidance, not a launch date. Calendar delay, engineering effort and customer-admin policy are different dependencies; a single score or date hides them. | D04, D05, D06, D22 |
 | R4 | Explain nuances, next steps and blocker recovery | Demonstrated | Use an ordered checklist, completion criteria, a next-move panel and symptom → remedy blockers. A developer needs to know how to make progress, including when the next action belongs to someone else. | D06, D07 |
 | R5 | Use agents practically and show the human handoff | Demonstrated | Research agents checked sources and reachable setup flows. Each guide distinguishes agent preparation from account ownership, consent, credentials and submission. Research can be automated; an approval, legal attestation or customer access grant cannot be assumed from it. | D08, D09 |
 | R6 | Generate a shareable guide live for an unfamiliar app | Partial | A live source reader discovers and fetches documentation, streams progress and saves a public draft. It is extractive and does not reliably interpret every provider policy. The slice works without model or research API credentials. That constraint limits guide completeness and must remain visible. | D10, D11, D12 |
-| R7 | Check guidance against real sources or setup attempts | Demonstrated | Cite official sources beside curated steps; retain attempted actions, corrections and untested boundaries in the evidence notebook. A linked document, a form inspected and a successful OAuth round trip prove different things. | D08, D09 |
+| R7 | Check guidance against real sources or setup attempts | Demonstrated | Cite official sources beside curated steps; retain attempted actions, corrections and untested boundaries in the evidence notebook. A linked document, a form inspected and a successful OAuth round trip prove different things. | D08, D09, D22 |
 | R8 | Provide a working link, source repository and setup instructions | Demonstrated | Publish the app and repository; document local setup, tests, architecture, sample results and limitations in the README and validation notes. Reviewers can run and evaluate the submission without a guided explanation. | D11, D12 |
-| R9 | Explain each decision, objective and requirement mapping | Demonstrated | This decision log is available in the app and as Markdown, using one structured source of truth. The reasoning should be reviewable alongside the experience, including the partial requirements. | D15 |
-| R10 | Mirror Composio's UI/UX and OAuth descriptions | Demonstrated | Use Composio’s documentation UI as the primary reading reference: persistent provider navigation, a focused content column, section links, restrained headings and readable body text. Keep search, comparison and progress controls in the catalog. Developers need to read and perform setup work. A promotional website layout creates unnecessary navigation and reading friction. | D01, D14 |
-| R11 | Turn integration intent into an editable contextual assessment | Demonstrated | Natural-language intake and provider selection converge on action and launch-context forms for Gmail, Slack and GitHub. Inputs and checklist state persist in the browser. Developers should not need to know which OAuth questions matter before starting. Editable interpretation prevents assumptions becoming invisible. | D16, D19 |
+| R9 | Explain each decision, objective and requirement mapping | Demonstrated | This decision log is available in the app and as Markdown, using one structured source of truth. The reasoning should be reviewable alongside the experience, including the partial requirements. | D15, D23 |
+| R10 | Mirror Composio's UI/UX and OAuth descriptions | Demonstrated | Use Composio’s documentation UI as the primary reading reference: persistent provider navigation, a focused content column, section links, restrained headings and readable body text. Keep search, comparison and progress controls in the catalog. Developers need to read and perform setup work. A promotional website layout creates unnecessary navigation and reading friction. | D01, D14, D23 |
+| R11 | Turn integration intent into an editable contextual assessment | Demonstrated | Natural-language intake and provider selection converge on one action/context confirmation screen. Path-changing choices are required; irrelevant questions are omitted. Inputs and personal checklist progress persist locally. Developers should not need to know which OAuth questions matter before starting. Editable interpretation prevents assumptions becoming invisible. | D16, D19, D21, D23 |
 | R12 | Use optional AI for interpretation with a functional keyless fallback | Partial | A server-side structured-output parser selects only known capabilities. Missing credentials, refusal, timeout or invalid output falls back to labeled keyword suggestions. Mocked AI and fallback paths are tested; live AI is not tested or enabled in the public demo. AI can help interpret intent, but must not create provider facts. The product must remain usable without external credentials. | D17 |
-| R13 | Recommend app models, permissions and launch dependencies from verified rules | Demonstrated | Typed provider capabilities and compositional rules distinguish Gmail sensitivity/data handling, Slack identity/distribution and GitHub App installation. Each rule has sources, an ID and a check date. Managed availability, permission fit and provider application model are independent decisions. A generic OAuth guide cannot safely collapse them. | D16, D17 |
-| R14 | Discover at least 100 real integrations without overstating guide coverage | Demonstrated | A dated public Composio catalog snapshot supplies 1,694 names and documentation links. Three entries have assessments; catalog-only auth and managed status remain unverified. Optional server-side Composio metadata is checked for the selected assessment method. Names provide useful discovery without pretending that every listed integration has a validated setup guide. | D18 |
-| R15 | Evaluate real scenarios and recalculate after changed answers | Demonstrated | Golden cases cover the three providers, conditional verification, pilot versus commercial distribution, selected-repository access and failure paths. Browser checks verify input edits, regenerated scopes/dependencies, exports and sharing. A plan must change with the developer’s actual requirements. Testing only that UI components render would miss incorrect advice. | D19, D20 |
+| R13 | Recommend app models, permissions and launch dependencies from verified rules | Demonstrated | Typed provider capabilities and compositional rules distinguish Gmail sensitivity/data handling, Slack identity/distribution and GitHub App installation. Each rule has sources, an ID and a check date. Managed availability, permission fit and provider application model are independent decisions. A generic OAuth guide cannot safely collapse them. | D16, D17, D21 |
+| R14 | Discover at least 100 real integrations without overstating guide coverage | Demonstrated | A dated public Composio catalog snapshot supplies 1,694 names and documentation links. Three entries have assessments; catalog-only auth and managed status remain unverified. Optional server-side Composio metadata is checked for the selected assessment method. Names provide useful discovery without pretending that every listed integration has a validated setup guide. | D18, D23 |
+| R15 | Evaluate real scenarios and recalculate after changed answers | Demonstrated | Golden cases cover the three providers, conditional verification, pilot versus commercial distribution, selected-repository access and failure paths. Browser checks verify input edits, regenerated scopes/dependencies, exports and sharing. A plan must change with the developer’s actual requirements. Testing only that UI components render would miss incorrect advice. | D19, D20, D21 |
 
 Demonstrated means the behavior exists in the focused slice; it does not mean provider approval or a measured user outcome. Partial requirements remain unfinished.
 
@@ -534,4 +534,78 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 - [Golden cases](https://github.com/infiniym/oauth-atlas/blob/main/tests/advisor.test.ts)
 - [Validation notebook](https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md)
+
+## D21 — Require only choices that change setup, in one confirmation screen
+
+**Phase:** User-journey revision
+
+**Objectives:** O1 · Reduce launch uncertainty; O2 · Keep the developer moving; O3 · Make trust inspectable
+
+**Assignment requirements:** R11, R13, R15
+
+**Decision.** Combine action selection and launch questions; require path-changing answers and turn later checks into owned tasks.
+
+**Why this approach.** An unanswered critical choice cannot support a firm app-model or approval recommendation. Repeated screens and questions whose answers cannot change the path add effort without improving the decision.
+
+**How it is implemented.** A shared requirements module controls visible questions and blocks incomplete recommendations, including old shared inputs. Selected-repository GitHub work skips branding/background questions. The request is read-only until an explicit reinterpret-and-review action is applied.
+
+**Alternative considered.** Keeping Not sure everywhere creates provisional plans with important gaps at the bottom. Branching into multiple possible plans adds complexity the user explicitly declined.
+
+**Tradeoff / remaining gap.** Developers must know the few requirements that determine the path. Additional policies remain explicit checks; the product still cannot certify a provider grant or approval.
+
+**Evidence and constraints.** The user requested fewer screens, definite critical choices and honest request editing. Rule cases cover incomplete inputs, irrelevant-question removal and preserving manual answers during same-provider request revision.
+
+**Acceptance criterion.** Create plan stays disabled until required answers exist. Changing the request previews suggestions before applying them; changed provider context does not leak into another assessment.
+
+- [Journey walkthrough](https://github.com/infiniym/oauth-atlas/blob/main/docs/PRODUCT-WALKTHROUGH.md)
+
+## D22 — Show configuration estimates separately from provider review and customer waits
+
+**Phase:** User-journey revision
+
+**Objectives:** O1 · Reduce launch uncertainty; O2 · Keep the developer moving; O3 · Make trust inspectable
+
+**Assignment requirements:** R3, R7
+
+**Decision.** Put timing near the recommendation, with scoped author estimates, applicable published review figures and separate customer checks.
+
+**Why this approach.** The developer needs planning guidance rather than a promised launch date. Lack of a universal reliable date does not justify hiding published review information for supported scenarios.
+
+**How it is implemented.** Managed setup is estimated at 30–90 minutes; custom Gmail at 45–90 minutes, Slack and GitHub App setup at 1–3 hours, and a simple GitHub OAuth app at 30–60 minutes. All are unmeasured planning estimates for configuration and a first test. Google and Slack review figures are cited only when the matching dependency applies.
+
+**Alternative considered.** A universal countdown would confuse hands-on work with waiting. Leaving all timing unestimated withholds useful planning information for known paths.
+
+**Tradeoff / remaining gap.** The setup ranges are not calibrated measurements and exclude feature development, review preparation and remediation. Provider estimates vary, independent security assessment timing is unverified, and customer-admin delays remain unknown.
+
+**Evidence and constraints.** Google verification FAQ and Slack Marketplace review process were rechecked on 30 October 2026. The documented GitHub registration path identifies no general review queue; this is a scoped inference, not a zero-wait guarantee.
+
+**Acceptance criterion.** Send-only Gmail changes review guidance from restricted to sensitive. Slack pilots do not inherit Marketplace timing. Every timing source ID resolves and Markdown preserves assumptions.
+
+- [Google timing](https://support.google.com/cloud/answer/13463817?hl=en)
+- [Slack review stages](https://docs.slack.dev/slack-marketplace/slack-marketplace-review-guide/)
+
+## D23 — Make the main navigation match the developer task
+
+**Phase:** User-journey revision
+
+**Objectives:** O2 · Keep the developer moving; O4 · Make knowledge reusable; O5 · Fit the Composio mental model
+
+**Assignment requirements:** R9, R10, R11, R14
+
+**Decision.** Keep Launch advisor, Provider directory and How it works in the sidebar; move reference, saved guides and submission evidence to secondary resources.
+
+**Why this approach.** The earlier shell accumulated a guide library, advisor shortcuts, workspace terminology and reviewer notes. Their prominence made supporting material appear to be required steps.
+
+**How it is implemented.** Remove Guided assessments, Your workspace and Project notes groups and duplicate header destinations. Examples fill only the description; the full catalog lives in its directory. Explain unfamiliar-app research before starting it. Bundle recognizable provider SVGs and increase instruction/explanation text to approximately 16px with improved contrast.
+
+**Alternative considered.** Deleting saved/reference/evidence capabilities would discard useful work. Retaining all destinations as primary navigation preserves the original confusion.
+
+**Tradeoff / remaining gap.** Secondary resources take an extra navigation action. Saved guides still refer to reference/draft bookmarks rather than a multi-user plan workspace. More readable text may require more vertical space.
+
+**Evidence and constraints.** User feedback identified redundant entrances, an incorrect Slack mark and small text. Devicon provider marks replace placeholder glyphs; CSS and browser checks verify the new layout rather than proving a usability improvement.
+
+**Acceptance criterion.** Only the three agreed main links appear in desktop/mobile navigation. Reference guides, saved guides and decision evidence remain accessible. Narrow screens retain labeled controls without horizontal overflow.
+
+- [Composio reading reference](https://docs.composio.dev/docs/quickstart)
+- [Provider mark source](https://github.com/devicons/devicon/tree/master/icons)
 

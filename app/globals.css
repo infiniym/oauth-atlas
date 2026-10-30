@@ -804,3 +804,111 @@ main { min-width: 0; }
 .mobile-page-sections.advisor-plan-sections { display: none; }
 @media (max-width: 1100px) { .mobile-page-sections.advisor-plan-sections { display: block; } }
 @media (max-width: 960px) { .docs-sidebar:not(.is-open) { visibility: hidden; } .docs-sidebar.is-open { visibility: visible; } }
+
+/* Shorter assessment flow: readable instructions and a quieter navigation shell. */
+.docs-sidebar { display: flex; flex-direction: column; }
+.docs-sidebar .sidebar-note { margin-top: auto; }
+.sidebar-note, .sidebar-note p { font-size: 13px; line-height: 23px; color: #a5a5b2; }
+.sidebar-note > a { display: inline-flex; align-items: center; gap: 5px; margin-top: 15px; font-size: 13px; }
+.nav-group > p { font-size: 12px; color: #a2a2ae; }
+.nav-group a, .nav-group button { font-size: 15px; min-height: 42px; color: #c6c6d1; }
+.primary, .secondary { min-height: 40px; font-size: 14px; line-height: 23px; }
+.text-button { font-size: 14px; line-height: 24px; }
+button:disabled { cursor: not-allowed; }
+.doc-main p { color: #c3c3cf; }
+.doc-main :is(.advisor-field > small, .interpretation-note p, .advisor-notice p, .directory-explanation, .plan-alternatives p, .metadata-details p, .session-example p, .research-banner p, .managed-intro p) { font-size: 16px; line-height: 28px; color: #bcbccb; }
+.advisor-field > span, .advisor-field select, .advisor-field textarea, .capability-choices legend, .capability-choices strong { font-size: 16px; line-height: 27px; color: #e0e0e9; }
+.advisor-field > small, .capability-choices small { font-size: 16px; line-height: 27px; color: #b5b5c4; }
+.advisor-field select, .advisor-field textarea { min-height: 46px; max-width: 100%; }
+.advisor-field textarea::placeholder { color: #9b9baa; }
+.capability-choices > label { padding: 15px 2px; }
+.assessment-form-foot > span, .assessment-topline, .assessment-topline .text-button { font-size: 14px; color: #b4b4c2; line-height: 25px; }
+.provider-shortcuts strong { font-size: 16px; }
+.provider-shortcuts small { font-size: 14px; color: #b0b0bf; }
+.provider-icon { width: 36px; height: 36px; border-color: #41414c; }
+.provider-mark { display: block; width: 25px; height: 25px; object-fit: contain; }
+.provider-mark.mark-github { filter: invert(1); }
+.app-logo .provider-mark { width: 24px; height: 24px; }
+.app-logo.small .provider-mark { width: 20px; height: 20px; }
+.intent-examples { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 15px; margin-top: 12px; }
+.intent-examples > span { font-size: 14px; color: #aaaabb; }
+.intent-examples .text-button { color: #afc5ff; font-size: 14px; padding: 2px 0; }
+.intent-form-foot { align-items: flex-end; gap: 20px; }
+.intent-form-foot > span { font-size: 14px; line-height: 24px; color: #b1b1c0; max-width: 370px; }
+.intent-form-foot .primary { font-size: 14px; }
+.advisor-other-provider { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 20px; margin-top: 32px; border-top: 1px solid #33333d; padding-top: 25px; }
+.advisor-other-provider > div { width: 100%; max-width: 760px; }
+.advisor-other-provider h2 { font-size: 19px; }
+.advisor-other-provider p { margin-top: 10px; }
+.request-summary, .request-editor { border: 1px solid #3b4254; border-radius: 7px; background: #121721; padding: 18px 20px; margin: 22px 0; }
+.request-summary > div { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.request-summary strong { font-size: 14px; color: #adb9d7; }
+.request-summary p { margin-top: 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.request-editor .advisor-field { margin: 0 0 14px; }
+.request-editor-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
+.request-revision { border-top: 1px solid #3b4254; padding-top: 18px; margin-top: 20px; }
+.request-revision dl { margin: 15px 0; }
+.request-revision dt { font-size: 14px; color: #afb9ce; }
+.request-revision dd { margin: 4px 0 14px; font-size: 16px; color: #dddfea; overflow-wrap: anywhere; }
+.request-revision .primary { margin-top: 15px; }
+.required-questions { margin-top: 30px; border-top: 1px solid #34343f; padding-top: 25px; }
+.required-questions > h2 { font-size: 21px; }
+.required-questions > p { margin-top: 10px; }
+.capability-grid, .question-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px 22px; }
+.capability-grid > label { display: flex; align-items: flex-start; gap: 11px; border: 1px solid #353540; border-radius: 6px; padding: 15px; background: #121215; cursor: pointer; }
+.capability-grid > label:has(input:checked) { border-color: #5e79b3; background: #151d2b; }
+.question-grid { gap: 0 25px; align-items: start; }
+.question-grid .advisor-field { min-width: 0; }
+.advanced-requirements > p { margin-top: 16px; }
+.advanced-requirements > summary { justify-content: flex-start; font-size: 16px; }
+.advanced-requirements > summary > span { font-size: 13px; color: #adadbb; margin-left: auto; }
+.interpretation-note strong { font-size: 15px; color: #c4d5f8; }
+.plan-timing { border: 1px solid #3b4252; background: #12151c; border-radius: 7px; padding: 22px; margin: 25px 0; scroll-margin-top: 88px; }
+.plan-timing h2 { font-size: 21px; margin-bottom: 20px; }
+.plan-timing > div + div { border-top: 1px solid #343a49; margin-top: 20px; padding-top: 20px; }
+.plan-timing h3, .plan-timing summary { font-size: 16px; line-height: 27px; color: #dde1ed; }
+.timing-setup > span { display: block; font-size: 15px; color: #b8c4df; }
+.timing-setup > strong { display: block; font-size: 27px; line-height: 39px; color: #eff3ff; margin-top: 4px; }
+.plan-timing p { margin-top: 9px; }
+.plan-timing > details { margin-top: 20px; border-top: 1px solid #343a49; padding-top: 17px; }
+.plan-timing summary, .auth-options summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; }
+.auth-options { margin: 20px 0; }
+.auth-options summary { font-size: 16px; color: #bacdfb; line-height: 27px; }
+.managed-methods, .managed-methods code { font-size: 13px; color: #afb8cc; }
+.metadata-details summary { font-size: 15px; color: #becbf0; }
+.advisor-comparison, .advisor-comparison :is(th, td), .advisor-comparison thead th { font-size: 15px; line-height: 26px; color: #c3c3d1; }
+.plan-actions .secondary { font-size: 14px; }
+.plan-actions .icon-button { min-width: 38px; min-height: 40px; }
+.recommendation-model span, .step-owner { font-size: 14px; color: #aeb9cf; line-height: 25px; }
+.permission-line > span, .permission-list small, .rule-explanation > div > span { font-size: 13px; line-height: 23px; color: #b9c2d9; }
+.advisor-citations a { font-size: 12px; line-height: 23px; color: #b4c9fb; }
+.plan-unknown-list { font-size: 16px; line-height: 28px; color: #c3c3d0; }
+.plan-source-list a { font-size: 16px; line-height: 27px; }
+.plan-source-list small { font-size: 13px; line-height: 23px; color: #aab4c9; }
+.assessment-inputs dt { font-size: 14px; color: #abb8d1; }.assessment-inputs dd { font-size: 16px; color: #c3c5d2; }
+.directory-provider strong { font-size: 16px; }.directory-provider > span, .directory-auth small { font-size: 13px; color: #adb3c7; line-height: 23px; }
+.directory-auth { font-size: 14px; color: #bfc5d4; }.directory-row .secondary { font-size: 14px; min-height: 40px; }
+.directory-toolbar > select { font-size: 14px; height: 44px; max-width: 230px; }
+.search-box { height: 44px; }.search-box input { font-size: 16px; }.search-box input::placeholder { color: #a1a1b0; }
+.doc-main :is(.directory-count, .directory-footnote, .catalog-provenance) { font-size: 14px; line-height: 25px; color: #aaaabb; }
+.page-footer { flex-wrap: wrap; align-items: flex-start; font-size: 13px; color: #aaaab8; }
+.page-footer nav { display: flex; flex-wrap: wrap; gap: 10px 19px; }
+.page-footer a { font-size: 13px; line-height: 23px; color: #b1b1c0; }
+.research-dialog > p, .research-dialog form label, .research-dialog .public-note, .research-progress p, .share-dialog > p { font-size: 16px; line-height: 28px; color: #c4c4d0; }
+.research-dialog input, .research-dialog textarea { font-size: 16px; }
+@media(max-width:650px){
+ .capability-grid, .question-grid { grid-template-columns: 1fr; }
+ .intent-form-foot .primary { font-size: 14px; }
+ .intent-form-foot > span { font-size: 14px; }
+ .advisor-other-provider .secondary { width: 100%; }
+ .request-summary, .request-editor, .plan-timing { padding: 17px 14px; }
+ .request-summary > div { align-items: flex-start; }
+ .advisor-field > span, .advisor-field > small, .advisor-field select, .advisor-field textarea { font-size: 16px; line-height: 27px; }
+ .plan-actions .secondary { font-size: 14px; }
+ .plan-timing h2 { font-size: 20px; }
+ .advisor-comparison :is(th,td), .advisor-comparison thead th { font-size: 14px; line-height: 25px; }
+ .doc-main .directory-explanation { font-size: 16px; line-height: 28px; }
+ .directory-auth { width: calc(100% - 50px); margin-left: 47px; }
+ .provider-shortcuts small { font-size: 14px; }
+ .page-footer nav { gap: 12px 18px; }
+}

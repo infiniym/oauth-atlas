@@ -7,7 +7,7 @@ test('requirement and objective traceability has no broken references or unexpla
  const objectives=new Set(log.objectives.map((o:{id:string})=>o.id));
  const requirements=new Set(log.requirements.map((r:{id:string})=>r.id));
  const decisions=new Set(log.decisions.map((d:{id:string})=>d.id));
- assert.equal(requirements.size,15);assert.equal(decisions.size,20);
+ assert.equal(requirements.size,15);assert.equal(decisions.size,23);
  for(const d of log.decisions){
   assert.ok(d.objectives.length&&d.requirements.length);
   for(const id of d.objectives)assert.ok(objectives.has(id),`${d.id}: missing ${id}`);

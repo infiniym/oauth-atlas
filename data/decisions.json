@@ -1,7 +1,7 @@
 {
   "updatedAt": "2026-10-30",
   "summary": "Help developers choose an authentication architecture for their use case, follow a source-backed launch plan and inspect the decisions behind the product.",
-  "readingNote": "The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study.",
+  "readingNote": "The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback.",
   "objectives": [
     {
       "id": "O1",
@@ -57,12 +57,13 @@
       "id": "R3",
       "requirement": "Explain difficulty, active work and approval waiting time",
       "status": "Demonstrated",
-      "approach": "Show scenario-specific launch gates, separately labeled effort estimates and provider waits, plus testing versus production requirements.",
+      "approach": "Show scenario-specific implementation estimates with their exclusions, applicable published provider-review figures and separate administrator checks. These are planning guidance, not a launch date.",
       "why": "Calendar delay, engineering effort and customer-admin policy are different dependencies; a single score or date hides them.",
       "decisions": [
         "D04",
         "D05",
-        "D06"
+        "D06",
+        "D22"
       ]
     },
     {
@@ -107,7 +108,8 @@
       "why": "A linked document, a form inspected and a successful OAuth round trip prove different things.",
       "decisions": [
         "D08",
-        "D09"
+        "D09",
+        "D22"
       ]
     },
     {
@@ -128,7 +130,8 @@
       "approach": "This decision log is available in the app and as Markdown, using one structured source of truth.",
       "why": "The reasoning should be reviewable alongside the experience, including the partial requirements.",
       "decisions": [
-        "D15"
+        "D15",
+        "D23"
       ]
     },
     {
@@ -139,18 +142,21 @@
       "why": "Developers need to read and perform setup work. A promotional website layout creates unnecessary navigation and reading friction.",
       "decisions": [
         "D01",
-        "D14"
+        "D14",
+        "D23"
       ]
     },
     {
       "id": "R11",
       "requirement": "Turn integration intent into an editable contextual assessment",
       "status": "Demonstrated",
-      "approach": "Natural-language intake and provider selection converge on action and launch-context forms for Gmail, Slack and GitHub. Inputs and checklist state persist in the browser.",
+      "approach": "Natural-language intake and provider selection converge on one action/context confirmation screen. Path-changing choices are required; irrelevant questions are omitted. Inputs and personal checklist progress persist locally.",
       "why": "Developers should not need to know which OAuth questions matter before starting. Editable interpretation prevents assumptions becoming invisible.",
       "decisions": [
         "D16",
-        "D19"
+        "D19",
+        "D21",
+        "D23"
       ]
     },
     {
@@ -171,7 +177,8 @@
       "why": "Managed availability, permission fit and provider application model are independent decisions. A generic OAuth guide cannot safely collapse them.",
       "decisions": [
         "D16",
-        "D17"
+        "D17",
+        "D21"
       ]
     },
     {
@@ -181,7 +188,8 @@
       "approach": "A dated public Composio catalog snapshot supplies 1,694 names and documentation links. Three entries have assessments; catalog-only auth and managed status remain unverified. Optional server-side Composio metadata is checked for the selected assessment method.",
       "why": "Names provide useful discovery without pretending that every listed integration has a validated setup guide.",
       "decisions": [
-        "D18"
+        "D18",
+        "D23"
       ]
     },
     {
@@ -192,7 +200,8 @@
       "why": "A plan must change with the developer’s actual requirements. Testing only that UI components render would miss incorrect advice.",
       "decisions": [
         "D19",
-        "D20"
+        "D20",
+        "D21"
       ]
     }
   ],
@@ -808,6 +817,101 @@
         {
           "label": "Validation notebook",
           "url": "https://github.com/infiniym/oauth-atlas/blob/main/docs/VALIDATION.md"
+        }
+      ]
+    },
+    {
+      "id": "D21",
+      "title": "Require only choices that change setup, in one confirmation screen",
+      "category": "Product",
+      "phase": "User-journey revision",
+      "objectives": [
+        "O1",
+        "O2",
+        "O3"
+      ],
+      "requirements": [
+        "R11",
+        "R13",
+        "R15"
+      ],
+      "decision": "Combine action selection and launch questions; require path-changing answers and turn later checks into owned tasks.",
+      "reason": "An unanswered critical choice cannot support a firm app-model or approval recommendation. Repeated screens and questions whose answers cannot change the path add effort without improving the decision.",
+      "implementation": "A shared requirements module controls visible questions and blocks incomplete recommendations, including old shared inputs. Selected-repository GitHub work skips branding/background questions. The request is read-only until an explicit reinterpret-and-review action is applied.",
+      "alternative": "Keeping Not sure everywhere creates provisional plans with important gaps at the bottom. Branching into multiple possible plans adds complexity the user explicitly declined.",
+      "tradeoff": "Developers must know the few requirements that determine the path. Additional policies remain explicit checks; the product still cannot certify a provider grant or approval.",
+      "evidence": "The user requested fewer screens, definite critical choices and honest request editing. Rule cases cover incomplete inputs, irrelevant-question removal and preserving manual answers during same-provider request revision.",
+      "check": "Create plan stays disabled until required answers exist. Changing the request previews suggestions before applying them; changed provider context does not leak into another assessment.",
+      "links": [
+        {
+          "label": "Journey walkthrough",
+          "url": "https://github.com/infiniym/oauth-atlas/blob/main/docs/PRODUCT-WALKTHROUGH.md"
+        }
+      ]
+    },
+    {
+      "id": "D22",
+      "title": "Show configuration estimates separately from provider review and customer waits",
+      "category": "Product",
+      "phase": "User-journey revision",
+      "objectives": [
+        "O1",
+        "O2",
+        "O3"
+      ],
+      "requirements": [
+        "R3",
+        "R7"
+      ],
+      "decision": "Put timing near the recommendation, with scoped author estimates, applicable published review figures and separate customer checks.",
+      "reason": "The developer needs planning guidance rather than a promised launch date. Lack of a universal reliable date does not justify hiding published review information for supported scenarios.",
+      "implementation": "Managed setup is estimated at 30–90 minutes; custom Gmail at 45–90 minutes, Slack and GitHub App setup at 1–3 hours, and a simple GitHub OAuth app at 30–60 minutes. All are unmeasured planning estimates for configuration and a first test. Google and Slack review figures are cited only when the matching dependency applies.",
+      "alternative": "A universal countdown would confuse hands-on work with waiting. Leaving all timing unestimated withholds useful planning information for known paths.",
+      "tradeoff": "The setup ranges are not calibrated measurements and exclude feature development, review preparation and remediation. Provider estimates vary, independent security assessment timing is unverified, and customer-admin delays remain unknown.",
+      "evidence": "Google verification FAQ and Slack Marketplace review process were rechecked on 30 October 2026. The documented GitHub registration path identifies no general review queue; this is a scoped inference, not a zero-wait guarantee.",
+      "check": "Send-only Gmail changes review guidance from restricted to sensitive. Slack pilots do not inherit Marketplace timing. Every timing source ID resolves and Markdown preserves assumptions.",
+      "links": [
+        {
+          "label": "Google timing",
+          "url": "https://support.google.com/cloud/answer/13463817?hl=en"
+        },
+        {
+          "label": "Slack review stages",
+          "url": "https://docs.slack.dev/slack-marketplace/slack-marketplace-review-guide/"
+        }
+      ]
+    },
+    {
+      "id": "D23",
+      "title": "Make the main navigation match the developer task",
+      "category": "Design",
+      "phase": "User-journey revision",
+      "objectives": [
+        "O2",
+        "O4",
+        "O5"
+      ],
+      "requirements": [
+        "R9",
+        "R10",
+        "R11",
+        "R14"
+      ],
+      "decision": "Keep Launch advisor, Provider directory and How it works in the sidebar; move reference, saved guides and submission evidence to secondary resources.",
+      "reason": "The earlier shell accumulated a guide library, advisor shortcuts, workspace terminology and reviewer notes. Their prominence made supporting material appear to be required steps.",
+      "implementation": "Remove Guided assessments, Your workspace and Project notes groups and duplicate header destinations. Examples fill only the description; the full catalog lives in its directory. Explain unfamiliar-app research before starting it. Bundle recognizable provider SVGs and increase instruction/explanation text to approximately 16px with improved contrast.",
+      "alternative": "Deleting saved/reference/evidence capabilities would discard useful work. Retaining all destinations as primary navigation preserves the original confusion.",
+      "tradeoff": "Secondary resources take an extra navigation action. Saved guides still refer to reference/draft bookmarks rather than a multi-user plan workspace. More readable text may require more vertical space.",
+      "evidence": "User feedback identified redundant entrances, an incorrect Slack mark and small text. Devicon provider marks replace placeholder glyphs; CSS and browser checks verify the new layout rather than proving a usability improvement.",
+      "check": "Only the three agreed main links appear in desktop/mobile navigation. Reference guides, saved guides and decision evidence remain accessible. Narrow screens retain labeled controls without horizontal overflow.",
+      "links": [
+        {
+          "label": "Composio reading reference",
+          "url": "https://docs.composio.dev/docs/quickstart"
+        },
+        {
+          "label": "Provider mark source",
+          "url": "https://github.com/devicons/devicon/tree/master/icons"
         }
       ]
     }

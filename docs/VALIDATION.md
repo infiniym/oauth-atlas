@@ -115,3 +115,25 @@ Added direct server-side Anthropic Messages support alongside the existing OpenA
 Credentials remain server-side. No live Anthropic key or model has been configured or tested. The core rules and keyless fallback remain available. The public hosting connector currently reports the existing Site as not found and returns no accessible Sites; this follow-up must not be described as deployed until access is restored and publication succeeds.
 
 The follow-up production Worker build and TypeScript check passed. A local POST to `/api/advisor/interpret` returned HTTP 200 with labeled local suggestions and the expected Gmail read/draft actions without configured credentials. Live Anthropic remains unverified.
+
+## Shorter journey and timing guidance — 30 October 2026
+
+Replaced the action/context wizard with one confirmation screen. The request is read-only until an explicit reinterpretation preview is applied. A shared question model requires answers that change the setup, omits irrelevant fields, and blocks firm recommendations for incomplete legacy/shared inputs. Customer-policy uncertainty becomes a checklist task. The sidebar now has three main destinations; saved/reference guides and submission evidence remain in the footer. Examples fill descriptions only. Provider SVGs replace placeholder glyphs, and important instructions/explanations use approximately 16px text.
+
+**78 automated tests pass.** Fifteen added cases cover required-answer gates, GitHub question relevance, organization-policy follow-up, testing versus production data handling, Workspace confirmation, request revisions/reset, and timing/source applicability. Existing scenarios were supplied with their now-required data-flow/repository answers; incomplete cases are tested separately rather than treated as firm recommendations.
+
+TypeScript and the production Worker build passed. Google’s verification FAQ, Slack’s Marketplace review process and GitHub’s app registration documentation were rechecked. Hands-on ranges are explicitly unmeasured author estimates for configuration and a first test connection, with assumptions and exclusions. They are not timed setup results. Provider stages are not summed into a launch date; customer-admin and independent security-assessment timing remain separate uncertainties.
+
+Browser checks in the in-app browser:
+
+- Gmail read/draft: a missing production data-processing choice kept Create launch plan disabled. Completing it produced the custom plan, 45–90 minute planning range and sourced restricted-scope review guidance.
+- Change request: rerunning a send-only description previewed the suggestion while existing read/draft choices remained intact. Applying it removed read/draft, preserved confirmed launch context, omitted the now-irrelevant data-processing question and changed review guidance to sensitive-scope timing.
+- The downloaded Markdown retained setup assumptions, sensitive timing and send permission, with no old read permission. Opening the shared assessment reproduced the revised plan and current-rules notice.
+- GitHub code/review actions required only repository access. Selected repositories enabled the plan without audience, branding or background questions and produced the GitHub App recommendation.
+- Slack bot read/post: a pilot showed unlisted-distribution guidance; changing to customer-facing production showed the separately sourced Marketplace review stages.
+- At a 375px viewport, the result, confirmation and directory had a 375px document width. Confirmation questions became one column and measured hint/timing text was 16px. Mobile navigation exposed the three agreed destinations. Desktop layout was checked at 1400px.
+- Searching Linear exposed Research docs. Its dialog explained that it reads up to four pages and does not select a complete setup before offering the collection action. No new live research run was needed for this wording change; existing research behavior remains covered by prior live samples and automated checks.
+
+Current screenshots are in `docs/screenshots/preview.jpg` and `confirmation.jpg`. The plain-language journey and rationale are in `docs/PRODUCT-WALKTHROUGH.md`; D21–D23 extend the historical log to 23 decisions. These checks do not establish improved developer comprehension, calibrated effort estimates, successful OAuth connections or provider approval.
+
+Publication remains blocked: the existing Site’s get/read-credential operations returned “Sites project not found.” The selected project identity and public audience were preserved; no replacement Site was created. Local preview and repository changes must not be described as a refreshed public deployment.

@@ -7,7 +7,7 @@ import {getMetadata} from '../lib/advisor/metadata.ts';
 import {interpret} from '../lib/advisor/intent-parser.ts';
 import {planMarkdown} from '../lib/advisor/export.ts';
 import type {Assessment,ProviderId} from '../lib/advisor/types.ts';
-const scenario=(p:ProviderId,extra:Partial<Assessment>):Assessment=>({...emptyAssessment(p),capabilities:p==='gmail'?['read']:p==='slack'?['read','post']:['identity'],stage:'test',audience:'personal',branding:'no',background:'no',...extra});
+const scenario=(p:ProviderId,extra:Partial<Assessment>):Assessment=>({...emptyAssessment(p),capabilities:p==='gmail'?['read']:p==='slack'?['read','post']:['identity'],stage:'test',audience:'personal',branding:'no',background:'no',dataHandling:'servers',repoAccess:'selected',...extra});
 const ids=(a:Assessment)=>recommend(a).dependencies.map(d=>d.id);
 const fixtures:{name:string;input:Assessment;check:(r:ReturnType<typeof recommend>)=>void}[]=[
  {name:'Gmail internal read-only test',input:scenario('gmail',{audience:'organization',workspaceOnly:'yes',branding:'yes'}),check:r=>{assert.equal(r.route,'custom');assert.ok(r.dependencies.some(d=>d.id==='GOOGLE-EXCEPTION'));assert.ok(!r.dependencies.some(d=>d.id==='GOOGLE-RESTRICTED'));}},

@@ -42,3 +42,8 @@ export function parseIntentLocally(description:string):Intent{
  result.unresolved.push('Confirm audience, launch stage, branding and the provider-specific questions.');return result;
 }
 export function applyIntent(description:string,intent:Intent):Assessment{return {...emptyAssessment(intent.provider||'gmail'),description,capabilities:intent.provider?intent.capabilities.filter(id=>capabilities[intent.provider!].some(c=>c.id===id)):[],background:intent.background,audience:intent.audience,repoAccess:intent.repoAccess,slackIdentity:intent.slackIdentity};}
+export function revisedAssessment(previous:Assessment,description:string,intent:Intent):Assessment{
+ const next=applyIntent(description,intent);
+ if(intent.provider!==previous.provider)return next;
+ return {...previous,description,capabilities:next.capabilities,...Object.fromEntries((['background','audience','repoAccess','slackIdentity'] as const).filter(key=>intent[key]!=='unknown').map(key=>[key,intent[key]]))};
+}

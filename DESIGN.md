@@ -56,3 +56,11 @@ The later MVP brief makes a contextual assessment the primary workflow. The same
 The provider directory distinguishes rule-backed assessments from catalog-only names. Unknown metadata is visible beside each catalog row rather than hidden behind a generic verified badge. The recommendation separates the app model, managed-method availability, permission fit, conditional launch dependencies, personal checkmarks and actual provider outcomes.
 
 Sharing explicitly includes assessment answers. A portable URL recomputes with current rules; Markdown captures the current plan. No approval score, fictitious elapsed time or account-connection status is used to decorate the result.
+
+## Shorter developer journey
+
+The subsequent user review identified competing entrances, redundant sidebar groups and insufficiently legible supporting text. The starting screen now has one description input with example prompts, three supported-provider shortcuts and a clearly qualified route for other apps. The full catalog is confined to its directory. Action selection and relevant setup questions share one confirmation screen; the request is a read-only summary with explicit revise/preview/apply controls.
+
+Only Launch advisor, Provider directory and How it works remain primary sidebar links. Reference/saved guides, validation, decisions and source are secondary footer resources. Provider marks are bundled SVGs from Devicon with attribution/license rather than decorative characters. Important field labels, hints, action descriptions and plan explanations use approximately 16px/27–28px text with stronger contrast; metadata is secondary. Desktop choices/questions use two columns and collapse to one on narrow screens.
+
+The result moves scoped timing guidance near the recommendation and collapses the generic managed/custom comparison. Estimates distinguish unmeasured hands-on configuration ranges, applicable sourced review figures and unresolved customer waits. D21–D23 and the standalone product walkthrough record the reasons and tradeoffs. Browser checks at 375px and 1400px establish layout behavior, not measured usability gains.
