@@ -154,3 +154,13 @@ Browser checks in the combined local app:
 The first browser run exposed an edge-runtime incompatibility hidden by Node tests: Cloudflare Workers rejects `redirect: 'error'`. The DNS, Firecrawl and Anthropic adapters now use manual redirects and reject non-success responses. A regression case checks edge-compatible API redirect behavior; a subsequent real Worker request successfully retrieved and saved Linear sources.
 
 The combined TypeScript check and production build passed. AI and Firecrawl credentials are absent, so live credentialed interpretation/rendered retrieval remain unverified. No provider app was registered and no token exchange or approval was completed. These changes are available locally; the public site has not been republished.
+
+## Live Haiku interpretation and adaptive thinking — 31 October 2026
+
+This follow-up supersedes the previous statement that live interpretation credentials are absent: the local preview now uses `claude-haiku-5-5` with adaptive thinking at medium effort. The actual key remains in the ignored local Worker bindings file with owner-only permissions. Hosted credentials and publication remain unchanged.
+
+**110 automated tests pass**, including model thinking-block parsing, preservation of signed blocks during one in-memory repair, exclusion of thinking text from saved guides, passage-reference expansion, repair bounds, confirmed-choice carryover, and rejection of contradictory/guaranteed published wait claims. TypeScript and production build checks pass.
+
+Real website API calls produced interpreted Linear plans for both app and user actors. They selected `read` plus `comments:create`, changed administrator-installation guidance with actor choice, and saved model settings and reported thinking-token counts. A fresh request asked one consequential actor question. The Notion case returned an interpreted partial plan with the read-only configuration unresolved. Dropbox source retrieval failed before interpretation. These are small reviewed samples, not broad coverage or executed provider setup.
+
+See [the dated Haiku evaluation](evaluations/HAIKU-2026-10-31.md) for timings, initial failures, code changes and unresolved risks. Browser automation was disabled in local Work settings during this follow-up; final model-enabled results were checked through the real website API and database-backed guide endpoint. No provider OAuth app, token exchange or approval was completed.

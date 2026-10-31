@@ -41,7 +41,7 @@ export async function postGuide(request: Request, env: Environment, fetcher: typ
     if (input.previousId) { previous = await load(env.DB,input.previousId); if(!previous)return json({error:'Previous guide not found. Start fresh research.'},404); }
   } catch { return json({error:'The live-guide database is not ready. Apply the isolated migration.'},503); }
   const db = env.DB; const abort = new AbortController();
-  const signal = AbortSignal.any([request.signal,abort.signal,AbortSignal.timeout(80000)]);
+  const signal = AbortSignal.any([request.signal,abort.signal,AbortSignal.timeout(110000)]);
   const encoder = new TextEncoder(); let closed = false;
   const stream = new ReadableStream({
     async start(controller) {

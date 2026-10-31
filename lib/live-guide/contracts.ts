@@ -34,11 +34,18 @@ export const interpretationSchema = z.object({
   unknowns: z.array(text(400)).max(10),
 }).strict();
 export type Interpretation = z.infer<typeof interpretationSchema>;
+export type InferenceTelemetry = {
+  model: string; attempts: number; elapsedMs: number; inputTokens: number; outputTokens: number;
+  thinkingTokens?: number; thinking?: 'adaptive'; effort?: 'medium';
+  outcome: 'accepted' | 'not-configured' | 'upstream-error' | 'incomplete' | 'validation-rejected' | 'timeout';
+};
 export type LiveGuide = Interpretation & {
   schemaVersion: 1; id: string; previousId?: string; generatedAt: string; input: GuideInput;
   provider: { website: string; identity: 'provided' | 'inferred' };
   mode: 'interpreted' | 'evidence-only'; status: 'provisional' | 'needs-input' | 'unsupported' | 'documented-plan';
   notice: string; warnings: string[]; setupTested: false;
+  engine?: InferenceTelemetry & { provider:'anthropic'; promptVersion:string };
+  decisions?: {id:string;question:string;answer:string}[];
   sources: Omit<Document, 'text'>[];
   integration: { catalogName?: string; docsUrl?: string; message: string };
 };

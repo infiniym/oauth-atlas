@@ -6,6 +6,8 @@ Describe an integration, confirm its requirements, and get an authentication arc
 
 The merged local app also includes `/live-guide`, reached through **Research an app** or the provider directory. It retrieves unfamiliar-provider documentation and optionally interprets it for the use case. See [live-guide setup and testing](docs/LIVE-GUIDE.md). The hosted link above has not yet been republished with this merge.
 
+The local Live Guide has now been exercised with real Haiku 5.5 requests and adaptive thinking at medium effort. Linear actor-dependent plans worked; Notion remained partial because retrieved evidence did not establish the requested read-only configuration. See the [Haiku evaluation](docs/evaluations/HAIKU-2026-10-31.md) for measured runs and limits. Credentials are local-only and excluded from source.
+
 The latest flow and Anthropic adapter are available locally/in source. The public deployment is older: the connected Sites account currently cannot access the existing project to publish this revision.
 
 ![Advisor](docs/screenshots/preview.jpg)

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { normalizeInput, onProvider, publicUrl } from '../lib/live-guide/contracts.ts';
 import type { Bindings, Document, Interpretation, StoredRun, LiveGuide } from '../lib/live-guide/contracts.ts';
 import { retrieve, publicReader, boundedText } from '../lib/live-guide/retrieval.ts';
-import { evidenceOnly, interpretEvidence, validateInterpretation } from '../lib/live-guide/interpretation.ts';
+import { evidenceOnly, interpretEvidence, validateInterpretation, sourcePassages, expandPassageReferences } from '../lib/live-guide/interpretation.ts';
 import { generate, integrationContext } from '../lib/live-guide/workflow.ts';
 import { getGuide, postGuide } from '../lib/live-guide/http.ts';
 import type { Store } from '../lib/live-guide/http.ts';
@@ -20,6 +20,14 @@ function plan():Interpretation{return {
   steps:[{title:'Register a test app',detail:'Create the app in workspace settings.',owner:'developer',doneWhen:'The app appears in workspace settings.',evidence:[{sourceId:'s1',quote}]}],questions:[],activeEffort:{range:'1–3 hours',assumptions:'A developer already has workspace access and an existing callback implementation.'},unknowns:['Customer administrator installation policy needs checking.'],
 };}
 const ai:Bindings={LIVE_GUIDE_ANTHROPIC_KEY:'test-secret',LIVE_GUIDE_ANTHROPIC_MODEL:'test-model'};
+type Context = {documents:{passages:{id:string;text:string;citable:boolean}[]}[]};
+function wirePlan(value:unknown,context:Context):unknown{
+  const p=structuredClone(value) as Interpretation;
+  if(Array.isArray(p.findings)&&Array.isArray(p.steps))for(const item of [...p.findings,...p.steps]){
+    (item as unknown as {evidence:{passageId:string}[]}).evidence=item.evidence.map(e=>({passageId:context.documents.flatMap(d=>d.passages).find(p=>p.citable&&p.text.includes(e.quote))?.id||'unknown-passage'}));
+  }
+  return p;
+}
 function network(options:{model?:unknown;stop?:string;address?:string;html?:string;modelStatus?:number;firecrawl?:boolean}={}){
   const calls:{url:string;init?:RequestInit}[]=[];
   const fetcher:typeof fetch=async(value,init)=>{
@@ -30,11 +38,8 @@ function network(options:{model?:unknown;stop?:string;address?:string;html?:stri
     if(url.startsWith('https://cloudflare-dns.com/'))return Response.json({Answer:new URL(url).searchParams.get('type')==='A'?[{type:1,data:options.address||'104.18.40.45'}]:[]});
     if(url==='https://api.anthropic.com/v1/messages'){
       if(options.modelStatus)return new Response('secret upstream failure',{status:options.modelStatus});
-      const model=structuredClone(options.model||plan()) as Interpretation;
-      if(Array.isArray(model.findings)&&Array.isArray(model.steps)){
-        const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);
-        for(const item of [...model.findings,...model.steps])for(const e of item.evidence){const source=context.documents.find((d:{text:string})=>d.text.includes(e.quote));if(source)e.sourceId=source.id;}
-      }
+      const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);
+      const model=wirePlan(options.model||plan(),context);
       return Response.json({type:'message',stop_reason:options.stop||'end_turn',content:[{type:'text',text:JSON.stringify(model)}]});
     }
     if(url==='https://api.firecrawl.dev/v2/search')return Response.json({success:true,data:{web:[{url:base+'docs/oauth',title:'Task OAuth'}]}});
@@ -99,10 +104,24 @@ test('validates supported OAuth, source references and exact permission identifi
   const scope=plan();scope.findings[1].scope='issues:admin';assert.throws(()=>validateInterpretation(scope,docs),/permission/);
   const fake=plan();fake.findings[0].evidence[0].quote='Approval is never required for this app.';assert.throws(()=>validateInterpretation(fake,docs),/citation/);
 });
+test('numbered passages preserve source text and the server supplies exact quotations',()=>{
+  const passages=sourcePassages(docs);assert.equal(new Set(passages.map(p=>p.id)).size,passages.length);
+  for(const passage of passages.filter(p=>p.citable)){assert.ok(sourceText.replace(/\s+/g,' ').includes(passage.text));assert.ok(passage.text.split(' ').length<=30);}
+  const p=wirePlan(plan(),{documents:[{passages}]});const expanded=expandPassageReferences(p,passages);
+  assert.equal(validateInterpretation(expanded,docs).findings[1].scope,'comments:create');
+  assert.throws(()=>expandPassageReferences({findings:[{evidence:[{passageId:'invented'}]}]},passages),/unknown/);
+  assert.throws(()=>expandPassageReferences({findings:[{evidence:[{passageId:passages[0].id,quote:'injected quote'}]}]},passages),/one supplied/);
+});
 test('requires evidence for provider turnaround and estimate assumptions',()=>{
   const p=plan();p.findings.push({kind:'provider-wait',scope:'',title:'Review wait',detail:'10 business days for marketplace review.',appliesWhen:'Submitting a marketplace listing.',evidence:[{sourceId:'s1',quote:'The marketplace review typically takes 10 business days after submission.'}]});assert.ok(validateInterpretation(p,docs));
   p.findings.at(-1)!.evidence[0].quote=quote;assert.throws(()=>validateInterpretation(p,docs),/published duration/);
   const estimate=plan();estimate.activeEffort.assumptions='';assert.throws(()=>validateInterpretation(estimate,docs),/assumptions/);
+});
+test('a matching quote cannot justify a contradictory turnaround or guaranteed approval',()=>{
+  const p=plan();p.findings.push({kind:'provider-wait',scope:'',title:'Review wait',detail:'Approval is guaranteed within 24 hours.',appliesWhen:'Submitting a marketplace listing.',evidence:[{sourceId:'s1',quote:'The marketplace review typically takes 10 business days after submission.'}]});
+  assert.throws(()=>validateInterpretation(p,docs),/does not match/);
+  p.findings.at(-1)!.detail='Approval is guaranteed in 10 business days.';assert.throws(()=>validateInterpretation(p,docs),/guaranteed approval/);
+  p.findings.at(-1)!.detail='The published estimate is ten business days for marketplace review.';assert.ok(validateInterpretation(p,docs));
 });
 test('unknown OAuth cannot produce a registration sequence',()=>{const p=plan();p.oauthSupport='unknown';assert.throws(()=>validateInterpretation(p,docs),/setup steps/);});
 test('missing AI credentials yields honest findings without scope selection or invented timing',async()=>{
@@ -114,22 +133,59 @@ test('explicit OAuth denial is preserved without treating absent evidence as uns
 });
 test('model adapter supplies request context, structured schema and saved source text',async()=>{
   const net=network();const result=await interpretEvidence(normalizeInput({app:'Task',useCase:'Post comments',audience:'customers'}),docs,ai,new AbortController().signal,net.fetcher);
-  assert.equal(result.mode,'interpreted');const call=net.calls[0];const body=JSON.parse(String(call.init?.body));assert.equal(body.model,'test-model');assert.equal(body.output_config.format.type,'json_schema');const context=JSON.parse(body.messages[0].content);assert.equal(context.request.useCase,'Post comments');assert.equal(context.documents[0].text,sourceText);assert.equal(body.system.includes('untrusted data'),true);
+  assert.equal(result.mode,'interpreted');const call=net.calls[0];const body=JSON.parse(String(call.init?.body));assert.equal(body.model,'test-model');assert.deepEqual(body.thinking,{type:'adaptive'});assert.equal(body.output_config.effort,'medium');assert.equal(body.max_tokens,16000);assert.equal(body.output_config.format.type,'json_schema');const context=JSON.parse(body.messages[0].content);assert.equal(context.request.useCase,'Post comments');assert.ok(context.documents[0].passages.some((p:{text:string})=>p.text.includes('client ID')));assert.equal(body.system.includes('untrusted data'),true);
+});
+test('adaptive thinking blocks are accepted while only final text becomes the guide',async()=>{
+  const net=network();
+  const fetcher:typeof fetch=async(url,init)=>{
+    const response=await net.fetcher(url,init);
+    if(String(url)!=='https://api.anthropic.com/v1/messages')return response;
+    const body=await response.json() as {content:unknown[]};
+    return Response.json({...body,usage:{input_tokens:200,output_tokens:130,output_tokens_details:{thinking_tokens:80}},content:[{type:'thinking',thinking:'Private model analysis',signature:'signed-block'},{type:'redacted_thinking',data:'opaque'},...body.content]});
+  };
+  const run=await generate({app:'Task',website:base},ai,()=>{},new AbortController().signal,fetcher);
+  assert.equal(run.guide.mode,'interpreted');assert.equal(run.guide.engine?.thinking,'adaptive');assert.equal(run.guide.engine?.effort,'medium');assert.equal(run.guide.engine?.thinkingTokens,80);
+  assert.ok(!JSON.stringify(run).includes('Private model analysis'));assert.ok(!JSON.stringify(run).includes('signed-block'));assert.ok(!JSON.stringify(run).includes('opaque'));
 });
 test('changed use cases reach the model independently and update selected permissions',async()=>{
-  const net=network();const fetcher:typeof fetch=async(value,init)=>{if(String(value)==='https://api.anthropic.com/v1/messages'){const payload=JSON.parse(JSON.parse(String(init?.body)).messages[0].content),p=plan();if(payload.request.useCase==='Modify issues'){p.findings[1].scope='issues:write';p.findings[1].evidence[0].quote='The issues:write scope allows modifying existing issues.';}return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(p)}]});}return net.fetcher(value,init);};
+  const net=network();const fetcher:typeof fetch=async(value,init)=>{if(String(value)==='https://api.anthropic.com/v1/messages'){const payload=JSON.parse(JSON.parse(String(init?.body)).messages[0].content),p=plan();if(payload.request.useCase==='Modify issues'){p.findings[1].scope='issues:write';p.findings[1].evidence[0].quote='The issues:write scope allows modifying existing issues.';}return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(wirePlan(p,payload))}]});}return net.fetcher(value,init);};
   const a=await interpretEvidence(normalizeInput({app:'Task',useCase:'Post comments'}),docs,ai,new AbortController().signal,fetcher),b=await interpretEvidence(normalizeInput({app:'Task',useCase:'Modify issues'}),docs,ai,new AbortController().signal,fetcher);assert.equal(a.value.findings[1].scope,'comments:create');assert.equal(b.value.findings[1].scope,'issues:write');
 });
 test('refusal, truncation, malformed output, fabricated evidence and upstream failures preserve findings',async()=>{
   for(const options of [{stop:'max_tokens'},{stop:'refusal'},{model:{bad:'shape'}},{modelStatus:401}]){const result=await interpretEvidence(normalizeInput({app:'Task'}),docs,ai,new AbortController().signal,network(options).fetcher);assert.equal(result.mode,'evidence-only');assert.ok(!result.notice.includes('test-secret'));}
   const fake=plan();fake.steps[0].evidence[0].quote='Create a secret app with no review needed.';assert.equal((await interpretEvidence(normalizeInput({app:'Task'}),docs,ai,new AbortController().signal,network({model:fake}).fetcher)).mode,'evidence-only');
 });
+test('one bounded repair retains source context and model while fixing invalid evidence',async()=>{
+  const net=network();let attempts=0;const payloads:Record<string,any>[]=[];
+  const fetcher:typeof fetch=async(url,init)=>{
+    if(String(url)==='https://api.anthropic.com/v1/messages'){
+      attempts++;payloads.push(JSON.parse(String(init?.body)));const p=plan();
+      if(attempts===1)p.findings[0].evidence[0].quote='This invented source passage cannot be found.';
+      return Response.json({type:'message',stop_reason:'end_turn',usage:{input_tokens:100,output_tokens:50},content:[{type:'thinking',thinking:'Private analysis',signature:'unchanged-signature'},{type:'text',text:JSON.stringify(wirePlan(p,JSON.parse(payloads.at(-1)!.messages[0].content)))}]});
+    }return net.fetcher(url,init);
+  };
+  const result=await interpretEvidence(normalizeInput({app:'Task'}),docs,ai,new AbortController().signal,fetcher);
+  assert.equal(result.mode,'interpreted');assert.equal(result.telemetry.attempts,2);assert.equal(result.telemetry.inputTokens,200);assert.equal(result.telemetry.outputTokens,100);
+  assert.equal(payloads[1].model,payloads[0].model);assert.equal(payloads[1].messages.length,3);assert.equal(payloads[1].messages[0].content,payloads[0].messages[0].content);assert.match(payloads[1].messages[2].content,/Repair the complete JSON once/);assert.ok(!JSON.stringify(payloads).includes('test-secret'));
+  assert.deepEqual(payloads[1].messages[1].content[0],{type:'thinking',thinking:'Private analysis',signature:'unchanged-signature'});assert.deepEqual(payloads[1].thinking,{type:'adaptive'});
+});
+test('validation repair stops after two attempts and service errors do not trigger repair',async()=>{
+  const p=plan();p.findings[0].evidence[0].quote='This unsupported quotation is never present.';
+  const rejected=await interpretEvidence(normalizeInput({app:'Task'}),docs,ai,new AbortController().signal,network({model:p}).fetcher);
+  assert.equal(rejected.mode,'evidence-only');assert.equal(rejected.telemetry.attempts,2);assert.equal(rejected.telemetry.outcome,'validation-rejected');assert.equal(rejected.value.steps.length,0);
+  const failed=await interpretEvidence(normalizeInput({app:'Task'}),docs,ai,new AbortController().signal,network({modelStatus:401}).fetcher);
+  assert.equal(failed.telemetry.attempts,1);assert.equal(failed.telemetry.outcome,'upstream-error');
+});
 test('questions suppress firm setup steps until answers arrive; refinement reuses saved evidence',async()=>{
   const p=plan();p.questions=[{id:'identity',prompt:'Who should comments appear from?',why:'This changes the app installation model.',options:['The connected person','The app']}];const net=network({model:p});
   const first=await generate({app:'Task',website:base,useCase:'Post comments'},ai,()=>{},new AbortController().signal,net.fetcher);
   assert.equal(first.guide.status,'needs-input');assert.equal(first.guide.steps.length,0);assert.equal(first.guide.activeEffort.range,'');
+  assert.match(first.guide.summary,/Confirm the choices/);assert.equal(first.guide.engine?.model,'test-model');assert.equal(first.guide.engine?.promptVersion,'live-guide.4');
   const later=network();const refined=await generate({...first.guide.input,previousId:first.guide.id,answers:{identity:'The app'}},ai,()=>{},new AbortController().signal,later.fetcher,first);
   assert.notEqual(refined.guide.id,first.guide.id);assert.equal(refined.guide.previousId,first.guide.id);assert.equal(refined.guide.steps.length,1);assert.ok(later.calls.every(c=>c.url.includes('anthropic')));assert.deepEqual(refined.documents,first.documents);
+  const context=JSON.parse(JSON.parse(String(later.calls[0].init?.body)).messages[0].content);
+  assert.equal(context.requestContext.confirmedChoices[0].question,'Who should comments appear from?');assert.equal(context.requestContext.confirmedChoices[0].answer,'The app');
+  assert.equal(refined.guide.decisions?.[0].answer,'The app');
 });
 test('refinement rejects changed requests, unknown answers and missing parents',async()=>{
   const first=await generate({app:'Task',website:base},ai,()=>{},new AbortController().signal,network().fetcher);

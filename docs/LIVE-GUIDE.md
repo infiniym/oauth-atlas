@@ -21,9 +21,11 @@ LIVE_GUIDE_ANTHROPIC_MODEL=
 LIVE_GUIDE_FIRECRAWL_KEY=
 ```
 
-The Anthropic key and an exact structured-output-capable model ID enable interpretation of the saved documents for the use case. Missing credentials, refusal, truncation, schema errors, fabricated citation excerpts or unmatched scope identifiers preserve **Evidence only** findings. No firm permission selection or approval path is substituted.
+The Anthropic key and an exact model ID supporting adaptive thinking and structured outputs enable interpretation of the saved documents for the use case. The local preview has been exercised with `claude-haiku-5-5`, adaptive thinking and medium effort. Thinking remains enabled: the response parser separates thinking blocks from final structured text. Only token counts and settings are saved, not thinking text. Missing credentials, refusal, truncation, schema errors or unmatched scope identifiers preserve **Evidence only** findings. No firm permission selection or approval path is substituted.
 
-Firecrawl is an optional search and rendered-page extraction adapter. Without its key, the bounded public HTML/Markdown reader runs directly. Both adapters have controlled-response tests. No live credentialed request was verified in this integration because these credentials are not configured.
+The model selects numbered source passages. The server expands those references into exact quotations and checks the permission identifiers against them. One validation-repair attempt is allowed within the shared model deadline; signed thinking blocks are preserved unmodified in that in-memory repair turn. A citation match establishes source correspondence, not semantic correctness. Published wait durations are checked against the cited duration, and an estimate cannot be turned into guaranteed approval.
+
+Firecrawl is an optional search and rendered-page extraction adapter. Without its key, the bounded public HTML/Markdown reader runs directly. Both adapters have controlled-response tests; real Haiku requests have also run through the local app. Credentialed Firecrawl retrieval and hosted model configuration remain unverified.
 
 ## Database setup
 
@@ -37,11 +39,11 @@ Apply the original migration first for a fresh database. Local and hosted databa
 
 ## What the implementation checks
 
-- Reads at most six substantive pages; documentation indexes do not consume content-page slots. Retrieval has a 42-second deadline; model interpretation has a 28-second deadline; the complete request is capped at 80 seconds.
+- Reads at most six substantive pages; documentation indexes do not consume content-page slots. Retrieval has a 42-second deadline; interpretation and its optional repair share 60 seconds; the complete request is capped at 110 seconds. The model output limit is 16,000 tokens for thinking and final output combined.
 - Records source URLs, retrieval dates and fingerprints of the exact text snapshots used by the model. Full snapshots remain server-side; the public guide contains metadata and short cited excerpts.
-- Checks structured output, excerpt matches, exact permission identifiers and quoted published waits. These checks establish citation correspondence, not semantic correctness or provider acceptance.
+- Checks structured output, numbered passage references, exact permission identifiers and agreement between claimed and quoted published waits. These checks establish citation correspondence and limited consistency, not general semantic correctness or provider acceptance.
 - Separates provider review, marketplace listing and customer-admin approval. Missing developer choices suppress firm setup steps until answered.
-- Refines answers against saved evidence, producing a new immutable guide version. Changed use cases require fresh research.
+- Refines answers against saved evidence, producing a new immutable guide version. Confirmed questions and answers are carried forward in plain language as well as by identifier, so the model can avoid asking the same requirement under a new name. Changed use cases require fresh research.
 - Preserves unresolved effort and waiting time. Any hands-on estimate is labeled and requires assumptions.
 - Checks HTTPS URLs, DNS answers, redirects and response size. DNS screening is not resolver pinning or a security audit.
 - Keeps guides public to anyone with the link, with an explicit input notice. Checkmarks remain on the device and are excluded from exports.

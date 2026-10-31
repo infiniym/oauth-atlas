@@ -2,7 +2,7 @@ import catalog from '../../data/catalog.json' with { type:'json' };
 import { normalizeInput } from './contracts.ts';
 import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun } from './contracts.ts';
 import { retrieve } from './retrieval.ts';
-import { interpretEvidence } from './interpretation.ts';
+import { interpretEvidence, PROMPT_VERSION } from './interpretation.ts';
 
 export function integrationContext(app: string): LiveGuide['integration'] {
   const normalize = (s:string) => s.toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -28,11 +28,14 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   const research = previous ? {documents:previous.documents,website:previous.guide.provider.website,inferred:previous.guide.provider.identity==='inferred',warnings:previous.guide.warnings} : await retrieve(input,bindings,emit,signal,fetcher);
   signal.throwIfAborted();
   emit({stage:'Interpreting the evidence',detail:`Checking the intended actions against ${research.documents.length} saved source snapshots.`,status:'working'});
-  const interpreted = await interpretEvidence(input,research.documents,bindings,signal,fetcher);
+  const decisions=new Map((previous?.guide.decisions||[]).map(d=>[d.id,d]));
+  for(const question of previous?.guide.questions||[])if(input.answers[question.id])decisions.set(question.id,{id:question.id,question:question.prompt,answer:input.answers[question.id]});
+  const interpreted = await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()]);
   const value = interpreted.value;
   const identityConfirmed = !research.inferred || input.answers['provider-identity']==='Yes, this is the provider';
   if (!identityConfirmed) value.questions = [{id:'provider-identity',prompt:`Is ${new URL(research.website).hostname} the provider you meant?`,why:'The provider was inferred from search. Confirm its identity before following setup advice.',options:['Yes, this is the provider','No, I will enter its website']},...value.questions.filter(q=>q.id!=='provider-identity')].slice(0,3);
   if (value.questions.length) {
+    value.summary = `Documentation was found for ${input.app}. Confirm the choices below to select a setup path for your intended actions.`;
     value.nextAction = 'Resolve the setup choices below before treating the recommendation as a firm path.';
     value.recommendation = 'A firm setup recommendation depends on the answers below. The cited requirements remain available for inspection.';
     value.steps = [];
@@ -43,6 +46,8 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     provider:{website:research.website,identity:identityConfirmed?'provided':'inferred'},
     status:value.oauthSupport==='unsupported'?'unsupported':value.questions.length?'needs-input':interpreted.mode==='interpreted' && value.oauthSupport==='documented' && !research.warnings.length && value.unknowns.length===0?'documented-plan':'provisional',
     mode:interpreted.mode,notice:interpreted.notice,warnings:research.warnings,setupTested:false,
+    decisions:[...decisions.values()],
+    ...(interpreted.telemetry.attempts?{engine:{...interpreted.telemetry,provider:'anthropic' as const,promptVersion:PROMPT_VERSION}}:{}),
     sources:research.documents.map(({text:_text,...source})=>source),integration:integrationContext(input.app),
   };
   emit({stage:'Guide assembled',detail:guide.mode==='interpreted'?'Source-backed findings and setup steps are ready to save.':'Evidence saved as provisional findings; a firm setup plan is not established.',status:'done'});
