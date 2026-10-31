@@ -17,10 +17,14 @@ export default function LiveGuideWorkspace(){
   const [answers,setAnswers]=useState<Record<string,string>>({}),[checks,setChecks]=useState<string[]>([]),[share,setShare]=useState(false);
   const abort=useRef<AbortController|null>(null),shareInput=useRef<HTMLInputElement>(null),result=useRef<HTMLElement>(null);
   useEffect(()=>{
-    const id=new URL(location.href).searchParams.get('id');if(!id)return;
-    const controller=new AbortController();setLoading(true);
-    fetch('/api/live-guide/'+encodeURIComponent(id),{signal:controller.signal}).then(async res=>{const data=await res.json() as {error?:string;guide:LiveGuide};if(!res.ok)throw new Error(data.error||'Guide could not be opened.');return data.guide;}).then(g=>{setGuide(g);setForm({app:g.input.app,website:g.input.website,useCase:g.input.useCase,audience:g.input.audience});}).catch(e=>{if(e.name!=='AbortError')setError(e.message);}).finally(()=>setLoading(false));
-    return()=>controller.abort();
+    let controller:AbortController|undefined;
+    function open(){
+      controller?.abort();const params=new URL(location.href).searchParams,id=params.get('id');setError('');setLoading(false);
+      if(!id){setGuide(null);setForm({...initial,app:(params.get('app')||'').slice(0,100),useCase:(params.get('useCase')||'').slice(0,600)});return;}
+      const current=new AbortController();controller=current;setLoading(true);
+      fetch('/api/live-guide/'+encodeURIComponent(id),{signal:current.signal}).then(async res=>{const data=await res.json() as {error?:string;guide:LiveGuide};if(!res.ok)throw new Error(data.error||'Guide could not be opened.');return data.guide;}).then(g=>{setGuide(g);setForm({app:g.input.app,website:g.input.website,useCase:g.input.useCase,audience:g.input.audience});}).catch(e=>{if(e.name!=='AbortError')setError(e.message);}).finally(()=>{if(!current.signal.aborted)setLoading(false);});
+    }
+    open();window.addEventListener('popstate',open);return()=>{controller?.abort();window.removeEventListener('popstate',open);};
   },[]);
   useEffect(()=>()=>abort.current?.abort(),[]);
   useEffect(()=>{
@@ -47,9 +51,9 @@ export default function LiveGuideWorkspace(){
   async function copy(){setShare(true);try{await navigator.clipboard.writeText(location.origin+'/live-guide?id='+guide!.id);setStatus('Guide link copied.');}catch{setStatus('Copy the selected link below.');requestAnimationFrame(()=>{shareInput.current?.focus();shareInput.current?.select();});}}
   function download(){const url=URL.createObjectURL(new Blob([markdown(guide!)],{type:'text/markdown;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=(guide!.input.app.replace(/[^a-z0-9-]/gi,'-')||'provider')+'-oauth-guide.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   return <div className={styles.workspace}>
-    <header className={styles.header}><a href="/" className={styles.brand}><Compass size={23}/>Launch Advisor<span> / Live guide</span></a><span className={styles.preview}>Independent preview</span></header>
+    <header className={styles.header}><a href="/" className={styles.brand}><Compass size={23}/>Launch Advisor<span> / Live guide</span></a><span className={styles.preview}>Live research</span></header>
     <div className={styles.layout}>
-      <aside className={styles.sidebar}><a href="/" className={styles.back}><ArrowLeft size={15}/>Atlas</a><p className={styles.navLabel}>RESEARCH A PROVIDER</p><a href="#lg-request" className={styles.navActive}><Compass size={16}/>Start research</a>{guide&&<><a href="#lg-plan"><FileText size={16}/>Your guide</a><a href="#lg-findings">Requirements</a><a href="#lg-checklist">Setup checklist</a><a href="#lg-sources">Sources</a></>}<div className={styles.sidebarNote}><ShieldCheck size={19}/><p>Sources support the guidance. Account access, consent and final submissions stay with you.</p></div></aside>
+      <aside className={styles.sidebar}><a href="/" className={styles.back}><ArrowLeft size={15}/>Launch advisor</a><a href="/?view=directory" className={styles.back}>Provider directory</a><p className={styles.navLabel}>RESEARCH A PROVIDER</p><a href="#lg-request" className={styles.navActive}><Compass size={16}/>Start research</a>{guide&&<><a href="#lg-plan"><FileText size={16}/>Your guide</a><a href="#lg-findings">Requirements</a><a href="#lg-checklist">Setup checklist</a><a href="#lg-sources">Sources</a></>}<div className={styles.sidebarNote}><ShieldCheck size={19}/><p>Sources support the guidance. Account access, consent and final submissions stay with you.</p></div></aside>
       <main className={styles.main}>
         <section id="lg-request" className={styles.request}>
           <p className={styles.eyebrow}>FROM PUBLIC DOCS TO YOUR NEXT STEP</p><h1>Research an unfamiliar app</h1><p className={styles.lead}>Tell us what you want to connect. Get a dated guide with setup requirements, evidence and open questions.</p>
@@ -64,7 +68,7 @@ export default function LiveGuideWorkspace(){
         {error&&<div className={styles.error} role="alert"><strong>Research needs another route</strong><p>{error}</p></div>}
         {status&&<p className={styles.feedback} role="status">{status}</p>}
         {loading&&<p role="status"><LoaderCircle className={styles.spin} size={17}/>Opening the saved guide…</p>}
-        {logs.length>0&&<details open={busy} className={styles.progress}><summary>{busy?'Research in progress':'Research log'}<span>{logs.filter(l=>l.stage==='Source read').length} sources read</span></summary><ol aria-live="polite">{logs.map((log,i)=><li key={i} className={log.status==='warning'?styles.warning:''}>{log.status==='working'&&busy&&i===logs.length-1?<LoaderCircle className={styles.spin} size={15}/>:<Check size={15}/>}<div><strong>{log.stage}</strong><p>{log.detail}</p></div></li>)}</ol></details>}
+        {logs.length>0&&<details open={busy} className={styles.progress}><summary>{busy?'Research in progress':'Research log'}<span>{logs.filter(l=>l.stage==='Source read').length} pages read</span></summary><ol aria-live="polite">{logs.map((log,i)=><li key={i} className={log.status==='warning'?styles.warning:''}>{log.status==='working'&&busy&&i===logs.length-1?<LoaderCircle className={styles.spin} size={15}/>:<Check size={15}/>}<div><strong>{log.stage}</strong><p>{log.detail}</p></div></li>)}</ol></details>}
         {guide&&<article ref={result} id="lg-plan" className={styles.guide}>
           <div className={styles.guideHeading}><div><p className={styles.eyebrow}>YOUR DATED RESEARCH GUIDE</p><h2>{guide.input.app}</h2><p>{guide.input.useCase||'General OAuth setup research'}</p></div><div className={styles.actions}><button className={styles.secondary} onClick={()=>void copy()}><Link2 size={16}/>Share</button><button className={styles.secondary} onClick={download}><Download size={16}/>Markdown</button></div></div>
           {share&&<label className={styles.shareLabel}>Public guide link<input ref={shareInput} readOnly value={typeof location==='undefined'?'':location.origin+'/live-guide?id='+guide.id} onFocus={e=>e.target.select()}/></label>}

@@ -5,3 +5,6 @@ export const guides = sqliteTable('guides', {
 export const researchLimits = sqliteTable('research_limits', {
   bucket: text('bucket').primaryKey(), count: integer('count').notNull().default(0),
 });
+
+// Live research shares the existing database and migration sequence.
+export { liveGuides, liveGuideLimits } from './live-guide/schema';

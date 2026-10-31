@@ -79,7 +79,7 @@ export async function interpretEvidence(input: GuideInput, documents: Document[]
   if (!bindings.LIVE_GUIDE_ANTHROPIC_KEY?.trim() || !bindings.LIVE_GUIDE_ANTHROPIC_MODEL?.trim()) return fallback('AI interpretation is not configured for this workstream. Retrieved evidence is available; permissions, approval applicability and timing remain unresolved.');
   try {
     const res = await fetcher('https://api.anthropic.com/v1/messages',{
-      method:'POST',redirect:'error',signal:AbortSignal.any([signal,AbortSignal.timeout(28000)]),
+      method:'POST',redirect:'manual',signal:AbortSignal.any([signal,AbortSignal.timeout(28000)]),
       headers:{'Content-Type':'application/json','x-api-key':bindings.LIVE_GUIDE_ANTHROPIC_KEY,'anthropic-version':'2026-10-21'},
       body:JSON.stringify({model:bindings.LIVE_GUIDE_ANTHROPIC_MODEL,max_tokens:6500,system:systemPrompt,messages:[{role:'user',content:JSON.stringify({request:input,documents:documents.map(d=>({id:d.id,url:d.url,text:d.text}))})}],output_config:{format:{type:'json_schema',schema:outputSchema}}}),
     });

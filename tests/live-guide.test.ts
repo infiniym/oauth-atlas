@@ -24,6 +24,8 @@ function network(options:{model?:unknown;stop?:string;address?:string;html?:stri
   const calls:{url:string;init?:RequestInit}[]=[];
   const fetcher:typeof fetch=async(value,init)=>{
     const url=typeof value==='string'?value:value instanceof URL?value.href:value.url;calls.push({url,init});
+    // Cloudflare's edge runtime supports follow/manual but rejects redirect:error.
+    assert.notEqual(init?.redirect,'error','Use edge-compatible manual redirects and reject non-2xx API responses.');
     if(init?.signal?.aborted)throw new DOMException('Aborted','AbortError');
     if(url.startsWith('https://cloudflare-dns.com/'))return Response.json({Answer:new URL(url).searchParams.get('type')==='A'?[{type:1,data:options.address||'104.18.40.45'}]:[]});
     if(url==='https://api.anthropic.com/v1/messages'){
@@ -81,6 +83,15 @@ test('Firecrawl discovery uses nested web results and selective markdown scrapin
   const net=network();const r=await retrieve(normalizeInput({app:'Task'}),{LIVE_GUIDE_FIRECRAWL_KEY:'fc-test'},()=>{},new AbortController().signal,net.fetcher);
   assert.equal(r.inferred,true);assert.ok(r.documents.length>0);const search=net.calls.find(c=>c.url.endsWith('/search'))!;assert.equal(JSON.parse(String(search.init?.body)).limit,4);assert.equal((search.init?.headers as Record<string,string>).Authorization,'Bearer fc-test');
   assert.deepEqual(JSON.parse(String(net.calls.find(c=>c.url.endsWith('/scrape'))!.init?.body)).formats,['markdown','links']);
+});
+test('edge adapters reject API redirects without following them',async()=>{
+  const net=network();
+  const fetcher:typeof fetch=async(url,init)=>{
+    if(String(url)==='https://api.anthropic.com/v1/messages'){assert.equal(init?.redirect,'manual');return new Response('',{status:307,headers:{location:'https://attacker.example.net'}});}
+    return net.fetcher(url,init);
+  };
+  const result=await interpretEvidence(normalizeInput({app:'Task'}),docs,ai,new AbortController().signal,fetcher);
+  assert.equal(result.mode,'evidence-only');assert.ok(!net.calls.some(c=>c.url.includes('attacker')));
 });
 test('validates supported OAuth, source references and exact permission identifiers',()=>{
   assert.equal(validateInterpretation(plan(),docs).oauthSupport,'documented');

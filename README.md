@@ -4,6 +4,8 @@
 
 Describe an integration, confirm its requirements, and get an authentication architecture, permission map and launch checklist. The core works without API keys or signing into a provider.
 
+The merged local app also includes `/live-guide`, reached through **Research an app** or the provider directory. It retrieves unfamiliar-provider documentation and optionally interprets it for the use case. See [live-guide setup and testing](docs/LIVE-GUIDE.md). The hosted link above has not yet been republished with this merge.
+
 The latest flow and Anthropic adapter are available locally/in source. The public deployment is older: the connected Sites account currently cannot access the existing project to publish this revision.
 
 ![Advisor](docs/screenshots/preview.jpg)
@@ -39,6 +41,7 @@ Node **22.13+**, npm. No API keys or cloud/provider accounts required.
 npm ci
 npm run build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_orange_wallop.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_groovy_mister_fear.sql
 npm run dev -- --port 5173
 ```
 
@@ -56,7 +59,7 @@ npm run build
 
 **Optional AI:** the server-side Anthropic Messages or OpenAI Responses structured-output adapter interprets the use-case description into known capabilities and unresolved questions. It cannot supply new scopes or approval rules. Model output is schema-validated and always editable. No key, invalid output, refusal, rate limit or timeout preserves the structured workflow with labeled local keyword suggestions.
 
-**Live research:** the existing keyless reader performs real public network discovery and extraction, limited to four successful sources and a 58-second deadline. It is not an LLM policy interpreter. Missing timing, scope applicability and approvals remain unverified.
+**Live research:** `/live-guide` performs public network discovery and reads up to six content pages. Its separate Anthropic configuration enables structured interpretation with checked source excerpts and scope identifiers. Without it, evidence-only findings remain explicit about unresolved timing, permissions and approvals. The older four-page `/api/research` reader remains available for compatibility.
 
 ## Optional configuration
 

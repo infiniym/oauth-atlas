@@ -1,9 +1,40 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e9714028-f1f3-41b8-b53b-e2a682028a7b",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "6543ceea-5494-4791-9eb2-db5556223e0b",
+  "prevId": "641bef86-1754-4b6b-822e-614cd6492254",
   "tables": {
+    "guides": {
+      "name": "guides",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "payload": {
+          "name": "payload",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "live_guide_limits": {
       "name": "live_guide_limits",
       "columns": {
@@ -52,6 +83,31 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "research_limits": {
+      "name": "research_limits",
+      "columns": {
+        "bucket": {
+          "name": "bucket",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "count": {
+          "name": "count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
         }
       },
       "indexes": {},

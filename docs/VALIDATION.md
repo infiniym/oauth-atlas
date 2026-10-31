@@ -137,3 +137,20 @@ Browser checks in the in-app browser:
 Current screenshots are in `docs/screenshots/preview.jpg` and `confirmation.jpg`. The plain-language journey and rationale are in `docs/PRODUCT-WALKTHROUGH.md`; D21–D23 extend the historical log to 23 decisions. These checks do not establish improved developer comprehension, calibrated effort estimates, successful OAuth connections or provider approval.
 
 Publication remains blocked: the existing Site’s get/read-credential operations returned “Sites project not found.” The selected project identity and public audience were preserved; no replacement Site was created. Local preview and repository changes must not be described as a refreshed public deployment.
+
+
+## Combined advisor and live-guide integration — 31 October 2026
+
+The isolated live-guide branch was merged into the advisor checkout after the advisor simplification commit. Existing research buttons now open `/live-guide`, with catalog names carried into the form. The added tables use the normal Drizzle migration sequence; the original guide tables and routes remain available.
+
+**105 automated tests pass.** The live-guide suite adds 27 cases covering input and URL validation, DNS and redirect checks, bounded retrieval, Firecrawl request contracts, source fingerprints, citation matching, exact permission identifiers, timing evidence, model refusal/truncation/failure, critical questions and refinement, independent rate limiting, persistence, public response filtering, cancellation, fragmented streams and Markdown. Provider API calls are controlled responses; they are not evidence that a model selected the right policy on a live request.
+
+Browser checks in the combined local app:
+
+- Gmail example → one confirmation screen → external production/custom branding/server-processing answers → custom Gmail plan, restricted permissions, conditional assessment and published timing guidance.
+- Homepage **Research an app** → new live-guide form → real Linear documentation retrieval → six saved content sources, dated fingerprints, evidence-only findings and a saved guide URL.
+- Reloading the saved guide opened its database-backed record. No setup sequence, precise effort estimate or approval wait was invented while AI interpretation was unconfigured.
+
+The first browser run exposed an edge-runtime incompatibility hidden by Node tests: Cloudflare Workers rejects `redirect: 'error'`. The DNS, Firecrawl and Anthropic adapters now use manual redirects and reject non-success responses. A regression case checks edge-compatible API redirect behavior; a subsequent real Worker request successfully retrieved and saved Linear sources.
+
+The combined TypeScript check and production build passed. AI and Firecrawl credentials are absent, so live credentialed interpretation/rendered retrieval remain unverified. No provider app was registered and no token exchange or approval was completed. These changes are available locally; the public site has not been republished.

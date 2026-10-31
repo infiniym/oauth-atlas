@@ -31,7 +31,7 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal) {
     if (checked.has(host)) return;
     const answers = await Promise.all(['A','AAAA'].map(async type => {
       const res = await fetcher(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(host)}&type=${type}`, {
-        headers: { accept: 'application/dns-json' }, signal: AbortSignal.any([signal, AbortSignal.timeout(4500)]), redirect: 'error',
+        headers: { accept: 'application/dns-json' }, signal: AbortSignal.any([signal, AbortSignal.timeout(4500)]), redirect: 'manual',
       });
       if (!res.ok) throw new Error('Could not check the public website address.');
       const data = JSON.parse(await boundedText(res, signal)) as { Answer?: { type: number; data: string }[] };
@@ -75,7 +75,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const reader = publicReader(fetcher, signal); const warnings: string[] = [];
   let seed = input.website;
   const firecrawl = async (path: string, body: object) => {
-    const res = await fetcher('https://api.firecrawl.dev/v2/' + path, { method:'POST', redirect:'error', signal: AbortSignal.any([signal,AbortSignal.timeout(12000)]), headers:{'Content-Type':'application/json',Authorization:'Bearer '+bindings.LIVE_GUIDE_FIRECRAWL_KEY},body:JSON.stringify(body) });
+    const res = await fetcher('https://api.firecrawl.dev/v2/' + path, { method:'POST', redirect:'manual', signal: AbortSignal.any([signal,AbortSignal.timeout(12000)]), headers:{'Content-Type':'application/json',Authorization:'Bearer '+bindings.LIVE_GUIDE_FIRECRAWL_KEY},body:JSON.stringify(body) });
     if (!res.ok) { await res.body?.cancel(); throw new Error('The configured retrieval service is unavailable.'); }
     const data = JSON.parse(await boundedText(res, signal)); if (!data.success) throw new Error('Retrieval did not return readable content.'); return data;
   };
