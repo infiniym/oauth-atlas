@@ -4,11 +4,11 @@
 
 Describe an integration, confirm its requirements, and get an authentication architecture, permission map and launch checklist. The core works without API keys or signing into a provider.
 
-The merged local app also includes `/live-guide`, reached through **Research an app** or the provider directory. It retrieves unfamiliar-provider documentation and optionally interprets it for the use case. See [live-guide setup and testing](docs/LIVE-GUIDE.md). The hosted link above has not yet been republished with this merge.
+The local app now uses one launch-plan experience for reviewed and unfamiliar providers. Gmail, Slack and GitHub use reviewed rules; other apps use public documentation research. Both feed the same plan contract, application shell, first-test/launch sections and sharing controls. A provider does not need to be in the directory. See [live research and setup](docs/LIVE-GUIDE.md).
 
-The local Live Guide has now been exercised with real Haiku 5.5 requests and adaptive thinking at medium effort. Linear actor-dependent plans worked; Notion remained partial because retrieved evidence did not establish the requested read-only configuration. See the [Haiku evaluation](docs/evaluations/HAIKU-2026-10-31.md) for measured runs and limits. Credentials are local-only and excluded from source.
+Intake and research share the selected Anthropic key/model. Local Haiku 5.5 runs use adaptive thinking at medium effort. Real checks include Gmail intake, Linear app actors, Notion read-only capabilities, Asana task access and a public API without OAuth. See [the current evaluation](docs/evaluations/UNIFIED-2026-10-31.md). Earlier failures and limits remain recorded in [the initial Haiku evaluation](docs/evaluations/HAIKU-2026-10-31.md).
 
-The latest flow and Anthropic adapter are available locally/in source. The public deployment is older: the connected Sites account currently cannot access the existing project to publish this revision.
+This revision is in the combined local checkout. The hosted link and screenshot below are from the earlier deployment; they have not been refreshed.
 
 ![Advisor](docs/screenshots/preview.jpg)
 
@@ -19,7 +19,7 @@ The latest flow and Anthropic adapter are available locally/in source. The publi
 3. Create the plan. Read the hands-on setup estimate and separately sourced review guidance, then inspect reasoning, permissions, conditional dependencies and the checklist. Estimates are scoped planning ranges, not timed results or a launch date.
 4. Edit Gmail to **send only** and regenerate. Restricted scopes and the restricted-data assessment dependency disappear; sensitive-scope guidance remains where applicable.
 5. Use the Slack or GitHub example prompts, then confirm their actual requirements. A limited Slack pilot differs from commercial distribution; selected-repository background work leads to a GitHub App and a separate installation flow.
-6. Copy, download Markdown, print or share the assessment. Sharing includes the description/answers, omits personal checkmarks, and recomputes with current rules. Markdown is the dated snapshot.
+6. Copy, download Markdown or share the plan. Share saves a dated version of output and inputs; reopening it does not rerun the current rules. Editing creates a new version. Personal checkmarks are excluded.
 7. Search the **Provider directory**, or select **Research an app** for an unfamiliar provider.
 
 ## Coverage and evidence
@@ -29,7 +29,7 @@ The latest flow and Anthropic adapter are available locally/in source. The publi
 | 3 deep assessments | Gmail, Slack and GitHub, with source-backed rules for the listed actions and contexts |
 | 1,694 catalog entries | Real toolkit names and Composio documentation links, captured 30 October 2026; catalog-only auth methods and managed availability are unverified |
 | 4 setup reference guides | Earlier researched GitHub, Notion, Slack and Gmail guides, including setup observations and corrections |
-| Live research drafts | Bounded public-source discovery/extraction for unfamiliar providers; incomplete, unreviewed and explicitly uncertain |
+| Live research plans | Bounded discovery, action/permission research and interpretation; gaps stay explicit and provider execution remains untested |
 
 The intended 100 reviewed OAuth-guide library is **not complete**. Catalog breadth is not validated-guide breadth. [Open an existing hosted Linear research draft](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9).
 
@@ -44,10 +44,11 @@ npm ci
 npm run build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_orange_wallop.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_groovy_mister_fear.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_romantic_lockheed.sql
 npm run dev -- --port 5173
 ```
 
-Open `http://localhost:5173`. Apply the migration once per fresh local database. Local and hosted D1 stores are separate. The advisor uses browser-local drafts and checkmarks; D1 stores public unfamiliar-provider research drafts and anonymous rate limits.
+Open `http://localhost:5173`. Apply the migration once per fresh local database. Local and hosted D1 stores are separate. The advisor uses browser-local drafts and checkmarks; D1 stores public research versions, explicitly shared reviewed plans and anonymous rate limits.
 
 ```sh
 npm test
@@ -61,16 +62,16 @@ npm run build
 
 **Optional AI:** the server-side Anthropic Messages or OpenAI Responses structured-output adapter interprets the use-case description into known capabilities and unresolved questions. It cannot supply new scopes or approval rules. Model output is schema-validated and always editable. No key, invalid output, refusal, rate limit or timeout preserves the structured workflow with labeled local keyword suggestions.
 
-**Live research:** `/live-guide` performs public network discovery and reads up to six content pages. Its separate Anthropic configuration enables structured interpretation with checked source excerpts and scope identifiers. Without it, evidence-only findings remain explicit about unresolved timing, permissions and approvals. The older four-page `/api/research` reader remains available for compatibility.
+**Live research:** `/live-guide` performs public discovery and reads up to eight content pages plus one targeted follow-up of up to three pages. The shared Anthropic configuration enables structured interpretation with checked source excerpts, exact permission identifiers, documented destinations and action coverage. Without it, evidence-only findings remain explicit about unresolved timing, permissions and approvals. The older four-page `/api/research` reader remains available for compatibility.
 
 ## Optional configuration
 
-The public demo does not configure AI or authenticated Composio API access. The AI-provider and metadata adapters are tested with controlled responses; live credentialed calls remain unverified. No API key is required to run the structured assessment.
+The local preview has exercised real Haiku calls; hosted settings have not been updated. Authenticated Composio metadata and credentialed Firecrawl retrieval remain unverified. No API key is required for reviewed rules or basic source collection.
 
 | Server-side binding | Behavior |
 | --- | --- |
 | `AI_PROVIDER` | Select `anthropic`, `openai`, or `none` (local suggestions only). If omitted, exactly one complete key/model pair is selected; two complete pairs require an explicit selection. |
-| `ANTHROPIC_API_KEY` + `ANTHROPIC_MODEL` | Enable Anthropic Messages intent interpretation. Supply an exact model ID available to your account with JSON structured-output support. No model is silently selected. |
+| `ANTHROPIC_API_KEY` + `ANTHROPIC_MODEL` | Enable intake and live research using the same Anthropic model. Supply an exact model ID with adaptive thinking and structured-output support. No model is silently selected. |
 | `OPENAI_API_KEY` + `OPENAI_MODEL` | Optional alternative for intent interpretation. Choose a model in your account supporting Responses structured outputs; no model is silently selected. `store: false`; input is the developer's description and a constrained capability map. |
 | `COMPOSIO_API_KEY` | Read `/api/v3.1/toolkits/{slug}` metadata for the selected assessment/Slackbot variant. Checks exact `composio_managed_auth_schemes`; does not infer granted scope coverage. |
 
@@ -79,12 +80,12 @@ For Anthropic, the server-side configuration is:
 ```dotenv
 AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=your_key_in_the_ignored_local_file
-ANTHROPIC_MODEL=your_available_claude_model_id
+ANTHROPIC_MODEL=claude-haiku-5-5
 ```
 
-The adapter calls Anthropic directly with a fixed capability schema via `output_config.format` and API version `2026-10-21`. It accepts complete message responses only, then checks the known provider/capability mapping locally. It has an 18-second deadline and a 2,048-token output bound. Refusal, truncation, unsupported output, timeout or an API error returns local suggestions. It never silently sends the description to another vendor. See [Anthropic structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and [Messages API version migration](https://platform.claude.com/docs/en/api/migration-2026-10-21).
+The adapter calls Anthropic directly with a fixed capability schema via `output_config.format` and API version `2026-10-21`. It accepts complete message responses only, then checks the known provider/capability mapping locally. Intake has a 25-second deadline and 4,096-token bound, with adaptive thinking at medium effort. Live research has separate task budgets using the same model: see [the bounded workflow](docs/LIVE-GUIDE.md). Refusal, truncation, unsupported output, timeout or an API error returns local suggestions. It never silently sends the description to another vendor. See [Anthropic structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and [Messages API version migration](https://platform.claude.com/docs/en/api/migration-2026-10-21).
 
-For Vite/Cloudflare development, copy [.dev.vars.example](.dev.vars.example) to an ignored `.dev.vars` and provide server-side values using Cloudflare's local bindings facility. Configure equivalent Worker runtime secrets for hosting. Never put these values in client bundles or `NEXT_PUBLIC_` variables. Missing/failed metadata retains the dated docs snapshot instead of declaring managed OAuth unavailable. Restart the local server after changing bindings. Optional AI has an anonymous limit of 20 requests per connection/hour; live research retains its limit of 10.
+For Vite/Cloudflare development, copy [.dev.vars.example](.dev.vars.example) to an ignored `.dev.vars` and provide server-side values using Cloudflare's local bindings facility. Configure equivalent Worker runtime secrets for hosting. Never put these values in client bundles or `NEXT_PUBLIC_` variables. Missing/failed metadata retains the dated docs snapshot instead of declaring managed OAuth unavailable. Restart the local server after changing bindings. Optional AI has an anonymous limit of 20 requests per connection/hour; live research has a limit of 12.
 
 ## Architecture
 
@@ -97,7 +98,10 @@ React + TypeScript on the existing Vinext/Vite stack, hosted as a Cloudflare Wor
 | `lib/advisor/requirements.ts`, `timing.ts` | Required setup choices, question relevance and scoped timing guidance |
 | `lib/advisor/rules-engine.ts` | Compositional provider decisions with stable explanation IDs |
 | `lib/advisor/assessment.ts` | Strict input validation, local intent suggestions, versioned share codec and progress keys |
-| `lib/advisor/ai-config.ts` | Server-side provider selection, explicit disablement and key/model pairing |
+| `lib/ai/config.ts` | Shared server-side model selection, explicit disablement and key/model pairing |
+| `lib/plan/` | Common result contract, adapters, immutable snapshots and Markdown |
+| `components/app-frame.tsx`, `components/launch-plan.tsx` | Shared shell and result experience |
+| `lib/live-guide/` | Bounded research, evidence interpretation, refinements and saved source versions |
 | `lib/advisor/intent-parser.ts` | Anthropic Messages/OpenAI Responses interpretation and local fallback |
 | `lib/advisor/metadata.ts` | Current Composio metadata adapter and conservative snapshot fallback |
 | `app/api/advisor/` | Bounded interpretation and metadata endpoints; secrets stay server-side |
@@ -120,8 +124,8 @@ See [the validation notebook](docs/VALIDATION.md) for automated results, browser
 
 Capability maps are deliberately scoped. Arbitrary special requirements are retained as open questions; not semantically interpreted. GitHub general conversation comments, branch writes and enterprise-wide APIs need additional mappings. Gmail exceptions depend on the complete architecture; calling a product internal or device-only is not sufficient proof. Slack identity, token scopes, channel membership and distribution-specific rate limits need representative tests.
 
-Shared links are readable input bundles and may be long. They recompute with current rules. There is no private multi-user workspace or cross-device checklist. Research drafts are public and have no self-service moderation/deletion interface. Browser storage can be cleared.
+New shared links open stored dated plans. Legacy encoded input links remain compatible and recalculate when edited. There is no private multi-user workspace or cross-device checklist. Research drafts are public and have no self-service moderation/deletion interface. Browser storage can be cleared.
 
-The source reader uses bounded traversal, HTTPS/DNS checks and redirect revalidation; these are not resolver pinning or a security audit. Real OAuth flows, authenticated AI/Composio calls, provider approvals, complete browser/device coverage and developer comprehension studies remain outside the validated slice.
+The source reader uses bounded traversal, HTTPS/DNS checks and redirect revalidation; these are not resolver pinning or a security audit. Real OAuth flows, authenticated Composio calls, provider approvals, complete browser/device coverage and developer comprehension studies remain outside the validated slice. Browser automation was disabled during the current revision; no fresh visual check is claimed.
 
-Next improvements: exercise credentialed adapters and real representative grants, add endpoint/tool permission coverage, validate draft guidance with developers, and expand the reviewed guide library before claiming 100-app depth.
+Next improvements: exercise real representative grants and remaining credentialed adapters, add endpoint/tool permission coverage, validate draft guidance with developers, and expand the reviewed guide library before claiming 100-app depth.

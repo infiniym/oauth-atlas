@@ -1,10 +1,10 @@
 # OAuth Launch Advisor — Decision log
 
-Updated 2026-10-30.
+Updated 2026-10-31.
 
 Help developers choose an authentication architecture for their use case, follow a source-backed launch plan and inspect the decisions behind the product.
 
-The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback.
+The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback. The 31 October revision unifies reviewed and researched results; D18–D20 include the current common-plan, snapshot and live-evaluation decisions.
 
 ## Product objectives
 
@@ -467,11 +467,11 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Assignment requirements:** R2, R6, R14
 
-**Decision.** Separate catalog names, deep assessments, reference guides and live research drafts.
+**Decision.** Use one plan experience across reviewed providers and unfamiliar apps, with the evidence basis visible.
 
 **Why this approach.** The new brief asks for discoverability across many integrations, while the original assignment asks for a maintained guide library. A searchable name does not establish verified OAuth behavior.
 
-**How it is implemented.** A public docs snapshot contains 1,694 real names and toolkit links. Three providers have rule-backed assessments; other methods and managed availability are unverified. Unknown providers can enter the existing live source reader. Optional Composio API metadata checks exact managed schemes for the selected deep provider.
+**How it is implemented.** Catalog names aid discovery but are optional. Reviewed rules and bounded live research adapt into LaunchPlan, rendered through one AppFrame and LaunchPlanView. Research targets registration, permissions/capabilities, identity and distribution, with one action-focused follow-up. Reference scenarios are labeled Reference notes.
 
 **Alternative considered.** Create 100 generic OAuth cards or infer managed availability from presence in a toolkit index. Both make the directory look more complete than its evidence.
 
@@ -479,13 +479,13 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Evidence and constraints.** The official toolkit catalog was read directly. Per-toolkit docs establish OAuth2 managed availability for Gmail, Slack, GitHub and the Slackbot variant; exact scope grants remain a separate check.
 
-**Acceptance criterion.** Search resolves a real catalog provider, coverage is visible, and a catalog-only entry starts research rather than a fabricated assessment.
+**Acceptance criterion.** Gmail, Slack, GitHub and researched providers produce the common contract; unknown names can enter research without a catalog entry, and no catalog match is treated as a compatible grant.
 
 - [Catalog snapshot](https://github.com/infiniym/oauth-atlas/blob/main/data/catalog.json)
 - [Refresh script](https://github.com/infiniym/oauth-atlas/blob/main/scripts/sync-catalog.mjs)
 - [Managed method semantics](https://docs.composio.dev/toolkits/managed-auth)
 
-## D19 — Share assessment inputs and export a dated plan snapshot
+## D19 — Share dated plans and preserve independent working progress
 
 **Phase:** Added for the advisor MVP brief
 
@@ -493,22 +493,22 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Assignment requirements:** R11, R15
 
-**Decision.** Store working inputs locally; encode validated inputs in share URLs; export the rendered plan as Markdown.
+**Decision.** Store reviewed output snapshots on explicit Share; preserve research versions and export the same plan contract as Markdown.
 
-**Why this approach.** A reviewer should reproduce the recommendation without an account or a new database service. Input changes must also invalidate stale personal checklist progress.
+**Why this approach.** Reopening a shared result must preserve the original conclusion and evidence dates even after rules change. Editing should create a new version; changed inputs must invalidate stale personal progress.
 
-**How it is implemented.** Strictly validated versioned input links regenerate with current rules. Markdown preserves the current output and evidence. Browser checklist keys depend on assessment inputs, engine version and recommendation route. The share dialog states that descriptions and answers are included.
+**How it is implemented.** The launch_plans table stores reviewed output and inputs under lp IDs. Saved research keeps lg IDs; both open at /plan/:id. New shares do not recalculate on read. Legacy input URLs remain compatible. Markdown includes request, steps, conditions, destinations, blockers and preparation drafts.
 
-**Alternative considered.** Silently publish every assessment into the existing public research database. That is unnecessary for the core workflow and would store user product details by default.
+**Alternative considered.** Continue encoding only inputs in URLs, which silently applies current rules when opened and cannot preserve the original recommendation.
 
-**Tradeoff / remaining gap.** Share URLs can be long and are readable by anyone receiving them. They recompute with current rules rather than freezing a historical conclusion; Markdown is the snapshot format. There is no multi-device private assessment account.
+**Tradeoff / remaining gap.** Anyone with a link can read the plan. Reviewed results are saved only on explicit Share; research is saved as part of generation with an input notice. There is no private account workspace or cross-device checklist.
 
-**Evidence and constraints.** Browser checks verify share round-trip, Unicode input validation, checklist reload and changed-answer reset. Personal progress is absent from the exported/shared input format.
+**Evidence and constraints.** Automated immutable round-trip, changed-input progress and legacy research compatibility cases pass. The real local API saves and reloads reviewed snapshots. Personal checkmarks are absent from stored/exported plans.
 
-**Acceptance criterion.** A changed capability produces new permissions, dependencies and checkmarks; a shared link reconstructs the assessment with an explicit current-rules notice.
+**Acceptance criterion.** Share and reopen the saved ID; the output stays unchanged. Editing creates a separate ID and local progress key. No fresh browser visual check is claimed for this revision.
 
-- [Assessment codec and validation](https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/assessment.ts)
-- [Markdown export](https://github.com/infiniym/oauth-atlas/blob/main/lib/advisor/export.ts)
+- [Common plan contract and storage](https://github.com/infiniym/oauth-atlas/tree/main/lib/plan)
+- [Plan rendering](https://github.com/infiniym/oauth-atlas/blob/main/components/launch-plan.tsx)
 
 ## D20 — Evaluate recommendation correctness with golden scenarios
 
@@ -526,9 +526,9 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Alternative considered.** Treat generated prose, screenshots or a successful build as sufficient correctness evidence. None establishes that the recommendation applies to the input.
 
-**Tradeoff / remaining gap.** Automated fixtures are not provider approvals or measured developer comprehension. Authenticated metadata/AI and real OAuth execution require separate live validation.
+**Tradeoff / remaining gap.** Automated fixtures and citation matches do not prove policy applicability, provider approval or developer comprehension. Real Haiku API runs cover a small sample. Browser automation was disabled for the common-plan revision, so prior visual observations are historical.
 
-**Evidence and constraints.** The evaluation set follows the cases in the supplied MVP brief and uses source-linked rules. No user task-completion metric is claimed.
+**Evidence and constraints.** The evaluation set follows the cases in the supplied MVP brief and uses source-linked rules. No user task-completion metric is claimed. The local shared Haiku configuration has now exercised Gmail intake and live Linear, Notion, Asana and public-API cases; failures and partial findings are recorded separately.
 
 **Acceptance criterion.** All automated cases pass, the three browser journeys produce their expected decisions, and limitations are stated in the validation notes.
 

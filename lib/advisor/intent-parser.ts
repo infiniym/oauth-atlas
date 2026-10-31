@@ -26,7 +26,7 @@ const outputSchema = {
   type: 'object',
   additionalProperties: false,
   properties: {
-    provider: {type: ['string','null'], enum: ['gmail','slack','github',null]},
+    provider: {anyOf:[{type:'string',enum:['gmail','slack','github']},{type:'null'}]},
     capabilities: {type:'array', items:{type:'string', enum:['read','metadata','draft','send','modify','post','private','contents','pulls','review','write','identity']}},
     background: {type:'string', enum:['yes','no','unknown']},
     audience: {type:'string', enum:['personal','organization','pilot','public','unknown']},
@@ -67,18 +67,18 @@ export async function interpret(description: string, config: IntentAiConfig, fet
     // Claude API reference checked 2026-10-30: output_config.format, no beta header.
     const response = await fetcher(anthropic ? 'https://api.anthropic.com/v1/messages' : 'https://api.openai.com/v1/responses', {
       method: 'POST',
-      signal: AbortSignal.timeout(18000),
+      signal: AbortSignal.timeout(25000),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + config.key,
-        ...(anthropic ? {'anthropic-version':'2026-10-21'} : {}),
+        ...(anthropic ? {'x-api-key':config.key,'anthropic-version':'2026-10-21'} : {Authorization:'Bearer '+config.key}),
       },
       body: JSON.stringify(anthropic ? {
         model: config.model,
-        max_tokens: 2048,
+        max_tokens: 4096,
+        thinking:{type:'adaptive'},
         system: systemPrompt,
         messages: [{role:'user',content:description}],
-        output_config: {format:{type:'json_schema',schema:outputSchema}},
+        output_config: {effort:'medium',format:{type:'json_schema',schema:outputSchema}},
       } : {
         model: config.model,
         store: false,

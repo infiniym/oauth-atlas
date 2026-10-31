@@ -8,3 +8,4 @@ export const researchLimits = sqliteTable('research_limits', {
 
 // Live research shares the existing database and migration sequence.
 export { liveGuides, liveGuideLimits } from './live-guide/schema';
+export const launchPlans=sqliteTable('launch_plans',{id:text('id').primaryKey(),payload:text('payload').notNull(),createdAt:text('created_at').notNull()});

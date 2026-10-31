@@ -25,15 +25,30 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   if (input.previousId && !previous) throw new Error('The previous guide could not be found. Start fresh research.');
   if (!input.previousId && Object.keys(input.answers).length) throw new Error('Answers must refer to an existing guide.');
   if (previous) continuation(input,previous);
-  const research = previous ? {documents:previous.documents,website:previous.guide.provider.website,inferred:previous.guide.provider.identity==='inferred',warnings:previous.guide.warnings} : await retrieve(input,bindings,emit,signal,fetcher);
+  let research = previous ? {documents:previous.documents,website:previous.guide.provider.website,inferred:previous.guide.provider.identity==='inferred',warnings:previous.guide.warnings} : await retrieve(input,bindings,emit,signal,fetcher);
   signal.throwIfAborted();
   emit({stage:'Interpreting the evidence',detail:`Checking the intended actions against ${research.documents.length} saved source snapshots.`,status:'working'});
   const decisions=new Map((previous?.guide.decisions||[]).map(d=>[d.id,d]));
   for(const question of previous?.guide.questions||[])if(input.answers[question.id])decisions.set(question.id,{id:question.id,question:question.prompt,answer:input.answers[question.id]});
-  const interpreted = await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()]);
+  let interpreted = await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()]);
+  if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length&&interpreted.value.researchNeeded.length){
+    emit({stage:'Resolving missing requirements',detail:'Looking for '+interpreted.value.researchNeeded.join(', ')+' evidence before finalizing the plan.',status:'working'});
+    const expanded=await retrieve(input,bindings,emit,signal,fetcher,{previous:research,topics:interpreted.value.researchNeeded});
+    if(expanded.documents.length>research.documents.length){
+      research=expanded;
+      const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()]);
+      const combined={...refined.telemetry,attempts:refined.telemetry.attempts+interpreted.telemetry.attempts,inputTokens:refined.telemetry.inputTokens+interpreted.telemetry.inputTokens,outputTokens:refined.telemetry.outputTokens+interpreted.telemetry.outputTokens,thinkingTokens:(refined.telemetry.thinkingTokens||0)+(interpreted.telemetry.thinkingTokens||0),elapsedMs:refined.telemetry.elapsedMs+interpreted.telemetry.elapsedMs,followupOutcome:refined.telemetry.outcome};
+      if(refined.mode==='interpreted'){refined.telemetry=combined;interpreted=refined;}
+      else{interpreted.telemetry={...combined,outcome:interpreted.telemetry.outcome};research.warnings.push('Additional sources were found, but the follow-up interpretation did not validate. Earlier supported findings remain provisional.');}
+    }
+  }
+  if(!interpreted.value.questions.length&&interpreted.value.researchNeeded.length)research.warnings.push('Evidence remains unresolved for '+interpreted.value.researchNeeded.join(', ')+'. The bounded research pass did not establish these requirements.');
   const value = interpreted.value;
+  const deferred=(previous?.guide.pendingQuestions||[]).filter(q=>!input.answers[q.id]);
+  if(deferred.length)value.questions=[...deferred,...value.questions.filter(q=>!deferred.some(d=>d.id===q.id))].slice(0,3);
   const identityConfirmed = !research.inferred || input.answers['provider-identity']==='Yes, this is the provider';
-  if (!identityConfirmed) value.questions = [{id:'provider-identity',prompt:`Is ${new URL(research.website).hostname} the provider you meant?`,why:'The provider was inferred from search. Confirm its identity before following setup advice.',options:['Yes, this is the provider','No, I will enter its website']},...value.questions.filter(q=>q.id!=='provider-identity')].slice(0,3);
+  const pendingQuestions=!identityConfirmed?value.questions.filter(q=>q.id!=='provider-identity'):[];
+  if (!identityConfirmed) value.questions = [{id:'provider-identity',prompt:`Is ${new URL(research.website).hostname} the provider you meant?`,why:'The provider was inferred from search. Confirm its identity before following setup advice.',options:['Yes, this is the provider','No, I will enter its website']}];
   if (value.questions.length) {
     value.summary = `Documentation was found for ${input.app}. Confirm the choices below to select a setup path for your intended actions.`;
     value.nextAction = 'Resolve the setup choices below before treating the recommendation as a firm path.';
@@ -47,6 +62,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     status:value.oauthSupport==='unsupported'?'unsupported':value.questions.length?'needs-input':interpreted.mode==='interpreted' && value.oauthSupport==='documented' && !research.warnings.length && value.unknowns.length===0?'documented-plan':'provisional',
     mode:interpreted.mode,notice:interpreted.notice,warnings:research.warnings,setupTested:false,
     decisions:[...decisions.values()],
+    ...(pendingQuestions.length?{pendingQuestions}:{}),
     ...(interpreted.telemetry.attempts?{engine:{...interpreted.telemetry,provider:'anthropic' as const,promptVersion:PROMPT_VERSION}}:{}),
     sources:research.documents.map(({text:_text,...source})=>source),integration:integrationContext(input.app),
   };

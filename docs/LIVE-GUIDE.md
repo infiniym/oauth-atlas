@@ -1,52 +1,55 @@
-# Live guide integration and testing
+# Shared launch plans and live research
 
-The live-guide branch is merged into Atlas. The supported-provider advisor and unfamiliar-provider research run in the same app and database. The live-guide modules and CSS remain separate from the advisor rules.
+The advisor is one product: describe an integration, confirm consequential choices, and get a launch plan. Reviewed rules cover Gmail, Slack and GitHub. Unfamiliar providers use public-source research. Both produce the `LaunchPlan` contract and render through the same application shell and `LaunchPlanView`.
 
-## Try the combined experience
+## Try locally
 
-1. Open `/` for the Gmail, Slack and GitHub advisor. Its existing confirmation flow, timing guidance and deterministic rules remain intact.
-2. Choose **Research an app** on the homepage, or **Research docs** on a catalog-only provider. Both open `/live-guide`; directory selections prefill the app name.
-3. For a dependable public-source example, enter Linear and `https://linear.app/developers/oauth-2-0-authentication`, with “Read issues and add comments for customer workspaces.”
-4. Generate the guide, inspect its evidence and open questions, then share or download Markdown. Reloading the saved URL opens the dated version. Fresh research creates another version.
+1. Open `/` and enter a provider name or website plus the intended actions. Providers do not need to appear in the directory.
+2. Reviewed providers open their relevant confirmation questions. An unfamiliar provider collects audience and an optional direct documentation URL, then researches the request. Name-only search can fail; supplying an official URL avoids ambiguous discovery.
+3. Confirm only developer choices that change app model, permissions or distribution. Inferred provider identity is confirmed separately, without dropping deferred questions.
+4. Read the next action, preparation fields, owner and completion criterion. The same result sections separate hands-on work, provider wait, permissions, representative testing, launch requirements, blockers, drafts and sources.
+5. Share or download the dated plan. `/plan/lp-…` saves reviewed output and inputs; `/plan/lg-…` reads an immutable research record. Older `/live-guide?id=…` links still work. Editing creates a new version; checkmarks remain local.
 
-Public search services can reject automated name-only searches. In that case the form asks for the official website or a direct documentation URL. An inaccessible source is not evidence of absent OAuth support.
+Reference notes are earlier scenarios, clearly labeled rather than represented as an assessment of the current request. Catalog membership alone does not prove OAuth availability, Composio compatibility or action coverage.
 
-## Optional server configuration
+## One model configuration
 
-The live-guide credentials are separate from the advisor's description parser. Configure these in the ignored `.dev.vars` file and restart the preview, or provide equivalent Worker runtime secrets:
+Use ignored `.dev.vars` locally and equivalent server secrets when hosting:
 
 ```dotenv
-LIVE_GUIDE_ANTHROPIC_KEY=
-LIVE_GUIDE_ANTHROPIC_MODEL=
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=
+ANTHROPIC_MODEL=claude-haiku-5-5
 LIVE_GUIDE_FIRECRAWL_KEY=
 ```
 
-The Anthropic key and an exact model ID supporting adaptive thinking and structured outputs enable interpretation of the saved documents for the use case. The local preview has been exercised with `claude-haiku-5-5`, adaptive thinking and medium effort. Thinking remains enabled: the response parser separates thinking blocks from final structured text. Only token counts and settings are saved, not thinking text. Missing credentials, refusal, truncation, schema errors or unmatched scope identifiers preserve **Evidence only** findings. No firm permission selection or approval path is substituted.
+Restart the preview after changes. Intake and research resolve the same selected key/model. Anthropic uses adaptive thinking at medium effort in both paths. Thinking text is never persisted; research telemetry records settings and token counts. The old `LIVE_GUIDE_ANTHROPIC_*` pair remains a compatibility alias only when the shared Anthropic pair is absent. `AI_PROVIDER=none` overrides it. Partial shared pairs never borrow the other half from legacy settings.
 
-The model selects numbered source passages. The server expands those references into exact quotations and checks the permission identifiers against them. One validation-repair attempt is allowed within the shared model deadline; signed thinking blocks are preserved unmodified in that in-memory repair turn. A citation match establishes source correspondence, not semantic correctness. Published wait durations are checked against the cited duration, and an estimate cannot be turned into guaranteed approval.
+The OpenAI adapter currently supports reviewed-provider intake only. Selecting it never silently switches research to Anthropic: research returns partial evidence with an explicit adapter limitation. The current evaluated end-to-end configuration is Haiku 5.5.
 
-Firecrawl is an optional search and rendered-page extraction adapter. Without its key, the bounded public HTML/Markdown reader runs directly. Both adapters have controlled-response tests; real Haiku requests have also run through the local app. Credentialed Firecrawl retrieval and hosted model configuration remain unverified.
+The optional Firecrawl key enables rendered search/scrape. Without it, the public HTML/Markdown reader runs directly; JS-only, login-gated and blocked documentation can remain unreadable. Credentialed Firecrawl retrieval has controlled-response coverage but has not been exercised live here.
 
-## Database setup
+## Research and validation
 
-The tables `live_guides` and `live_guide_limits` use the normal Atlas migration journal. Existing guide storage remains separate. After building, apply the added local migration:
+- Initially reads up to eight content pages, with a 38-second reading deadline; indexes and short link pages aid discovery without consuming content slots. Missing registration, permissions, identity or distribution facts may trigger one targeted follow-up, up to three new pages and 18 seconds.
+- Ranks scope/capability pages, distribution requirements and API references for the requested actions. Sibling provider domains and explicitly linked external documentation can be followed. External links are provenance, not proof of official ownership.
+- Saves bounded text snapshots, URLs, dates, useful links and fingerprints. The model sees compact numbered passages, with short exact scope entries preserved. Full saved snapshots remain server-side.
+- Interpretation and one repair share a 75-second deadline per research round. Total request bound is 220 seconds. Thinking and final output share the 16,000-token output limit. A follow-up is bounded; unresolved facts remain explicit.
+- Checks schema, exact passage correspondence, exact selected permission identifiers, documented destinations and published duration consistency. These checks do not establish semantic applicability or provider acceptance.
+- Preserves signed thinking blocks only in an in-memory repair turn. Failure returns partial findings, no invented permission selection or setup sequence. A local OAuth limitation is never mechanically applied to the provider's entire product family.
+- Separates provider review, marketplace listing and customer-admin approval; groups unresolved work by test, launch or follow-up consequence. Confirmed answers carry their full prompt and answer into refinements.
+- Uses HTTPS/DNS screening, redirect validation, bounded bodies, same-origin input and anonymous research limits (12 per connection/hour). This is not resolver pinning or a security audit.
+
+No app creation, authorization, token exchange, tool execution or provider approval has been performed by the planner. See [validation](VALIDATION.md) and the dated evaluations for actual runs and failures.
+
+## Database
+
+The normal migration journal adds `live_guides`, `live_guide_limits`, then `launch_plans`. Build first, then apply migrations once per fresh local database:
 
 ```sh
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_orange_wallop.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_groovy_mister_fear.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_romantic_lockheed.sql
 ```
 
-Apply the original migration first for a fresh database. Local and hosted databases are separate. This integration was prepared for local testing; the public hosted version has not been republished.
-
-## What the implementation checks
-
-- Reads at most six substantive pages; documentation indexes do not consume content-page slots. Retrieval has a 42-second deadline; interpretation and its optional repair share 60 seconds; the complete request is capped at 110 seconds. The model output limit is 16,000 tokens for thinking and final output combined.
-- Records source URLs, retrieval dates and fingerprints of the exact text snapshots used by the model. Full snapshots remain server-side; the public guide contains metadata and short cited excerpts.
-- Checks structured output, numbered passage references, exact permission identifiers and agreement between claimed and quoted published waits. These checks establish citation correspondence and limited consistency, not general semantic correctness or provider acceptance.
-- Separates provider review, marketplace listing and customer-admin approval. Missing developer choices suppress firm setup steps until answered.
-- Refines answers against saved evidence, producing a new immutable guide version. Confirmed questions and answers are carried forward in plain language as well as by identifier, so the model can avoid asking the same requirement under a new name. Changed use cases require fresh research.
-- Preserves unresolved effort and waiting time. Any hands-on estimate is labeled and requires assumptions.
-- Checks HTTPS URLs, DNS answers, redirects and response size. DNS screening is not resolver pinning or a security audit.
-- Keeps guides public to anyone with the link, with an explicit input notice. Checkmarks remain on the device and are excluded from exports.
-- Does not infer managed OAuth or action coverage from a catalog name. An unknown toolkit does not receive generic Composio setup instructions.
-
-Automated checks cover the advisor and live-guide workflows, network and storage failures, cancellation, schema/citation rejection, critical questions, refinement, sharing, exports and URL safeguards. Live-source checks and browser observations are recorded separately in the validation notebook. No provider app registration, token exchange or approval is claimed.
+Local and hosted stores are separate. This revision is for the combined local preview; it has not been published to the hosted site.

@@ -1,18 +1,20 @@
 import { z } from 'zod';
+import {getDomain} from 'tldts';
+import type {IntentAiBindings} from '../ai/config.ts';
 
 const text = (max: number) => z.string().trim().min(1).max(max).refine(s => !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(s), 'Use plain text.');
 export const inputSchema = z.object({
   app: text(100), website: z.string().trim().max(1500).default(''),
   useCase: z.string().trim().max(600).default(''),
   audience: z.enum(['internal', 'customers', 'unknown']).default('unknown'),
-  answers: z.record(z.string().max(60), text(300)).refine(a => Object.keys(a).length <= 4).default({}),
+  answers: z.record(z.string().max(60), text(300)).refine(a => Object.keys(a).length <= 24).default({}),
   previousId: z.string().regex(/^lg-[a-f0-9-]{36}$/).optional(),
 }).strict();
 export type GuideInput = z.infer<typeof inputSchema>;
 export type Progress = { stage: string; detail: string; status: 'working' | 'done' | 'warning' };
-export type Document = { id: string; url: string; title: string; retrievedAt: string; hash: string; text: string };
+export type Document = { id: string; url: string; title: string; retrievedAt: string; hash: string; text: string; links?:string[] };
 export type Evidence = { sourceId: string; quote: string };
-const evidenceSchema = z.array(z.object({ sourceId: text(20), quote: text(260) }).strict()).min(1).max(3);
+const evidenceSchema = z.array(z.object({ sourceId: text(20), quote: text(260) }).strict()).min(1).max(6);
 export const findingSchema = z.object({
   kind: z.enum(['oauth', 'permission', 'provider-review', 'customer-approval', 'prerequisite', 'provider-wait']),
   title: text(120), detail: text(800), appliesWhen: text(400), scope:z.string().max(100).default(''), evidence: evidenceSchema,
@@ -20,6 +22,8 @@ export const findingSchema = z.object({
 const stepSchema = z.object({
   title: text(120), detail: text(800), owner: z.enum(['developer', 'agent', 'customer admin', 'provider']),
   doneWhen: text(400), evidence: evidenceSchema,
+  appliesWhen:z.string().max(400).optional(),
+  stage:z.enum(['prepare','test','launch']).default('test'),destination:z.string().max(1500).default(''),fields:z.array(text(100)).max(8).default([]),
 }).strict();
 const questionSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]{0,59}$/), prompt: text(200), why: text(300),
@@ -32,12 +36,16 @@ export const interpretationSchema = z.object({
   questions: z.array(questionSchema).max(3),
   activeEffort: z.object({ range: z.string().max(100), assumptions: z.string().max(500) }).strict(),
   unknowns: z.array(text(400)).max(10),
+  blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),owner:text(80),resolution:text(500)}).strict()).max(10).default([]),
+  coverage:z.array(z.object({action:text(180),permissions:z.array(text(100)).max(8),status:z.enum(['mapped','unresolved','unsupported']),reason:text(400)}).strict()).max(10).default([]),
+  researchNeeded:z.array(z.enum(['registration','permissions','identity','distribution'])).max(3).default([]),
 }).strict();
 export type Interpretation = z.infer<typeof interpretationSchema>;
+export type InferenceOutcome='accepted' | 'not-configured' | 'upstream-error' | 'incomplete' | 'validation-rejected' | 'timeout';
 export type InferenceTelemetry = {
   model: string; attempts: number; elapsedMs: number; inputTokens: number; outputTokens: number;
   thinkingTokens?: number; thinking?: 'adaptive'; effort?: 'medium';
-  outcome: 'accepted' | 'not-configured' | 'upstream-error' | 'incomplete' | 'validation-rejected' | 'timeout';
+  outcome:InferenceOutcome;followupOutcome?:InferenceOutcome;
 };
 export type LiveGuide = Interpretation & {
   schemaVersion: 1; id: string; previousId?: string; generatedAt: string; input: GuideInput;
@@ -46,12 +54,13 @@ export type LiveGuide = Interpretation & {
   notice: string; warnings: string[]; setupTested: false;
   engine?: InferenceTelemetry & { provider:'anthropic'; promptVersion:string };
   decisions?: {id:string;question:string;answer:string}[];
+  pendingQuestions?:Interpretation['questions'];
   sources: Omit<Document, 'text'>[];
   integration: { catalogName?: string; docsUrl?: string; message: string };
 };
 export type StoredRun = { guide: LiveGuide; documents: Document[] };
-export type Bindings = {
-  LIVE_GUIDE_ANTHROPIC_KEY?: string; LIVE_GUIDE_ANTHROPIC_MODEL?: string; LIVE_GUIDE_FIRECRAWL_KEY?: string;
+export type Bindings = IntentAiBindings & {
+  LIVE_GUIDE_FIRECRAWL_KEY?: string;
 };
 export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[] };
 
@@ -86,6 +95,7 @@ export function publicUrl(value: string): URL {
 export function onProvider(url: string, seed: string): boolean {
   const host = new URL(url).hostname.replace(/^www\./, '');
   const base = new URL(seed).hostname.replace(/^www\./, '');
-  return host === base || host.endsWith('.' + base);
+  if(host===base||host.endsWith('.'+base))return true;
+  const domain=getDomain(base,{allowPrivateDomains:true});return !!domain&&domain===getDomain(host,{allowPrivateDomains:true});
 }
 export const normalizeText = (s: string) => s.replace(/\s+/g, ' ').trim();

@@ -37,8 +37,8 @@ test('Anthropic request uses Messages structured output and only known interpret
  let endpoint='',init:RequestInit|undefined;
  const result=await interpret('Read Gmail',anthropic,async(url,options)=>{endpoint=String(url);init=options;return Response.json(message());});
  assert.equal(endpoint,'https://api.anthropic.com/v1/messages');assert.equal(init?.method,'POST');
- const headers=new Headers(init?.headers);assert.equal(headers.get('Authorization'),'Bearer fixture-secret');assert.equal(headers.get('anthropic-version'),'2026-10-21');assert.equal(headers.get('anthropic-beta'),null);
- const body=JSON.parse(String(init?.body));assert.equal(body.model,'configured-claude-model');assert.equal(body.max_tokens,2048);assert.equal(body.messages[0].content,'Read Gmail');assert.equal(body.messages[0].role,'user');assert.match(body.system,/Never generate scopes/);
+ const headers=new Headers(init?.headers);assert.equal(headers.get('x-api-key'),'fixture-secret');assert.equal(headers.get('Authorization'),null);assert.equal(headers.get('anthropic-version'),'2026-10-21');assert.equal(headers.get('anthropic-beta'),null);
+ const body=JSON.parse(String(init?.body));assert.equal(body.model,'configured-claude-model');assert.equal(body.max_tokens,4096);assert.equal(body.messages[0].content,'Read Gmail');assert.equal(body.messages[0].role,'user');assert.match(body.system,/Never generate scopes/);
  assert.equal(body.output_config.format.type,'json_schema');assert.equal(body.output_config.format.schema.additionalProperties,false);assert.ok(!('tools' in body));assert.ok(!('temperature' in body));assert.ok(!('store' in body));
  assert.equal(result.mode,'AI suggestions');assert.equal(result.aiProvider,'anthropic');assert.deepEqual(result.intent,validIntent);assert.ok(!JSON.stringify(result).includes('fixture-secret'));
 });
