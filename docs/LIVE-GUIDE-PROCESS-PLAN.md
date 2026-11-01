@@ -1,7 +1,7 @@
 # Live Guide: why the loop happened and the proposed process
 
-**Date:** 31 October 2026  
-**Status:** Implemented locally on 1 November 2026 after review; validation and remaining limits are recorded in [the follow-up evaluation](evaluations/REVIEW-FIXES-2026-11-01.md). The proposal below preserves the original rationale.  
+**Date:** 31 October 2026
+**Status:** Implemented locally on 1 November 2026 after review; validation and remaining limits are recorded in [the follow-up evaluation](evaluations/REVIEW-FIXES-2026-11-01.md). The proposal below preserves the original rationale.
 **Scope:** The unfamiliar-provider journey, including Linear and apps outside the directory. Keep the shared result experience with Gmail, Slack and GitHub.
 
 ## Implementation note — 1 November
