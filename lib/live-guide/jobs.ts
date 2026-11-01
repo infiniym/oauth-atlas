@@ -4,9 +4,9 @@ import {generate} from './workflow.ts';
 import {load} from './http.ts';
 import type {Store} from './http.ts';
 import {freezeResearchPlan} from '../plan/storage.ts';
-export type GuideJob={id:string;input:GuideInput;state:'queued'|'running'|'waiting'|'ready'|'interrupted';events:Progress[];checkpoint?:WorkflowCheckpoint;guide?:LiveGuide;error?:string;createdAt:string;updatedAt:string;leaseUntil:number;timing?:{startedAt:string;finishedAt?:string;elapsedMs?:number;firstQuestionMs?:number;firstActionMs?:number};attempts?:{modelCalls:number;inputTokens:number;outputTokens:number;modelMs:number}[]};
+export type GuideJob={id:string;input:GuideInput;savedSources?:LiveGuide['sources'];state:'queued'|'running'|'waiting'|'ready'|'interrupted';events:Progress[];checkpoint?:WorkflowCheckpoint;guide?:LiveGuide;error?:string;createdAt:string;updatedAt:string;leaseUntil:number;timing?:{startedAt:string;finishedAt?:string;elapsedMs?:number;firstQuestionMs?:number;firstActionMs?:number};attempts?:{modelCalls:number;inputTokens:number;outputTokens:number;modelMs:number}[]};
 type Row={payload:string;state:GuideJob['state'];lease_until:number};
-export function publicJob(job:GuideJob){const {checkpoint:_checkpoint,...result}=job;return result;}
+export function publicJob(job:GuideJob){const {checkpoint:_checkpoint,...result}=job;return {...result,savedSources:job.checkpoint?.research.documents.map(({text:_text,...source})=>source)||job.guide?.sources||[]};}
 export async function getJob(db:Store,id:string):Promise<GuideJob|null>{
  if(!/^job-[a-f0-9-]{36}$/.test(id))return null;
  const row=await db.prepare('SELECT payload,state,lease_until FROM guide_jobs WHERE id=?').bind(id).first<Row>();if(!row)return null;
@@ -39,8 +39,8 @@ export async function runJob(db:Store,id:string,bindings:Bindings,emit:(event:Pr
   if(result.guide.journey)for(const k of ['modelCalls','inputTokens','outputTokens','modelMs'] as const)result.guide.journey[k]+=earlier[k];
   job.attempts=[...job.attempts||[],{modelCalls:telemetry?.attempts||0,inputTokens:telemetry?.inputTokens||0,outputTokens:telemetry?.outputTokens||0,modelMs:telemetry?.elapsedMs||0}];
   signal.throwIfAborted();await pending;
-  if(!result.guide.questions.length)await freezeResearchPlan(result.guide,db);
+  if(!result.guide.questions.length&&result.guide.mode==='interpreted'&&(!result.guide.engine||result.guide.engine.outcome==='accepted'))await freezeResearchPlan(result.guide,db);
   await db.prepare('INSERT OR IGNORE INTO live_guides (id,payload,created_at) VALUES (?,?,?)').bind(result.guide.id,JSON.stringify(result),result.guide.generatedAt).run();
-  job.guide=result.guide;const failed=result.guide.engine&&result.guide.engine.outcome!=='accepted';job.state=failed?'interrupted':result.guide.questions.length?'waiting':'ready';if(failed)job.error='Interpretation could not finish. Collected sources are retained; retry only this unfinished stage.';job.leaseUntil=0;await save();return job;
+  job.guide=result.guide;const failed=!result.guide.questions.length&&(result.guide.mode==='evidence-only'||!!result.guide.engine&&result.guide.engine.outcome!=='accepted');job.state=failed?'interrupted':result.guide.questions.length?'waiting':'ready';if(failed)job.error='Interpretation could not finish. Collected sources are retained; retry only this unfinished stage.';job.leaseUntil=0;await save();return job;
  }catch{await pending.catch(()=>{});job.state='interrupted';job.leaseUntil=0;job.error='This stage could not finish. Your request and collected evidence are saved. Retry this stage, or edit the request.';await save();return job;}
 }

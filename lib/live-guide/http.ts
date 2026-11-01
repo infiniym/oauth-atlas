@@ -49,7 +49,7 @@ export async function postGuide(request: Request, env: Environment, fetcher: typ
       try {
         const run = await generate(input,env,event=>send({type:'progress',event}),signal,fetcher,previous || undefined);
         signal.throwIfAborted();
-        if(!run.guide.questions.length)await (await import('../plan/storage.ts')).freezeResearchPlan(run.guide,db);
+        if(!run.guide.questions.length&&run.guide.mode==='interpreted'&&(!run.guide.engine||run.guide.engine.outcome==='accepted'))await (await import('../plan/storage.ts')).freezeResearchPlan(run.guide,db);
         await db.prepare('INSERT INTO live_guides (id,payload,created_at) VALUES (?,?,?)').bind(run.guide.id,JSON.stringify(run),run.guide.generatedAt).run();
         send({type:'complete',guide:run.guide});
       } catch(error) {

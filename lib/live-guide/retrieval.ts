@@ -87,7 +87,7 @@ export function actionLinkScore(url:string,label:string,useCase:string):number{
   const words=useCase.toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,''));
   const terms=[...new Set(words)],resources=terms.filter(t=>text.includes(t)).length;
   const direct=terms.reduce((n,t)=>n+(new RegExp('(?:get|list|retrieve|create|post|update|delete)[-_ ]*(?:(?:all|a|an)[-_ ]*)?'+t+'s?(?:[-_ ]|for|by|$|\\.)').test(text)?Math.min(2,words.filter(w=>w===t).length)*20:0),0);
-  return resources&&/\/reference\/|\/api\/|endpoint/i.test(text)?40+Math.min(resources,3)*8+direct:0;
+  return resources&&/\/reference\/|\/api\/|endpoint/i.test(text)?40+Math.min(resources,3)*8+direct:/graphql|api[-/ ](?:reference|basics|quickstart)|getting[-/ ]started/.test(text)?18:0;
 }
 
 export async function discoverProvider(input:GuideInput,bindings:Bindings,emit:(event:Progress)=>void,outer:AbortSignal,fetcher:Fetcher=fetch):Promise<string>{
@@ -116,7 +116,7 @@ export async function discoverProvider(input:GuideInput,bindings:Bindings,emit:(
   outer.throwIfAborted();return publicUrl(seed).href;
 }
 
-export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[]}={}): Promise<Research> {
+export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[];urls?:string[];query?:string}={}): Promise<Research> {
   const signal = AbortSignal.any([outer, AbortSignal.timeout(options.previous?18000:38000)]);
   const reader = publicReader(fetcher, signal); const warnings: string[] = [];
   let seed = options.previous?.website||input.website;
@@ -132,17 +132,17 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const topics=options.topics||(['registration','permissions','identity','distribution'] as ResearchTopic[]);
   const candidates=new Map<string,string>();
   for(const d of previous)for(const link of d.links||[])if(!previous.some(p=>p.url===link))candidates.set(link,'');
-  const queue = previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase)>0)).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed,new URL('/llms.txt',seed).href];
+  const queue = options.urls?.length?options.urls.map(u=>publicUrl(u).href):previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase)>0)).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed,new URL('/llms.txt',seed).href];
   if(previous.length&&!queue.length){
     emit({stage:'Finding missing evidence',detail:'Looking for '+topics.join(', ')+' documentation.',status:'working'});
-    try{const query=`site:${new URL(seed).hostname.replace(/^(docs|developers|developer)\./,'')} ${input.app} OAuth ${topics.join(' ')}`;
+    try{const query=options.query||`site:${new URL(seed).hostname.replace(/^(docs|developers|developer)\./,'')} ${input.app} OAuth ${topics.join(' ')}`;
       if(bindings.LIVE_GUIDE_FIRECRAWL_KEY){const data=await firecrawl('search',{query,limit:4,sources:[{type:'web'}]});queue.push(...(data.data?.web||[]).map((x:{url:string})=>x.url));}
       else{const result=await reader.read('https://html.duckduckgo.com/html/?q='+encodeURIComponent(query));queue.push(...parsePage(result.url,result.body).links.map(l=>new URL(l).searchParams.get('uddg')||l));}
     }catch{warnings.push('The targeted follow-up search was unavailable.');}
   }
   const attempted = new Set<string>(previous.map(d=>sourceKey(d.url))); const pages: Page[] = [];
   const covered=new Set<ResearchTopic>();
-  const allowedExternal=new Set<string>(previous.filter(d=>!onProvider(d.url,seed)).map(d=>new URL(d.url).hostname));
+  const allowedExternal=new Set<string>([...(options.urls||[]).map(u=>new URL(u).hostname),...previous.filter(d=>!onProvider(d.url,seed)).map(d=>new URL(d.url).hostname)]);
   const allowed=(url:string)=>onProvider(url,seed)||allowedExternal.has(new URL(url).hostname);
   while (queue.length && pages.length < (previous.length?3:8) && attempted.size < previous.length+16 && !signal.aborted) {
     const url = queue.shift()!; if (attempted.has(sourceKey(url)) || !allowed(url)) continue; attempted.add(sourceKey(url));

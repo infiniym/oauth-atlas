@@ -1,3 +1,4 @@
+import {resolveGuide} from './resolution.ts';
 import catalog from '../../data/catalog.json' with { type:'json' };
 import { normalizeInput } from './contracts.ts';
 import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun,WorkflowCheckpoint,Interpretation } from './contracts.ts';
@@ -25,6 +26,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   if (input.previousId && !previous) throw new Error('The previous guide could not be found. Start fresh research.');
   if (!input.previousId && Object.keys(input.answers).length) throw new Error('Answers must refer to an existing guide.');
   if (previous) continuation(input,previous);
+  if(input.resolution&&previous)return resolveGuide(input,previous,bindings,emit,signal,fetcher,options);
   const cumulative=previous?.guide.journey||{modelCalls:previous?.guide.engine?.attempts||0,inputTokens:previous?.guide.engine?.inputTokens||0,outputTokens:previous?.guide.engine?.outputTokens||0,modelMs:previous?.guide.engine?.elapsedMs||0};
   const decisions=new Map((previous?.guide.decisions||[]).map(d=>[d.id,d]));
   for(const question of previous?.guide.questions||[])if(input.answers[question.id])decisions.set(question.id,{id:question.id,question:question.prompt,answer:input.answers[question.id]});
@@ -91,6 +93,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     journey:{modelCalls:cumulative.modelCalls+(telemetry?.attempts||0),inputTokens:cumulative.inputTokens+(telemetry?.inputTokens||0),outputTokens:cumulative.outputTokens+(telemetry?.outputTokens||0),modelMs:cumulative.modelMs+(telemetry?.elapsedMs||0)},
     sources:research.documents.map(({text:_text,...source})=>source),integration:integrationContext(input.app),
   };
-  emit({stage:phase==='ready'?'Guide ready':'Waiting for your choices',detail:phase==='ready'?'Your guide and unresolved requirements are saved.':'Continue this saved request; completed work will be reused.',status:'done'});
+  const failed=telemetry&&telemetry.outcome!=='accepted';
+  emit(failed?{stage:'Guide unfinished',detail:'Your request and '+research.documents.length+' sources are saved. Retry the unfinished planning step.',status:'warning'}:{stage:phase==='ready'?'Guide ready':'Waiting for your choices',detail:phase==='ready'?'Your guide and unresolved requirements are saved.':'Continue this saved request; completed work will be reused.',status:'done'});
   return {guide,documents:research.documents};
 }

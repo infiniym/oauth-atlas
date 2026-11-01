@@ -9,6 +9,7 @@ export const inputSchema = z.object({
   audience: z.enum(['internal', 'customers', 'unknown']).default('unknown'),
   answers: z.record(z.string().max(60), text(300)).refine(a => Object.keys(a).length <= 24).default({}),
   previousId: z.string().regex(/^lg-[a-f0-9-]{36}$/).optional(),
+  resolution:z.object({kind:z.enum(['find-request','documentation','observation','refresh']),actionId:text(60).optional(),url:z.string().max(1500).optional(),blockerTitle:text(250).optional(),note:text(600).optional(),satisfied:z.boolean().optional(),requestId:z.string().uuid()}).strict().optional(),
 }).strict();
 export type GuideInput = z.infer<typeof inputSchema>;
 export type Progress = { stage: string; detail: string; status: 'working' | 'done' | 'warning';at?:string };
@@ -17,7 +18,7 @@ export type Evidence = { sourceId: string; quote: string };
 const evidenceSchema = z.array(z.object({ sourceId: text(20), quote: text(260) }).strict()).min(1).max(6);
 export const findingSchema = z.object({
   kind: z.enum(['oauth', 'permission', 'provider-review', 'customer-approval', 'prerequisite', 'provider-wait']),
-  title: text(120), detail: text(800), appliesWhen: z.string().trim().max(400), scope:z.string().max(100).default(''), evidence: evidenceSchema,
+  title: text(120), detail: text(800), appliesWhen: z.string().trim().max(400).default(''), scope:z.string().max(100).default(''), evidence: evidenceSchema,
   stage:z.enum(['prepare','test','launch']).optional(),stepIds:z.array(text(60)).max(10).optional(),
 }).strict();
 const stepSchema = z.object({
@@ -43,7 +44,7 @@ export const interpretationSchema = z.object({
   questions: z.array(questionSchema).max(3),
   activeEffort: z.object({ range: z.string().max(100), assumptions: z.string().max(500) }).strict(),
   unknowns: z.array(text(400)).max(10),
-  blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),owner:text(80),resolution:text(500),stepIds:z.array(text(60)).max(10).optional()}).strict()).max(10).default([]),
+  blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),kind:z.enum(['prerequisite','instruction','verification','missing-evidence']).optional(),owner:text(80),resolution:text(500),stepIds:z.array(text(60)).max(10).optional(),resolutionStepIds:z.array(text(60)).max(10).optional(),actionId:text(60).optional()}).strict()).max(10).default([]),
   coverage:z.array(z.object({action:text(180),actionId:text(60).optional(),permissions:z.array(text(100)).max(8),status:z.enum(['mapped','unresolved','unsupported']),reason:text(400),evidence:z.array(z.object({sourceId:text(20),quote:text(260)})).max(6).optional(),support:z.enum(['reviewed','unresolved']).optional()}).strict()).max(10).default([]),
   researchNeeded:z.array(z.enum(['registration','permissions','identity','distribution'])).max(3).default([]),
 }).strict();
@@ -67,6 +68,7 @@ export type LiveGuide = Interpretation & {
   clarificationUsed?:boolean;
   followupDone?:boolean;
   journey?:{modelCalls:number;inputTokens:number;outputTokens:number;modelMs:number};
+  observations?:{blockerTitle:string;note:string;satisfied:boolean;recordedAt:string;reportedBy:'developer'}[];
   sources: Omit<Document, 'text'>[];
   integration: { catalogName?: string; docsUrl?: string; message: string };
 };
@@ -86,6 +88,8 @@ export function normalizeInput(raw: unknown): GuideInput {
     input.app = new URL(publicUrl(input.website)).hostname.replace(/^www\./, '');
   }
   if (input.website) input.website = publicUrl(input.website).href;
+  if(input.resolution&&!input.previousId)throw new Error('An update must refer to a saved guide.');
+  if(input.resolution?.url)input.resolution.url=publicUrl(input.resolution.url).href;
   if (/[<>\u0000-\u001f]/.test(input.useCase)) throw new Error('Describe the use case in plain text.');
   return input;
 }
