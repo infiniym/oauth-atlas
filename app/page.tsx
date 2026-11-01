@@ -49,7 +49,7 @@ export default function Atlas(){
  function openGuide(g:Guide){setGuide(g);setGuideError('');changeLocation('/?guide='+g.id);}
  function navigate(v:View){setGuide(null);setGuideError('');setView(v);setAdvisorProvider('');setAdvisorKey(v);changeLocation(v==='advisor'?'/':'/?view='+v);}
  function openAssessment(id:string){setGuide(null);setGuideError('');setView('advisor');setAdvisorProvider(id);setAdvisorKey('provider-'+id);changeLocation('/?view=advisor&provider='+id);}
- function generate(value='',useCase=''){location.assign('/live-guide?'+new URLSearchParams({app:value,useCase}).toString());}
+ function generate(value='',useCase='',audience='unknown'){location.assign('/live-guide?'+new URLSearchParams({app:value,useCase,audience:['personal','organization','internal'].includes(audience)?'internal':['pilot','public','customers'].includes(audience)?'customers':'unknown'}).toString());}
  const names:Record<View,string>={advisor:'Launch advisor',directory:'Provider directory',library:'Reference notes',saved:'Saved reference notes',evidence:'Research and validation',decisions:'Decision log',about:'How it works'};
  const list=(view==='saved'?saved:library).filter(g=>searchText(g).includes(query.toLowerCase())).filter(g=>filter==='all'||(filter==='quick'?g.difficulty==='low'||g.difficulty==='moderate':g.difficulty==='high'));
  const catalog=!guide&&(view==='library'||view==='saved'||view==='advisor'||view==='directory');

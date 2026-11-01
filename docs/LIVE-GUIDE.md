@@ -6,8 +6,8 @@ The advisor is one product: describe an integration, confirm consequential choic
 
 1. Open `/` and enter a provider name or website plus the intended actions. Providers do not need to appear in the directory.
 2. Reviewed providers open their relevant confirmation questions. An unfamiliar provider collects audience and an optional direct documentation URL, then researches the request. Name-only search can fail; supplying an official URL avoids ambiguous discovery.
-3. Confirm only developer choices that change app model, permissions or distribution. Inferred provider identity is confirmed separately, without dropping deferred questions.
-4. Read the next action, preparation fields, owner and completion criterion. The same result sections separate hands-on work, provider wait, permissions, representative testing, launch requirements, blockers, drafts and sources.
+3. Name-only provider identity is confirmed before documentation collection or a model call. Then a small requirements pass asks one batch of consequential choices. Existing pending questions are served without inference; answered requests proceed to a guide rather than another question loop.
+4. Read the next available action, preparation fields, owner and completion criterion. Blockers are attached to steps; authorization alone cannot count as the requested API test. The same result sections separate hands-on work, provider wait, permissions, representative testing, launch requirements, blockers, drafts and sources.
 5. Share or download the dated plan. `/plan/lp-…` saves reviewed output and inputs; `/plan/lg-…` reads an immutable research record. Older `/live-guide?id=…` links still work. Editing creates a new version; checkmarks remain local.
 
 Reference notes are earlier scenarios, clearly labeled rather than represented as an assessment of the current request. Catalog membership alone does not prove OAuth availability, Composio compatibility or action coverage.
@@ -31,11 +31,11 @@ The optional Firecrawl key enables rendered search/scrape. Without it, the publi
 
 ## Research and validation
 
-- Initially reads up to eight content pages, with a 38-second reading deadline; indexes and short link pages aid discovery without consuming content slots. Missing registration, permissions, identity or distribution facts may trigger one targeted follow-up, up to three new pages and 18 seconds.
+- Initially reads up to eight content pages, with a 38-second reading deadline; indexes and short link pages aid discovery without consuming content slots. Material missing setup or API-test facts may trigger one targeted follow-up, up to three new pages and 18 seconds. Missing launch-only policy does not automatically trigger another full planning pass.
 - Ranks scope/capability pages, distribution requirements and API references for the requested actions. Sibling provider domains and explicitly linked external documentation can be followed. External links are provenance, not proof of official ownership.
 - Saves bounded text snapshots, URLs, dates, useful links and fingerprints. The model sees compact numbered passages, with short exact scope entries preserved. Full saved snapshots remain server-side.
-- Interpretation and one repair share a 75-second deadline per research round. Total request bound is 220 seconds. Thinking and final output share the 16,000-token output limit. A follow-up is bounded; unresolved facts remain explicit.
-- Checks schema, exact passage correspondence, exact selected permission identifiers, documented destinations and published duration consistency. These checks do not establish semantic applicability or provider acceptance.
+- The small structured requirements pass has a 4,096-token output bound. A detailed plan and one repair share a 75-second active deadline and 16,000-token bound; final JSON is validated locally because the expanded full schema exceeds the API grammar budget. A separate compact action/permission review has a 25-second bound. Total active request bound is 220 seconds. Thinking stays adaptive at medium effort. These bounds are not wall-time guarantees during machine sleep or runtime suspension.
+- Checks schema, exact passage correspondence, selected permission identifiers, documented destinations, dependency references/cycles and published duration consistency. An independent semantic review checks action-to-permission support and omitted requested actions. Documented mapping and untested execution are separate labels; incomplete mapping reviews downgrade access rather than certifying it. These checks do not establish semantic applicability or provider acceptance.
 - Preserves signed thinking blocks only in an in-memory repair turn. Failure returns partial findings, no invented permission selection or setup sequence. A local OAuth limitation is never mechanically applied to the provider's entire product family.
 - Separates provider review, marketplace listing and customer-admin approval; groups unresolved work by test, launch or follow-up consequence. Confirmed answers carry their full prompt and answer into refinements.
 - Uses HTTPS/DNS screening, redirect validation, bounded bodies, same-origin input and anonymous research limits (12 per connection/hour). This is not resolver pinning or a security audit.
@@ -51,5 +51,11 @@ node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_groovy_mister_fear.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_romantic_lockheed.sql
 ```
+
+The `guide_jobs` table in `drizzle/0003_simple_vulcan.sql` stores process state, retained evidence, progress events, attempt metrics and leases. Apply it with the same local D1 command above. Reloading `/live-guide?job=…` reconnects to the saved process. Duplicate submissions reuse a fingerprinted operation and atomic processing lease. Interrupted work is not retried automatically; an explicit retry reuses available checkpoints.
+
+HTTP processing can continue briefly after disconnect using the runtime execution context. It is not an unlimited background worker: Cloudflare documents a finite post-disconnect lifetime for [`waitUntil`](https://developers.cloudflare.com/workers/runtime-apis/context/#waituntil). A suspended or terminated process may require retry; ambiguous external calls can already have incurred tokens. Exactly-once external billing is not claimed.
+
+Reviewed plans are now computed and stored by the server using the selected metadata before display. Share and Markdown use that same result. Completed research also freezes the common plan at generation; old records receive a snapshot on their first canonical read.
 
 Local and hosted stores are separate. This revision is for the combined local preview; it has not been published to the hosted site.

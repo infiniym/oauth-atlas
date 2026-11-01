@@ -15,7 +15,7 @@ const sourceText='Create an OAuth application in your workspace settings. Config
 const docs:Document[]=[{id:'s1',url:base+'docs/oauth',title:'Task OAuth',retrievedAt:'2026-10-30T00:00:00Z',hash:'abc',text:sourceText}];
 const quote='Create an OAuth application in your workspace settings.';
 function plan():Interpretation{return {
-  oauthSupport:'documented',summary:'Task documents a developer-owned OAuth application flow.',recommendation:'Register a test app and request only the permissions for your chosen actions.',nextAction:'Open the OAuth application settings and register a test application.',
+  accessModel:'oauth',requestedActions:[],prohibitions:[],oauthSupport:'documented',summary:'Task documents a developer-owned OAuth application flow.',recommendation:'Register a test app and request only the permissions for your chosen actions.',nextAction:'Open the OAuth application settings and register a test application.',
   findings:[{kind:'oauth',scope:'',title:'Developer app registration',detail:'Register an OAuth application in workspace settings.',appliesWhen:'Connecting customer workspaces through your own app.',evidence:[{sourceId:'s1',quote}]},{kind:'permission',scope:'comments:create',title:'Create comments',detail:'Use comments:create to post comments.',appliesWhen:'The agent posts issue comments.',evidence:[{sourceId:'s1',quote:'The comments:create scope allows creating new comments on issues.'}]}],
   blockers:[],coverage:[],researchNeeded:[],steps:[{stage:'prepare',destination:'',fields:[],title:'Register a test app',detail:'Create the app in workspace settings.',owner:'developer',doneWhen:'The app appears in workspace settings.',evidence:[{sourceId:'s1',quote}]}],questions:[],activeEffort:{range:'1–3 hours',assumptions:'A developer already has workspace access and an existing callback implementation.'},unknowns:['Customer administrator installation policy needs checking.'],
 };}
@@ -133,7 +133,7 @@ test('evidence fallback preserves a local OAuth limitation without applying it t
 });
 test('model adapter supplies request context, structured schema and saved source text',async()=>{
   const net=network();const result=await interpretEvidence(normalizeInput({app:'Task',useCase:'Post comments',audience:'customers'}),docs,ai,new AbortController().signal,net.fetcher);
-  assert.equal(result.mode,'interpreted');const call=net.calls[0];const body=JSON.parse(String(call.init?.body));assert.equal(body.model,'test-model');assert.deepEqual(body.thinking,{type:'adaptive'});assert.equal(body.output_config.effort,'medium');assert.equal(body.max_tokens,16000);assert.equal(body.output_config.format.type,'json_schema');const context=JSON.parse(body.messages[0].content);assert.equal(context.request.useCase,'Post comments');assert.ok(context.documents[0].passages.some((p:{text:string})=>p.text.includes('client ID')));assert.equal(body.system.includes('untrusted data'),true);
+  assert.equal(result.mode,'interpreted');const call=net.calls[0];const body=JSON.parse(String(call.init?.body));assert.equal(body.model,'test-model');assert.deepEqual(body.thinking,{type:'adaptive'});assert.equal(body.output_config.effort,'medium');assert.equal(body.max_tokens,4096);assert.equal(body.output_config.format.type,'json_schema');const context=JSON.parse(body.messages[0].content);assert.equal(context.request.useCase,'Post comments');assert.ok(context.documents[0].passages.some((p:{text:string})=>p.text.includes('client ID')));assert.equal(body.system.includes('untrusted data'),true);
 });
 test('adaptive thinking blocks are accepted while only final text becomes the guide',async()=>{
   const net=network();
@@ -180,7 +180,7 @@ test('questions suppress firm setup steps until answers arrive; refinement reuse
   const p=plan();p.questions=[{id:'identity',prompt:'Who should comments appear from?',why:'This changes the app installation model.',options:['The connected person','The app']}];const net=network({model:p});
   const first=await generate({app:'Task',website:base,useCase:'Post comments'},ai,()=>{},new AbortController().signal,net.fetcher);
   assert.equal(first.guide.status,'needs-input');assert.equal(first.guide.steps.length,0);assert.equal(first.guide.activeEffort.range,'');
-  assert.match(first.guide.summary,/Confirm the choices/);assert.equal(first.guide.engine?.model,'test-model');assert.equal(first.guide.engine?.promptVersion,'live-guide.5');
+  assert.match(first.guide.summary,/Confirm the setup choices/);assert.equal(first.guide.engine?.model,'test-model');assert.equal(first.guide.engine?.promptVersion,'live-guide.6');
   const later=network();const refined=await generate({...first.guide.input,previousId:first.guide.id,answers:{identity:'The app'}},ai,()=>{},new AbortController().signal,later.fetcher,first);
   assert.notEqual(refined.guide.id,first.guide.id);assert.equal(refined.guide.previousId,first.guide.id);assert.equal(refined.guide.steps.length,1);assert.ok(later.calls.every(c=>c.url.includes('anthropic')));assert.deepEqual(refined.documents,first.documents);
   const context=JSON.parse(JSON.parse(String(later.calls[0].init?.body)).messages[0].content);
@@ -234,7 +234,7 @@ test('research ranks capability and distribution documentation above unrelated c
   const page=parsePage(base,'<html><title>OAuth</title><nav>Repeated navigation</nav><main><p>Real OAuth requirements and conditions belong here.</p></main><a href="/docs/capabilities">Read capabilities</a></html>');assert.ok(!page.text.includes('Repeated navigation'));assert.equal(page.labels[base+'docs/capabilities'],'Read capabilities');
 });
 test('permission follow-up prioritises API references for the requested actions',()=>{
-  const request='Read project tasks and create new tasks for customers';assert.ok(actionLinkScore(base+'reference/createtask','',request)>40);assert.ok(actionLinkScore(base+'reference/gettasksforproject','',request)>40);assert.equal(actionLinkScore(base+'reference/deleteusers','',request),0);
+  const request='Read project tasks and create new tasks for customers';assert.ok(actionLinkScore(base+'reference/createtask','',request)>40);assert.ok(actionLinkScore(base+'reference/gettasksforproject','',request)>40);assert.equal(actionLinkScore(base+'reference/deleteusers','',request),0);assert.ok(actionLinkScore(base+'reference/gettasksforproject','',request)>actionLinkScore(base+'reference/gettaskcountsforproject','',request));
 });
 test('read-only research favours retrieval endpoints and excludes negated write actions',()=>{
  const request='Read the pages users share. Never edit pages or add comments.';assert.ok(actionLinkScore(base+'reference/retrieve-a-page','',request)>0);assert.ok(actionLinkScore(base+'reference/post-page','',request)<0);assert.ok(actionLinkScore(base+'reference/update-agent','',request)<0);
@@ -259,7 +259,7 @@ test('redirect aliases do not count as new follow-up evidence',async()=>{
 test('a material evidence gap gets one targeted research round, followed by a new interpretation',async()=>{
   const first=await generate({app:'Task',website:base},ai,()=>{},new AbortController().signal,network().fetcher);first.documents[0].links=[base+'docs/permissions'];let modelCalls=0,permissionReads=0;const net=network(),events:Progress[]=[];
   const fetcher:typeof fetch=async(value,init)=>{if(String(value)===base+'docs/permissions'){permissionReads++;return new Response('<title>Permissions</title><main>'+sourceText+'</main>');}if(String(value)==='https://api.anthropic.com/v1/messages'){modelCalls++;const p=plan();p.researchNeeded=modelCalls===1?['permissions']:[];return network({model:p}).fetcher(value,init);}return net.fetcher(value,init);};
-  const run=await generate({...first.guide.input,previousId:first.guide.id},ai,e=>events.push(e),new AbortController().signal,fetcher,first);assert.equal(permissionReads,1);assert.equal(modelCalls,2);assert.equal(run.documents.length,first.documents.length+1);assert.ok(events.some(e=>e.stage==='Resolving missing requirements'));
+  const run=await generate({...first.guide.input,previousId:first.guide.id},ai,e=>events.push(e),new AbortController().signal,fetcher,first);assert.equal(permissionReads,1);assert.equal(modelCalls,2);assert.equal(run.documents.length,first.documents.length+1);assert.ok(events.some(e=>e.stage==='Checking a missing requirement'));
 });
 test('invented setup destinations and incomplete action grants are rejected',()=>{
   const p=plan();p.steps[0].destination='https://attacker.example.net/apps';assert.throws(()=>validateInterpretation(p,docs),/destination/);p.steps[0].destination=base+'docs/oauth';p.coverage=[{action:'Read issues',permissions:['issues:read'],status:'mapped',reason:'Required access.'}];assert.throws(()=>validateInterpretation(p,docs),/Action coverage/);p.coverage[0].status='unresolved';assert.equal(validateInterpretation(p,docs).coverage[0].status,'unresolved');
@@ -271,10 +271,11 @@ test('exact narrow scopes survive broad paragraphs during context compression',(
  const text=Array.from({length:100},()=> 'OAuth authorization tokens require permissions and public application registration before customers authorize the integration.').join('\n')+'\n* comments:create allows creating issue comments.';
  const all=sourcePassages([{...docs[0],text}]);assert.ok(contextPassages(all,'s1','Post comments as the app').some(p=>p.text.includes('comments:create')));
 });
-test('identity confirmation preserves all deferred material questions before showing a plan',async()=>{
+test('identity confirmation happens before research and questions are batched once evidence is read',async()=>{
   const p=plan();p.questions=Array.from({length:3},(_,i)=>({id:'choice-'+i,prompt:'Material choice '+i+'?',why:'Changes the app model.',options:['Option A','Option B']}));
-  const first=await generate({app:'Task'}, {...ai,LIVE_GUIDE_FIRECRAWL_KEY:'fc-test'},()=>{},new AbortController().signal,network({model:p}).fetcher);assert.equal(first.guide.questions.length,1);assert.equal(first.guide.pendingQuestions?.length,3);
-  const second=await generate({...first.guide.input,previousId:first.guide.id,answers:{'provider-identity':'Yes, this is the provider'}},ai,()=>{},new AbortController().signal,network().fetcher,first);assert.equal(second.guide.questions.length,3);assert.equal(second.guide.steps.length,0);
+  const net=network({model:p});const first=await generate({app:'Task'},{...ai,LIVE_GUIDE_FIRECRAWL_KEY:'fc-test'},()=>{},new AbortController().signal,net.fetcher);
+  assert.equal(first.guide.questions.length,1);assert.equal(first.documents.length,0);assert.ok(!net.calls.some(c=>c.url.includes('anthropic')||c.url.endsWith('/scrape')));
+  const second=await generate({...first.guide.input,previousId:first.guide.id,answers:{'provider-identity':'Yes, this is the provider'}},ai,()=>{},new AbortController().signal,network({model:p}).fetcher,first);assert.equal(second.guide.questions.length,3);assert.equal(second.guide.steps.length,0);
   const third=await generate({...second.guide.input,previousId:second.guide.id,answers:{...second.guide.input.answers,...Object.fromEntries(second.guide.questions.map(q=>[q.id,'Option A']))}},ai,()=>{},new AbortController().signal,network().fetcher,second);assert.equal(third.guide.questions.length,0);assert.equal(third.guide.decisions?.length,4);
 });
 test('shared AI selection enables research with the same key/model and explicit disable wins',async()=>{

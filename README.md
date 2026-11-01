@@ -4,7 +4,7 @@
 
 Describe an integration, confirm its requirements, and get an authentication architecture, permission map and launch checklist. The core works without API keys or signing into a provider.
 
-The local app now uses one launch-plan experience for reviewed and unfamiliar providers. Gmail, Slack and GitHub use reviewed rules; other apps use public documentation research. Both feed the same plan contract, application shell, first-test/launch sections and sharing controls. A provider does not need to be in the directory. See [live research and setup](docs/LIVE-GUIDE.md).
+The local app now uses one launch-plan experience for reviewed and unfamiliar providers. Gmail, Slack and GitHub use reviewed rules; other apps use public documentation research. Both feed the same plan contract, application shell, first-test/launch sections and sharing controls. A provider does not need to be in the directory. See [live research and setup](docs/LIVE-GUIDE.md) and [the 1 November review fixes](docs/evaluations/REVIEW-FIXES-2026-11-01.md).
 
 Intake and research share the selected Anthropic key/model. Local Haiku 5.5 runs use adaptive thinking at medium effort. Real checks include Gmail intake, Linear app actors, Notion read-only capabilities, Asana task access and a public API without OAuth. See [the current evaluation](docs/evaluations/UNIFIED-2026-10-31.md). Earlier failures and limits remain recorded in [the initial Haiku evaluation](docs/evaluations/HAIKU-2026-10-31.md).
 
@@ -19,7 +19,7 @@ This revision is in the combined local checkout. The hosted link and screenshot 
 3. Create the plan. Read the hands-on setup estimate and separately sourced review guidance, then inspect reasoning, permissions, conditional dependencies and the checklist. Estimates are scoped planning ranges, not timed results or a launch date.
 4. Edit Gmail to **send only** and regenerate. Restricted scopes and the restricted-data assessment dependency disappear; sensitive-scope guidance remains where applicable.
 5. Use the Slack or GitHub example prompts, then confirm their actual requirements. A limited Slack pilot differs from commercial distribution; selected-repository background work leads to a GitHub App and a separate installation flow.
-6. Copy, download Markdown or share the plan. Share saves a dated version of output and inputs; reopening it does not rerun the current rules. Editing creates a new version. Personal checkmarks are excluded.
+6. Copy, download Markdown or share the plan. Share saves a dated version of output and inputs; reopening it does not rerun the current rules. Editing creates a new version. Personal checkmarks are excluded. Server-selected metadata is part of the saved decision; Share does not recompute it with different metadata.
 7. Search the **Provider directory**, or select **Research an app** for an unfamiliar provider.
 
 ## Coverage and evidence
@@ -45,6 +45,7 @@ npm run build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_orange_wallop.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_groovy_mister_fear.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_romantic_lockheed.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0003_simple_vulcan.sql
 npm run dev -- --port 5173
 ```
 
@@ -62,7 +63,7 @@ npm run build
 
 **Optional AI:** the server-side Anthropic Messages or OpenAI Responses structured-output adapter interprets the use-case description into known capabilities and unresolved questions. It cannot supply new scopes or approval rules. Model output is schema-validated and always editable. No key, invalid output, refusal, rate limit or timeout preserves the structured workflow with labeled local keyword suggestions.
 
-**Live research:** `/live-guide` performs public discovery and reads up to eight content pages plus one targeted follow-up of up to three pages. The shared Anthropic configuration enables structured interpretation with checked source excerpts, exact permission identifiers, documented destinations and action coverage. Without it, evidence-only findings remain explicit about unresolved timing, permissions and approvals. The older four-page `/api/research` reader remains available for compatibility.
+**Live research:** `/live-guide` performs public discovery and reads up to eight content pages plus one targeted follow-up of up to three pages. The shared Anthropic configuration enables structured interpretation with checked source excerpts, exact permission identifiers, documented destinations, action coverage and step dependencies. A small requirements pass batches questions before detailed generation. Saved process URLs reconnect instead of silently submitting new work. A separate semantic check remains fallible and never claims execution success. Without it, evidence-only findings remain explicit about unresolved timing, permissions and approvals. The older four-page `/api/research` reader remains available for compatibility.
 
 ## Optional configuration
 

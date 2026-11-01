@@ -4,7 +4,7 @@ import {interpret} from '../lib/advisor/intent-parser.ts';
 import {isIntentAiConfigured,resolveIntentAiConfig} from '../lib/advisor/ai-config.ts';
 import type {IntentAiBindings} from '../lib/advisor/ai-config.ts';
 
-const validIntent={provider:'gmail',capabilities:['read'],background:'unknown',audience:'unknown',repoAccess:'unknown',slackIdentity:'unknown',unresolved:['Who will use it?']};
+const validIntent={providerCandidate:'',provider:'gmail',capabilities:['read'],background:'unknown',audience:'unknown',repoAccess:'unknown',slackIdentity:'unknown',unresolved:['Who will use it?']};
 const anthropic={provider:'anthropic' as const,key:'fixture-secret',model:'configured-claude-model'};
 const message=(overrides:Record<string,unknown>={})=>({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(validIntent)}],...overrides});
 

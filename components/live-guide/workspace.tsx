@@ -1,43 +1,75 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
-import {ArrowLeft,ArrowRight,Check,ChevronDown,Compass,Globe,LoaderCircle,X} from 'lucide-react';
+import {ArrowLeft,ArrowRight,Check,ChevronDown,Compass,Globe,LoaderCircle} from 'lucide-react';
 import type {GuideInput,LiveGuide,Progress} from '@/lib/live-guide/contracts';
-import {readGuideStream} from '@/lib/live-guide/stream';
+import type {GuideJob} from '@/lib/live-guide/jobs';
+import type {LaunchPlan} from '@/lib/plan/types';
+import {readJobResponse} from '@/lib/live-guide/job-client';
 import {researchedPlan} from '@/lib/plan/adapters';
 import {reviewedProvider} from '@/lib/plan/routing';
 import AppFrame from '@/components/app-frame';
 import LaunchPlanView from '@/components/launch-plan';
 const initial={app:'',website:'',useCase:'',audience:'unknown' as GuideInput['audience']};
 export default function ResearchWorkspace(){
-  const [form,setForm]=useState(initial),[guide,setGuide]=useState<LiveGuide|null>(null),[logs,setLogs]=useState<Progress[]>([]),[answers,setAnswers]=useState<Record<string,string>>({});
-  const [busy,setBusy]=useState(false),[loading,setLoading]=useState(false),[editing,setEditing]=useState(false),[error,setError]=useState(''),[status,setStatus]=useState('');
-  const abort=useRef<AbortController|null>(null);
-  useEffect(()=>{
-    const controller=new AbortController();const params=new URL(location.href).searchParams,id=params.get('id');
-    if(!id){setForm({...initial,app:(params.get('app')||'').slice(0,100),useCase:(params.get('useCase')||'').slice(0,600)});return;}
-    setEditing(params.get('edit')==='1');setLoading(true);fetch('/api/live-guide/'+encodeURIComponent(id),{signal:controller.signal}).then(async r=>{const data=await r.json() as {guide:LiveGuide;error?:string};if(!r.ok)throw new Error(data.error||'Plan could not be opened.');setGuide(data.guide);setForm({app:data.guide.input.app,website:data.guide.input.website,useCase:data.guide.input.useCase,audience:data.guide.input.audience});}).catch(e=>{if(e.name!=='AbortError')setError(e.message);}).finally(()=>setLoading(false));return()=>controller.abort();
-  },[]);
-  useEffect(()=>()=>abort.current?.abort(),[]);
-  async function research(refine=false){
-    if(busy)return;if(refine&&guide?.questions.some(q=>!answers[q.id])){setError('Answer each choice that changes the setup.');return;}
-    if(!refine){const reviewed=reviewedProvider(form.app);if(reviewed){location.assign('/?'+new URLSearchParams({view:'advisor',provider:reviewed,description:form.useCase}).toString());return;}}
-    if(refine&&answers['provider-identity']==='No, I will enter its website'){setEditing(true);setStatus('Enter the correct website and create a new plan.');return;}
-    const input=refine&&guide?{...guide.input,answers:{...guide.input.answers,...answers},previousId:guide.id}:form;
-    const controller=new AbortController();abort.current=controller;setBusy(true);setError('');setStatus('');setLogs([]);
-    try{const response=await fetch('/api/live-guide',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),signal:controller.signal});const saved=await readGuideStream(response,e=>setLogs(old=>[...old,e]),controller.signal);setGuide(saved);setAnswers({});setForm({app:saved.input.app,website:saved.input.website,useCase:saved.input.useCase,audience:saved.input.audience});setEditing(false);history.replaceState(null,'','/live-guide?id='+saved.id);window.scrollTo(0,0);}
-    catch(e){if((e as Error).name==='AbortError')setStatus('Research cancelled. Your saved plan is still available.');else setError((e as Error).message);}finally{setBusy(false);abort.current=null;}
-  }
-  const confirming=!!guide?.questions.length&&!editing;
-  return <AppFrame breadcrumb={guide?guide.input.app+' / Your launch plan':'Create a launch plan'}><div className="advisor-workspace">
-    {error&&<div className="advisor-notice error" role="alert"><p>{error}</p></div>}{status&&<p role="status" className="plan-feedback">{status}</p>}{loading&&<div className="advisor-loading"><LoaderCircle className="spin" size={18}/>Opening plan…</div>}
-    {!loading&&(!guide||editing)&&<><div className="assessment-topline"><a href="/" className="text-button"><ArrowLeft size={16}/>Start over</a><span>Describe → Confirm → Your plan</span></div><div className="assessment-form-shell"><header><span className="section-kicker">Your integration</span><h1>Go from integration idea to launch plan.</h1><p>We’ll research the provider’s documentation, confirm choices that change your setup and create your plan.</p></header><form onSubmit={e=>{e.preventDefault();void research();}}>
-    <label className="advisor-field"><span>Provider name or website</span><input required id="lg-app" maxLength={100} value={form.app} disabled={busy} onChange={e=>setForm({...form,app:e.target.value})} placeholder="Any app name or official website"/></label>
-    <label className="advisor-field"><span>What are you building?</span><textarea id="lg-usecase" rows={3} maxLength={600} disabled={busy} value={form.useCase} onChange={e=>setForm({...form,useCase:e.target.value})} placeholder="What should your agent read or change, and for whom?"/></label>
-    <label className="advisor-field"><span>Who will use the integration?</span><select disabled={busy} value={form.audience} onChange={e=>setForm({...form,audience:e.target.value as GuideInput['audience']})}><option value="unknown">I haven’t decided yet</option><option value="internal">My own organization</option><option value="customers">Customers / other organizations</option></select></label>
-    <details className="advanced-requirements" open={!!error}><summary>Official documentation <span>Optional</span><ChevronDown size={14}/></summary><label className="advisor-field"><span>Official website or documentation URL</span><small>Useful if the name is ambiguous or the first search cannot find the right provider.</small><input id="lg-website" maxLength={1500} disabled={busy} value={form.website} onChange={e=>setForm({...form,website:e.target.value})} placeholder="https://provider.com/developers"/></label></details>
-    <p className="research-public-note"><Globe size={16}/>Plans are readable by anyone with the link. Use public details, never credentials.</p><div className="assessment-form-foot"><span>Reviewed knowledge or fresh sources, in one launch plan.</span><button className="primary" disabled={busy} type="submit">{busy?<LoaderCircle className="spin" size={16}/>:<Compass size={16}/>}Create launch plan<ArrowRight size={15}/></button></div></form></div></>}
-    {confirming&&<><div className="assessment-topline"><button className="text-button" onClick={()=>setEditing(true)}><ArrowLeft size={16}/>Edit request</button><span>Describe → Confirm → Your plan</span></div><div className="assessment-form-shell"><header><span className="section-kicker">Confirm your requirements</span><h1>One quick check before your plan.</h1><p>These choices change your setup. Provider-policy gaps become tasks in the plan.</p></header><section className="request-summary"><strong>{guide!.input.app}</strong><p>{guide!.input.useCase||'General provider setup'}</p></section><form onSubmit={e=>{e.preventDefault();void research(true);}}><div className="required-questions"><div className="question-grid">{guide!.questions.map(q=><label className="advisor-field" key={q.id}><span>{q.prompt}</span><small>{q.why}</small><select disabled={busy} value={answers[q.id]||''} onChange={e=>setAnswers({...answers,[q.id]:e.target.value})}><option value="">Choose an answer</option>{q.options.map(o=><option key={o} value={o}>{o}</option>)}</select></label>)}</div></div><div className="assessment-form-foot"><span>{guide!.questions.filter(q=>!answers[q.id]).length} required choices left.</span><button className="primary" disabled={busy||guide!.questions.some(q=>!answers[q.id])}>{busy?<LoaderCircle className="spin" size={16}/>:<Compass size={16}/>}Create launch plan<ArrowRight size={15}/></button></div></form></div></>}
-    {logs.length>0&&<details className="research-run" open={busy}><summary>{busy?'Research in progress':'Research log'}<ChevronDown size={14}/></summary><ol role="log" aria-live="polite">{logs.map((log,i)=><li key={i}>{busy&&i===logs.length-1?<LoaderCircle className="spin" size={15}/>:<Check size={15}/>}<div><strong>{log.stage}</strong><p>{log.detail}</p></div></li>)}</ol>{busy&&<button className="secondary" onClick={()=>abort.current?.abort()}><X size={15}/>Cancel research</button>}</details>}
-    {!loading&&guide&&!confirming&&!editing&&<LaunchPlanView plan={researchedPlan(guide)} onEdit={()=>setEditing(true)} onShare={()=>location.origin+'/plan/'+guide.id}/>}
-  </div></AppFrame>;
+ const [form,setForm]=useState(initial),[guide,setGuide]=useState<LiveGuide|null>(null),[plan,setPlan]=useState<LaunchPlan|null>(null),[job,setJob]=useState<GuideJob|null>(null),[logs,setLogs]=useState<Progress[]>([]),[answers,setAnswers]=useState<Record<string,string>>({});
+ const [busy,setBusy]=useState(false),[loading,setLoading]=useState(true),[editing,setEditing]=useState(false),[error,setError]=useState('');
+ const active=useRef(false),abort=useRef<AbortController|null>(null),started=useRef(false),requestKey=useRef('');
+ function apply(saved:LiveGuide){setGuide(saved);setAnswers({});setForm({app:saved.input.app,website:saved.input.website,useCase:saved.input.useCase,audience:saved.input.audience});setEditing(false);}
+ async function accept(current:GuideJob){setJob(current);setLogs(current.events);if(current.guide){apply(current.guide);if(!current.guide.questions.length){const r=await fetch('/api/plans/'+current.guide.id);if(r.ok)setPlan(((await r.json()) as {plan:LaunchPlan}).plan);}}}
+ async function watch(current:GuideJob,retry=false){
+  if(active.current)return;active.current=true;setBusy(true);setError('');const controller=new AbortController();abort.current=controller;
+  try{
+   if(current.state==='queued'||(current.state==='interrupted'&&retry))current=await readJobResponse(await fetch('/api/live-guide/jobs/'+current.id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({retry}),signal:controller.signal}),event=>setLogs(old=>[...old,event]),controller.signal);
+   while(current.state==='running'){
+    await new Promise<void>((resolve,reject)=>{const timer=setTimeout(resolve,1500);controller.signal.addEventListener('abort',()=>{clearTimeout(timer);reject(new DOMException('Aborted','AbortError'));},{once:true});});
+    const r=await fetch('/api/live-guide/jobs/'+current.id,{signal:controller.signal});if(!r.ok)throw new Error('Saved progress could not be reopened.');current=((await r.json()) as {job:GuideJob}).job;setJob(current);setLogs(current.events);
+   }
+   await accept(current);if(current.state==='interrupted')setError(current.error||'Processing was interrupted. Your evidence is retained.');window.scrollTo(0,0);
+  }catch(e){if((e as Error).name!=='AbortError')setError((e as Error).message+' Your saved process URL can be reopened.');}
+  finally{active.current=false;setBusy(false);abort.current=null;}
+ }
+ useEffect(()=>{
+  if(started.current)return;started.current=true;const params=new URL(location.href).searchParams,id=params.get('id'),jobId=params.get('job');setEditing(params.get('edit')==='1');
+  void (async()=>{try{
+   if(jobId){const r=await fetch('/api/live-guide/jobs/'+encodeURIComponent(jobId));if(!r.ok)throw new Error('Saved process not found.');const current=((await r.json()) as {job:GuideJob}).job as GuideJob;await accept(current);if(current.state==='queued'||current.state==='running')void watch(current);}
+   else if(id){const r=await fetch('/api/live-guide/'+encodeURIComponent(id));if(!r.ok)throw new Error('Saved guide not found.');const saved=((await r.json()) as {guide:LiveGuide}).guide as LiveGuide;apply(saved);setEditing(params.get('edit')==='1');if(!saved.questions.length){const p=await fetch('/api/plans/'+saved.id);if(p.ok)setPlan(((await p.json()) as {plan:LaunchPlan}).plan);}}
+   else{
+    const handoff={app:params.get('app')||'',useCase:params.get('useCase')||'',audience:params.get('audience')||'unknown'};
+    if(handoff.app.length>100||handoff.useCase.length>1500)throw new Error('The provider or description is too long. Nothing has been truncated; shorten it on the previous page.');
+    if(!handoff.app&&handoff.useCase)setError('Your full description is retained. Enter the provider name or website to continue; automatic identification was unavailable or ambiguous.');
+    const draft=handoff.app||handoff.useCase?null:JSON.parse(localStorage.getItem('atlas-research-draft')||'null');setForm(draft||{...initial,...handoff,audience:['internal','customers'].includes(handoff.audience)?handoff.audience as GuideInput['audience']:'unknown'});
+   }
+  }catch(e){setError((e as Error).message);}finally{setLoading(false);}})();
+  return()=>abort.current?.abort();
+ },[]);
+ useEffect(()=>{if(!loading)try{localStorage.setItem('atlas-research-draft',JSON.stringify(form));}catch{}},[form,loading]);
+ async function research(refine=false){
+  if(active.current||busy)return;setError('');
+  if(refine&&guide?.questions.some(q=>!answers[q.id])){setError('Answer the current setup choices.');return;}
+  if(refine&&answers['provider-identity']==='No, I will enter its website'){setEditing(true);setForm(f=>({...f,website:''}));return;}
+  if(!refine){const reviewed=reviewedProvider(form.app);if(reviewed){location.assign('/?'+new URLSearchParams({view:'advisor',provider:reviewed,description:form.useCase}));return;}}
+  const input=refine&&guide?{...guide.input,answers:{...guide.input.answers,...answers},previousId:guide.id}:form;
+  // Keep the same key on a failed POST so a retry cannot enqueue duplicate work.
+  const keyFor=JSON.stringify(input);let saved: {input:string;key:string}|null=null;try{saved=JSON.parse(sessionStorage.getItem('atlas-pending-request')||'null');}catch{}
+  requestKey.current=saved?.input===keyFor?saved.key:crypto.randomUUID();try{sessionStorage.setItem('atlas-pending-request',JSON.stringify({input:keyFor,key:requestKey.current}));}catch{}
+  setBusy(true);try{const r=await fetch('/api/live-guide/jobs',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':requestKey.current},body:JSON.stringify({input})});const data=await r.json() as {job:GuideJob;error?:string};if(!r.ok)throw new Error(data.error||'The process could not start.');const current=data.job as GuideJob;setJob(current);setLogs(current.events);history.replaceState(null,'','/live-guide?job='+current.id);try{sessionStorage.removeItem('atlas-pending-request');}catch{}setEditing(false);setBusy(false);await watch(current);}catch(e){setError((e as Error).message);setBusy(false);}
+ }
+ const confirming=!!guide?.questions.length&&!editing&&!busy,identity=guide?.questions.length===1&&guide.questions[0].id==='provider-identity';
+ const interrupted=job?.state==='interrupted';
+ return <AppFrame breadcrumb={guide?guide.input.app+' / Your launch plan':'Create a launch plan'}><div className="advisor-workspace">
+  {error&&<div className="advisor-notice error" role="alert"><p>{error}</p></div>}
+  {loading?<div className="advisor-loading"><LoaderCircle className="spin" size={18}/>Opening saved progress…</div>:null}
+  {!loading&&!busy&&(!guide||editing)&&!interrupted&&<><div className="assessment-topline"><a href="/" className="text-button"><ArrowLeft size={16}/>Start over</a><span>Describe → Confirm → Your guide</span></div><div className="assessment-form-shell"><header><span className="section-kicker">Your integration</span><h1>Go from integration idea to launch plan.</h1><p>We’ll identify the provider, settle choices that change setup, then build your guide.</p></header><form onSubmit={e=>{e.preventDefault();void research();}}>
+   <label className="advisor-field"><span>Provider name or website</span><input required id="lg-app" maxLength={100} value={form.app} onChange={e=>setForm({...form,app:e.target.value})} placeholder="Any app name or official website"/></label>
+   <label className="advisor-field"><span>What are you building?</span><textarea id="lg-usecase" rows={4} maxLength={1500} value={form.useCase} onChange={e=>setForm({...form,useCase:e.target.value})} placeholder="What should the agent read or change? What must it never do?"/><small>{form.useCase.length}/1,500 characters · your full request is retained</small></label>
+   <label className="advisor-field"><span>Who will use the integration?</span><select value={form.audience} onChange={e=>setForm({...form,audience:e.target.value as GuideInput['audience']})}><option value="unknown">I haven’t decided yet</option><option value="internal">My own organization</option><option value="customers">Customers / other organizations</option></select></label>
+   <details className="advanced-requirements"><summary>Official documentation <span>Optional</span><ChevronDown size={14}/></summary><label className="advisor-field"><span>Official website or documentation URL</span><input id="lg-website" maxLength={1500} value={form.website} onChange={e=>setForm({...form,website:e.target.value})} placeholder="https://provider.com/developers"/></label></details>
+   <p className="research-public-note"><Globe size={16}/>Plans are saved and readable by anyone with the link. Use public details, never credentials.</p><div className="assessment-form-foot"><span>Completed work and answers are saved between steps.</span><button className="primary" type="submit">Continue<ArrowRight size={15}/></button></div>
+  </form></div></>}
+  {confirming&&<div className="assessment-form-shell"><header><span className="section-kicker">{identity?'Identify the provider':'Confirm your setup choices'}</span><h1>{identity?'Is this the provider you mean?':'A few choices before your guide.'}</h1><p>{identity?'No documentation crawl or full plan is needed to confirm this selection.':'Your documentation is saved. These choices change the setup path; answer them together to continue.'}</p></header><section className="request-summary"><strong>{guide!.input.app}</strong><p>{guide!.input.useCase}</p>{guide!.requestedActions?.length?<p><b>Understood actions:</b> {guide!.requestedActions.map(a=>a.title).join('; ')}</p>:null}{guide!.prohibitions?.length?<p><b>Restrictions:</b> {guide!.prohibitions.join('; ')}</p>:null}<a href={guide!.provider.website} target="_blank" rel="noreferrer">{new URL(guide!.provider.website).hostname}</a></section><form onSubmit={e=>{e.preventDefault();void research(true);}}><div className="question-grid">{guide!.questions.map(q=><label className="advisor-field" key={q.id}><span>{q.prompt}</span><small>{q.why}</small><select value={answers[q.id]||''} onChange={e=>setAnswers({...answers,[q.id]:e.target.value})}><option value="">Choose an answer</option>{q.options.map(o=><option key={o}>{o}</option>)}</select></label>)}</div><div className="assessment-form-foot"><button type="button" className="text-button" onClick={()=>setEditing(true)}>Edit request</button><button className="primary" disabled={guide!.questions.some(q=>!answers[q.id])}>{identity?'Continue with this provider':'Continue to my guide'}<ArrowRight size={15}/></button></div></form></div>}
+  {busy&&<section className="assessment-form-shell" role="status"><span className="section-kicker">Your request is in progress</span><h1>{logs.at(-1)?.stage||'Continuing your saved request'}</h1><p><LoaderCircle className="spin" size={18}/> {logs.at(-1)?.detail||'Checking the saved process.'}</p><p>{form.app}: {form.useCase}</p><small>Reloading this URL reconnects to the same process. It does not start another research request.</small></section>}
+  {interrupted&&!busy&&<div className="assessment-form-foot"><span>Saved evidence will be reused. Retrying may repeat an unfinished provider call.</span><button className="primary" onClick={()=>void watch(job!,true)}>Retry unfinished stage</button><button className="text-button" onClick={()=>{setJob(null);setEditing(true);}}>Edit request</button></div>}
+  {logs.length>0&&<details className="research-run"><summary>Completed work and current stage<ChevronDown size={14}/></summary><ol>{logs.map((log,i)=><li key={i}><Check size={15}/><div><strong>{log.stage}</strong><p>{log.detail}</p></div></li>)}</ol></details>}
+  {!loading&&!busy&&guide&&!confirming&&!editing&&<LaunchPlanView plan={plan||researchedPlan(guide)} onEdit={()=>{setJob(null);setEditing(true);}} onShare={()=>location.origin+'/plan/'+guide.id}/>}
+ </div></AppFrame>;
 }

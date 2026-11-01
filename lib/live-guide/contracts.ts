@@ -5,42 +5,50 @@ import type {IntentAiBindings} from '../ai/config.ts';
 const text = (max: number) => z.string().trim().min(1).max(max).refine(s => !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(s), 'Use plain text.');
 export const inputSchema = z.object({
   app: text(100), website: z.string().trim().max(1500).default(''),
-  useCase: z.string().trim().max(600).default(''),
+  useCase: z.string().trim().max(1500).default(''),
   audience: z.enum(['internal', 'customers', 'unknown']).default('unknown'),
   answers: z.record(z.string().max(60), text(300)).refine(a => Object.keys(a).length <= 24).default({}),
   previousId: z.string().regex(/^lg-[a-f0-9-]{36}$/).optional(),
 }).strict();
 export type GuideInput = z.infer<typeof inputSchema>;
-export type Progress = { stage: string; detail: string; status: 'working' | 'done' | 'warning' };
+export type Progress = { stage: string; detail: string; status: 'working' | 'done' | 'warning';at?:string };
 export type Document = { id: string; url: string; title: string; retrievedAt: string; hash: string; text: string; links?:string[] };
 export type Evidence = { sourceId: string; quote: string };
 const evidenceSchema = z.array(z.object({ sourceId: text(20), quote: text(260) }).strict()).min(1).max(6);
 export const findingSchema = z.object({
   kind: z.enum(['oauth', 'permission', 'provider-review', 'customer-approval', 'prerequisite', 'provider-wait']),
-  title: text(120), detail: text(800), appliesWhen: text(400), scope:z.string().max(100).default(''), evidence: evidenceSchema,
+  title: text(120), detail: text(800), appliesWhen: z.string().trim().max(400), scope:z.string().max(100).default(''), evidence: evidenceSchema,
+  stage:z.enum(['prepare','test','launch']).optional(),stepIds:z.array(text(60)).max(10).optional(),
 }).strict();
 const stepSchema = z.object({
   title: text(120), detail: text(800), owner: z.enum(['developer', 'agent', 'customer admin', 'provider']),
   doneWhen: text(400), evidence: evidenceSchema,
   appliesWhen:z.string().max(400).optional(),
+  id:text(60).optional(),dependsOn:z.array(text(60)).max(10).optional(),actionIds:z.array(text(60)).max(10).optional(),
+  testKind:z.enum(['prepare','authorization','action','boundary','lifecycle','launch']).optional(),
+  request:z.object({method:z.string().max(20),endpoint:z.string().max(1500),example:z.string().max(800)}).strict().optional(),
   stage:z.enum(['prepare','test','launch']).default('test'),destination:z.string().max(1500).default(''),fields:z.array(text(100)).max(8).default([]),
 }).strict();
-const questionSchema = z.object({
+export const questionSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]{0,59}$/), prompt: text(200), why: text(300),
   options: z.array(text(120)).min(2).max(3),
 }).strict();
 export const interpretationSchema = z.object({
+  accessModel:z.enum(['oauth','public','unknown']).default('oauth'),
+  requestedActions:z.array(z.object({id:text(60),title:text(180),operation:z.enum(['read','create','update','delete','authorize','other'])}).strict()).max(10).default([]),
+  prohibitions:z.array(text(200)).max(10).default([]),
   oauthSupport: z.enum(['documented', 'unsupported', 'unknown']),
   summary: text(700), recommendation: text(700), nextAction: text(400),
   findings: z.array(findingSchema).max(16), steps: z.array(stepSchema).max(10),
   questions: z.array(questionSchema).max(3),
   activeEffort: z.object({ range: z.string().max(100), assumptions: z.string().max(500) }).strict(),
   unknowns: z.array(text(400)).max(10),
-  blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),owner:text(80),resolution:text(500)}).strict()).max(10).default([]),
-  coverage:z.array(z.object({action:text(180),permissions:z.array(text(100)).max(8),status:z.enum(['mapped','unresolved','unsupported']),reason:text(400)}).strict()).max(10).default([]),
+  blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),owner:text(80),resolution:text(500),stepIds:z.array(text(60)).max(10).optional()}).strict()).max(10).default([]),
+  coverage:z.array(z.object({action:text(180),actionId:text(60).optional(),permissions:z.array(text(100)).max(8),status:z.enum(['mapped','unresolved','unsupported']),reason:text(400),evidence:z.array(z.object({sourceId:text(20),quote:text(260)})).max(6).optional(),support:z.enum(['reviewed','unresolved']).optional()}).strict()).max(10).default([]),
   researchNeeded:z.array(z.enum(['registration','permissions','identity','distribution'])).max(3).default([]),
 }).strict();
 export type Interpretation = z.infer<typeof interpretationSchema>;
+export type RequestIntent=Pick<Interpretation,'requestedActions'|'prohibitions'>;
 export type InferenceOutcome='accepted' | 'not-configured' | 'upstream-error' | 'incomplete' | 'validation-rejected' | 'timeout';
 export type InferenceTelemetry = {
   model: string; attempts: number; elapsedMs: number; inputTokens: number; outputTokens: number;
@@ -55,6 +63,10 @@ export type LiveGuide = Interpretation & {
   engine?: InferenceTelemetry & { provider:'anthropic'; promptVersion:string };
   decisions?: {id:string;question:string;answer:string}[];
   pendingQuestions?:Interpretation['questions'];
+  phase?:'identity'|'clarification'|'ready';
+  clarificationUsed?:boolean;
+  followupDone?:boolean;
+  journey?:{modelCalls:number;inputTokens:number;outputTokens:number;modelMs:number};
   sources: Omit<Document, 'text'>[];
   integration: { catalogName?: string; docsUrl?: string; message: string };
 };
@@ -63,6 +75,7 @@ export type Bindings = IntentAiBindings & {
   LIVE_GUIDE_FIRECRAWL_KEY?: string;
 };
 export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[] };
+export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;draft?:Interpretation};
 
 export function normalizeInput(raw: unknown): GuideInput {
   const parsed = inputSchema.safeParse(raw);

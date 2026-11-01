@@ -74,6 +74,7 @@ export function parsePage(url: string, body: string): Page {
   return { url, title, text: text.replace(/[\t ]+/g,' ').replace(/\n\s*\n/g,'\n').trim(), links: [...new Set(links)],labels };
 }
 export const topicPatterns={registration:/oauth|register.{0,20}app|creat.{0,20}(?:app|integration|connection)|app.{0,12}setup/i,permissions:/scopes?|permissions?|capabilities|access.types/i,identity:/actor|app.authentication|bot|agents?|user.authentication/i,distribution:/app.{0,15}review|oauth.{0,15}review|approval|verification|distribution|marketplace|integration.directory|publish|public.connection/i};
+export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
 export type ResearchTopic=keyof typeof topicPatterns;
 export function linkScore(url:string,label=''):number{
   const text=url+' '+label;return (/oauth/i.test(text)?30:0)+(topicPatterns.permissions.test(text)?28:0)+(topicPatterns.distribution.test(text)?26:0)+(topicPatterns.identity.test(text)?12:0)+(/developer|docs/i.test(text)?5:0)-(/blog|changelog|login|signup|privacy|terms|code.and.reviews|pull.request|\.(?:png|svg|jpg|pdf|js|css)(?:\?|$)/i.test(text)?80:0);
@@ -85,23 +86,18 @@ export function actionLinkScore(url:string,label:string,useCase:string):number{
   if(!writes&&/\/(?:create|post|insert|update|modify|delete|remove|patch|put|add|set)[\w-]*(?:\.md)?$/i.test(path))return -60;
   const words=useCase.toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,''));
   const terms=[...new Set(words)],resources=terms.filter(t=>text.includes(t)).length;
-  const direct=terms.reduce((n,t)=>n+(new RegExp('(?:get|list|retrieve|create|post|update|delete)[-_ ]*(?:(?:all|a|an)[-_ ]*)?'+t).test(text)?Math.min(2,words.filter(w=>w===t).length)*20:0),0);
+  const direct=terms.reduce((n,t)=>n+(new RegExp('(?:get|list|retrieve|create|post|update|delete)[-_ ]*(?:(?:all|a|an)[-_ ]*)?'+t+'s?(?:[-_ ]|for|by|$|\\.)').test(text)?Math.min(2,words.filter(w=>w===t).length)*20:0),0);
   return resources&&/\/reference\/|\/api\/|endpoint/i.test(text)?40+Math.min(resources,3)*8+direct:0;
 }
 
-export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[]}={}): Promise<Research> {
-  const signal = AbortSignal.any([outer, AbortSignal.timeout(options.previous?18000:38000)]);
-  const reader = publicReader(fetcher, signal); const warnings: string[] = [];
-  let seed = options.previous?.website||input.website;
-  const firecrawl = async (path: string, body: object) => {
-    const res = await fetcher('https://api.firecrawl.dev/v2/' + path, { method:'POST', redirect:'manual', signal: AbortSignal.any([signal,AbortSignal.timeout(12000)]), headers:{'Content-Type':'application/json',Authorization:'Bearer '+bindings.LIVE_GUIDE_FIRECRAWL_KEY},body:JSON.stringify(body) });
-    if (!res.ok) { await res.body?.cancel(); throw new Error('The configured retrieval service is unavailable.'); }
-    const data = JSON.parse(await boundedText(res, signal)); if (!data.success) throw new Error('Retrieval did not return readable content.'); return data;
-  };
+export async function discoverProvider(input:GuideInput,bindings:Bindings,emit:(event:Progress)=>void,outer:AbortSignal,fetcher:Fetcher=fetch):Promise<string>{
+  if(input.website)return publicUrl(input.website).href;
+  const signal=AbortSignal.any([outer,AbortSignal.timeout(12000)]),reader=publicReader(fetcher,signal);let seed='';
+  const search=async(body:object)=>{const response=await fetcher('https://api.firecrawl.dev/v2/search',{method:'POST',redirect:'manual',signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+bindings.LIVE_GUIDE_FIRECRAWL_KEY},body:JSON.stringify(body)});if(!response.ok)throw new Error('Search unavailable.');return JSON.parse(await boundedText(response,signal));};
   if (!seed) {
     emit({stage:'Finding the provider',detail:`Searching for ${input.app} OAuth documentation.`,status:'working'});
     if (bindings.LIVE_GUIDE_FIRECRAWL_KEY) {
-      const data = await firecrawl('search',{query:`${input.app} official OAuth developer documentation`,limit:4,sources:[{type:'web'}]});
+      const data = await search({query:`${input.app} official OAuth developer documentation`,limit:4,sources:[{type:'web'}]});
       seed = (data.data?.web || []).find((x: {url:string}) => { try { return !/composio|zapier|pipedream|reddit|medium|youtube/.test(new URL(x.url).hostname) && !!publicUrl(x.url); } catch { return false; } })?.url || '';
     } else {
       for (const url of [`https://html.duckduckgo.com/html/?q=${encodeURIComponent(input.app+' official OAuth developer documentation')}`,`https://search.brave.com/search?q=${encodeURIComponent(input.app+' official OAuth developer documentation')}`]) {
@@ -117,6 +113,19 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
     }
     if (!seed) throw new Error('Could not identify this app confidently. Add its official website or direct OAuth documentation URL.');
   }
+  outer.throwIfAborted();return publicUrl(seed).href;
+}
+
+export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[]}={}): Promise<Research> {
+  const signal = AbortSignal.any([outer, AbortSignal.timeout(options.previous?18000:38000)]);
+  const reader = publicReader(fetcher, signal); const warnings: string[] = [];
+  let seed = options.previous?.website||input.website;
+  const firecrawl = async (path: string, body: object) => {
+    const res = await fetcher('https://api.firecrawl.dev/v2/' + path, { method:'POST', redirect:'manual', signal: AbortSignal.any([signal,AbortSignal.timeout(12000)]), headers:{'Content-Type':'application/json',Authorization:'Bearer '+bindings.LIVE_GUIDE_FIRECRAWL_KEY},body:JSON.stringify(body) });
+    if (!res.ok) { await res.body?.cancel(); throw new Error('The configured retrieval service is unavailable.'); }
+    const data = JSON.parse(await boundedText(res, signal)); if (!data.success) throw new Error('Retrieval did not return readable content.'); return data;
+  };
+  if(!seed)seed=await discoverProvider(input,bindings,emit,outer,fetcher);
   seed = publicUrl(seed).href;
   const score=(url:string,label='')=>linkScore(url,label)+actionLinkScore(url,label,input.useCase);
   const previous=options.previous?.documents||[];
@@ -131,12 +140,12 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       else{const result=await reader.read('https://html.duckduckgo.com/html/?q='+encodeURIComponent(query));queue.push(...parsePage(result.url,result.body).links.map(l=>new URL(l).searchParams.get('uddg')||l));}
     }catch{warnings.push('The targeted follow-up search was unavailable.');}
   }
-  const attempted = new Set<string>(previous.map(d=>d.url)); const pages: Page[] = [];
+  const attempted = new Set<string>(previous.map(d=>sourceKey(d.url))); const pages: Page[] = [];
   const covered=new Set<ResearchTopic>();
   const allowedExternal=new Set<string>(previous.filter(d=>!onProvider(d.url,seed)).map(d=>new URL(d.url).hostname));
   const allowed=(url:string)=>onProvider(url,seed)||allowedExternal.has(new URL(url).hostname);
   while (queue.length && pages.length < (previous.length?3:8) && attempted.size < previous.length+16 && !signal.aborted) {
-    const url = queue.shift()!; if (attempted.has(url) || !allowed(url)) continue; attempted.add(url);
+    const url = queue.shift()!; if (attempted.has(sourceKey(url)) || !allowed(url)) continue; attempted.add(sourceKey(url));
     emit({stage:'Reading documentation',detail:new URL(url).hostname+new URL(url).pathname,status:'working'});
     try {
       let page: Page;
@@ -152,14 +161,14 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const index = /\/llms(?:-full)?\.txt(?:\?|$)/.test(page.url);
       if ((page.text.length < 80 && !page.links.length) || (index && !page.links.length) || /just a moment|verify.*human|access denied|checking your browser/i.test(page.title)) throw new Error('Page requires browser verification or contains no readable documentation.');
       const substantive=!index&&page.text.length>=80;
-      attempted.add(page.url);
+      attempted.add(sourceKey(page.url));
       if (substantive && !pages.some(p=>p.url===page.url)&&!previous.some(d=>d.url===page.url)) pages.push(page);
       for(const link of page.links){
         if(!onProvider(link,seed)&&/docs|developers?|readme\.io|gitbook|readthedocs|mintlify/i.test(link)&&linkScore(link,page.labels[link])>15)allowedExternal.add(new URL(link).hostname);
-        if(allowed(link)&&!attempted.has(link)&&score(link,page.labels[link])>0)candidates.set(link,page.labels[link]||'');
+        if(allowed(link)&&!attempted.has(sourceKey(link))&&score(link,page.labels[link])>0)candidates.set(link,page.labels[link]||'');
       }
       if(substantive)for(const topic of topics)if(topicPatterns[topic].test(page.url+' '+page.title))covered.add(topic);
-      const ranked=[...candidates].filter(([l])=>!attempted.has(l)).sort((a,b)=>score(b[0],b[1])-score(a[0],a[1]));
+      const ranked=[...candidates].filter(([l])=>!attempted.has(sourceKey(l))).sort((a,b)=>score(b[0],b[1])-score(a[0],a[1]));
       const priority=topics.filter(t=>!covered.has(t)).flatMap(t=>{const candidate=ranked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0):undefined);return candidate?[candidate[0]]:[];});
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
       queue.splice(index?0:queue.length,0,...priority.filter(l=>!queue.includes(l)));
