@@ -79,7 +79,7 @@ test('completion: unquoted HTML navigation retains setup and requested endpoint 
  const {parsePage}=await import('../lib/live-guide/retrieval.ts');const p=parsePage('https://docs.acme.com/api/oauth/','<main>OAuth registration documentation for individual user access.</main><a href=/api/issues/>Issues API</a><a href=/integrations/oauth_provider/>OAuth scopes</a>');assert.ok(p.links.includes('https://docs.acme.com/api/issues/'));assert.equal(p.labels['https://docs.acme.com/api/issues/'],'Issues API');
 });
 test('completion: exhausted generation retries the same evidence once at lower effort before retrieval',async()=>{
- let calls=0;const result=await interpretEvidence(run().guide.input,docs,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));calls++;assert.equal(body.output_config.effort,calls===1?'medium':'low');if(calls===1)return Response.json({type:'message',stop_reason:'max_tokens',content:[],usage:{input_tokens:50,output_tokens:16000}});return aiResponse(wire(value()));},[],{final:true,intent:{requestedActions:value().requestedActions,prohibitions:[]}});
+ let calls=0;const result=await interpretEvidence(run().guide.input,docs,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));calls++;assert.equal(body.output_config.effort,'low');if(calls===1)return Response.json({type:'message',stop_reason:'max_tokens',content:[],usage:{input_tokens:50,output_tokens:16000}});return aiResponse(wire(value()));},[],{final:true,intent:{requestedActions:value().requestedActions,prohibitions:[]}});
  assert.equal(calls,2);assert.equal(result.mode,'interpreted');assert.equal(result.telemetry.outcome,'accepted');assert.match(result.telemetry.validationIssues!.join(' '),/exhausted the output budget/);
 });
 test('completion: source editing controls cannot outrank published documentation',()=>{
@@ -104,6 +104,14 @@ test('completion: a stalled event stream recovers the saved terminal job without
 test('completion: version constants survive a small context budget ahead of incidental pagination and JSON examples',()=>{
  const source={...docs[0],text:'Versioning\nThe current Acme-Version is 2026-10-01 for every resource request.\n'+('"rich_text" : [ "metadata example" ]\nPass pagination cursors back unchanged; do not parse their contents.\n').repeat(40)};
  const selected=contextPassages(sourcePassages([source]),source.id,'Read page titles and content.',1000).map(p=>p.text).join(' ');assert.match(selected,/Acme-Version is 2026-10-01/);
+});
+test('completion: a simple default scope definition survives alongside namespaced grants',()=>{
+ const d={...docs[0],text:'OAuth permissions\n* `inspect` - (Default) Read access to the connected account. Always present.\n* `items:create` - Allows creating and updating items.\n'+('Token request example and unrelated authorization lifecycle details.\n').repeat(80)};
+ const selected=contextPassages(sourcePassages([d]),d.id,'Read item titles.',600).map(p=>p.text).join(' ');assert.match(selected,/inspect.*Read access/);assert.match(selected,/items:create/);
+});
+test('completion: the requested nested route takes priority over response JSON and a generic collection',()=>{
+ const d={...docs[0],text:'GET /issues\nLists all visible issues.\n'+('"title": "Example response title", "_links": { "self": "/issues/42" }\n').repeat(60)+'\nList project issues\nGET /projects/:id/issues\nLists issues within one project. Accepts page and per_page; use the Link header for the next page.\n'};
+ const selected=contextPassages(sourcePassages([d]),d.id,'Read issue titles in a project, including pagination.',900).map(p=>p.text).join(' ');assert.match(selected,/GET \/projects\/:id\/issues/);assert.match(selected,/per_page/);
 });
 function aiResponse(data:unknown){return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(data)}],usage:{input_tokens:100,output_tokens:100,output_tokens_details:{thinking_tokens:30}}});}
 function wire(v:Interpretation){const all=sourcePassages(docs);const copy=structuredClone(v);for(const item of [...copy.findings,...copy.steps,...copy.coverage])if(item.evidence)(item as unknown as {evidence:unknown[]}).evidence=item.evidence.map(e=>({passageId:all.find(p=>p.text.includes(e.quote))!.id}));return copy;}

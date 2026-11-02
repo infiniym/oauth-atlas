@@ -118,6 +118,7 @@ export function documentationScore(url:string,label:string,input:Pick<GuideInput
  if(/\/(?:auth\/login|login|signup|sign-in|trial_registrations)(?:\/|$)/.test(parsed.pathname))return -1000;
  if(/\/(?:customers|features|replay|careers|pricing)(?:\/|$)/.test(parsed.pathname))return -100;
  const irrelevant=['workers','agent-administration','object-storage','business-api','business-endpoints','team-admin','team/','longpoll','webhooks','realtime','marketplace','diffs','merge_requests_approvals','migration','oauth-1','legacy'];
+ if(!/\b(?:manage|create|rotate|revoke|administer).{0,25}(?:tokens?|credentials?)\b/i.test(request)&&/\/(?:personal_access_tokens|project_access_tokens|group_access_tokens|project_job_token_scopes|job_token_scope)(?:\/|$)/.test(parsed.pathname))return -80;
  const agentArea=/\/(?:admin|workers|(?:[a-z0-9]+-)?agent-apis|agent-filesystem)(?:\/|-)|get-agent-permissions|query-agents/.test(parsed.pathname)&&!/(?:manage|list|query|configure|administer).{0,25}(?:agents|workers)/.test(request)?100:0;
  const penalty=agentArea+irrelevant.filter(t=>text.includes(t)&&!request.includes(t.replace(/-/g,' '))).length*65;
  const seedPath=input.website?new URL(input.website).pathname.split('/').filter(Boolean)[0]:'';
