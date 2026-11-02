@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-10-31",
+  "updatedAt": "2026-11-02",
   "summary": "Help developers choose an authentication architecture for their use case, follow a source-backed launch plan and inspect the decisions behind the product.",
-  "readingNote": "The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback. The 31 October revision unifies reviewed and researched results; D18–D20 include the current common-plan, snapshot and live-evaluation decisions.",
+  "readingNote": "The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback. The 31 October revision unifies reviewed and researched results; D18–D20 include the current common-plan, snapshot and live-evaluation decisions. Current status was reconciled on 2 November. Historical decisions retain their original context; see the final evaluation for current results and remaining gaps.",
   "objectives": [
     {
       "id": "O1",
@@ -92,8 +92,8 @@
       "id": "R6",
       "requirement": "Generate a shareable guide live for an unfamiliar app",
       "status": "Partial",
-      "approach": "A live source reader discovers and fetches documentation, streams progress and saves a public draft. It is extractive and does not reliably interpret every provider policy.",
-      "why": "The slice works without model or research API credentials. That constraint limits guide completeness and must remain visible.",
+      "approach": "Live documentation research generates action-specific setup and test instructions, preserving sources and recoverable gaps.",
+      "why": "Model-powered interpretation requires server-side Anthropic configuration. Public source collection and reviewed-provider rules work without model credentials; these are different capabilities.",
       "decisions": [
         "D10",
         "D11",
@@ -115,9 +115,9 @@
     {
       "id": "R8",
       "requirement": "Provide a working link, source repository and setup instructions",
-      "status": "Demonstrated",
+      "status": "Partial",
       "approach": "Publish the app and repository; document local setup, tests, architecture, sample results and limitations in the README and validation notes.",
-      "why": "Reviewers can run and evaluate the submission without a guided explanation.",
+      "why": "The public source and demo must be updated together and checked against the same release; local success does not establish hosted success.",
       "decisions": [
         "D11",
         "D12"
@@ -163,7 +163,7 @@
       "id": "R12",
       "requirement": "Use optional AI for interpretation with a functional keyless fallback",
       "status": "Partial",
-      "approach": "A server-side structured-output parser selects only known capabilities. Missing credentials, refusal, timeout or invalid output falls back to labeled keyword suggestions. Mocked AI and fallback paths are tested; live AI is not tested or enabled in the public demo.",
+      "approach": "A server-side parser suggests editable inputs for reviewed providers. Real local Anthropic calls have exercised intake and live guide generation; failures and incomplete guides remain recorded.",
       "why": "AI can help interpret intent, but must not create provider facts. The product must remain usable without external credentials.",
       "decisions": [
         "D17"

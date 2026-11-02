@@ -1,0 +1,808 @@
+[
+  {
+    "input": {
+      "version": 1,
+      "provider": "gmail",
+      "description": "Read customer Gmail email and draft replies for review.",
+      "capabilities": [
+        "read",
+        "draft"
+      ],
+      "audience": "public",
+      "stage": "test",
+      "branding": "no",
+      "background": "yes",
+      "dataHandling": "servers",
+      "workspaceOnly": "unknown",
+      "slackIdentity": "unknown",
+      "repoAccess": "unknown",
+      "orgPolicy": "unknown",
+      "managedScopes": "unknown",
+      "customScopes": "unknown",
+      "dedicatedQuota": "no",
+      "customInstance": "no",
+      "special": ""
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "id": "lp-ba90f635-cd3e-42f2-a090-455a17cb6358",
+      "provider": "Gmail",
+      "request": "Read customer Gmail email and draft replies for review.",
+      "createdAt": "2026-11-02T06:56:29.082Z",
+      "basis": "Reviewed rules",
+      "status": "Ready to start setup",
+      "summary": "Start with the managed app to avoid unnecessary provider registration. Scope, identity and organization-policy checks remain required.",
+      "route": "Google OAuth web application",
+      "next": {
+        "id": "managed-fit",
+        "title": "Check the managed grant before proceeding",
+        "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+        "sourceIds": [
+          "managed",
+          "custom"
+        ],
+        "destination": "https://docs.composio.dev/toolkits/managed-auth",
+        "fields": []
+      },
+      "steps": [
+        {
+          "id": "managed-fit",
+          "title": "Check the managed grant before proceeding",
+          "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+          "sourceIds": [
+            "managed",
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/toolkits/managed-auth",
+          "fields": []
+        },
+        {
+          "id": "auth-config",
+          "title": "Use the verified managed Auth Config",
+          "detail": "Use managed auth only after the scope and identity checks pass. If they do not pass, create a custom Auth Config instead.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+          "sourceIds": [
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+          "fields": [
+            "Toolkit",
+            "Authentication method",
+            "Auth config ID"
+          ]
+        },
+        {
+          "id": "session",
+          "title": "Create a session scoped to the selected toolkit",
+          "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+          "sourceIds": [
+            "sessions"
+          ],
+          "destination": "https://docs.composio.dev/docs/configuring-sessions",
+          "fields": []
+        },
+        {
+          "id": "check-admin",
+          "title": "Check the target organization’s installation policy",
+          "detail": "Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.",
+          "owner": "Developer + admin",
+          "stage": "test",
+          "doneWhen": "The described configuration is saved and ready for the next step.",
+          "sourceIds": [
+            "auth"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication",
+          "fields": []
+        },
+        {
+          "id": "connect",
+          "title": "Authorize a representative account",
+          "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+          "owner": "Developer",
+          "stage": "test",
+          "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+          "sourceIds": [
+            "auth"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication",
+          "fields": []
+        },
+        {
+          "id": "request-read",
+          "title": "Test: Read email content",
+          "stage": "test",
+          "testKind": "action",
+          "actionIds": [
+            "read"
+          ],
+          "owner": "Developer",
+          "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Use only a seeded test mailbox. For read-only access, inspect that no write scope was granted; do not test a write.",
+          "doneWhen": "HTTP 200 with the selected test message id and payload. Record the actual response; this example has not been executed.",
+          "fields": [
+            "TEST_MESSAGE_ID: list test messages with GET https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=1 and copy messages[0].id"
+          ],
+          "sourceIds": [
+            "gmail-request-read",
+            "proxy-execute"
+          ],
+          "destination": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://gmail.googleapis.com/gmail/v1/users/me/messages/TEST_MESSAGE_ID?format=full",
+            "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"gmail\",\n  \"method\": \"GET\",\n  \"endpoint\": \"https://gmail.googleapis.com/gmail/v1/users/me/messages/TEST_MESSAGE_ID?format=full\"\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+            "language": "javascript"
+          }
+        },
+        {
+          "id": "request-draft",
+          "title": "Test: Create and manage drafts",
+          "stage": "test",
+          "testKind": "action",
+          "actionIds": [
+            "draft"
+          ],
+          "owner": "Developer",
+          "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Do not send the draft. gmail.compose also grants sending: enforce draft-only behavior in your tool layer.",
+          "doneWhen": "HTTP 200 with draft id and message id; the message remains a draft. Record the actual response; this example has not been executed.",
+          "fields": [
+            "Use the connected test account as From and a mailbox you control as To; generate raw with the supplied MIME line"
+          ],
+          "sourceIds": [
+            "gmail-request-draft",
+            "proxy-execute"
+          ],
+          "destination": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/create",
+          "request": {
+            "method": "POST",
+            "endpoint": "https://gmail.googleapis.com/gmail/v1/users/me/drafts",
+            "example": "const raw = Buffer.from(\"From: your-connected-test-account@example.com\\r\\nTo: your-test-inbox@example.com\\r\\nSubject: Integration test\\r\\n\\r\\nTest message only.\").toString(\"base64url\");\nconst response = await session.proxyExecute({\n  \"toolkit\": \"gmail\",\n  \"method\": \"POST\",\n  \"endpoint\": \"https://gmail.googleapis.com/gmail/v1/users/me/drafts\",\n  \"body\": {\n    \"message\": {\n      \"raw\": raw\n    }\n  }\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+            "language": "javascript"
+          }
+        },
+        {
+          "id": "gate-GOOGLE-ASSESSMENT",
+          "title": "Server handling adds a security assessment check",
+          "detail": "Restricted data stored or transmitted through servers triggers Google’s assessment requirements unless the application qualifies for an exception. Include external AI processing in the data-flow review; a test exception is not production approval.",
+          "owner": "Developer",
+          "stage": "launch",
+          "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+          "sourceIds": [
+            "google-restricted"
+          ],
+          "destination": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+          "fields": []
+        },
+        {
+          "id": "review",
+          "title": "Review launch evidence and unresolved questions",
+          "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+          "owner": "Developer",
+          "stage": "launch",
+          "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+          "sourceIds": [
+            "auth"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication",
+          "fields": []
+        }
+      ],
+      "permissions": [
+        {
+          "id": "permission-0",
+          "identifier": "https://www.googleapis.com/auth/gmail.readonly",
+          "classification": "Restricted",
+          "title": "https://www.googleapis.com/auth/gmail.readonly",
+          "detail": "Read mailbox content.",
+          "sourceIds": [
+            "gmail-scopes"
+          ]
+        },
+        {
+          "id": "permission-1",
+          "identifier": "https://www.googleapis.com/auth/gmail.compose",
+          "classification": "Restricted",
+          "title": "https://www.googleapis.com/auth/gmail.compose",
+          "detail": "Manage drafts and send email; grants sending even if the product only drafts.",
+          "sourceIds": [
+            "gmail-scopes"
+          ]
+        }
+      ],
+      "requirements": [
+        {
+          "id": "GOOGLE-MANAGED",
+          "title": "Confirm the managed grant for your feature",
+          "detail": "Composio owns the managed registration. Confirm the selected scope set, the permitted use case and data-handling obligations before production. No developer-owned registration is included in this candidate path.",
+          "label": "Conditional requirement",
+          "sourceIds": [
+            "custom",
+            "google-restricted"
+          ],
+          "stepIds": [
+            "managed-fit"
+          ],
+          "stage": "prepare"
+        },
+        {
+          "id": "GOOGLE-ASSESSMENT",
+          "title": "Server handling adds a security assessment check",
+          "detail": "Restricted data stored or transmitted through servers triggers Google’s assessment requirements unless the application qualifies for an exception. Include external AI processing in the data-flow review; a test exception is not production approval.",
+          "label": "Conditional requirement",
+          "sourceIds": [
+            "google-restricted"
+          ],
+          "stepIds": [
+            "gate-GOOGLE-ASSESSMENT"
+          ],
+          "stage": "launch"
+        }
+      ],
+      "blockers": [],
+      "sources": [
+        {
+          "id": "toolkit-api",
+          "title": "Toolkit metadata API and managed auth methods",
+          "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "managed",
+          "title": "Managed OAuth directory",
+          "url": "https://docs.composio.dev/toolkits/managed-auth",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "custom",
+          "title": "Managed vs custom auth",
+          "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "sessions",
+          "title": "Configuring sessions",
+          "url": "https://docs.composio.dev/docs/configuring-sessions",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "auth",
+          "title": "Authentication and connected accounts",
+          "url": "https://docs.composio.dev/docs/authentication",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "gmail-toolkit",
+          "title": "Gmail toolkit authentication",
+          "url": "https://docs.composio.dev/toolkits/gmail",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "gmail-scopes",
+          "title": "Gmail scope classifications",
+          "url": "https://developers.google.com/workspace/gmail/api/auth/scopes",
+          "publisher": "Google",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "google-restricted",
+          "title": "Restricted scope verification and exceptions",
+          "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+          "publisher": "Google",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "gmail-request-read",
+          "title": "Test: Read email content API reference",
+          "url": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get",
+          "checkedAt": "2026-11-02"
+        },
+        {
+          "id": "gmail-request-draft",
+          "title": "Test: Create and manage drafts API reference",
+          "url": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/create",
+          "checkedAt": "2026-11-02"
+        },
+        {
+          "id": "proxy-execute",
+          "title": "Run provider requests through an authorized Composio session",
+          "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+          "checkedAt": "2026-11-02"
+        }
+      ],
+      "timing": {
+        "work": "30–90 minutes",
+        "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+        "wait": "No new developer-owned Google registration is included in this managed candidate path. Confirm the actual permissions and permitted use before assuming you can proceed without additional work.",
+        "waitSourceIds": [
+          "managed",
+          "custom"
+        ],
+        "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+      },
+      "integration": "Evaluate managed OAuth first. It is available in the documentation, but scope and token-role fit still need to be verified.",
+      "details": [
+        {
+          "id": "AUTH-METHOD",
+          "title": "Check the method, then check the fit",
+          "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+          "label": "Verified requirement",
+          "sourceIds": [
+            "managed",
+            "toolkit-api",
+            "gmail-toolkit"
+          ]
+        },
+        {
+          "id": "GMAIL-SCOPES",
+          "title": "Scope classification follows the selected actions",
+          "detail": "At least one selected scope is restricted. Reducing access to send-only changes this assessment.",
+          "label": "Verified requirement",
+          "sourceIds": [
+            "gmail-scopes"
+          ]
+        },
+        {
+          "id": "GMAIL-WRITE",
+          "title": "Separate granted permissions from agent tools",
+          "detail": "The chosen scope can permit sending. Limit exposed tools and require product approval for sends where appropriate; tool restrictions do not narrow the provider-issued scope.",
+          "label": "Recommendation",
+          "sourceIds": [
+            "gmail-scopes",
+            "sessions"
+          ]
+        }
+      ],
+      "preparation": [
+        {
+          "title": "Permissions rationale",
+          "text": "https://www.googleapis.com/auth/gmail.readonly: Read mailbox content.\nhttps://www.googleapis.com/auth/gmail.compose: Manage drafts and send email; grants sending even if the product only drafts."
+        },
+        {
+          "title": "Auth configuration worksheet",
+          "text": "Provider registration: use the managed app only after verifying its actual scope and identity fit.\nToolkit: gmail\nPermissions: https://www.googleapis.com/auth/gmail.readonly, https://www.googleapis.com/auth/gmail.compose\nRecord the verified auth config ID."
+        },
+        {
+          "title": "First connection test",
+          "text": "Check the target organization’s installation policy: Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.\nDone when: The described configuration is saved and ready for the next step.\nAuthorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Read email content: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Use only a seeded test mailbox. For read-only access, inspect that no write scope was granted; do not test a write.\nDone when: HTTP 200 with the selected test message id and payload. Record the actual response; this example has not been executed.\nTest: Create and manage drafts: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Do not send the draft. gmail.compose also grants sending: enforce draft-only behavior in your tool layer.\nDone when: HTTP 200 with draft id and message id; the message remains a draft. Record the actual response; this example has not been executed."
+        }
+      ],
+      "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+      "context": [
+        {
+          "label": "Actions",
+          "value": "Read email content, Create and manage drafts"
+        },
+        {
+          "label": "Who will use the integration?",
+          "value": "Customers / public release"
+        },
+        {
+          "label": "What are you preparing for?",
+          "value": "Development and testing"
+        },
+        {
+          "label": "Must the provider show your own app name during consent?",
+          "value": "No"
+        }
+      ],
+      "assessment": {
+        "version": 1,
+        "provider": "gmail",
+        "description": "Read customer Gmail email and draft replies for review.",
+        "capabilities": [
+          "read",
+          "draft"
+        ],
+        "audience": "public",
+        "stage": "test",
+        "branding": "no",
+        "background": "yes",
+        "dataHandling": "servers",
+        "workspaceOnly": "unknown",
+        "slackIdentity": "unknown",
+        "repoAccess": "unknown",
+        "orgPolicy": "unknown",
+        "managedScopes": "unknown",
+        "customScopes": "unknown",
+        "dedicatedQuota": "no",
+        "customInstance": "no",
+        "special": ""
+      },
+      "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"gmail\"],\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+      "metadata": {
+        "provider": "gmail",
+        "authMethods": [
+          "OAUTH2"
+        ],
+        "managedMethods": [
+          "OAUTH2"
+        ],
+        "origin": "Documentation snapshot",
+        "checkedAt": "2026-10-30",
+        "scopeCoverage": "unknown",
+        "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+        "toolkitSlug": "gmail"
+      }
+    },
+    "roundTrip": true
+  },
+  {
+    "input": {
+      "version": 1,
+      "provider": "gmail",
+      "description": "Read customer Gmail email and draft replies for review.",
+      "capabilities": [
+        "send"
+      ],
+      "audience": "public",
+      "stage": "test",
+      "branding": "no",
+      "background": "yes",
+      "dataHandling": "servers",
+      "workspaceOnly": "unknown",
+      "slackIdentity": "unknown",
+      "repoAccess": "unknown",
+      "orgPolicy": "unknown",
+      "managedScopes": "unknown",
+      "customScopes": "unknown",
+      "dedicatedQuota": "no",
+      "customInstance": "no",
+      "special": ""
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "id": "lp-c7441d0e-5f0d-4756-9ae9-9ce850ef982f",
+      "provider": "Gmail",
+      "request": "Read customer Gmail email and draft replies for review.",
+      "createdAt": "2026-11-02T06:56:29.113Z",
+      "basis": "Reviewed rules",
+      "status": "Ready to start setup",
+      "summary": "Start with the managed app to avoid unnecessary provider registration. Scope, identity and organization-policy checks remain required.",
+      "route": "Google OAuth web application",
+      "next": {
+        "id": "managed-fit",
+        "title": "Check the managed grant before proceeding",
+        "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+        "sourceIds": [
+          "managed",
+          "custom"
+        ],
+        "destination": "https://docs.composio.dev/toolkits/managed-auth",
+        "fields": []
+      },
+      "steps": [
+        {
+          "id": "managed-fit",
+          "title": "Check the managed grant before proceeding",
+          "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+          "sourceIds": [
+            "managed",
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/toolkits/managed-auth",
+          "fields": []
+        },
+        {
+          "id": "auth-config",
+          "title": "Use the verified managed Auth Config",
+          "detail": "Use managed auth only after the scope and identity checks pass. If they do not pass, create a custom Auth Config instead.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+          "sourceIds": [
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+          "fields": [
+            "Toolkit",
+            "Authentication method",
+            "Auth config ID"
+          ]
+        },
+        {
+          "id": "session",
+          "title": "Create a session scoped to the selected toolkit",
+          "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+          "sourceIds": [
+            "sessions"
+          ],
+          "destination": "https://docs.composio.dev/docs/configuring-sessions",
+          "fields": []
+        },
+        {
+          "id": "check-admin",
+          "title": "Check the target organization’s installation policy",
+          "detail": "Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.",
+          "owner": "Developer + admin",
+          "stage": "test",
+          "doneWhen": "The described configuration is saved and ready for the next step.",
+          "sourceIds": [
+            "auth"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication",
+          "fields": []
+        },
+        {
+          "id": "connect",
+          "title": "Authorize a representative account",
+          "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+          "owner": "Developer",
+          "stage": "test",
+          "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+          "sourceIds": [
+            "auth"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication",
+          "fields": []
+        },
+        {
+          "id": "request-send",
+          "title": "Test: Send email",
+          "stage": "test",
+          "testKind": "action",
+          "actionIds": [
+            "send"
+          ],
+          "owner": "Developer",
+          "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This sends a real test email when you run it. Use only your own test recipient. With a send-only grant, a mailbox read should be denied; inspect the grant first.",
+          "doneWhen": "HTTP 200 with the sent message id; confirm receipt in your test inbox. Record the actual response; this example has not been executed.",
+          "fields": [
+            "Use the connected test account as From and a recipient you control as To; generate raw with the supplied MIME line"
+          ],
+          "sourceIds": [
+            "gmail-request-send",
+            "proxy-execute"
+          ],
+          "destination": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/send",
+          "request": {
+            "method": "POST",
+            "endpoint": "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
+            "example": "const raw = Buffer.from(\"From: your-connected-test-account@example.com\\r\\nTo: your-test-inbox@example.com\\r\\nSubject: Integration test\\r\\n\\r\\nTest message only.\").toString(\"base64url\");\nconst response = await session.proxyExecute({\n  \"toolkit\": \"gmail\",\n  \"method\": \"POST\",\n  \"endpoint\": \"https://gmail.googleapis.com/gmail/v1/users/me/messages/send\",\n  \"body\": {\n    \"raw\": raw\n  }\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+            "language": "javascript"
+          }
+        },
+        {
+          "id": "review",
+          "title": "Review launch evidence and unresolved questions",
+          "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+          "owner": "Developer",
+          "stage": "launch",
+          "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+          "sourceIds": [
+            "auth"
+          ],
+          "destination": "https://docs.composio.dev/docs/authentication",
+          "fields": []
+        }
+      ],
+      "permissions": [
+        {
+          "id": "permission-0",
+          "identifier": "https://www.googleapis.com/auth/gmail.send",
+          "classification": "Sensitive",
+          "title": "https://www.googleapis.com/auth/gmail.send",
+          "detail": "Send email without mailbox reading.",
+          "sourceIds": [
+            "gmail-scopes"
+          ]
+        }
+      ],
+      "requirements": [
+        {
+          "id": "GOOGLE-MANAGED",
+          "title": "Confirm the managed grant for your feature",
+          "detail": "Composio owns the managed registration. Confirm the selected scope set, the permitted use case and data-handling obligations before production. No developer-owned registration is included in this candidate path.",
+          "label": "Conditional requirement",
+          "sourceIds": [
+            "custom",
+            "google-restricted"
+          ],
+          "stepIds": [
+            "managed-fit"
+          ],
+          "stage": "prepare"
+        }
+      ],
+      "blockers": [],
+      "sources": [
+        {
+          "id": "toolkit-api",
+          "title": "Toolkit metadata API and managed auth methods",
+          "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "managed",
+          "title": "Managed OAuth directory",
+          "url": "https://docs.composio.dev/toolkits/managed-auth",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "custom",
+          "title": "Managed vs custom auth",
+          "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "sessions",
+          "title": "Configuring sessions",
+          "url": "https://docs.composio.dev/docs/configuring-sessions",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "auth",
+          "title": "Authentication and connected accounts",
+          "url": "https://docs.composio.dev/docs/authentication",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "gmail-toolkit",
+          "title": "Gmail toolkit authentication",
+          "url": "https://docs.composio.dev/toolkits/gmail",
+          "publisher": "Composio",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "gmail-scopes",
+          "title": "Gmail scope classifications",
+          "url": "https://developers.google.com/workspace/gmail/api/auth/scopes",
+          "publisher": "Google",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "google-restricted",
+          "title": "Restricted scope verification and exceptions",
+          "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+          "publisher": "Google",
+          "checkedAt": "2026-10-30"
+        },
+        {
+          "id": "gmail-request-send",
+          "title": "Test: Send email API reference",
+          "url": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/send",
+          "checkedAt": "2026-11-02"
+        },
+        {
+          "id": "proxy-execute",
+          "title": "Run provider requests through an authorized Composio session",
+          "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+          "checkedAt": "2026-11-02"
+        }
+      ],
+      "timing": {
+        "work": "30–90 minutes",
+        "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+        "wait": "No new developer-owned Google registration is included in this managed candidate path. Confirm the actual permissions and permitted use before assuming you can proceed without additional work.",
+        "waitSourceIds": [
+          "managed",
+          "custom"
+        ],
+        "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+      },
+      "integration": "Evaluate managed OAuth first. It is available in the documentation, but scope and token-role fit still need to be verified.",
+      "details": [
+        {
+          "id": "AUTH-METHOD",
+          "title": "Check the method, then check the fit",
+          "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+          "label": "Verified requirement",
+          "sourceIds": [
+            "managed",
+            "toolkit-api",
+            "gmail-toolkit"
+          ]
+        },
+        {
+          "id": "GMAIL-SCOPES",
+          "title": "Scope classification follows the selected actions",
+          "detail": "The send-only scope is sensitive. It does not grant reading or draft management.",
+          "label": "Verified requirement",
+          "sourceIds": [
+            "gmail-scopes"
+          ]
+        }
+      ],
+      "preparation": [
+        {
+          "title": "Permissions rationale",
+          "text": "https://www.googleapis.com/auth/gmail.send: Send email without mailbox reading."
+        },
+        {
+          "title": "Auth configuration worksheet",
+          "text": "Provider registration: use the managed app only after verifying its actual scope and identity fit.\nToolkit: gmail\nPermissions: https://www.googleapis.com/auth/gmail.send\nRecord the verified auth config ID."
+        },
+        {
+          "title": "First connection test",
+          "text": "Check the target organization’s installation policy: Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.\nDone when: The described configuration is saved and ready for the next step.\nAuthorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Send email: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This sends a real test email when you run it. Use only your own test recipient. With a send-only grant, a mailbox read should be denied; inspect the grant first.\nDone when: HTTP 200 with the sent message id; confirm receipt in your test inbox. Record the actual response; this example has not been executed."
+        }
+      ],
+      "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+      "context": [
+        {
+          "label": "Actions",
+          "value": "Send email"
+        },
+        {
+          "label": "Who will use the integration?",
+          "value": "Customers / public release"
+        },
+        {
+          "label": "What are you preparing for?",
+          "value": "Development and testing"
+        },
+        {
+          "label": "Must the provider show your own app name during consent?",
+          "value": "No"
+        }
+      ],
+      "assessment": {
+        "version": 1,
+        "provider": "gmail",
+        "description": "Read customer Gmail email and draft replies for review.",
+        "capabilities": [
+          "send"
+        ],
+        "audience": "public",
+        "stage": "test",
+        "branding": "no",
+        "background": "yes",
+        "dataHandling": "servers",
+        "workspaceOnly": "unknown",
+        "slackIdentity": "unknown",
+        "repoAccess": "unknown",
+        "orgPolicy": "unknown",
+        "managedScopes": "unknown",
+        "customScopes": "unknown",
+        "dedicatedQuota": "no",
+        "customInstance": "no",
+        "special": ""
+      },
+      "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"gmail\"],\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+      "metadata": {
+        "provider": "gmail",
+        "authMethods": [
+          "OAUTH2"
+        ],
+        "managedMethods": [
+          "OAUTH2"
+        ],
+        "origin": "Documentation snapshot",
+        "checkedAt": "2026-10-30",
+        "scopeCoverage": "unknown",
+        "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+        "toolkitSlug": "gmail"
+      }
+    },
+    "roundTrip": true
+  }
+]

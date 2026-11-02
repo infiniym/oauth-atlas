@@ -1,0 +1,862 @@
+{
+  "case": "notion",
+  "testType": "Real local HTTP job; actual public reader and configured model; no OAuth executed",
+  "input": {
+    "app": "Notion",
+    "website": "https://developers.notion.com/guides/get-started/authorization",
+    "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+    "audience": "customers"
+  },
+  "elapsedMs": 79314,
+  "state": "ready",
+  "failure": null,
+  "guide": {
+    "id": "lg-b4668a9c-d447-4408-b1d5-99e08896864e",
+    "input": {
+      "app": "Notion",
+      "website": "https://developers.notion.com/guides/get-started/authorization",
+      "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "generatedAt": "2026-11-02T06:52:51.930Z",
+    "mode": "interpreted",
+    "status": "provisional",
+    "oauthSupport": "documented",
+    "notice": "Generated from retrieved documentation. Citation matching and a separate access review are fallible checks; setup has not been tested.",
+    "setupTested": false,
+    "engine": {
+      "model": "claude-haiku-5-5",
+      "attempts": 3,
+      "elapsedMs": 75293,
+      "inputTokens": 25226,
+      "outputTokens": 16720,
+      "thinkingTokens": 12974,
+      "thinking": "adaptive",
+      "effort": "medium",
+      "outcome": "accepted",
+      "provider": "anthropic",
+      "promptVersion": "live-guide.8"
+    },
+    "coverage": [
+      {
+        "action": "Read titles and metadata of Notion pages shared with the integration",
+        "actionId": "read-page-titles",
+        "permissions": [
+          "Read content"
+        ],
+        "status": "mapped",
+        "reason": "Read content allows reading existing content, and page titles are returned only with read content. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s6",
+            "quote": "Read content : This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+          },
+          {
+            "sourceId": "s3",
+            "quote": "Properties marked with an * are available to connections with any capabilities. Other properties require read content capabilities in order to be returned from the Notion API. For more information"
+          },
+          {
+            "sourceId": "s5",
+            "quote": "--url https://api.notion.com/v1/pages/{page_id} \\ --header 'Authorization: Bearer <token>' \\"
+          }
+        ],
+        "support": "reviewed"
+      },
+      {
+        "action": "Read content blocks of Notion pages shared with the integration",
+        "actionId": "read-page-content",
+        "permissions": [
+          "Read content"
+        ],
+        "status": "mapped",
+        "reason": "Read content allows reading existing content, and the markdown retrieval endpoint reads page content. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s6",
+            "quote": "Read content : This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "--url https://api.notion.com/v1/pages/{page_id}/markdown \\ --header 'Authorization: Bearer <token>' \\"
+          }
+        ],
+        "support": "reviewed"
+      }
+    ],
+    "steps": [
+      {
+        "title": "Set up public connection with Read content only",
+        "detail": "In the Developer portal, create a public connection, note its client ID and set its redirect URI. Set Read content as the only content capability.",
+        "owner": "developer",
+        "doneWhen": "Connection shows a client ID and redirect URI, with Read content as its only content capability.",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "1 Navigate the user to the connection’s authorization URL. This URL is provided in the Developer portal ."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Parameter Description Required client_id An identifier for your connection, found in the connection settings. ✅"
+          },
+          {
+            "sourceId": "s6",
+            "quote": "To set your connection’s capabilities see the Authorization guide or navigate to the Developer portal . For PATs, choose capabilities when you create the token."
+          },
+          {
+            "sourceId": "s6",
+            "quote": "If your connection is reading data to export it out of Notion, your connection will only need Read content capabilities."
+          }
+        ],
+        "id": "step-1",
+        "dependsOn": [],
+        "actionIds": [],
+        "testKind": "prepare",
+        "stage": "prepare",
+        "destination": "",
+        "fields": [
+          "client_id",
+          "redirect_uri",
+          "capability: Read content"
+        ]
+      },
+      {
+        "title": "Implement redirect callback and code-to-token exchange (not executed)",
+        "detail": "Read the code query parameter from the redirect. Exchange it at the token endpoint using Basic auth with client credentials and grant_type authorization_code.",
+        "owner": "agent",
+        "doneWhen": "Callback and token exchange code exists in the test app. No authorization has been executed yet.",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "2 After the user selects which workspace pages to share, Notion redirects the user to the connection’s redirect URI and includes a code query parameter. The redirect URI is the"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Next, send the code as part of a POST request to Notion’s token endpoint: https://api.notion.com/v1/oauth/token ."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Authorization : Basic \"$CLIENT_ID:$CLIENT_SECRET\""
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Content-Type : application/json { \"grant_type\" : \"authorization_code\" , \"code\" : \"e202e8c9-0990-40af-855f-ff8f872b1ec6\" , \"redirect_uri\" : \"https://example.com/auth/notion/callback\" }"
+          }
+        ],
+        "id": "step-2",
+        "dependsOn": [
+          "step-1"
+        ],
+        "actionIds": [],
+        "testKind": "prepare",
+        "stage": "prepare",
+        "destination": "https://api.notion.com/v1/oauth/token",
+        "fields": [
+          "CLIENT_ID",
+          "CLIENT_SECRET",
+          "redirect_uri"
+        ]
+      },
+      {
+        "title": "Authorize a test-workspace user and exchange the code",
+        "detail": "Open the authorization URL from the connection settings as the test user. Select two or three test pages in the page picker, then complete the redirect and token exchange.",
+        "owner": "developer",
+        "doneWhen": "Redirect returns a code, the token exchange succeeds, and only the selected test pages are shared.",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "HTML < a href = \"https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code\" > Add to Notion </ a >"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "If the user opts to Select pages , then a page picker interface opens. A user can search for and select pages and databases to share with the connection from"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "2 After the user selects which workspace pages to share, Notion redirects the user to the connection’s redirect URI and includes a code query parameter. The redirect URI is the"
+          }
+        ],
+        "appliesWhen": "Representative test workspace",
+        "id": "step-3",
+        "dependsOn": [
+          "step-2"
+        ],
+        "actionIds": [],
+        "testKind": "authorization",
+        "stage": "test",
+        "destination": "",
+        "fields": [
+          "owner=user",
+          "client_id",
+          "redirect_uri",
+          "response_type=code"
+        ]
+      },
+      {
+        "title": "Test read of page titles and metadata",
+        "detail": "Retrieve a shared test page with title filtering. Replace PAGE_ID with a shared test page ID and ACCESS_TOKEN with the token from step 3. Expect a page object with a title property and no write call.",
+        "owner": "developer",
+        "doneWhen": "Response returns the shared test page's title and metadata, and no write endpoint was called.",
+        "evidence": [
+          {
+            "sourceId": "s5",
+            "quote": "--url https://api.notion.com/v1/pages/{page_id} \\ --header 'Authorization: Bearer <token>' \\"
+          },
+          {
+            "sourceId": "s3",
+            "quote": "the only property value is the title ."
+          },
+          {
+            "sourceId": "s3",
+            "quote": "Properties marked with an * are available to connections with any capabilities. Other properties require read content capabilities in order to be returned from the Notion API. For more information"
+          }
+        ],
+        "id": "step-4",
+        "dependsOn": [
+          "step-3"
+        ],
+        "actionIds": [
+          "read-page-titles"
+        ],
+        "testKind": "action",
+        "request": {
+          "method": "GET",
+          "endpoint": "https://api.notion.com/v1/pages/{page_id}",
+          "example": "curl '--request' 'GET' '--url' 'https://api.notion.com/v1/pages/PAGE_ID?filter_properties=title' '--header' 'Authorization: Bearer ACCESS_TOKEN' '--header' 'Notion-Version: 2022-06-28'"
+        },
+        "stage": "test",
+        "destination": "",
+        "fields": []
+      },
+      {
+        "title": "Test read of page content blocks",
+        "detail": "Retrieve the markdown of a shared test page using the same PAGE_ID and ACCESS_TOKEN. Expect markdown content in the response.",
+        "owner": "developer",
+        "doneWhen": "Response returns the shared test page's markdown content, and no write endpoint was called.",
+        "evidence": [
+          {
+            "sourceId": "s8",
+            "quote": "curl --request GET \\"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "--url https://api.notion.com/v1/pages/{page_id}/markdown \\ --header 'Authorization: Bearer <token>' \\"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "page_id: \"b55c9c91-384d-452b-81db-d1ef79372b75\" }) console.log(response.markdown)"
+          }
+        ],
+        "id": "step-5",
+        "dependsOn": [
+          "step-4"
+        ],
+        "actionIds": [
+          "read-page-content"
+        ],
+        "testKind": "action",
+        "request": {
+          "method": "GET",
+          "endpoint": "https://api.notion.com/v1/pages/{page_id}/markdown",
+          "example": "curl '--request' 'GET' '--url' 'https://api.notion.com/v1/pages/PAGE_ID/markdown' '--header' 'Authorization: Bearer ACCESS_TOKEN' '--header' 'Notion-Version: 2022-06-28'"
+        },
+        "stage": "test",
+        "destination": "",
+        "fields": []
+      },
+      {
+        "title": "Confirm provider review and distribution requirements before customer rollout",
+        "detail": "Obtain and satisfy the provider's documented review and distribution requirements for public connections. This is not a marketplace listing unless the provider requires one.",
+        "owner": "developer",
+        "doneWhen": "Documented review and distribution requirements are found and satisfied for customer workspaces.",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "a user-scoped static token, and public connections use the OAuth 2.0 protocol."
+          }
+        ],
+        "appliesWhen": "Before connecting customer workspaces beyond the test workspace",
+        "id": "step-6",
+        "dependsOn": [
+          "step-4",
+          "step-5"
+        ],
+        "actionIds": [],
+        "testKind": "launch",
+        "stage": "launch",
+        "destination": "",
+        "fields": []
+      }
+    ],
+    "sources": [
+      {
+        "id": "s1",
+        "url": "https://developers.notion.com/guides/get-started/authorization",
+        "title": "Authorization - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.549Z",
+        "hash": "98e0106bea64de8944c99f4ec23c8c4baaf2e59d3e9d33cb5713ccce6ae5678c",
+        "links": [
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/guides/get-started/public-connections",
+          "https://oauth.net/2/",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://api.notion.com/v1/oauth/token",
+          "https://www.notion.com/help/sharing-and-permissions",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/guides/agent-skills/overview",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/guides/get-started/authorization",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/guides/get-started/authorization.md",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Frame-DXXFP6nH.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DynamicMarkdown-B54_zNBF.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/zoom-image-lightbox-BG6oD64b.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lightbox-handle-r17bVUz3.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/index-BSPJDRoU.css?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/guides/get-started/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/get-started/overview",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/guides/get-started/quick-start",
+          "https://developers.notion.com/guides/get-started/developer-tools",
+          "https://developers.notion.com/guides/get-started/personal-access-tokens",
+          "https://developers.notion.com/guides/get-started/internal-connections",
+          "https://developers.notion.com/guides/get-started/handling-api-keys",
+          "https://developers.notion.com/guides/get-started/preparing-for-users",
+          "https://developers.notion.com/guides/mcp/overview",
+          "https://developers.notion.com/guides/mcp/common-mcp-clients",
+          "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+          "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+          "https://developers.notion.com/guides/mcp/notion-skills",
+          "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+          "https://developers.notion.com/guides/mcp/build-mcp-client",
+          "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+          "https://developers.notion.com/guides/mcp/hosting-open-source-mcp",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values",
+          "https://developers.notion.com/guides/data-apis/working-with-databases",
+          "https://developers.notion.com/guides/data-apis/working-with-views",
+          "https://developers.notion.com/guides/data-apis/working-with-comments",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+          "https://developers.notion.com/guides/data-apis/working-with-files-and-media"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://developers.notion.com/reference/versioning",
+        "title": "Versioning - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.558Z",
+        "hash": "b23aa8fde3dfcb9bd3052882122ad90f9701a8ecc5337cebdf1cf85a4b878c95",
+        "links": [
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/reference/versioning.md",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/index-BSPJDRoU.css?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/icons/nds/arrowCircleLoopForward.svg",
+          "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/get-started/overview",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/workspace-block-limits",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developers.notion.com/reference/retrieve-async-task",
+          "https://developers.notion.com/reference/changes-by-version",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/database",
+          "https://developers.notion.com/reference/data-source",
+          "https://developers.notion.com/reference/view",
+          "https://developers.notion.com/reference/comment-object",
+          "https://developers.notion.com/reference/file-object",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/emoji-and-icon",
+          "https://developers.notion.com/reference/unfurl-attribute-object",
+          "https://developers.notion.com/reference/authentication",
+          "https://developers.notion.com/reference/get-users",
+          "https://developers.notion.com/reference/list-custom-emojis",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03"
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://developers.notion.com/reference/page",
+        "title": "Page - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.563Z",
+        "hash": "161999f53c9139ce6450e2e1b0260f81459a0c7654cd7951a3a87b238467cd7e",
+        "links": [
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/page.md",
+          "https://developers.notion.com/reference/page-property-values",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/index-BSPJDRoU.css?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/icons/nds/arrowCircleLoopForward.svg",
+          "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/get-started/overview",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/workspace-block-limits",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developers.notion.com/reference/retrieve-async-task",
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/database",
+          "https://developers.notion.com/reference/data-source",
+          "https://developers.notion.com/reference/view",
+          "https://developers.notion.com/reference/comment-object",
+          "https://developers.notion.com/reference/file-object",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/emoji-and-icon",
+          "https://developers.notion.com/reference/unfurl-attribute-object",
+          "https://developers.notion.com/reference/authentication",
+          "https://developers.notion.com/reference/get-users",
+          "https://developers.notion.com/reference/list-custom-emojis",
+          "https://developers.notion.com/reference/property-object",
+          "https://developers.notion.com/reference/get-block-children",
+          "https://developers.notion.com/reference/rich-text"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://developers.notion.com/reference/page-property-values",
+        "title": "Page property values - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.569Z",
+        "hash": "940ff5cd2b61e1a8f528f05cc70f532a635e2ac9663e961022cda3b9474af16d",
+        "links": [
+          "https://developers.notion.com/reference/retrieve-a-page",
+          "https://developers.notion.com/reference/retrieve-a-page-property",
+          "https://developers.notion.com/reference/page-property-values",
+          "https://developers.notion.com/reference/page-property-values.md",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/property-item-object",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/index-BSPJDRoU.css?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/icons/nds/arrowCircleLoopForward.svg",
+          "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/get-started/overview",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/workspace-block-limits",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developers.notion.com/reference/retrieve-async-task",
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/reference/database",
+          "https://developers.notion.com/reference/data-source",
+          "https://developers.notion.com/reference/view",
+          "https://developers.notion.com/reference/comment-object",
+          "https://developers.notion.com/reference/file-object",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/emoji-and-icon",
+          "https://developers.notion.com/reference/unfurl-attribute-object",
+          "https://developers.notion.com/reference/authentication",
+          "https://developers.notion.com/reference/get-users",
+          "https://developers.notion.com/reference/list-custom-emojis",
+          "https://developers.notion.com/reference/property-object",
+          "https://developers.notion.com/reference/retrieve-a-data-source",
+          "https://developers.notion.com/guides/data-apis/uploading-small-files",
+          "https://developers.notion.com/guides/data-apis/query-large-data-sources",
+          "https://developers.notion.com/reference/rich-text",
+          "https://developers.notion.com/guides/data-apis/working-with-databases",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values"
+        ]
+      },
+      {
+        "id": "s5",
+        "url": "https://developers.notion.com/reference/retrieve-a-page",
+        "title": "Retrieve a page - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.575Z",
+        "hash": "90b072a254e54ebf46bd318cf23fc1ecb3d703911dbd289a411eac199d65ce8c",
+        "links": [
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/retrieve-a-page",
+          "https://developers.notion.com/reference/retrieve-a-page.md",
+          "https://developers.notion.com/reference/retrieve-a-page-property",
+          "https://developers.notion.com/reference/retrieve-page-markdown",
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/move-page",
+          "https://developers.notion.com/reference/page-property-values",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/OpenApiReferenceProvider-CS552b7R.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/utils-DDTCYAF2.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/cloneDeep-izs3Hzxb.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/_Uint8Array-BVIqJ90l.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isObjectLike-C8vmzPEN.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isArray-Dcu1dQ5t.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/utils-De8ttokP.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/toString-BX-iyh8G.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isSymbol-CSH9U2Gm.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/addUniqueKeysToSchema-DrwRDvAh.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/snippetPresets-DtAN0nWx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/style-to-object-BY3JEAdk.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/v4-DIgz8zy6.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/ApiExamples-D5rWArI6.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isEqual-BfaiBbcl.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/usePlaygroundInputsStore-O2i12wsz.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/shallow-DV8xABTt.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/getApiPlaygroundDisplay-DBZ0B5Jx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/CodeSnippet-BVi0tPUX.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/CodeSnippets-CqASbIwY.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Page-m07pfKpT.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/getPastedJson-DG9vsMS8.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/icon-CXzRSCr8.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/MethodPill-BdKVtEuX.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DuplicateIcon-CZlmBrJI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/createIcon-biFEUKPL.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DynamicMarkdown-B54_zNBF.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/SectionHeading-DwwHK3Pt.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/axios-vUo_bRtp.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Markdown-DfhCTwyA.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/clsx-xpJZXxdP.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lib-DuNMoZ05.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lib-B8HbPgcC.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/html-void-elements-mCSPHezU.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/dist-BTZUMDnx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/katex-YMM-FMeD.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/marked.esm-CZWythHk.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/AssistantPageLink-DqdKa2R4.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://developers.notion.com/reference/capabilities",
+        "title": "Connection capabilities - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.586Z",
+        "hash": "0b96528f91f8cf08811004c26699e014ff6fc61ce4a26b956569141851da29c6",
+        "links": [
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/list-comments",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/reference/get-self",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Frame-DXXFP6nH.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DynamicMarkdown-B54_zNBF.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/zoom-image-lightbox-BG6oD64b.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lightbox-handle-r17bVUz3.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/index-BSPJDRoU.css?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/icons/nds/arrowCircleLoopForward.svg",
+          "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/get-started/overview",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/workspace-block-limits",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developers.notion.com/reference/retrieve-async-task",
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/database",
+          "https://developers.notion.com/reference/data-source",
+          "https://developers.notion.com/reference/view",
+          "https://developers.notion.com/reference/comment-object",
+          "https://developers.notion.com/reference/file-object",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/emoji-and-icon",
+          "https://developers.notion.com/reference/unfurl-attribute-object",
+          "https://developers.notion.com/reference/authentication",
+          "https://developers.notion.com/reference/get-users",
+          "https://developers.notion.com/reference/list-custom-emojis",
+          "https://developers.notion.com/guides/get-started/personal-access-tokens",
+          "https://developers.notion.com/guides/get-started/authorization",
+          "https://app.notion.com/developers/connections",
+          "https://developers.notion.com/reference/retrieve-a-database",
+          "https://developers.notion.com/reference/get-user"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://developers.notion.com/reference/retrieve-a-page-property",
+        "title": "Retrieve a page property item - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.591Z",
+        "hash": "1f937d501b122c92bcecb85ed0b42f09ed644c014c11374a4d2a494789042dec",
+        "links": [
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/retrieve-a-page-property",
+          "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "https://developers.notion.com/reference/retrieve-a-page",
+          "https://developers.notion.com/reference/retrieve-page-markdown",
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/move-page",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/OpenApiReferenceProvider-CS552b7R.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/utils-DDTCYAF2.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/cloneDeep-izs3Hzxb.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/_Uint8Array-BVIqJ90l.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isObjectLike-C8vmzPEN.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isArray-Dcu1dQ5t.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/utils-De8ttokP.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/toString-BX-iyh8G.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isSymbol-CSH9U2Gm.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/addUniqueKeysToSchema-DrwRDvAh.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/snippetPresets-DtAN0nWx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/style-to-object-BY3JEAdk.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/v4-DIgz8zy6.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/ApiExamples-D5rWArI6.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isEqual-BfaiBbcl.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/usePlaygroundInputsStore-O2i12wsz.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/shallow-DV8xABTt.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/getApiPlaygroundDisplay-DBZ0B5Jx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/CodeSnippet-BVi0tPUX.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/CodeSnippets-CqASbIwY.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Page-m07pfKpT.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/getPastedJson-DG9vsMS8.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/icon-CXzRSCr8.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/MethodPill-BdKVtEuX.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DuplicateIcon-CZlmBrJI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/createIcon-biFEUKPL.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DynamicMarkdown-B54_zNBF.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/SectionHeading-DwwHK3Pt.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/axios-vUo_bRtp.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Markdown-DfhCTwyA.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/clsx-xpJZXxdP.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lib-DuNMoZ05.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lib-B8HbPgcC.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/html-void-elements-mCSPHezU.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/dist-BTZUMDnx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/katex-YMM-FMeD.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/marked.esm-CZWythHk.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/AssistantPageLink-DqdKa2R4.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/index-BSPJDRoU.css?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9"
+        ]
+      },
+      {
+        "id": "s8",
+        "url": "https://developers.notion.com/reference/retrieve-page-markdown",
+        "title": "Retrieve a page as markdown - Notion Docs",
+        "retrievedAt": "2026-11-02T06:51:36.599Z",
+        "hash": "9320176309a6143680710d16ce721b42b6f07215fef448c055879d5a86ba9210",
+        "links": [
+          "https://developers.notion.com/reference/retrieve-page-markdown",
+          "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "https://developers.notion.com/reference/retrieve-a-page",
+          "https://developers.notion.com/reference/retrieve-a-page-property",
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/move-page",
+          "https://developers.notion.com/reference/trash-page",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/apple-touch-icon.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon/favicon.ico",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/android-chrome-192x192.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-16x16.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon-32x32.png",
+          "https://developers.notion.com/mintlify-assets/_mintlify/favicons/notion-demo/1PaJq9z3waub4TpE/_generated/favicon-dark/favicon.ico",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/_mintlify/assets/index-B2TY3ua1.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/rolldown-runtime-Bjp52BOI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/initial-vendor-qAl-_E2i.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/OpenApiReferenceProvider-CS552b7R.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/utils-DDTCYAF2.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/cloneDeep-izs3Hzxb.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/_Uint8Array-BVIqJ90l.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isObjectLike-C8vmzPEN.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isArray-Dcu1dQ5t.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/utils-De8ttokP.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/toString-BX-iyh8G.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isSymbol-CSH9U2Gm.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/addUniqueKeysToSchema-DrwRDvAh.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/snippetPresets-DtAN0nWx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/style-to-object-BY3JEAdk.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/v4-DIgz8zy6.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/ApiExamples-D5rWArI6.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/isEqual-BfaiBbcl.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/usePlaygroundInputsStore-O2i12wsz.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/shallow-DV8xABTt.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/getApiPlaygroundDisplay-DBZ0B5Jx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/CodeSnippet-BVi0tPUX.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/CodeSnippets-CqASbIwY.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Page-m07pfKpT.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/getPastedJson-DG9vsMS8.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/icon-CXzRSCr8.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/MethodPill-BdKVtEuX.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DuplicateIcon-CZlmBrJI.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/createIcon-biFEUKPL.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/DynamicMarkdown-B54_zNBF.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/SectionHeading-DwwHK3Pt.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/axios-vUo_bRtp.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/Markdown-DfhCTwyA.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/clsx-xpJZXxdP.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lib-DuNMoZ05.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/lib-B8HbPgcC.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/html-void-elements-mCSPHezU.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/dist-BTZUMDnx.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/katex-YMM-FMeD.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/marked.esm-CZWythHk.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9",
+          "https://developers.notion.com/_mintlify/assets/AssistantPageLink-DqdKa2R4.js?dpl=dpl_DeHjVRGfFnhYQwHnfC2pjeXXv8h9"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "title": "Confirm the capability required by the markdown endpoint",
+        "consequence": "follow-up",
+        "kind": "verification",
+        "owner": "developer",
+        "resolution": "Check the markdown retrieval reference for its required capability and confirm it is Read content.",
+        "stepIds": [
+          "step-5"
+        ],
+        "resolutionStepIds": [
+          "step-5"
+        ]
+      },
+      {
+        "title": "Confirm the Notion-Version header value",
+        "consequence": "follow-up",
+        "kind": "verification",
+        "owner": "developer",
+        "resolution": "Check the versioning reference for the current required version. Keep 2022-06-28 only if it is confirmed.",
+        "stepIds": [
+          "step-4",
+          "step-5"
+        ],
+        "resolutionStepIds": [
+          "step-4",
+          "step-5"
+        ]
+      },
+      {
+        "title": "Verify review and distribution requirements",
+        "consequence": "launch",
+        "kind": "verification",
+        "owner": "developer",
+        "resolution": "Find the provider's review, verification and distribution requirements for public connections before rollout.",
+        "stepIds": [
+          "step-6"
+        ],
+        "resolutionStepIds": [
+          "step-6"
+        ]
+      }
+    ]
+  }
+}

@@ -10,7 +10,7 @@ A developer wants their agent to read a customer's email. Before building the fe
 
 ## The approach
 
-I began with provider guides, but a guide still leaves the developer to decide which instructions apply. I shifted the starting point to their intended feature. “Read email, never send” should lead to a different plan from “send email only.” The flow checks whether Composio's managed app fits before asking the developer to register their own. The goal is a clear next action.
+I began with provider guides, but a guide still leaves the developer to decide which instructions apply. I shifted the starting point to their intended feature. “Read email, never send” should lead to a different plan from “send email only.” The flow considers a managed app first and makes the remaining access checks explicit. The goal is a clear next action.
 
 ## The developer's journey
 
@@ -22,8 +22,12 @@ I began with provider guides, but a guide still leaves the developer to decide w
 
 ## Why these choices
 
-One layout makes familiar and unfamiliar apps feel like the same product. Reviewed guidance supports Gmail, Slack and GitHub; live research extends the journey to other apps. Access follows the feature, so customers aren't asked for unnecessary permissions. Linked sources let developers inspect the advice. Saving answers and repairing individual gaps avoids repeating the whole conversation.
+One layout makes familiar and unfamiliar apps feel like the same product. Reviewed guidance supports Gmail, Slack and GitHub; live research extends the journey to other apps. Permissions follow the requested feature, with unresolved access called out before testing. Linked sources let developers inspect the advice. Saving answers and repairing individual gaps avoids repeating the whole conversation.
+
+## Try it
+
+In the tested Gmail flow, changing read-and-draft to send-only changed the permission plan to gmail.send. Try that edit and compare the result. The README includes the exact Notion input for live research.
 
 ## Where the prototype stands
 
-Some live guides still need missing details resolved. The product guides setup; it does not connect accounts or complete provider approvals. Next, I would test whether developers can choose a path and reach a first working connection without help.
+Live research can fail or return an incomplete guide; sources and unresolved steps remain available. The product guides setup; it does not connect accounts or complete provider approvals. Next, I would test whether developers can choose a path and reach a first working connection without help.

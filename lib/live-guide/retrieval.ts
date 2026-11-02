@@ -211,13 +211,14 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       queue.unshift(...promoted);
       for(const [link] of ranked.slice(0,8))if(!queue.includes(link))queue.push(link);
       emit({stage:'Source read',detail:page.title+(index?' · documentation index':''),status:'done'});
+      if(substantive&&input.documentationUrl&&options.urls?.includes(input.documentationUrl))break;
     } catch(error) {
       outer.throwIfAborted();failures.push(sourceFailure(error,url)); warnings.push(`Could not read ${new URL(url).hostname}${new URL(url).pathname}.`);
       emit({stage:'Source unavailable',detail:warnings.at(-1)!,status:'warning'});
     }
   }
   outer.throwIfAborted();
-  if (!pages.length&&!previous.length) throw new ResearchFailure(failures.find(f=>f.category!=='source-unavailable')||failures[0]||{category:'source-unavailable',url:seed,message:'No readable documentation was found. Add a direct official API-reference or Markdown URL.'});
+  if ((!pages.length&&!previous.length)||(input.documentationUrl&&options.urls?.includes(input.documentationUrl)&&!pages.length)) throw new ResearchFailure(failures.find(f=>f.category!=='source-unavailable')||failures[0]||{category:'source-unavailable',url:seed,message:'The supplied documentation could not be read. Your earlier sources are retained; add a readable public API-reference or Markdown URL.'});
   if (signal.aborted) warnings.push('Research reached its source-reading deadline; findings are partial.');
   const documents: Document[] = await Promise.all(pages.map(async (p,i) => {
     // Preserve relevant sections when pages contain long navigation/schema preambles.

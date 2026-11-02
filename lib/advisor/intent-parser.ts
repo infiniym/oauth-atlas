@@ -96,7 +96,7 @@ export async function interpret(description: string, config: IntentAiConfig, fet
     const intent = intentSchema.parse(JSON.parse(text));
     return {
       mode: 'AI suggestions', aiProvider:config.provider, intent,
-      notice: `${anthropic ? 'Anthropic' : 'OpenAI'} selected from the known capability map. Check every interpretation; recommendations are still produced by the verified rules.`,
+      notice: 'We selected these actions from your description. Change anything we misunderstood.',
     };
   } catch {
     // Refusals, truncation, bad JSON, network errors and invalid capabilities all

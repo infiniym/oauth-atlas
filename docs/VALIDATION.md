@@ -1,5 +1,7 @@
 # Validation notebook — 29 October 2026
 
+**Current results:** [Final evaluation - 2 November 2026](evaluations/FINAL-2026-11-02.md). The dated sections below are historical records and do not describe the current hosted release.
+
 ## Provider investigation
 
 Independent research agents used official provider pages and attempted accessible setup paths. Their original dossiers are in `research/`; normalized guide data retains source IDs. There are 28 official-source records across the four guides (some sources support multiple claims).

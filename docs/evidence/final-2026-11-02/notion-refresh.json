@@ -1,0 +1,31 @@
+{
+  "test": "Zero-model guide fixes preserve prior snapshot and improve request inputs",
+  "oldGuideId": "lg-b4668a9c-d447-4408-b1d5-99e08896864e",
+  "newGuideId": "lg-e59fc916-4071-434f-b1ac-d421b53bf984",
+  "oldVersionUnchanged": true,
+  "modelCalls": 0,
+  "requests": [
+    {
+      "fields": [
+        "Access token: backend OAuth exchange for the test account; keep it out of this guide",
+        "page_id: test resource ID from provider UI/list response"
+      ],
+      "request": {
+        "method": "GET",
+        "endpoint": "https://api.notion.com/v1/pages/{page_id}",
+        "example": "curl '--request' 'GET' '--url' 'https://api.notion.com/v1/pages/PAGE_ID?filter_properties=title' '--header' 'Authorization: Bearer ACCESS_TOKEN' '--header' 'Notion-Version: 2026-03-11'"
+      }
+    },
+    {
+      "fields": [
+        "Access token: backend OAuth exchange for the test account; keep it out of this guide",
+        "page_id: test resource ID from provider UI/list response"
+      ],
+      "request": {
+        "method": "GET",
+        "endpoint": "https://api.notion.com/v1/pages/{page_id}/markdown",
+        "example": "curl '--request' 'GET' '--url' 'https://api.notion.com/v1/pages/PAGE_ID/markdown' '--header' 'Authorization: Bearer ACCESS_TOKEN' '--header' 'Notion-Version: 2026-03-11'"
+      }
+    }
+  ]
+}

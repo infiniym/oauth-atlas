@@ -1,0 +1,662 @@
+[
+  {
+    "attempt": "recovery-dropbox-first-failure.json",
+    "input": {
+      "app": "Dropbox",
+      "website": "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+      "useCase": "A web app lists file and folder names in each customer's Dropbox App Folder. Read metadata only. Never download file contents, upload, delete, or access team administration.",
+      "audience": "customers",
+      "answers": {},
+      "previousId": "lg-ba525984-18ee-4e19-a307-0e55bd104636",
+      "documentationUrl": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+      "resolution": {
+        "kind": "find-request",
+        "actionId": "list-folder-continue",
+        "requestId": "10f3601d-feed-4727-bbc8-cf705f4067d2"
+      }
+    },
+    "elapsedMs": 17985,
+    "state": "interrupted",
+    "beforeSourceCount": 8,
+    "afterSources": [
+      {
+        "id": "s1",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth"
+      },
+      {
+        "id": "s2",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/auth/token-revoke"
+      },
+      {
+        "id": "s3",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder"
+      },
+      {
+        "id": "s4",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      },
+      {
+        "id": "s5",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor"
+      },
+      {
+        "id": "s6",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata"
+      },
+      {
+        "id": "s7",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members"
+      },
+      {
+        "id": "s8",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue"
+      },
+      {
+        "id": "s9",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      },
+      {
+        "id": "s10",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue"
+      },
+      {
+        "id": "s11",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue"
+      }
+    ],
+    "coverage": [
+      {
+        "action": "List file and folder names and metadata in each customer's App Folder",
+        "actionId": "list-folder-metadata",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "mapped",
+        "reason": "Documented required scope for list_folder. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s3",
+            "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+          },
+          {
+            "sourceId": "s3",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder \\"
+          }
+        ],
+        "support": "reviewed"
+      },
+      {
+        "action": "Continue paginated folder listing using returned cursors",
+        "actionId": "list-folder-continue",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "unresolved",
+        "reason": "The s4 quote ties files.metadata.read to list_folder, but no quote explicitly states that list_folder/continue requires this scope, so the continue-listing relationship is not established.",
+        "evidence": [
+          {
+            "sourceId": "s4",
+            "quote": "list_folder . Required scope: files.metadata.read"
+          },
+          {
+            "sourceId": "s4",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder/continue \\"
+          }
+        ],
+        "support": "unresolved"
+      }
+    ],
+    "failure": {
+      "category": "validation",
+      "message": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation."
+    },
+    "engine": {
+      "model": "claude-haiku-5-5",
+      "attempts": 1,
+      "inputTokens": 14774,
+      "outputTokens": 1869,
+      "elapsedMs": 17887,
+      "outcome": "validation-rejected",
+      "thinking": "adaptive",
+      "effort": "medium",
+      "validationIssues": [
+        "steps.0.fields.0: String must contain at most 100 character(s)"
+      ],
+      "provider": "anthropic",
+      "promptVersion": "live-guide.9"
+    },
+    "setupTested": false,
+    "oldVersionUnchanged": true
+  },
+  {
+    "attempt": "recovery-dropbox-second-failure.json",
+    "input": {
+      "app": "Dropbox",
+      "website": "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+      "useCase": "A web app lists file and folder names in each customer's Dropbox App Folder. Read metadata only. Never download file contents, upload, delete, or access team administration.",
+      "audience": "customers",
+      "answers": {},
+      "previousId": "lg-ba525984-18ee-4e19-a307-0e55bd104636",
+      "documentationUrl": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+      "resolution": {
+        "kind": "find-request",
+        "actionId": "list-folder-continue",
+        "requestId": "1443914b-123a-4c55-badf-8c7cf06fde24"
+      }
+    },
+    "elapsedMs": 14234,
+    "state": "interrupted",
+    "beforeSourceCount": 8,
+    "afterSources": [
+      {
+        "id": "s1",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth"
+      },
+      {
+        "id": "s2",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/auth/token-revoke"
+      },
+      {
+        "id": "s3",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder"
+      },
+      {
+        "id": "s4",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      },
+      {
+        "id": "s5",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor"
+      },
+      {
+        "id": "s6",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata"
+      },
+      {
+        "id": "s7",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members"
+      },
+      {
+        "id": "s8",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue"
+      },
+      {
+        "id": "s9",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      }
+    ],
+    "coverage": [
+      {
+        "action": "List file and folder names and metadata in each customer's App Folder",
+        "actionId": "list-folder-metadata",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "mapped",
+        "reason": "Documented required scope for list_folder. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s3",
+            "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+          },
+          {
+            "sourceId": "s3",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder \\"
+          }
+        ],
+        "support": "reviewed"
+      },
+      {
+        "action": "Continue paginated folder listing using returned cursors",
+        "actionId": "list-folder-continue",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "unresolved",
+        "reason": "The s4 quote ties files.metadata.read to list_folder, but no quote explicitly states that list_folder/continue requires this scope, so the continue-listing relationship is not established.",
+        "evidence": [
+          {
+            "sourceId": "s4",
+            "quote": "list_folder . Required scope: files.metadata.read"
+          },
+          {
+            "sourceId": "s4",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder/continue \\"
+          }
+        ],
+        "support": "unresolved"
+      }
+    ],
+    "failure": {
+      "category": "validation",
+      "message": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation."
+    },
+    "engine": {
+      "model": "claude-haiku-5-5",
+      "attempts": 1,
+      "inputTokens": 14774,
+      "outputTokens": 2453,
+      "elapsedMs": 14097,
+      "outcome": "validation-rejected",
+      "thinking": "adaptive",
+      "effort": "medium",
+      "validationIssues": [
+        "steps.0.detail: String must contain at most 800 character(s)"
+      ],
+      "provider": "anthropic",
+      "promptVersion": "live-guide.9"
+    },
+    "setupTested": false,
+    "oldVersionUnchanged": true
+  },
+  {
+    "attempt": "recovery-dropbox-before-source-context.json",
+    "input": {
+      "app": "Dropbox",
+      "website": "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+      "useCase": "A web app lists file and folder names in each customer's Dropbox App Folder. Read metadata only. Never download file contents, upload, delete, or access team administration.",
+      "audience": "customers",
+      "answers": {},
+      "previousId": "lg-ba525984-18ee-4e19-a307-0e55bd104636",
+      "documentationUrl": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+      "resolution": {
+        "kind": "find-request",
+        "actionId": "list-folder-continue",
+        "requestId": "8c961e1a-d4be-4bda-b44d-cf1eb283d9e1"
+      }
+    },
+    "elapsedMs": 17308,
+    "state": "ready",
+    "beforeSourceCount": 8,
+    "afterSources": [
+      {
+        "id": "s1",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth"
+      },
+      {
+        "id": "s2",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/auth/token-revoke"
+      },
+      {
+        "id": "s3",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder"
+      },
+      {
+        "id": "s4",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      },
+      {
+        "id": "s5",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor"
+      },
+      {
+        "id": "s6",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata"
+      },
+      {
+        "id": "s7",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members"
+      },
+      {
+        "id": "s8",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue"
+      },
+      {
+        "id": "s9",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      }
+    ],
+    "coverage": [
+      {
+        "action": "List file and folder names and metadata in each customer's App Folder",
+        "actionId": "list-folder-metadata",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "mapped",
+        "reason": "Documented required scope for list_folder. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s3",
+            "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+          },
+          {
+            "sourceId": "s3",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder \\"
+          }
+        ],
+        "support": "reviewed"
+      },
+      {
+        "action": "Continue paginated folder listing using returned cursors",
+        "actionId": "list-folder-continue",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "unresolved",
+        "reason": "The quoted scope line names list_folder rather than list_folder/continue, and the continue endpoint's scope requirement is not directly quoted, so the continue-action mapping to files.metadata.read is not explicitly documented.",
+        "evidence": [
+          {
+            "sourceId": "s9",
+            "quote": "list_folder . Required scope: files.metadata.read"
+          },
+          {
+            "sourceId": "s9",
+            "quote": "cursor string Required >=1 character"
+          },
+          {
+            "sourceId": "s9",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder/continue \\"
+          }
+        ],
+        "support": "unresolved"
+      }
+    ],
+    "failure": null,
+    "engine": {
+      "model": "claude-haiku-5-5",
+      "attempts": 2,
+      "inputTokens": 17006,
+      "outputTokens": 2757,
+      "elapsedMs": 17198,
+      "outcome": "accepted",
+      "thinking": "adaptive",
+      "effort": "medium",
+      "thinkingTokens": 723,
+      "provider": "anthropic",
+      "promptVersion": "live-guide.9"
+    },
+    "setupTested": false,
+    "oldVersionUnchanged": true
+  },
+  {
+    "attempt": "recovery-dropbox.json",
+    "input": {
+      "app": "Dropbox",
+      "website": "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+      "useCase": "A web app lists file and folder names in each customer's Dropbox App Folder. Read metadata only. Never download file contents, upload, delete, or access team administration.",
+      "audience": "customers",
+      "answers": {},
+      "previousId": "lg-ba525984-18ee-4e19-a307-0e55bd104636",
+      "documentationUrl": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+      "resolution": {
+        "kind": "find-request",
+        "actionId": "list-folder-continue",
+        "requestId": "673a0aa4-7a5e-4734-8b73-74b3f0a92230"
+      }
+    },
+    "elapsedMs": 18127,
+    "state": "ready",
+    "beforeSourceCount": 8,
+    "afterSources": [
+      {
+        "id": "s1",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth"
+      },
+      {
+        "id": "s2",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/auth/token-revoke"
+      },
+      {
+        "id": "s3",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder"
+      },
+      {
+        "id": "s4",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      },
+      {
+        "id": "s5",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor"
+      },
+      {
+        "id": "s6",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata"
+      },
+      {
+        "id": "s7",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members"
+      },
+      {
+        "id": "s8",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue"
+      },
+      {
+        "id": "s9",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue"
+      }
+    ],
+    "coverage": [
+      {
+        "action": "List file and folder names and metadata in each customer's App Folder",
+        "actionId": "list-folder-metadata",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "mapped",
+        "reason": "Documented required scope for list_folder. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s3",
+            "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+          },
+          {
+            "sourceId": "s3",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder \\"
+          }
+        ],
+        "support": "reviewed"
+      },
+      {
+        "action": "Continue paginated folder listing using returned cursors",
+        "actionId": "list-folder-continue",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "unresolved",
+        "reason": "The independent action-to-permission check did not complete. Confirm the documented relationship before executing this action.",
+        "evidence": [
+          {
+            "sourceId": "s9",
+            "quote": "list_folder . Required scope: files.metadata.read"
+          },
+          {
+            "sourceId": "s9",
+            "quote": "Endpoint format: RPC Authentication: App , User , Dropbox-API-Select-Admin (Whole Team)"
+          },
+          {
+            "sourceId": "s9",
+            "quote": "OR Authorization Bearer OAuth 2.0 token issued to a specific user. Use Authorization: Bearer <token> ."
+          }
+        ],
+        "support": "unresolved"
+      }
+    ],
+    "failure": null,
+    "engine": {
+      "model": "claude-haiku-5-5",
+      "attempts": 2,
+      "inputTokens": 17112,
+      "outputTokens": 2720,
+      "elapsedMs": 18035,
+      "outcome": "accepted",
+      "thinking": "adaptive",
+      "effort": "medium",
+      "thinkingTokens": 645,
+      "provider": "anthropic",
+      "promptVersion": "live-guide.9"
+    },
+    "setupTested": false,
+    "oldVersionUnchanged": true
+  },
+  {
+    "attempt": "recovery-openproject-first-failure.json",
+    "input": {
+      "app": "OpenProject",
+      "website": "https://www.openproject.org/docs/api/",
+      "useCase": "Read titles of work packages the connected person can access. Never modify or delete work packages.",
+      "audience": "customers",
+      "answers": {},
+      "previousId": "lg-2b8b429a-2660-43bc-a782-cb18501d3707",
+      "documentationUrl": "https://www.openproject.org/docs/system-admin-guide/authentication/oauth-applications/"
+    },
+    "elapsedMs": 68403,
+    "state": "interrupted",
+    "beforeSourceCount": 8,
+    "afterSources": [
+      {
+        "id": "s1",
+        "url": "https://www.openproject.org/docs/api/"
+      },
+      {
+        "id": "s2",
+        "url": "https://www.openproject.org/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s3",
+        "url": "https://www.openproject.org/de/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s4",
+        "url": "https://www.openproject.org/es/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s5",
+        "url": "https://www.openproject.org/fr/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s6",
+        "url": "https://www.openproject.org/pt/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s7",
+        "url": "https://www.openproject.org/docs/api/endpoints/user-working-times/"
+      },
+      {
+        "id": "s8",
+        "url": "https://www.openproject.org/docs/api/endpoints/work-schedule/"
+      },
+      {
+        "id": "s9",
+        "url": "https://www.openproject.org/docs/system-admin-guide/authentication/oauth-applications/"
+      },
+      {
+        "id": "s10",
+        "url": "https://www.openproject.org/docs/api/endpoints/workspaces/"
+      },
+      {
+        "id": "s11",
+        "url": "https://www.openproject.org/de/docs/api/endpoints/user-working-times/"
+      }
+    ],
+    "coverage": [],
+    "failure": {
+      "category": "validation",
+      "message": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation."
+    },
+    "engine": {
+      "model": "claude-haiku-5-5",
+      "attempts": 2,
+      "elapsedMs": 64694,
+      "inputTokens": 36710,
+      "outputTokens": 15390,
+      "thinkingTokens": 8508,
+      "thinking": "adaptive",
+      "effort": "medium",
+      "outcome": "validation-rejected",
+      "validationIssues": [
+        "A step destination for an API request is not documented in the supplied sources.",
+        "A step destination for an API request is not documented in the supplied sources."
+      ],
+      "provider": "anthropic",
+      "promptVersion": "live-guide.9"
+    },
+    "setupTested": false,
+    "oldVersionUnchanged": true
+  },
+  {
+    "attempt": "recovery-openproject.json",
+    "input": {
+      "app": "OpenProject",
+      "website": "https://www.openproject.org/docs/api/",
+      "useCase": "Read titles of work packages the connected person can access. Never modify or delete work packages.",
+      "audience": "customers",
+      "answers": {},
+      "previousId": "lg-2b8b429a-2660-43bc-a782-cb18501d3707",
+      "documentationUrl": "https://www.openproject.org/docs/system-admin-guide/authentication/oauth-applications/"
+    },
+    "elapsedMs": 90188,
+    "state": "interrupted",
+    "beforeSourceCount": 8,
+    "afterSources": [
+      {
+        "id": "s1",
+        "url": "https://www.openproject.org/docs/api/"
+      },
+      {
+        "id": "s2",
+        "url": "https://www.openproject.org/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s3",
+        "url": "https://www.openproject.org/de/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s4",
+        "url": "https://www.openproject.org/es/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s5",
+        "url": "https://www.openproject.org/fr/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s6",
+        "url": "https://www.openproject.org/pt/docs/api/endpoints/work-packages/"
+      },
+      {
+        "id": "s7",
+        "url": "https://www.openproject.org/docs/api/endpoints/user-working-times/"
+      },
+      {
+        "id": "s8",
+        "url": "https://www.openproject.org/docs/api/endpoints/work-schedule/"
+      },
+      {
+        "id": "s9",
+        "url": "https://www.openproject.org/docs/system-admin-guide/authentication/oauth-applications/"
+      },
+      {
+        "id": "s10",
+        "url": "https://www.openproject.org/docs/api/endpoints/workspaces/"
+      },
+      {
+        "id": "s11",
+        "url": "https://www.openproject.org/de/docs/api/endpoints/user-working-times/"
+      }
+    ],
+    "coverage": [],
+    "failure": {
+      "category": "planning",
+      "message": "This stage reached its 90-second budget. Your request and completed evidence are saved; retry only the unfinished stage or add a more specific documentation URL."
+    },
+    "engine": {
+      "model": "claude-haiku-5-5",
+      "attempts": 2,
+      "elapsedMs": 64694,
+      "inputTokens": 36710,
+      "outputTokens": 15390,
+      "thinkingTokens": 8508,
+      "thinking": "adaptive",
+      "effort": "medium",
+      "outcome": "validation-rejected",
+      "validationIssues": [
+        "A step destination for an API request is not documented in the supplied sources.",
+        "A step destination for an API request is not documented in the supplied sources."
+      ],
+      "provider": "anthropic",
+      "promptVersion": "live-guide.9"
+    },
+    "setupTested": false,
+    "oldVersionUnchanged": true
+  }
+]

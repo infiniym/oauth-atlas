@@ -46,6 +46,12 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     interpreted={value:{...evidenceOnly(research!.documents),...intent,questions:deferred},mode:'interpreted',notice:'These setup choices were already saved. No new research or model call was needed.'};
     emit({stage:'Saved choices ready',detail:'Reusing the questions and documentation already collected.',status:'done'});
   }else{
+    if(input.documentationUrl){
+      research=await retrieve(input,bindings,emit,signal,fetcher,{previous:research||undefined,urls:[input.documentationUrl],refresh:true});
+      // New evidence invalidates a saved interpretation, not confirmed intent.
+      options={...options,checkpoint:undefined};followupDone=false;
+      await options.save?.({research,clarificationUsed,followupDone,intent});
+    }
     if(!research?.documents.length){research=await retrieve({...input,website:research?.website||input.website},bindings,emit,signal,fetcher);research.inferred=false;await options.save?.({research,clarificationUsed,followupDone,intent});}
     emit({stage:clarificationUsed?'Building your guide':'Checking setup choices',detail:'Using '+research.documents.length+' saved source snapshots. Your request and previous answers are retained.',status:'working'});
     interpreted=options.checkpoint?.draft?{value:options.checkpoint.draft,mode:'interpreted',notice:'Continuing the saved plan checkpoint. No completed planning call was repeated.'}:await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:clarificationUsed,intent});
@@ -75,7 +81,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       }
 
     }
-    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});const review=await reviewMappings(interpreted.value,input,bindings,signal,fetcher);interpreted.value=review.value;if(interpreted.telemetry)for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(review.telemetry[k]||0);await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});}
+    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});const review=await reviewMappings(interpreted.value,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;if(interpreted.telemetry)for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(review.telemetry[k]||0);await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});}
   }
   research=research!;signal.throwIfAborted();
   const value=interpreted.value;

@@ -1,10 +1,10 @@
 # OAuth Launch Advisor
 
-[Hosted demo (previous release)](https://oauth-atlas.mossystar19.chatgpt.site/) · [Source](https://github.com/infiniym/oauth-atlas)
+[Hosted demo (update pending)](https://oauth-atlas.mossystar19.chatgpt.site/) · [Source](https://github.com/infiniym/oauth-atlas)
 
 Help an agent developer choose an OAuth app model, understand required permissions and approvals, and reach a first representative API test. Reviewed Gmail, Slack and GitHub rules and live documentation research use the same guide layout, exports and dated share links. Apps can be researched without being in the catalog.
 
-**Release status:** this checkout contains the submission candidate. The hosted demo and remote repository have not been updated to this candidate. Do not describe those links as the tested release until the [release checks](docs/SUBMISSION.md) pass.
+**Release status:** this source contains the submission candidate. The hosted demo has not been updated to match it. Do not describe those links as the tested release until the [release checks](docs/SUBMISSION.md) pass.
 
 ## Start here
 
@@ -37,6 +37,16 @@ npm run dev -- --port 5173
 
 Open `http://localhost:5173`. Local and hosted databases are separate. For live interpretation, copy `.dev.vars.example` to the ignored `.dev.vars` and set `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY` and the exact `ANTHROPIC_MODEL` available to your account. Adaptive thinking remains enabled at medium effort. Restart after changing bindings. Never put keys in the browser, repository or submission.
 
+## Try live research
+
+Use **Notion** with `https://developers.notion.com/guides/get-started/authorization`, choose **Customers / other organizations**, and enter:
+
+> A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.
+
+A fresh local HTTP run produced two cited read requests with reviewed permission mappings in 79.3 seconds. This is a generated, unexecuted guide. Hosted generation remains unverified for this candidate because the Sites connector cannot access the recorded project. The [evidence set](docs/evidence/final-2026-11-02/README.md) includes this run and failed cases.
+
+For reviewed providers, the first-test steps include backend JavaScript using an authorized Composio session. The proxy keeps tokens server-side and needs the Project API key's Proxy execute permission. Replace the test inputs, complete the Connect Link, then run the selected request in your backend. Sending, posting, reviewing and PR creation act on real test resources when you run them; use your own disposable test accounts. These examples have been checked with stubbed execution, not real provider accounts.
+
 ## Product decisions
 
 1. Start with a few varied providers instead of claiming 100 complete guides. The 1,694-entry dated catalog is discovery breadth, not validated setup coverage.
@@ -47,7 +57,7 @@ Open `http://localhost:5173`. Local and hosted databases are separate. For live 
 
 ## Validation and limits
 
-See [the current evaluation](docs/evaluations/SUBMISSION-READINESS-2026-11-02.md), [live-guide architecture](docs/LIVE-GUIDE.md) and [architecture/configuration](docs/ARCHITECTURE.md). The evaluation records unsuccessful runs as well as useful outputs, and separates fixtures, real model calls, browser checks and actual OAuth execution.
+See [the current evaluation](docs/evaluations/FINAL-2026-11-02.md), [live-guide architecture](docs/LIVE-GUIDE.md) and [architecture/configuration](docs/ARCHITECTURE.md). The evaluation records unsuccessful runs as well as useful outputs, and separates fixtures, real model calls, browser checks and actual OAuth execution.
 
 Live stages have a 90-second budget, bounded page reading and anonymous quota. Unreadable or moved documentation and unsupported provider facts can still require a direct official URL. The independent model check is fallible. No real provider accounts were connected and no approvals were obtained. The 100-guide library, private workspaces and production hardening are outside this focused slice.
 

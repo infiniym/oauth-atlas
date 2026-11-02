@@ -58,4 +58,4 @@ Real checks cover a small varied set: Linear app actors, Notion read-only conten
 6. Try unreadable/ambiguous documentation or a public API. The product should expose the limitation without fabricating OAuth steps.
 7. Share and reopen a dated plan. Another developer should understand its inputs, next action and unresolved gates without a verbal walkthrough.
 
-Automated/API checks establish behavior and source correspondence. Developer comprehension, time-to-first-working-connection and actual provider acceptance still need observed user tasks and real grants. See [validation](VALIDATION.md) and [the current evaluation](evaluations/UNIFIED-2026-10-31.md).
+Automated/API checks establish behavior and source correspondence. Developer comprehension, time-to-first-working-connection and actual provider acceptance still need observed user tasks and real grants. See [validation](VALIDATION.md) and [the current evaluation](evaluations/FINAL-2026-11-02.md).
