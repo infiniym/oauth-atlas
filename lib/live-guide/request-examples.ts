@@ -27,9 +27,9 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
   if(!step?.request?.example)continue;
   let example=String(step.request.example);
   // Documentation-derived version headers are facts, not developer inputs.
-  example=example.replace(/([\w-]+-Version):\s*(<[^>]+>|\d{4}-\d{2}-\d{2})/gi,(whole,header,current)=>{
+  example=example.replace(/([\w-]+-Version):\s*(<[^>]+>|[A-Z][A-Z_]+|\d{4}-\d{2}-\d{2})/gi,(whole,header,current)=>{
    const literal=[...source.matchAll(new RegExp(header+':?\\s*["\'`]?\\s*(\\d{4}-\\d{2}-\\d{2})','gi'))].map(m=>m[1]).sort().at(-1);
-   if(!literal){if(current.startsWith('<'))throw new Error('A required request version is not established by the supplied sources.');return whole;}
+   if(!literal){if(!/^\d{4}-\d{2}-\d{2}$/.test(current))throw new Error('A required request version is not established by the supplied sources.');return whole;}
    return header+': '+literal;
   });
   step.request.example=shellSafeCurl(example);

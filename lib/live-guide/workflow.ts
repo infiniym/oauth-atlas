@@ -79,7 +79,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
         const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions}});
         const original=interpreted.telemetry;
         if(refined.mode==='interpreted')interpreted=refined;else research.warnings.push('Additional evidence was saved, but the follow-up interpretation failed. Earlier findings remain provisional.');
-        if(original&&refined.telemetry){const totals={...original,followupOutcome:refined.telemetry.outcome};for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)totals[k]=(original[k]||0)+(refined.telemetry[k]||0);interpreted.telemetry=totals;}
+        if(original&&refined.telemetry){const totals={...original,outcome:refined.mode==='interpreted'?refined.telemetry.outcome:original.outcome,followupOutcome:refined.telemetry.outcome};for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)totals[k]=(original[k]||0)+(refined.telemetry[k]||0);interpreted.telemetry=totals;}
       }
 
     }
@@ -119,7 +119,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   completed.guide.resultState=guideReadiness(completed.guide);
   completed.guide.researchMetrics={navigationCalls:research.navigationCalls||0};
   const requestsDocumented=completed.guide.resultState==='usable-guide';
-  const failed=telemetry&&telemetry.outcome!=='accepted';
+  const failed=completed.guide.resultState==='research-failure';
   emit(failed?{stage:'Guide unfinished',detail:'Your request and '+research.documents.length+' sources are saved. Retry the unfinished planning step.',status:'warning'}:{stage:phase==='ready'?(requestsDocumented?'Requested test documented':'Guide saved with gaps'):'Waiting for your choices',detail:phase==='ready'?(requestsDocumented?'The requested API test is documented. Setup and execution have not been verified.':'Your sources and available steps are saved. Resolve the marked gaps before the requested API test.'):'Continue this saved request; completed work will be reused.',status:'done'});
   return completed;
 }

@@ -10,11 +10,11 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs/SUBMISSION-OVERVIEW.md"
-OUTPUT = ROOT / "output/pdf/oauth-launch-advisor-overview-draft.pdf"
+OUTPUT = ROOT / "output/pdf/oauth-launch-advisor-overview.pdf"
 
 
 def inline(text):
-    text = escape(text).replace("\u201c", '"').replace("\u201d", '"')
+    text = escape(text).replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'").replace("\u2014", "-").replace("\u2013", "-")
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
     return re.sub(
         r"\[([^\]]+)\]\((https://[^\s)]+)\)",

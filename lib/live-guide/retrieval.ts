@@ -3,6 +3,7 @@ import type {Failure} from './failures.ts';
 import { normalizeText, onProvider, publicUrl } from './contracts.ts';
 import type { Bindings, Document, GuideInput, Progress, Research } from './contracts.ts';
 import {resolveIntentAiConfig} from '../ai/config.ts';
+import {openApiText} from './openapi.ts';
 
 type Page = { url: string; title: string; text: string; links: string[]; labels:Record<string,string> };
 type Fetcher = typeof fetch;
@@ -68,15 +69,17 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal) {
   } };
 }
 const decode = (s: string) => s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(Math.min(parseInt(n,16),0x10ffff))).replace(/&#(\d+);/g,(_,n) => String.fromCodePoint(Math.min(Number(n),0x10ffff)));
-export function parsePage(url: string, body: string): Page {
+export function parsePage(url: string, body: string,useCase=''): Page {
+  const api=openApiText(body,useCase);if(api)return {url,title:api.title,text:api.text,links:[],labels:{}};
   const html = /<(?:html|title|main|body)\b/i.test(body);
   const title = decode(body.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || body.match(/^#\s+(.+)$/m)?.[1] || new URL(url).hostname).replace(/<[^>]*>/g,'').slice(0,160);
   const links: string[] = [];
   const labels:Record<string,string>={};
   const add = (href: string) => { try { links.push(publicUrl(new URL(decode(href),url).href).href); } catch { /* Skip unsafe/non-web links. */ } };
-  for (const m of body.matchAll(/href\s*=\s*["']([^"']+)["']/gi)) add(m[1]);
+  for (const m of body.matchAll(/\bhref\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s"'`=<>]+))/gi)) add(m[1]||m[2]||m[3]);
+  if(/swagger-ui|SwaggerUIBundle/i.test(body))for(const m of body.matchAll(/(?:data-source\s*=|\burl\s*:)\s*["']([^"']+)["']/gi))add(m[1]);
   for (const m of body.matchAll(/\[[^\]]*\]\(([^\s)]+)\)/g)) add(m[1]);
-  for(const m of body.matchAll(/<a\b[^>]*href\s*=\s*["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi))try{labels[new URL(decode(m[1]),url).href]=decode(m[2].replace(/<[^>]*>/g,' ')).trim().slice(0,140);}catch{}
+  for(const m of body.matchAll(/<a\b[^>]*\bhref\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s"'`=<>]+))[^>]*>([\s\S]*?)<\/a>/gi))try{labels[new URL(decode(m[1]||m[2]||m[3]),url).href]=decode(m[4].replace(/<[^>]*>/g,' ')).trim().slice(0,140);}catch{}
   for(const m of body.matchAll(/\[([^\]]*)\]\(([^\s)]+)\)/g))try{labels[new URL(decode(m[2]),url).href]=m[1].slice(0,140);}catch{}
   // Prefer the article body over large client-rendered navigation payloads.
   const main=body.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1]||body.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)?.[1]||body;
@@ -87,11 +90,11 @@ export function parsePage(url: string, body: string): Page {
   return { url, title, text: content.replace(/[\t ]+/g,' ').replace(/\n\s*\n/g,'\n').trim(), links: [...new Set(links)],labels };
 }
 export const topicPatterns={registration:/oauth|authoriz|\/guides\/?$|getting.started|register.{0,20}app|creat.{0,20}(?:app|integration|connection)|app.{0,12}setup/i,permissions:/scopes?|permissions?|capabilities|access.types/i,identity:/actor|app.authentication|bot|agents?|user.authentication/i,distribution:/app.{0,15}review|oauth.{0,15}review|approval|verification|distribution|marketplace|integration.directory|publish|public.connection/i};
-export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/^\/(?:[a-z]{2}(?:[-_][A-Z]{2})?)\/(?=docs\/|developers(?:\/|$)|developer\/|api\/)/,'/').replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
+export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/^\/(?:[a-z]{2}(?:[-_][A-Za-z]{2})?)\/(?=docs\/|developers(?:\/|$)|developer\/|api\/)/,'/').replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
 export type ResearchTopic=keyof typeof topicPatterns;
 export function linkScore(url:string,label=''):number{
   if(/\.(?:png|jpe?g|gif|webp|svg|ico|css|m?js|woff2?|map)(?:\?|$)|\/(?:_mintlify|mintlify-assets|assets|images)\//i.test(url))return -1000;
-  const text=url+' '+label;return (/oauth/i.test(text)?30:0)+(topicPatterns.permissions.test(text)?28:0)+(topicPatterns.distribution.test(text)?26:0)+(topicPatterns.identity.test(text)?12:0)+(/developer|docs/i.test(text)?5:0)-(/blog|changelog|login|signup|privacy|terms|code.and.reviews|pull.request|\.(?:png|svg|jpg|pdf|js|css)(?:\?|$)/i.test(text)?80:0);
+  const text=url+' '+label;return (/openapi|swagger/i.test(text)?45:0)+(/oauth/i.test(text)?30:0)+(topicPatterns.permissions.test(text)?28:0)+(topicPatterns.distribution.test(text)?26:0)+(topicPatterns.identity.test(text)?12:0)+(/developer|docs/i.test(text)?5:0)-(/blog|changelog|login|signup|privacy|terms|code.and.reviews|pull.request|\.(?:png|svg|jpg|pdf|js|css)(?:\?|$)/i.test(text)?80:0);
 }
 export function actionLinkScore(url:string,label:string,useCase:string):number{
   const path=new URL(url).pathname.toLowerCase(),text=path+' '+label.toLowerCase(),stop=new Set(['read','create','write','with','from','their','only','when','they','that','this','then','them','will','into','have','other','customer','customers','request','requests','should','connect','connected','never','without','internal','user','users','account','accounts','workspace','workspaces','shared','explicitly','public']);
@@ -118,7 +121,7 @@ export function documentationScore(url:string,label:string,input:Pick<GuideInput
 }
 export function requestTerms(value:string,app=''):string[]{
  const stop=new Set(('read only with from their when they that this then them will into have other customer customers request requests should connect connected connection never without internal user users account accounts workspace workspaces shared explicitly public individual each application integration agent title titles names including pagination oauth developer owned instance instances retain input inputs explain whether base '+app.toLowerCase()).split(/\W+/));
- return [...new Set(value.replace(/\b(?:never|not|no|without|don't|do not)\b[^.!?;\n]*/gi,'').toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,'')))];
+ return [...new Set(value.replace(/\b(?:never|not|no|without|don't|do not)\b[^.!?;\n]*/gi,'').toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).flatMap(t=>{const stem=t.replace(/ies$/,'y').replace(/s$/,'');return stem.length>6?[stem,stem.slice(0,5)]:[stem];}))];
 }
 export function selectSourceText(text:string,useCase:string,limit=48000,app=''):string{
  if(text.length<=limit)return text;
@@ -181,7 +184,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const topics=options.topics||(['registration','permissions','identity','distribution'] as ResearchTopic[]);
   const candidates=new Map<string,string>();
   for(const d of previous)for(const link of d.links||[])if(!previous.some(p=>p.url===link))candidates.set(link,'');
-  const queue = options.urls?.length?options.urls.map(u=>publicUrl(u).href):previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase)>0)).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed];
+  const queue = options.urls?.length?options.urls.map(u=>publicUrl(u).href):previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase)>0)||(/paginat|continuation|cursor/i.test(input.useCase)&&/paginat|swagger|openapi/i.test(l))).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed];
   if(previous.length&&!queue.length){
     emit({stage:'Finding missing evidence',detail:'Looking for '+topics.join(', ')+' documentation.',status:'working'});
     try{const query=options.query||`site:${new URL(seed).hostname.replace(/^(docs|developers|developer)\./,'')} ${input.app} OAuth ${topics.join(' ')}`;
@@ -206,17 +209,30 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
         const result = await firecrawl('scrape',{url,formats:['markdown','links'],onlyMainContent:true,timeout:10000,maxAge:0});
         const finalUrl = publicUrl(result.data?.metadata?.sourceURL || url).href;
         if (!allowed(finalUrl)) throw new Error('Source left the selected domain.');
-        page = parsePage(finalUrl,result.data?.markdown || '');
+        page = parsePage(finalUrl,result.data?.markdown || '',input.useCase);
         page.links.push(...(result.data?.links || []).filter((x: unknown) => typeof x === 'string').flatMap((x:string) => {try{return [publicUrl(x).href];}catch{return [];}}));
         page.title = result.data?.metadata?.title?.slice(0,160) || page.title;
-      } else { const result = await reader.read(url,onProvider(url,seed)?seed:new URL(url).origin); page = parsePage(result.url,result.body); }
+      } else {
+        let result = await reader.read(url,onProvider(url,seed)?seed:new URL(url).origin);
+        // Some official host migrations redirect a linked schema to the new
+        // host's home page. Retry that same documented path on the new host,
+        // through the public-address and provider-domain checks again.
+        if(/(?:swagger|openapi).*\.json$/i.test(new URL(url).pathname)&&new URL(result.url).pathname==='/'&&new URL(result.url).origin!==new URL(url).origin&&onProvider(result.url,seed)){
+          emit({stage:'Following moved API documentation',detail:'Reading the documented schema path on its new official host.',status:'working'});
+          result=await reader.read(new URL(new URL(url).pathname,result.url).href,seed);
+        }
+        page = parsePage(result.url,result.body,input.useCase);
+      }
       if(documentationScore(page.url,page.title,input)<-60)throw new Error('This source is outside the requested product area or is a sign-in page.');
       const index = /\/llms(?:-full)?\.txt(?:\?|$)/.test(page.url);
       if ((page.text.length < 80 && !page.links.length) || (index && !page.links.length) || /just a moment|verify.*human|access denied|checking your browser/i.test(page.title)) throw new Error('Page requires browser verification or contains no readable documentation.');
       const substantive=!index&&page.text.length>=80;
+      if(!substantive&&!index&&!previous.length){for(const indexUrl of [new URL('/llms.txt',seed).href,new URL(new URL(seed).pathname.replace(/\/$/,'')+'/llms.txt',seed).href])if(!attempted.has(sourceKey(indexUrl))&&!queue.includes(indexUrl))queue.push(indexUrl);}
       attempted.add(sourceKey(page.url));
       if (substantive && !pages.some(p=>p.url===page.url)&&(!previous.some(d=>d.url===page.url)||refreshed.has(sourceKey(page.url)))) pages.push(page);
       for(const link of page.links){
+        const seedVersion=new URL(seed).pathname.match(/\/docs\/(latest|next|v\d[^/]*)\//)?.[1],linkVersion=new URL(link).pathname.match(/\/docs\/(latest|next|v\d[^/]*)\//)?.[1];
+        if(seedVersion&&linkVersion&&seedVersion!==linkVersion)continue;
         const linked=new URL(link),brand=input.app.toLowerCase().replace(/[^a-z0-9]/g,'');
         const providerBranded=brand.length>2&&(linked.hostname.replace(/[^a-z0-9]/g,'').includes(brand)||linked.pathname.split('/').slice(0,3).some(p=>p.toLowerCase().replace(/[^a-z0-9]/g,'').includes(brand)));
         if(!onProvider(link,seed)&&providerBranded&&onProvider(page.url,seed)&&/docs|developers?|readme\.io|gitbook|readthedocs|mintlify/i.test(link)&&linkScore(link,page.labels[link])+actionLinkScore(link,page.labels[link]||'',input.useCase)>0)allowedExternal.add(linked.hostname);
@@ -232,8 +248,11 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const resource=!resourceRead?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0&&score(l,label)>20):undefined;
       const reference=ranked.find(([l])=>/\/(?:api-reference|reference)\/?$|\/guides\/?$/.test(new URL(l).pathname));
       const overview=!covered.has('registration')?ranked.find(([l])=>/\/docs\/(?:overview|introduction|getting-started)\/?$/.test(new URL(l).pathname)):undefined;
+      const version=[...pages,...previous].some(p=>/[\w-]+-Version/.test(p.text))&&!pages.some(p=>/\/versioning(?:\/|$)/.test(p.url))?ranked.find(([l])=>/\/versioning(?:\/|$)/.test(new URL(l).pathname)):undefined;
       const missing=topics.filter(t=>!covered.has(t)).map(t=>{const topicRanked=t==='registration'?[...ranked].sort((a,b)=>(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(b[0]+' '+b[1])?100:0)-(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(a[0]+' '+a[1])?100:0)):ranked;const candidate=topicRanked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0):undefined);return {topic:t,url:candidate?.[0]};});
-      const priority=[...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...(overview?[overview[0]]:[]),...missing.filter(m=>m.topic==='registration').flatMap(m=>m.url?[m.url]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
+      const schema=ranked.find(([l])=>/swagger.*\.json|openapi.*\.(?:json|ya?ml)/i.test(l));
+      const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l])=>/\/paginat/i.test(l)):undefined;
+      const priority=[...(pagination?[pagination[0]]:[]),...(schema?[schema[0]]:[]),...(version?[version[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...(overview?[overview[0]]:[]),...missing.filter(m=>m.topic==='registration').flatMap(m=>m.url?[m.url]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
       const promoted=[...new Set(priority)];
       for(const link of promoted){const at=queue.indexOf(link);if(at>=0)queue.splice(at,1);}

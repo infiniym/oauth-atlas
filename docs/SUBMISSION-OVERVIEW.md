@@ -1,33 +1,32 @@
 # OAuth Launch Advisor
 
-Helping developers get past “Where do I start?” when connecting an app.
+From an integration idea to the first useful test.
 
 [Demo](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/) · [Code and setup](https://github.com/infiniym/oauth-atlas)
 
 ## The problem
 
-A developer wants their agent to read a customer's email. Before building the feature, they face a different set of questions: Which app should I register? What access should I request? Will I need approval? How much work and waiting are involved? The answers are scattered across documentation, making it hard to choose a path and start.
+An agent developer wants to read a customer's email. Before building the feature, they must choose an app model, request the right access and understand whose approval is needed. Provider documentation explains the platform; the developer still has to work out which instructions apply to their feature.
 
-## The approach
+## Start with the feature
 
-I began with provider guides, but a guide still leaves the developer to decide which instructions apply. I shifted the starting point to their intended feature. “Read email, never send” should lead to a different plan from “send email only.” The flow considers a managed app first and makes the remaining access checks explicit. The goal is a clear next action.
+“Read email and prepare drafts” needs a different plan from “send email only.” OAuth Launch Advisor begins with that distinction. It considers managed and developer-owned options, explains the permission boundary, and separates a first test from customer launch. The aim is an actionable next step, with its owner and a clear finish.
 
 ## The developer's journey
 
-1. **Describe the integration.** Find an app or enter its name or website, including apps outside the directory. Say what it should do and must never do.
-2. **Confirm the choices that matter.** Clarify whose account is connected and who will use the feature. Keep previous answers; research provider requirements for the developer.
-3. **Start with one next action.** Explain the recommended setup, required access, who does the work and what completion looks like. Separate hands-on effort from approval waiting.
-4. **Reach a first test.** Show setup steps and a representative API request. Identify missing information beside the affected step, with a way to resolve it.
-5. **Prepare for launch and share.** Keep customer-launch requirements separate from initial testing. Share the plan so a teammate can continue with the same context.
+1. **Describe.** Enter an app name or official website, what the agent should do, and what it must never do. Apps outside the directory can use live research.
+2. **Confirm.** Answer choices that change the setup, such as acting as the app or the connected person. The product researches provider facts and retains previous answers.
+3. **Prepare and test.** Follow sourced registration and authorization instructions, then use a representative API request with the required access, inputs and expected response. Missing facts sit beside the affected action; targeted recovery keeps completed work.
+4. **Continue together.** Track your own progress, review the separate launch requirements, and share a dated plan or download the same useful instructions as Markdown. Editing creates a new version.
 
-## Why these choices
+## One useful learning
 
-One layout makes familiar and unfamiliar apps feel like the same product. Reviewed guidance supports Gmail, Slack and GitHub; live research extends the journey to other apps. Permissions follow the requested feature, with unresolved access called out before testing. Linked sources let developers inspect the advice. Saving answers and repairing individual gaps avoids repeating the whole conversation.
+In the Gmail walkthrough, read-and-draft selected gmail.readonly and gmail.compose. Send-only selected gmail.send instead. The draft permission also grants sending: a product's narrow behavior is not necessarily the token's permission boundary. The guide makes that distinction explicit.
 
 ## Try it
 
-In the tested Gmail flow, changing read-and-draft to send-only changed the permission plan to gmail.send. Try that edit and compare the result. The README includes the exact Notion input for live research.
+Choose Gmail, select reading and drafts, then edit the plan to send-only. Compare the permissions and launch consequences. For live research, try Notion with: “Read titles and content of pages each customer explicitly shares. Read only; never create or modify pages.” The repository contains exact evaluation inputs and evidence.
 
-## Where the prototype stands
+## Scope
 
-Live research can fail or return an incomplete guide; sources and unresolved steps remain available. The product guides setup; it does not connect accounts or complete provider approvals. Next, I would test whether developers can choose a path and reach a first working connection without help.
+The focused slice combines reviewed Gmail, Slack and GitHub guidance with research from official provider documentation. It produces setup and test instructions. Developers still register and connect their accounts, run resource requests and obtain any required approvals. The dated catalog is discovery coverage, not a claim that every integration has been validated.

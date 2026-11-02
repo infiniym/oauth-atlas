@@ -1,0 +1,94 @@
+{
+  "name": "linear",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "38160c99693abd216676f26eaf8134835781e0b4",
+    "builtAt": "2026-11-02T08:19:29.383Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.10"
+  },
+  "input": {
+    "app": "Linear",
+    "website": "https://linear.app/developers",
+    "useCase": "Read issue titles in the connected person's workspace, including pagination. Never create, update or delete issues. Use OAuth for each individual customer account.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-02T08:25:02.543Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-d28b7838-2102-4125-a952-87054cfc3ed4",
+      "key": "5cd06994-dd46-4622-91fc-54bc9ca52bf1",
+      "input": {
+        "app": "Linear",
+        "website": "https://linear.app/developers",
+        "useCase": "Read issue titles in the connected person's workspace, including pagination. Never create, update or delete issues. Use OAuth for each individual customer account.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "linear.app/developers",
+      "status": "working",
+      "at": "2026-11-02T08:25:05.494Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Linear",
+      "status": "done",
+      "at": "2026-11-02T08:25:05.832Z"
+    }
+  ],
+  "job": {
+    "id": "job-d28b7838-2102-4125-a952-87054cfc3ed4",
+    "input": {
+      "app": "Linear",
+      "website": "https://linear.app/developers",
+      "useCase": "Read issue titles in the connected person's workspace, including pagination. Never create, update or delete issues. Use OAuth for each individual customer account.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "linear.app/developers",
+        "status": "working",
+        "at": "2026-11-02T08:25:05.494Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Linear",
+        "status": "done",
+        "at": "2026-11-02T08:25:05.832Z"
+      }
+    ],
+    "createdAt": "2026-11-02T08:25:02.673Z",
+    "updatedAt": "2026-11-02T08:25:06.131Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-02T08:25:05.204Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "url": "https://linear.app/developers",
+      "message": "The supplied documentation could not be read. Your earlier sources are retained; add a readable public API-reference or Markdown URL."
+    },
+    "error": "The supplied documentation could not be read. Your earlier sources are retained; add a readable public API-reference or Markdown URL.",
+    "savedSources": []
+  },
+  "readiness": "research-failure",
+  "requests": [],
+  "errors": [
+    "No usable guide for the declared task",
+    "No shareable plan",
+    "Request contract check failed",
+    "Required pagination absent"
+  ],
+  "pass": false,
+  "elapsedMs": 3896
+}
