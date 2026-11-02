@@ -26,7 +26,7 @@ Do not upload source archives or secrets by default. The assignment asks for a w
 
 > OAuth Launch Advisor helps developers turn an integration idea into a setup plan and first test. Demo: https://oauth-launch-advisor.gharkagpt1.chatgpt.site/ · Code: https://github.com/infiniym/oauth-atlas . The attached overview explains the problem, developer journey and product choices.
 
-Use that text only after both URLs serve the selected tested release. Use the current hosted release and matching source listed in the hosted evaluation. The local PDF remains a review draft until the hosted checks are complete.
+The public demo and matching source are listed in the hosted evaluation. The one-page PDF includes the current demo and repository links. It remains a draft for the candidate to review before any submission.
 
 ## Hosting
 
@@ -34,8 +34,8 @@ The replacement Site was created in the current account on 2 November 2026. It u
 
 ## Before a later submission
 
-- Select the release commit after the evaluation passes; update the public repository and hosted demo to that same release only when authorized.
-- Verify the actual hosted live flow from a new session with server-only secrets and enough quota for the reviewer. Local success does not establish hosted success.
-- Replace stale screenshots and record the public release/commit in the README and overview.
-- Test both public links without depending on an owner-only session. Keep the few varied examples and holdout outcome honest.
+- Use the matching hosted release and GitHub tag recorded in the hosted evaluation.
+- Check model quota and repeat the public links shortly before submission.
+- Complete a fresh visual check when browser access is available.
+- Keep the observed results and unresolved unfamiliar-app cases in the repository.
 - Fill the candidate email, verify the attachment type/size and re-read the notes. Upload and Submit are separate user-controlled actions.

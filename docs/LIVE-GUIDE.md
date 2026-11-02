@@ -59,4 +59,4 @@ HTTP processing can continue briefly after disconnect using the runtime executio
 
 Reviewed plans are now computed and stored by the server using the selected metadata before display. Share and Markdown use that same result. Completed research also freezes the common plan at generation; old records receive a snapshot on their first canonical read.
 
-Local and hosted stores are separate. This revision is for the combined local preview; it has not been published to the hosted site.
+Local and hosted stores are separate. The current public host is https://oauth-launch-advisor.gharkagpt1.chatgpt.site/ . See [hosted results](evaluations/HOSTED-2026-11-02.md); the earlier account’s host remains unchanged.

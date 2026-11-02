@@ -4,7 +4,7 @@
 
 Help an agent developer choose an OAuth app model, understand required permissions and approvals, and reach a first representative API test. Reviewed Gmail, Slack and GitHub rules and live documentation research use the same guide layout, exports and dated share links. Apps can be researched without being in the catalog.
 
-**Release status:** the app is being published under its current owner account. See the [hosted release checks](docs/evaluations/HOSTED-2026-11-02.md) for the tested version and verification limits.
+**Release status:** the app is published under its current owner account. See the [hosted release checks](docs/evaluations/HOSTED-2026-11-02.md) for the tested version and verification limits.
 
 ## Start here
 
@@ -43,7 +43,7 @@ Use **Notion** with `https://developers.notion.com/guides/get-started/authorizat
 
 > A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.
 
-A fresh local HTTP run produced two cited read requests with reviewed permission mappings in 79.3 seconds. This is a generated, unexecuted guide. The replacement host uses a fresh database; old shared links remain on the earlier host. Hosted checks are recorded in the release evaluation. The [evidence set](docs/evidence/final-2026-11-02/README.md) includes this run and failed cases.
+A fresh local HTTP run produced two cited read requests with reviewed permission mappings in 79.3 seconds. This is a generated, unexecuted guide. The replacement host uses a fresh database; old shared links remain on the earlier host. Hosted checks are recorded in the release evaluation. The [local evidence](docs/evidence/final-2026-11-02/README.md) includes that run and failed cases. Fresh hosted Notion generation failed endpoint validation; adding its specific official reference produced a new guide with both read mappings reviewed. [Open that saved hosted example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/plan/lg-a66d41a6-cae4-4cb8-ac4e-0ad5674ea86c). It demonstrates the recovered output, not a new generation on every visit.
 
 For reviewed providers, the first-test steps include backend JavaScript using an authorized Composio session. The proxy keeps tokens server-side and needs the Project API key's Proxy execute permission. Replace the test inputs, complete the Connect Link, then run the selected request in your backend. Sending, posting, reviewing and PR creation act on real test resources when you run them; use your own disposable test accounts. These examples have been checked with stubbed execution, not real provider accounts.
 
@@ -57,7 +57,7 @@ For reviewed providers, the first-test steps include backend JavaScript using an
 
 ## Validation and limits
 
-See [the current evaluation](docs/evaluations/FINAL-2026-11-02.md), [live-guide architecture](docs/LIVE-GUIDE.md) and [architecture/configuration](docs/ARCHITECTURE.md). The evaluation records unsuccessful runs as well as useful outputs, and separates fixtures, real model calls, browser checks and actual OAuth execution.
+See [the current hosted evaluation](docs/evaluations/HOSTED-2026-11-02.md), [live-guide architecture](docs/LIVE-GUIDE.md) and [architecture/configuration](docs/ARCHITECTURE.md). The evaluation records unsuccessful runs as well as useful outputs, and separates fixtures, real model calls, browser checks and actual OAuth execution.
 
 Live stages have a 90-second budget, bounded page reading and anonymous quota. Unreadable or moved documentation and unsupported provider facts can still require a direct official URL. The independent model check is fallible. No real provider accounts were connected and no approvals were obtained. The 100-guide library, private workspaces and production hardening are outside this focused slice.
 

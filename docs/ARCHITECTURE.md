@@ -10,7 +10,7 @@
 
 ## Optional configuration
 
-The local preview has exercised real Haiku calls; hosted settings have not been updated. Authenticated Composio metadata and credentialed Firecrawl retrieval remain unverified. No API key is required for reviewed rules or basic source collection.
+Both local and hosted evaluations record real Haiku calls. The current host uses server-side model secrets; see the hosted evaluation for successful and incomplete runs. Authenticated Composio metadata and credentialed Firecrawl retrieval remain unverified. No API key is required for reviewed rules or basic source collection.
 
 | Server-side binding | Behavior |
 | --- | --- |
