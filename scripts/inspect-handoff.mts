@@ -38,6 +38,6 @@ export function inspectHandoff(guide:any){
 }
 export function paginationHandoff(guide:any,requests:ReturnType<typeof inspectHandoff>){
  const instructions=guide.steps.filter((s:any)=>s.testKind==='action').map((s:any)=>s.detail+' '+s.doneWhen).join(' ');
- const continuation=requests.some(r=>/[?&](?:cursor|page|offset|after|before|skip|next_token)=|\/continue(?:[?'"\s]|$)|"(?:cursor|after|offset|page|next_token)"\s*:|\bafter\s*:/i.test(JSON.stringify(r.stub)));
+ const continuation=requests.some((r:{stub:unknown})=>/[?&](?:cursor|page|offset|after|before|skip|next_token)=|\/continue(?:[?'"\s]|$)|"(?:cursor|after|offset|page|next_token)"\s*:|\bafter\s*:/i.test(JSON.stringify(r.stub)));
  return continuation&&/repeat|until|next|has_more|hasNextPage|next_cursor|endCursor|exhaust|remaining|last page|all (?:entries|results|pages)/i.test(instructions);
 }
