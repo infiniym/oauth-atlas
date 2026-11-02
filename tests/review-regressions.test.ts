@@ -16,6 +16,10 @@ import {exportPlan} from '../lib/plan/export.ts';
 import {interpret} from '../lib/advisor/intent-parser.ts';
 import {researchRoute} from '../lib/plan/routing.ts';
 import type {Store} from '../lib/live-guide/http.ts';
+import {endpointEvidence} from '../lib/live-guide/grounding.ts';
+import {sourceKey,linkScore,selectSourceText} from '../lib/live-guide/retrieval.ts';
+import {repairLongFields,planningDocuments} from '../lib/live-guide/interpretation.ts';
+import {guideReadiness} from '../lib/live-guide/readiness.ts';
 const url='https://acmetasks.example.com/docs/oauth';
 const docs:Document[]=[{id:'s1',url,title:'OAuth setup',hash:'abc',retrievedAt:'2026-11-01T00:00:00Z',text:'Create an OAuth application in workspace settings before testing.\nThe issues:read permission allows reading issues in a selected project.\nUse GET /issues to read the issues in that project.'}];
 const ev=[{sourceId:'s1',quote:'The issues:read permission allows reading issues in a selected project.'}];
@@ -23,6 +27,42 @@ function value():Interpretation{return {accessModel:'oauth',requestedActions:[{i
 function run(v=value()):StoredRun{const guide:LiveGuide={...v,id:'lg-'+crypto.randomUUID(),schemaVersion:1,generatedAt:'2026-11-01T00:00:00Z',input:normalizeInput({app:'Acme Tasks',website:url,useCase:'Read issues in selected projects. Never write or delete issues.',audience:'customers'}),provider:{website:url,identity:'provided'},mode:'interpreted',status:'provisional',notice:'Not executed.',warnings:[],setupTested:false,sources:docs.map(({text:_text,...d})=>d),integration:{message:'Toolkit compatibility unverified.'}};return {guide,documents:docs};}
 function database(){const sqlite=new DatabaseSync(':memory:');sqlite.exec('CREATE TABLE live_guides(id TEXT PRIMARY KEY,payload TEXT,created_at TEXT); CREATE TABLE launch_plans(id TEXT PRIMARY KEY,payload TEXT,created_at TEXT);');sqlite.exec(readFileSync(new URL('../drizzle/0003_simple_vulcan.sql',import.meta.url),'utf8'));const db:Store={prepare(sql){return{bind(...args){return{async run(){return sqlite.prepare(sql).run(...args as (string|number|null)[]);},async first<T>(){return (sqlite.prepare(sql).get(...args as (string|number|null)[])||null) as T|null;}};}};}};return{db,sqlite};}
 const bindings={ANTHROPIC_API_KEY:'fixture-key',ANTHROPIC_MODEL:'fixture-model'};
+
+test('completion: endpoint templates, API hosts and query names are grounded independently',()=>{
+ const sources=[{...docs[0],text:'Call GET /v1/pages/{page_id} at https://api.acme.com with limit and cursor query parameters. This returns the page content.'}];
+ assert.ok(endpointEvidence('https://api.acme.com/v1/pages/{pageId}?limit=50&cursor=USER_CURSOR',sources).supported);
+ assert.ok(endpointEvidence('/v1/pages/{page_id}?cursor=USER_CURSOR',sources).supported);
+ assert.ok(!endpointEvidence('https://attacker.com/v1/pages/{page_id}',sources).supported);
+ assert.ok(!endpointEvidence('/v1/pages/{page_id}/delete',sources).supported);
+ assert.ok(!endpointEvidence('/v1/pages/{page_id}?invented=true',sources).supported);
+ assert.ok(!endpointEvidence(url,sources).supported);
+});
+test('completion: localized aliases and assets cannot consume the documentation budget',()=>{
+ assert.equal(sourceKey('https://acme.com/de/docs/api/'),sourceKey('https://acme.com/docs/api'));
+ assert.equal(sourceKey('https://acme.com/fr_CA/developers'),sourceKey('https://acme.com/developers'));
+ assert.ok(linkScore('https://docs.acme.com/oauth/favicon.ico')<0);
+});
+test('completion: an OAuth registration guide survives ranking beside endpoint object references',()=>{
+ const registration={...docs[0],url:'https://acmetasks.example.com/docs/system-admin/authentication/oauth-applications/'};
+ const endpoint={...docs[0],id:'s2',url:'https://acmetasks.example.com/docs/api/endpoints/oauth-2/'};
+ assert.ok(planningDocuments([endpoint,registration],run().guide.input).includes(registration));
+});
+test('completion: distinct pagination requests survive action reconciliation',()=>{
+ const p=value();p.steps.push({...p.steps[1],id:'continue',request:{method:'GET',endpoint:'/issues?cursor=NEXT',example:"curl 'https://api.acme.com/issues?cursor=NEXT'"},dependsOn:['read-test']});
+ const out=reconcile(p);assert.equal(out.steps.filter(s=>s.testKind==='action').length,2);assert.deepEqual(out.steps.at(-1)!.dependsOn,['read-test']);
+});
+test('completion: overlength presentation repair retains request, grants and evidence',async()=>{
+ const p=value();p.coverage[0].reason='Repeated display text. '.repeat(30);const before=structuredClone(p);
+ const out=await repairLongFields(p as unknown as Record<string,unknown>,bindings,new AbortController().signal,async()=>aiResponse({values:['The documented scope permits reading issues.']}));
+ assert.deepEqual(out.steps,before.steps);assert.deepEqual(out.findings,before.findings);assert.deepEqual((out.coverage as typeof p.coverage)[0].evidence,before.coverage[0].evidence);assert.ok((out.coverage as typeof p.coverage)[0].reason.length<400);
+});
+test('completion: long reference extraction retains requested read route and exact read-only grant',()=>{
+ const text=('Sync task data with unrelated commands and token metadata.\n').repeat(2000)+'\ndata:read\nGrants read-only access to tasks and projects.\nGet Tasks\nGet all active tasks for the user.\nget /api/v1/tasks\ncursor\nUse next_cursor from the response until null.\n';
+ const selected=selectSourceText(text,'List active task titles with pagination.',6000,'Acme');assert.match(selected,/get \/api\/v1\/tasks/);assert.match(selected,/data:read/);
+});
+test('completion: ready job metadata and a request string alone cannot pass usability',()=>{
+ const p=run().guide;assert.equal(guideReadiness(p),'research-failure');p.coverage[0].support='reviewed';assert.equal(guideReadiness(p),'usable-guide');p.coverage[0].status='unresolved';assert.equal(guideReadiness(p),'research-failure');
+});
 function aiResponse(data:unknown){return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(data)}],usage:{input_tokens:100,output_tokens:100,output_tokens_details:{thinking_tokens:30}}});}
 function wire(v:Interpretation){const all=sourcePassages(docs);const copy=structuredClone(v);for(const item of [...copy.findings,...copy.steps,...copy.coverage])if(item.evidence)(item as unknown as {evidence:unknown[]}).evidence=item.evidence.map(e=>({passageId:all.find(p=>p.text.includes(e.quote))!.id}));return copy;}
 

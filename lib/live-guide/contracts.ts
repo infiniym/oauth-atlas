@@ -58,6 +58,7 @@ export type InferenceTelemetry = {
   thinkingTokens?: number; thinking?: 'adaptive'; effort?: 'medium';
   validationIssues?:string[];
   outcome:InferenceOutcome;followupOutcome?:InferenceOutcome;
+  reviewOutcome?:InferenceOutcome;
 };
 export type LiveGuide = Interpretation & {
   schemaVersion: 1; id: string; previousId?: string; generatedAt: string; input: GuideInput;
@@ -68,6 +69,8 @@ export type LiveGuide = Interpretation & {
   decisions?: {id:string;question:string;answer:string}[];
   pendingQuestions?:Interpretation['questions'];
   phase?:'identity'|'clarification'|'ready';
+  resultState?:'researching'|'needs-user-decision'|'usable-guide'|'provider-limitation'|'research-failure';
+  researchMetrics?:{navigationCalls:number};
   clarificationUsed?:boolean;
   followupDone?:boolean;
   journey?:{modelCalls:number;inputTokens:number;outputTokens:number;modelMs:number};
@@ -79,7 +82,7 @@ export type StoredRun = { guide: LiveGuide; documents: Document[] };
 export type Bindings = IntentAiBindings & {
   LIVE_GUIDE_FIRECRAWL_KEY?: string;
 };
-export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[] };
+export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[];navigationCalls?:number };
 export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;draft?:Interpretation};
 
 export function normalizeInput(raw: unknown): GuideInput {

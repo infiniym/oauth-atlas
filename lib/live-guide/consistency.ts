@@ -20,7 +20,7 @@ export function reconcile(value:Interpretation):Interpretation{
   for(const a of v.requestedActions.filter(isResource)){
     if(!v.coverage.some(c=>c.actionId===a.id))v.coverage.push({actionId:a.id,action:a.title,permissions:[],status:'unresolved',reason:'The requested action has no documented permission mapping in this plan.',support:'unresolved',evidence:[]});
     let actionSteps=v.steps.filter(s=>s.stage==='test'&&s.actionIds?.includes(a.id)&&s.testKind==='action');
-    if(actionSteps.length>1&&actionSteps.every(s=>s.actionIds?.length===1)){
+    if(actionSteps.length>1&&actionSteps.every(s=>s.actionIds?.length===1)&&new Set(actionSteps.map(s=>JSON.stringify(s.request))).size===1){
       const keep=actionSteps.find(s=>s.request?.endpoint&&s.request.example)||actionSteps[0];
       const removed=new Set(actionSteps.filter(s=>s!==keep).map(s=>s.id).filter(Boolean));
       v.steps=v.steps.filter(s=>!removed.has(s.id));

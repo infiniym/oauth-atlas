@@ -5,6 +5,7 @@ import { normalizeInput } from './contracts.ts';
 import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun,WorkflowCheckpoint,Interpretation } from './contracts.ts';
 import { retrieve,discoverProvider } from './retrieval.ts';
 import { interpretEvidence, reviewMappings,evidenceOnly, PROMPT_VERSION } from './interpretation.ts';
+import {guideReadiness} from './readiness.ts';
 
 export function integrationContext(app: string): LiveGuide['integration'] {
   const normalize = (s:string) => s.toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -68,7 +69,8 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       interpreted.value.questions=[];interpreted.value.steps=interpreted.value.steps.filter(s=>s.stage==='prepare');
     }
     const materialTopics=interpreted.value.researchNeeded.filter(t=>t!=='distribution');
-    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length&&materialTopics.length&&!followupDone){
+    if(!interpreted.value.questions.length&&(materialTopics.length||interpreted.mode==='evidence-only')&&!followupDone){
+      if(!materialTopics.length)materialTopics.push(interpreted.telemetry?.validationIssues?.some(s=>s.startsWith('Unestablished OAuth'))?'registration':'permissions');
       followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});
       emit({stage:'Checking a missing requirement',detail:'Looking only for missing '+materialTopics.join(', ')+' evidence.',status:'working'});
       const expanded=await retrieve(input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics});
@@ -81,7 +83,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       }
 
     }
-    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});const review=await reviewMappings(interpreted.value,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;if(interpreted.telemetry)for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(review.telemetry[k]||0);await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});}
+    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});const review=await reviewMappings(interpreted.value,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;if(interpreted.telemetry){interpreted.telemetry.reviewOutcome=review.telemetry.outcome;for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(review.telemetry[k]||0);}await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});}
   }
   research=research!;signal.throwIfAborted();
   const value=interpreted.value;
@@ -100,9 +102,24 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     journey:{modelCalls:cumulative.modelCalls+(telemetry?.attempts||0),inputTokens:cumulative.inputTokens+(telemetry?.inputTokens||0),outputTokens:cumulative.outputTokens+(telemetry?.outputTokens||0),modelMs:cumulative.modelMs+(telemetry?.elapsedMs||0)},
     sources:research.documents.map(({text:_text,...source})=>source),integration:integrationContext(input.app),
   };
-  const resourceActions=value.requestedActions.filter(isResource);
-  const requestsDocumented=resourceActions.length>0&&resourceActions.every(a=>value.coverage.some(c=>c.actionId===a.id&&c.status==='mapped'&&c.support==='reviewed')&&value.steps.some(s=>s.testKind==='action'&&s.actionIds?.includes(a.id)&&concreteRequest(s)));
+  let completed:StoredRun={guide,documents:research.documents};
+  if(guide.phase==='ready'&&guide.mode==='interpreted'&&guide.oauthSupport==='documented'){
+    const gaps=guide.requestedActions.filter(a=>isResource(a)&&(!guide.coverage.some(c=>c.actionId===a.id&&c.status==='mapped'&&c.support==='reviewed')||!guide.steps.some(s=>s.testKind==='action'&&s.actionIds?.includes(a.id)&&concreteRequest(s)))).slice(0,2);
+    for(const action of gaps){
+      emit({stage:'Repairing an incomplete action',detail:'Checking the missing request or access evidence for '+action.title+'. Completed setup and your answers are retained.',status:'working'});
+      const before=completed.guide.engine;
+      const repaired=await resolveGuide({...input,previousId:completed.guide.id,resolution:{kind:'find-request',actionId:action.id,requestId:crypto.randomUUID()}},completed,bindings,emit,signal,fetcher,{save:async checkpoint=>options.save?.({...checkpoint,clarificationUsed,followupDone:true,intent:{requestedActions:guide.requestedActions,prohibitions:guide.prohibitions},draft:completed.guide})});
+      if(before&&repaired.guide.engine)for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)repaired.guide.engine[k]=(before[k]||0)+(repaired.guide.engine[k]||0);
+      // Internal drafts are checkpoints, not dangling public snapshot links.
+      repaired.guide.id=guide.id;repaired.guide.input=input;repaired.guide.previousId=guide.previousId;
+      completed=repaired;
+      await options.save?.({research:{...research,documents:completed.documents},clarificationUsed,followupDone:true,intent:{requestedActions:guide.requestedActions,prohibitions:guide.prohibitions},draft:completed.guide});
+    }
+  }
+  completed.guide.resultState=guideReadiness(completed.guide);
+  completed.guide.researchMetrics={navigationCalls:research.navigationCalls||0};
+  const requestsDocumented=completed.guide.resultState==='usable-guide';
   const failed=telemetry&&telemetry.outcome!=='accepted';
   emit(failed?{stage:'Guide unfinished',detail:'Your request and '+research.documents.length+' sources are saved. Retry the unfinished planning step.',status:'warning'}:{stage:phase==='ready'?(requestsDocumented?'Requested test documented':'Guide saved with gaps'):'Waiting for your choices',detail:phase==='ready'?(requestsDocumented?'The requested API test is documented. Setup and execution have not been verified.':'Your sources and available steps are saved. Resolve the marked gaps before the requested API test.'):'Continue this saved request; completed work will be reused.',status:'done'});
-  return {guide,documents:research.documents};
+  return completed;
 }
