@@ -4,7 +4,7 @@ import {ArrowLeft,ArrowRight,Check,ChevronDown,Compass,Globe,LoaderCircle} from 
 import type {GuideInput,LiveGuide,Progress} from '@/lib/live-guide/contracts';
 import type {GuideJob} from '@/lib/live-guide/jobs';
 import type {LaunchPlan} from '@/lib/plan/types';
-import {readJobResponse} from '@/lib/live-guide/job-client';
+import {monitorJob} from '@/lib/live-guide/job-client';
 import {researchedPlan} from '@/lib/plan/adapters';
 import {reviewedProvider} from '@/lib/plan/routing';
 import AppFrame from '@/components/app-frame';
@@ -23,11 +23,7 @@ export default function ResearchWorkspace(){
  async function watch(current:GuideJob,retry=false){
   if(active.current)return;active.current=true;setBusy(true);setError('');const controller=new AbortController();abort.current=controller;
   try{
-   if(current.state==='queued'||(current.state==='interrupted'&&retry))current=await readJobResponse(await fetch('/api/live-guide/jobs/'+current.id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({retry}),signal:controller.signal}),event=>setLogs(old=>[...old,event]),controller.signal);
-   while(current.state==='running'){
-    await new Promise<void>((resolve,reject)=>{const timer=setTimeout(resolve,1500);controller.signal.addEventListener('abort',()=>{clearTimeout(timer);reject(new DOMException('Aborted','AbortError'));},{once:true});});
-    const r=await fetch('/api/live-guide/jobs/'+current.id,{signal:controller.signal});if(!r.ok)throw new Error('Saved progress could not be reopened.');current=((await r.json()) as {job:GuideJob}).job;setJob(current);setLogs(current.events);
-   }
+   current=await monitorJob(current,{retry,signal:controller.signal,onProgress:event=>setLogs(old=>[...old,event]),onJob:current=>{setJob(current);setLogs(current.events);}});
    await accept(current);if(current.state==='interrupted')setError(current.error||'Processing was interrupted. Your evidence is retained.');window.scrollTo(0,0);
   }catch(e){if((e as Error).name!=='AbortError')setError((e as Error).message+' Your saved process URL can be reopened.');}
   finally{active.current=false;setBusy(false);abort.current=null;}

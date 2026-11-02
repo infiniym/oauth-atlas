@@ -239,6 +239,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
         if(allowed(link)&&!executable(link)&&!attempted.has(sourceKey(link))&&score(link,page.labels[link])>0)candidates.set(link,page.labels[link]||'');
       }
       if(substantive)for(const topic of topics)if(topicPatterns[topic].test(page.url+' '+page.title)&&(topic!=='registration'||/register.{0,80}(?:app|client)|creat.{0,80}(?:OAuth application|OAuth app|integration|connection)|OAuth applications/i.test(page.text)||!/\/endpoints\//.test(page.url)&&/authorization|oauth.app|public.connection/i.test(page.url)))covered.add(topic);
+      if(substantive&&/Required scopes?\s*:|\bscopes?\b.{0,35}\b(?:read|permission)|\bcapabilities\b/i.test(page.text))covered.add('permissions');
       const ranked=[...candidates].filter(([l])=>!attempted.has(sourceKey(l))).sort((a,b)=>score(b[0],b[1])-score(a[0],a[1]));
       if(!previous.length&&selections<2&&ranked.length>=20&&(pages.length===1||/\/(?:overview|files|api|developers)\/?$/.test(new URL(page.url).pathname))){
         selections++;emit({stage:'Choosing relevant documentation',detail:'Prioritizing registration, access and the requested API operations from official navigation.',status:'working'});
@@ -252,7 +253,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const missing=topics.filter(t=>!covered.has(t)).map(t=>{const topicRanked=t==='registration'?[...ranked].sort((a,b)=>(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(b[0]+' '+b[1])?100:0)-(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(a[0]+' '+a[1])?100:0)):ranked;const candidate=topicRanked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0):undefined);return {topic:t,url:candidate?.[0]};});
       const schema=ranked.find(([l])=>/swagger.*\.json|openapi.*\.(?:json|ya?ml)/i.test(l));
       const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l])=>/\/paginat/i.test(l)):undefined;
-      const priority=[...(pagination?[pagination[0]]:[]),...(schema?[schema[0]]:[]),...(version?[version[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...(overview?[overview[0]]:[]),...missing.filter(m=>m.topic==='registration').flatMap(m=>m.url?[m.url]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
+      const priority=[...(pagination?[pagination[0]]:[]),...(schema?[schema[0]]:[]),...(version?[version[0]]:[]),...(overview?[overview[0]]:[]),...missing.filter(m=>m.topic==='registration'||m.topic==='permissions').flatMap(m=>m.url?[m.url]:[]),...(resource?[resource[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...missing.filter(m=>m.topic!=='registration'&&m.topic!=='permissions').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
       const promoted=[...new Set(priority)];
       for(const link of promoted){const at=queue.indexOf(link);if(at>=0)queue.splice(at,1);}

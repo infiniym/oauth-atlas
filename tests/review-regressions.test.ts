@@ -20,6 +20,7 @@ import {endpointEvidence} from '../lib/live-guide/grounding.ts';
 import {sourceKey,linkScore,selectSourceText} from '../lib/live-guide/retrieval.ts';
 import {repairLongFields,planningDocuments} from '../lib/live-guide/interpretation.ts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
+import {monitorJob} from '../lib/live-guide/job-client.ts';
 const url='https://acmetasks.example.com/docs/oauth';
 const docs:Document[]=[{id:'s1',url,title:'OAuth setup',hash:'abc',retrievedAt:'2026-11-01T00:00:00Z',text:'Create an OAuth application in workspace settings before testing.\nThe issues:read permission allows reading issues in a selected project.\nUse GET /issues to read the issues in that project.'}];
 const ev=[{sourceId:'s1',quote:'The issues:read permission allows reading issues in a selected project.'}];
@@ -78,6 +79,16 @@ test('completion: unquoted HTML navigation retains setup and requested endpoint 
 });
 test('completion: an OpenAPI reference retains the base path, pagination, security and response fields',async()=>{
  const {openApiText}=await import('../lib/live-guide/openapi.ts');const api=openApiText(JSON.stringify({swagger:'2.0',info:{title:'Acme API'},basePath:'/api/v1',paths:{'/user/items':{get:{summary:'List items visible to the authenticated user',parameters:[{name:'page',in:'query',type:'integer'}],responses:{200:{description:'List of items',schema:{type:'array',items:{$ref:'#/definitions/Item'}}}}}}},definitions:{Item:{type:'object',properties:{id:{type:'integer'},name:{type:'string'}}}}}),'List item names with pagination.');assert.match(api!.text,/GET \/api\/v1\/user\/items/);assert.match(api!.text,/"page"/);assert.match(api!.text,/"name"/);assert.match(api!.text,/List of items/);
+});
+test('completion: a stalled event stream recovers the saved terminal job without starting duplicate work',async()=>{
+ const {db}=database(),job=await createJob(db,run().guide.input,crypto.randomUUID());let posts=0,reads=0,cancelled=false;
+ const completed={...job,state:'ready' as const,guide:run().guide};
+ const result=await monitorJob(job,{signal:AbortSignal.timeout(1000),pollMs:1,fetcher:async(_u,init)=>{if(init?.method==='POST'){posts++;return new Response(new ReadableStream({start(c){c.enqueue(new TextEncoder().encode(JSON.stringify({type:'progress',event:{stage:'Reading',detail:'Source saved',status:'working'}})+'\n'));},cancel(){cancelled=true;}}),{headers:{'Content-Type':'application/x-ndjson'}});}reads++;return Response.json({job:completed});}});
+ assert.equal(result.state,'ready');assert.equal(posts,1);assert.equal(reads,1);await new Promise(r=>setTimeout(r,1));assert.ok(cancelled);
+});
+test('completion: version constants survive a small context budget ahead of incidental pagination and JSON examples',()=>{
+ const source={...docs[0],text:'Versioning\nThe current Acme-Version is 2026-10-01 for every resource request.\n'+('"rich_text" : [ "metadata example" ]\nPass pagination cursors back unchanged; do not parse their contents.\n').repeat(40)};
+ const selected=contextPassages(sourcePassages([source]),source.id,'Read page titles and content.',1000).map(p=>p.text).join(' ');assert.match(selected,/Acme-Version is 2026-10-01/);
 });
 function aiResponse(data:unknown){return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(data)}],usage:{input_tokens:100,output_tokens:100,output_tokens_details:{thinking_tokens:30}}});}
 function wire(v:Interpretation){const all=sourcePassages(docs);const copy=structuredClone(v);for(const item of [...copy.findings,...copy.steps,...copy.coverage])if(item.evidence)(item as unknown as {evidence:unknown[]}).evidence=item.evidence.map(e=>({passageId:all.find(p=>p.text.includes(e.quote))!.id}));return copy;}
