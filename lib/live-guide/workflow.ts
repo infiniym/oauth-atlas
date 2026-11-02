@@ -1,3 +1,4 @@
+import {isResource,concreteRequest} from './semantics.ts';
 import {resolveGuide} from './resolution.ts';
 import catalog from '../../data/catalog.json' with { type:'json' };
 import { normalizeInput } from './contracts.ts';
@@ -93,7 +94,9 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     journey:{modelCalls:cumulative.modelCalls+(telemetry?.attempts||0),inputTokens:cumulative.inputTokens+(telemetry?.inputTokens||0),outputTokens:cumulative.outputTokens+(telemetry?.outputTokens||0),modelMs:cumulative.modelMs+(telemetry?.elapsedMs||0)},
     sources:research.documents.map(({text:_text,...source})=>source),integration:integrationContext(input.app),
   };
+  const resourceActions=value.requestedActions.filter(isResource);
+  const requestsDocumented=resourceActions.length>0&&resourceActions.every(a=>value.coverage.some(c=>c.actionId===a.id&&c.status==='mapped'&&c.support==='reviewed')&&value.steps.some(s=>s.testKind==='action'&&s.actionIds?.includes(a.id)&&concreteRequest(s)));
   const failed=telemetry&&telemetry.outcome!=='accepted';
-  emit(failed?{stage:'Guide unfinished',detail:'Your request and '+research.documents.length+' sources are saved. Retry the unfinished planning step.',status:'warning'}:{stage:phase==='ready'?'Guide ready':'Waiting for your choices',detail:phase==='ready'?'Your guide and unresolved requirements are saved.':'Continue this saved request; completed work will be reused.',status:'done'});
+  emit(failed?{stage:'Guide unfinished',detail:'Your request and '+research.documents.length+' sources are saved. Retry the unfinished planning step.',status:'warning'}:{stage:phase==='ready'?(requestsDocumented?'Requested test documented':'Guide saved with gaps'):'Waiting for your choices',detail:phase==='ready'?(requestsDocumented?'The requested API test is documented. Setup and execution have not been verified.':'Your sources and available steps are saved. Resolve the marked gaps before the requested API test.'):'Continue this saved request; completed work will be reused.',status:'done'});
   return {guide,documents:research.documents};
 }

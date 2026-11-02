@@ -1,16 +1,18 @@
+import {ResearchFailure,sourceFailure} from './failures.ts';
+import type {Failure} from './failures.ts';
 import { normalizeText, onProvider, publicUrl } from './contracts.ts';
 import type { Bindings, Document, GuideInput, Progress, Research } from './contracts.ts';
 
 type Page = { url: string; title: string; text: string; links: string[]; labels:Record<string,string> };
 type Fetcher = typeof fetch;
 const MAX_BYTES = 1_500_000;
-export async function boundedText(response: Response, signal: AbortSignal): Promise<string> {
+export async function boundedText(response: Response, signal: AbortSignal, maxBytes=MAX_BYTES): Promise<string> {
   if (!response.body) return '';
   const reader = response.body.getReader(); let size = 0, result = ''; const decoder = new TextDecoder();
   try {
     while (true) {
       signal.throwIfAborted(); const { value, done } = await reader.read(); if (done) break;
-      size += value.byteLength; if (size > MAX_BYTES) { await reader.cancel(); throw new Error('Source response is too large.'); }
+      size += value.byteLength; if (size > maxBytes) { await reader.cancel(); throw new Error('Source response is too large.'); }
       result += decoder.decode(value, { stream: true });
     }
     return result + decoder.decode();
@@ -43,7 +45,7 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal) {
   return { check, async read(value: string, allowed?: string): Promise<{ url: string; body: string }> {
     let url = publicUrl(value);
     for (let hop = 0; hop < 4; hop++) {
-      if (allowed && !onProvider(url.href, allowed)) throw new Error('Source left the selected provider domain. Use its direct documentation URL.');
+      if (allowed && !onProvider(url.href, allowed)) throw new ResearchFailure({category:'source-moved',url:value,destination:url.href,message:'This documentation redirects outside the selected provider to '+url.hostname+'. Confirm that documentation address to continue.'});
       await check(url.hostname);
       const res = await fetcher(url.href, { redirect: 'manual', signal: AbortSignal.any([signal, AbortSignal.timeout(8000)]), headers: { accept: 'text/html,text/markdown,text/plain', 'user-agent': 'OAuthLaunchGuide/1.0 public documentation reader' } });
       if ([301,302,303,307,308].includes(res.status)) {
@@ -52,12 +54,12 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal) {
       }
       if (!res.ok) { await res.body?.cancel(); throw new Error(`Source returned HTTP ${res.status}.`); }
       if (!/text\/(?:html|plain|markdown)|application\/(?:json|xhtml\+xml)/i.test(res.headers.get('content-type') || 'text/plain')) { await res.body?.cancel(); throw new Error('Use a public HTML or Markdown documentation page.'); }
-      return { url: url.href, body: await boundedText(res, signal) };
+      try{return {url:url.href,body:await boundedText(res,signal,8_000_000)};}catch(error){if(error instanceof Error&&error.message==='Source response is too large.')throw new ResearchFailure({category:'page-too-large',url:url.href,message:'This documentation exceeds the 8 MB reading limit. Add a smaller official API-reference or Markdown page; retrying this page will not make it smaller.'});throw error;}
     }
     throw new Error('Too many source redirects.');
   } };
 }
-const decode = (s: string) => s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&#(\d+);/g,(_,n) => String.fromCodePoint(Math.min(Number(n),0x10ffff)));
+const decode = (s: string) => s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(Math.min(parseInt(n,16),0x10ffff))).replace(/&#(\d+);/g,(_,n) => String.fromCodePoint(Math.min(Number(n),0x10ffff)));
 export function parsePage(url: string, body: string): Page {
   const html = /<(?:html|title|main|body)\b/i.test(body);
   const title = decode(body.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || body.match(/^#\s+(.+)$/m)?.[1] || new URL(url).hostname).replace(/<[^>]*>/g,'').slice(0,160);
@@ -71,9 +73,12 @@ export function parsePage(url: string, body: string): Page {
   // Prefer the article body over large client-rendered navigation payloads.
   const main=body.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1]||body.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)?.[1]||body;
   const text = decode(html ? main.replace(/<(script|style|svg|nav|header|footer|aside)\b[^>]*>[\s\S]*?<\/\1>/gi,'\n').replace(/<\/(?:p|li|h[1-6]|div|tr|section)>|<br\s*\/?>/gi,'\n').replace(/<[^>]*>/g,' ') : body.replace(/!\[[^\]]*\]\([^)]*\)/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1'));
-  return { url, title, text: text.replace(/[\t ]+/g,' ').replace(/\n\s*\n/g,'\n').trim(), links: [...new Set(links)],labels };
+  const examples:string[]=[];
+  if(html)for(const match of decode(body).matchAll(/"(?:code|codeSnippet)"\s*:\s*(?:\[\s*0\s*,\s*)?("(?:\\.|[^"\\])*")/g)){try{const code=JSON.parse(match[1]);if(typeof code==='string'&&/https:\/\/|\b(?:GET|POST|PUT|PATCH|DELETE)\s+\//.test(code)&&code.length<=6000&&!examples.includes(code))examples.push(code);}catch{}if(examples.length>=3)break;}
+  const content=text+(examples.length?'\n[Separate source excerpt]\n'+examples.join('\n[Separate source excerpt]\n'):'');
+  return { url, title, text: content.replace(/[\t ]+/g,' ').replace(/\n\s*\n/g,'\n').trim(), links: [...new Set(links)],labels };
 }
-export const topicPatterns={registration:/oauth|register.{0,20}app|creat.{0,20}(?:app|integration|connection)|app.{0,12}setup/i,permissions:/scopes?|permissions?|capabilities|access.types/i,identity:/actor|app.authentication|bot|agents?|user.authentication/i,distribution:/app.{0,15}review|oauth.{0,15}review|approval|verification|distribution|marketplace|integration.directory|publish|public.connection/i};
+export const topicPatterns={registration:/oauth|\/guides\/?$|getting.started|register.{0,20}app|creat.{0,20}(?:app|integration|connection)|app.{0,12}setup/i,permissions:/scopes?|permissions?|capabilities|access.types/i,identity:/actor|app.authentication|bot|agents?|user.authentication/i,distribution:/app.{0,15}review|oauth.{0,15}review|approval|verification|distribution|marketplace|integration.directory|publish|public.connection/i};
 export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
 export type ResearchTopic=keyof typeof topicPatterns;
 export function linkScore(url:string,label=''):number{
@@ -84,10 +89,36 @@ export function actionLinkScore(url:string,label:string,useCase:string):number{
   const positive=useCase.replace(/\b(?:never|not|no|without|don't)\b[^.!?;\n]*/gi,'');
   const writes=/\b(?:create|add|post|insert|edit|update|modify|write|delete|remove)\b/i.test(positive);
   if(!writes&&/\/(?:create|post|insert|update|modify|delete|remove|patch|put|add|set)[\w-]*(?:\.md)?$/i.test(path))return -60;
-  const words=useCase.toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,''));
+  const words=positive.toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,''));
   const terms=[...new Set(words)],resources=terms.filter(t=>text.includes(t)).length;
   const direct=terms.reduce((n,t)=>n+(new RegExp('(?:get|list|retrieve|create|post|update|delete)[-_ ]*(?:(?:all|a|an)[-_ ]*)?'+t+'s?(?:[-_ ]|for|by|$|\\.)').test(text)?Math.min(2,words.filter(w=>w===t).length)*20:0),0);
   return resources&&/\/reference\/|\/api\/|endpoint/i.test(text)?40+Math.min(resources,3)*8+direct:/graphql|api[-/ ](?:reference|basics|quickstart)|getting[-/ ]started/.test(text)?18:0;
+}
+
+export function documentationScore(url:string,label:string,input:Pick<GuideInput,'useCase'|'website'>):number{
+ const parsed=new URL(url),text=(parsed.origin+parsed.pathname+' '+label).toLowerCase(),request=input.useCase.toLowerCase();
+ if(/\/(?:auth\/login|login|signup|sign-in|trial_registrations)(?:\/|$)/.test(parsed.pathname))return -1000;
+ const irrelevant=['workers','agent-administration','object-storage','business-api','business-endpoints','team-admin','team/','longpoll','webhooks','realtime','marketplace','diffs','merge_requests_approvals'];
+ const agentArea=/\/(?:admin|workers|notion-agent-apis|agent-filesystem)(?:\/|-)|get-agent-permissions|query-agents/.test(parsed.pathname)&&!/(?:manage|list|query|configure|administer).{0,25}(?:agents|workers)/.test(request)?100:0;
+ const penalty=agentArea+irrelevant.filter(t=>text.includes(t)&&!request.includes(t.replace(/-/g,' '))).length*65;
+ const seedPath=input.website?new URL(input.website).pathname.split('/').filter(Boolean)[0]:'';
+ const otherProduct=seedPath&&seedPath.endsWith('-api')&&!new URL(url).pathname.startsWith('/'+seedPath)?45:0;
+ return linkScore(parsed.origin+parsed.pathname,label)+actionLinkScore(url,label,input.useCase)-penalty-otherProduct-(/forum\.|new-topic|trial_registrations|\/-\/work_items/.test(text)?100:0);
+}
+export function requestTerms(value:string,app=''):string[]{
+ const stop=new Set(('read only with from their when they that this then them will into have other customer customers request requests should connect connected connection never without internal user users account accounts workspace workspaces shared explicitly public individual each application integration agent title names '+app.toLowerCase()).split(/\W+/));
+ return [...new Set(value.replace(/\b(?:never|not|no|without|don't|do not)\b[^.!?;\n]*/gi,'').toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,'')))];
+}
+export function selectSourceText(text:string,useCase:string,limit=48000,app=''):string{
+ if(text.length<=limit)return text;
+ const terms=requestTerms(useCase,app);
+ const lines=text.split('\n'),ranked=lines.map((s,i)=>({i,score:(/oauth|scope|permission|capabilit|authorization|redirect|client.secret/i.test(s)?3:0)+terms.filter(t=>s.toLowerCase().includes(t)).length*4+(/^(?:GET|POST|PATCH|DELETE) |--data|api\.[^ ]+\/|^query /.test(s)?4:0)})).sort((a,b)=>b.score-a.score);
+ const selected=new Set<number>();let size=0;const add=(i:number)=>{if(i>=0&&i<lines.length&&!selected.has(i)&&size+lines[i].length<limit){selected.add(i);size+=lines[i].length+1;}};
+ for(let i=0;i<Math.min(15,lines.length);i++)add(i);
+ for(const topic of [/oauth|register.{0,20}app|client.?id/i,/redirect.?uri|authorization.code|client.?secret/i,/scopes?|permissions?|capabilit/i])for(const {i} of ranked.filter(x=>topic.test(lines[x.i])).slice(0,8)){for(let n=Math.max(0,i-4);n<=Math.min(lines.length-1,i+12);n++)add(n);}
+ for(const {i} of ranked.filter(x=>/https?:\/\/|\/api\/v[0-9]+\//i.test(lines[x.i])&&terms.some(t=>lines[x.i].toLowerCase().includes(t))).slice(0,12))for(let n=Math.max(0,i-6);n<=Math.min(lines.length-1,i+35);n++)add(n);
+ for(const {i,score} of ranked){if(!score)break;for(let n=Math.max(0,i-6);n<=Math.min(lines.length-1,i+20);n++)add(n);}
+ return [...selected].sort((a,b)=>a-b).map((n,i,all)=>(i&&n>all[i-1]+1?'\n[Separate source excerpt]\n':'')+lines[n]).join('\n');
 }
 
 export async function discoverProvider(input:GuideInput,bindings:Bindings,emit:(event:Progress)=>void,outer:AbortSignal,fetcher:Fetcher=fetch):Promise<string>{
@@ -116,10 +147,10 @@ export async function discoverProvider(input:GuideInput,bindings:Bindings,emit:(
   outer.throwIfAborted();return publicUrl(seed).href;
 }
 
-export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[];urls?:string[];query?:string}={}): Promise<Research> {
+export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[];urls?:string[];query?:string;refresh?:boolean}={}): Promise<Research> {
   const signal = AbortSignal.any([outer, AbortSignal.timeout(options.previous?18000:38000)]);
-  const reader = publicReader(fetcher, signal); const warnings: string[] = [];
-  let seed = options.previous?.website||input.website;
+  const reader = publicReader(fetcher, signal); const warnings: string[] = [];const failures:Failure[]=[];
+  let seed = input.documentationUrl||options.previous?.website||input.website;
   const firecrawl = async (path: string, body: object) => {
     const res = await fetcher('https://api.firecrawl.dev/v2/' + path, { method:'POST', redirect:'manual', signal: AbortSignal.any([signal,AbortSignal.timeout(12000)]), headers:{'Content-Type':'application/json',Authorization:'Bearer '+bindings.LIVE_GUIDE_FIRECRAWL_KEY},body:JSON.stringify(body) });
     if (!res.ok) { await res.body?.cancel(); throw new Error('The configured retrieval service is unavailable.'); }
@@ -127,7 +158,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   };
   if(!seed)seed=await discoverProvider(input,bindings,emit,outer,fetcher);
   seed = publicUrl(seed).href;
-  const score=(url:string,label='')=>linkScore(url,label)+actionLinkScore(url,label,input.useCase);
+  const score=(url:string,label='')=>documentationScore(url,label,input);
   const previous=options.previous?.documents||[];
   const topics=options.topics||(['registration','permissions','identity','distribution'] as ResearchTopic[]);
   const candidates=new Map<string,string>();
@@ -140,7 +171,8 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       else{const result=await reader.read('https://html.duckduckgo.com/html/?q='+encodeURIComponent(query));queue.push(...parsePage(result.url,result.body).links.map(l=>new URL(l).searchParams.get('uddg')||l));}
     }catch{warnings.push('The targeted follow-up search was unavailable.');}
   }
-  const attempted = new Set<string>(previous.map(d=>sourceKey(d.url))); const pages: Page[] = [];
+  const refreshed=new Set((options.refresh?options.urls||[]:[]).map(sourceKey));
+  const attempted = new Set<string>(previous.filter(d=>!refreshed.has(sourceKey(d.url))).map(d=>sourceKey(d.url))); const pages: Page[] = [];
   const covered=new Set<ResearchTopic>();
   const allowedExternal=new Set<string>([...(options.urls||[]).map(u=>new URL(u).hostname),...previous.filter(d=>!onProvider(d.url,seed)).map(d=>new URL(d.url).hostname)]);
   const allowed=(url:string)=>onProvider(url,seed)||allowedExternal.has(new URL(url).hostname);
@@ -158,34 +190,38 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
         page.links.push(...(result.data?.links || []).filter((x: unknown) => typeof x === 'string').flatMap((x:string) => {try{return [publicUrl(x).href];}catch{return [];}}));
         page.title = result.data?.metadata?.title?.slice(0,160) || page.title;
       } else { const result = await reader.read(url,onProvider(url,seed)?seed:new URL(url).origin); page = parsePage(result.url,result.body); }
+      if(documentationScore(page.url,page.title,input)<-60)throw new Error('This source is outside the requested product area or is a sign-in page.');
       const index = /\/llms(?:-full)?\.txt(?:\?|$)/.test(page.url);
       if ((page.text.length < 80 && !page.links.length) || (index && !page.links.length) || /just a moment|verify.*human|access denied|checking your browser/i.test(page.title)) throw new Error('Page requires browser verification or contains no readable documentation.');
       const substantive=!index&&page.text.length>=80;
       attempted.add(sourceKey(page.url));
-      if (substantive && !pages.some(p=>p.url===page.url)&&!previous.some(d=>d.url===page.url)) pages.push(page);
+      if (substantive && !pages.some(p=>p.url===page.url)&&(!previous.some(d=>d.url===page.url)||refreshed.has(sourceKey(page.url)))) pages.push(page);
       for(const link of page.links){
         if(!onProvider(link,seed)&&/docs|developers?|readme\.io|gitbook|readthedocs|mintlify/i.test(link)&&linkScore(link,page.labels[link])>15)allowedExternal.add(new URL(link).hostname);
         if(allowed(link)&&!attempted.has(sourceKey(link))&&score(link,page.labels[link])>0)candidates.set(link,page.labels[link]||'');
       }
       if(substantive)for(const topic of topics)if(topicPatterns[topic].test(page.url+' '+page.title))covered.add(topic);
       const ranked=[...candidates].filter(([l])=>!attempted.has(sourceKey(l))).sort((a,b)=>score(b[0],b[1])-score(a[0],a[1]));
-      const priority=topics.filter(t=>!covered.has(t)).flatMap(t=>{const candidate=ranked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0):undefined);return candidate?[candidate[0]]:[];});
+      const resource=ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0&&score(l,label)>20);
+      const reference=ranked.find(([l])=>/\/(?:api-reference|reference)\/?$|\/guides\/?$/.test(new URL(l).pathname));
+      const priority=[...(resource?[resource[0]]:[]),...(reference?[reference[0]]:[]),...topics.filter(t=>!covered.has(t)).flatMap(t=>{const candidate=ranked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0):undefined);return candidate?[candidate[0]]:[];})];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
-      queue.splice(index?0:queue.length,0,...priority.filter(l=>!queue.includes(l)));
+      const promoted=[...new Set(priority)];
+      for(const link of promoted){const at=queue.indexOf(link);if(at>=0)queue.splice(at,1);}
+      queue.unshift(...promoted);
       for(const [link] of ranked.slice(0,8))if(!queue.includes(link))queue.push(link);
       emit({stage:'Source read',detail:page.title+(index?' · documentation index':''),status:'done'});
-    } catch {
-      outer.throwIfAborted(); warnings.push(`Could not read ${new URL(url).hostname}${new URL(url).pathname}.`);
+    } catch(error) {
+      outer.throwIfAborted();failures.push(sourceFailure(error,url)); warnings.push(`Could not read ${new URL(url).hostname}${new URL(url).pathname}.`);
       emit({stage:'Source unavailable',detail:warnings.at(-1)!,status:'warning'});
     }
   }
   outer.throwIfAborted();
-  if (!pages.length&&!previous.length) throw new Error('No readable documentation found. Try a direct public OAuth documentation URL.');
+  if (!pages.length&&!previous.length) throw new ResearchFailure(failures.find(f=>f.category!=='source-unavailable')||failures[0]||{category:'source-unavailable',url:seed,message:'No readable documentation was found. Add a direct official API-reference or Markdown URL.'});
   if (signal.aborted) warnings.push('Research reached its source-reading deadline; findings are partial.');
   const documents: Document[] = await Promise.all(pages.map(async (p,i) => {
     // Preserve relevant sections when pages contain long navigation/schema preambles.
-    const lines = p.text.split('\n'); const first = lines.findIndex(l=>/oauth|client[_ -]?id|authentication/i.test(l));
-    const text = lines.slice(Math.max(0,first-4)).join('\n').slice(0,32000);
+    const text=selectSourceText(p.text,input.useCase,48000,input.app);
     const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(normalizeText(text)));
     return {id:'s'+(previous.length+i+1),url:p.url,title:p.title,retrievedAt:new Date().toISOString(),hash:Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,'0')).join(''),text,links:p.links.filter(l=>score(l,p.labels[l])>0).sort((a,b)=>score(b,p.labels[b])-score(a,p.labels[a])).slice(0,60)};
   }));

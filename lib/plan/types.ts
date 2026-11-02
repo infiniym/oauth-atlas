@@ -4,7 +4,7 @@ export type PlanEvidence={sourceId:string;quote:string};
 export type PlanSource={id:string;title:string;url:string;checkedAt:string};
 export type PlanItem={id:string;title:string;detail:string;appliesWhen?:string;label?:string;sourceIds:string[];evidence?:PlanEvidence[];stage?:'prepare'|'test'|'launch';stepIds?:string[]};
 export type PlanStep=PlanItem&{owner:string;stage:'prepare'|'test'|'launch';doneWhen:string;destination?:string;fields:string[];dependsOn?:string[];actionIds?:string[];blockedBy?:string[];testKind?:string;request?:{method:string;endpoint:string;example:string}};
-export type PlanBlocker={id:string;title:string;consequence:'test'|'launch'|'follow-up';owner:string;resolution:string;stepIds?:string[];kind?:'prerequisite'|'instruction'|'verification'|'missing-evidence';resolutionStepIds?:string[];actionId?:string;resolved?:boolean};
+export type PlanBlocker={id:string;title:string;consequence:'test'|'launch'|'follow-up';owner:string;resolution:string;stepIds?:string[];kind?:'prerequisite'|'instruction'|'verification'|'missing-evidence';resolutionStepIds?:string[];actionId?:string;gap?:{actionId:string;fact:'request'|'permission'};resolved?:boolean};
 export type LaunchPlan={
   schemaVersion:1;id:string;provider:string;request:string;createdAt:string;
   basis:'Reviewed rules'|'Live research'|'Reference notes';status:string;summary:string;route:string;

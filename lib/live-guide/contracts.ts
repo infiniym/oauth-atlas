@@ -4,6 +4,7 @@ import type {IntentAiBindings} from '../ai/config.ts';
 
 const text = (max: number) => z.string().trim().min(1).max(max).refine(s => !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(s), 'Use plain text.');
 export const inputSchema = z.object({
+  documentationUrl:z.string().max(1500).optional(),
   app: text(100), website: z.string().trim().max(1500).default(''),
   useCase: z.string().trim().max(1500).default(''),
   audience: z.enum(['internal', 'customers', 'unknown']).default('unknown'),
@@ -36,7 +37,8 @@ export const questionSchema = z.object({
 }).strict();
 export const interpretationSchema = z.object({
   accessModel:z.enum(['oauth','public','unknown']).default('oauth'),
-  requestedActions:z.array(z.object({id:text(60),title:text(180),operation:z.enum(['read','create','update','delete','authorize','other'])}).strict()).max(10).default([]),
+  semanticsVersion:z.literal(2).optional(),
+  requestedActions:z.array(z.object({id:text(60),title:text(180),category:z.enum(['resource','authorization']).optional(),operation:z.enum(['read','create','update','delete','authorize','other'])}).strict()).max(10).default([]),
   prohibitions:z.array(text(200)).max(10).default([]),
   oauthSupport: z.enum(['documented', 'unsupported', 'unknown']),
   summary: text(700), recommendation: text(700), nextAction: text(400),
@@ -44,7 +46,7 @@ export const interpretationSchema = z.object({
   questions: z.array(questionSchema).max(3),
   activeEffort: z.object({ range: z.string().max(100), assumptions: z.string().max(500) }).strict(),
   unknowns: z.array(text(400)).max(10),
-  blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),kind:z.enum(['prerequisite','instruction','verification','missing-evidence']).optional(),owner:text(80),resolution:text(500),stepIds:z.array(text(60)).max(10).optional(),resolutionStepIds:z.array(text(60)).max(10).optional(),actionId:text(60).optional()}).strict()).max(10).default([]),
+  blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),kind:z.enum(['prerequisite','instruction','verification','missing-evidence']).optional(),owner:text(80),resolution:text(500),stepIds:z.array(text(60)).max(10).optional(),resolutionStepIds:z.array(text(60)).max(10).optional(),actionId:text(60).optional(),gap:z.object({actionId:text(60),fact:z.enum(['request','permission'])}).strict().optional()}).strict()).max(10).default([]),
   coverage:z.array(z.object({action:text(180),actionId:text(60).optional(),permissions:z.array(text(100)).max(8),status:z.enum(['mapped','unresolved','unsupported']),reason:text(400),evidence:z.array(z.object({sourceId:text(20),quote:text(260)})).max(6).optional(),support:z.enum(['reviewed','unresolved']).optional()}).strict()).max(10).default([]),
   researchNeeded:z.array(z.enum(['registration','permissions','identity','distribution'])).max(3).default([]),
 }).strict();
@@ -54,6 +56,7 @@ export type InferenceOutcome='accepted' | 'not-configured' | 'upstream-error' | 
 export type InferenceTelemetry = {
   model: string; attempts: number; elapsedMs: number; inputTokens: number; outputTokens: number;
   thinkingTokens?: number; thinking?: 'adaptive'; effort?: 'medium';
+  validationIssues?:string[];
   outcome:InferenceOutcome;followupOutcome?:InferenceOutcome;
 };
 export type LiveGuide = Interpretation & {
@@ -89,6 +92,7 @@ export function normalizeInput(raw: unknown): GuideInput {
   }
   if (input.website) input.website = publicUrl(input.website).href;
   if(input.resolution&&!input.previousId)throw new Error('An update must refer to a saved guide.');
+  if(input.documentationUrl)input.documentationUrl=publicUrl(input.documentationUrl).href;
   if(input.resolution?.url)input.resolution.url=publicUrl(input.resolution.url).href;
   if (/[<>\u0000-\u001f]/.test(input.useCase)) throw new Error('Describe the use case in plain text.');
   return input;
