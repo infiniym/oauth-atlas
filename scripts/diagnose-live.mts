@@ -1,4 +1,6 @@
 // @ts-nocheck -- Diagnostic recorder; provider envelopes are deliberately captured verbatim.
+import {acceptanceAnswers} from './acceptance-choices.mts';
+import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {generate} from '../lib/live-guide/workflow.ts';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
@@ -22,6 +24,7 @@ const fetcher:typeof fetch=async(url,init)=>{
  return response;}catch(e){entry.error=e instanceof Error?e.message:'Fetch failed';throw e;}
 };
 let result:any,error:string|undefined;
-try{result=await generate(c.input,process.env,p=>{events.push({...p,ms:Date.now()-started});console.log(name,p.stage,p.detail);},AbortSignal.timeout(180000),fetcher);}catch(e){error=e instanceof Error?e.message:'Failed';}
+const signal=AbortSignal.timeout(180000),emit=p=>{events.push({...p,ms:Date.now()-started});console.log(name,p.stage,p.detail);};
+try{result=await generate(c.input,process.env,emit,signal,fetcher);for(let n=0;result.guide.questions.length&&n<3;n++){const previous=result;result=await generate({...previous.guide.input,previousId:previous.guide.id,answers:acceptanceAnswers(previous.guide)},process.env,emit,signal,fetcher,previous);}}catch(e){error=e instanceof Error?e.message:'Failed';}
 const path=dir+'/'+name+'-'+label+'.json';writeFileSync(path,JSON.stringify({sourceIdentity,input:c.input,elapsedMs:Date.now()-started,result,error,events,trace},null,2));
-console.log(JSON.stringify({path,ms:Date.now()-started,error,mode:result?.guide.mode,engine:result?.guide.engine,coverage:result?.guide.coverage,questions:result?.guide.questions,sources:result?.guide.sources.map(s=>s.url)}));
+console.log(JSON.stringify({path,ms:Date.now()-started,error,mode:result?.guide.mode,readiness:result?guideReadiness(result.guide):'research-failure',engine:result?.guide.engine,coverage:result?.guide.coverage,questions:result?.guide.questions,sources:result?.guide.sources.map(s=>s.url)}));

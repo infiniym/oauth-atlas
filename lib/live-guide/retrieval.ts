@@ -92,6 +92,10 @@ export function parsePage(url: string, body: string,useCase=''): Page {
 export const topicPatterns={registration:/oauth|authoriz|\/guides\/?$|getting.started|register.{0,20}app|creat.{0,20}(?:app|integration|connection)|app.{0,12}setup/i,permissions:/scopes?|permissions?|capabilities|access.types/i,identity:/actor|app.authentication|bot|agents?|user.authentication/i,distribution:/app.{0,15}review|oauth.{0,15}review|approval|verification|distribution|marketplace|integration.directory|publish|public.connection/i};
 export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/^\/(?:[a-z]{2}(?:[-_][A-Za-z]{2})?)\/(?=docs\/|developers(?:\/|$)|developer\/|api\/)/,'/').replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
 export type ResearchTopic=keyof typeof topicPatterns;
+function sameDocumentationVersion(url:string,seed:string):boolean{
+ const version=(value:string)=>new URL(value).pathname.match(/\/docs\/(latest|next|v\d[^/]*)\//)?.[1];
+ return !version(seed)||!version(url)||version(seed)===version(url);
+}
 export function linkScore(url:string,label=''):number{
   if(/\.(?:png|jpe?g|gif|webp|svg|ico|css|m?js|woff2?|map)(?:\?|$)|\/(?:_mintlify|mintlify-assets|assets|images)\//i.test(url))return -1000;
   const text=url+' '+label;return (/openapi|swagger/i.test(text)?45:0)+(/oauth/i.test(text)?30:0)+(topicPatterns.permissions.test(text)?28:0)+(topicPatterns.distribution.test(text)?26:0)+(topicPatterns.identity.test(text)?12:0)+(/developer|docs/i.test(text)?5:0)-(/blog|changelog|login|signup|privacy|terms|code.and.reviews|pull.request|\.(?:png|svg|jpg|pdf|js|css)(?:\?|$)/i.test(text)?80:0);
@@ -105,15 +109,16 @@ export function actionLinkScore(url:string,label:string,useCase:string):number{
   const words=positive.toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,''));
   const terms=[...new Set(words)],resources=terms.filter(t=>text.includes(t)).length;
   const direct=terms.reduce((n,t)=>n+(new RegExp('(?:get|list|retrieve|create|post|update|delete)[-_ ]*(?:(?:all|a|an)[-_ ]*)?'+t+'s?(?:[-_ ]|for|by|$|\\.)').test(text)?Math.min(2,words.filter(w=>w===t).length)*20:0),0);
-  return resources&&/\/reference\/|\/api\/|endpoint/i.test(text)?40+Math.min(resources,3)*8+direct:/graphql|api[-/ ](?:reference|basics|quickstart)|getting[-/ ]started/.test(text)?18:0;
+  return resources&&/\/reference\/|\/api\/|endpoint/i.test(text)?40+Math.min(resources,3)*8+direct:/graphql|api[-/ ](?:reference|basics|quickstart|usage|overview)|getting[-/ ]started/.test(text)?18:0;
 }
 
 export function documentationScore(url:string,label:string,input:Pick<GuideInput,'useCase'|'website'>):number{
  const parsed=new URL(url),text=(parsed.origin+parsed.pathname+' '+label).toLowerCase(),request=input.useCase.toLowerCase();
+ if(/\/-\/ide\/|\/commits\/(?:branch|commit)\/|\/src\/(?:commit|branch)\//.test(parsed.pathname)||/^edit (?:this page|in |page source)/i.test(label))return -1000;
  if(/\/(?:auth\/login|login|signup|sign-in|trial_registrations)(?:\/|$)/.test(parsed.pathname))return -1000;
  if(/\/(?:customers|features|replay|careers|pricing)(?:\/|$)/.test(parsed.pathname))return -100;
  const irrelevant=['workers','agent-administration','object-storage','business-api','business-endpoints','team-admin','team/','longpoll','webhooks','realtime','marketplace','diffs','merge_requests_approvals','migration','oauth-1','legacy'];
- const agentArea=/\/(?:admin|workers|notion-agent-apis|agent-filesystem)(?:\/|-)|get-agent-permissions|query-agents/.test(parsed.pathname)&&!/(?:manage|list|query|configure|administer).{0,25}(?:agents|workers)/.test(request)?100:0;
+ const agentArea=/\/(?:admin|workers|(?:[a-z0-9]+-)?agent-apis|agent-filesystem)(?:\/|-)|get-agent-permissions|query-agents/.test(parsed.pathname)&&!/(?:manage|list|query|configure|administer).{0,25}(?:agents|workers)/.test(request)?100:0;
  const penalty=agentArea+irrelevant.filter(t=>text.includes(t)&&!request.includes(t.replace(/-/g,' '))).length*65;
  const seedPath=input.website?new URL(input.website).pathname.split('/').filter(Boolean)[0]:'';
  const otherProduct=seedPath&&seedPath.endsWith('-api')&&!new URL(url).pathname.startsWith('/'+seedPath)?45:0;
@@ -183,7 +188,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const previous=options.previous?.documents||[];
   const topics=options.topics||(['registration','permissions','identity','distribution'] as ResearchTopic[]);
   const candidates=new Map<string,string>();
-  for(const d of previous)for(const link of d.links||[])if(!previous.some(p=>p.url===link))candidates.set(link,'');
+  for(const d of previous)for(const link of d.links||[])if(sameDocumentationVersion(link,seed)&&!previous.some(p=>p.url===link)&&score(link)>0)candidates.set(link,'');
   const queue = options.urls?.length?options.urls.map(u=>publicUrl(u).href):previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase)>0)||(/paginat|continuation|cursor/i.test(input.useCase)&&/paginat|swagger|openapi/i.test(l))).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed];
   if(previous.length&&!queue.length){
     emit({stage:'Finding missing evidence',detail:'Looking for '+topics.join(', ')+' documentation.',status:'working'});
@@ -200,7 +205,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const allowedExternal=new Set<string>([...(options.urls||[]).map(u=>new URL(u).hostname),...previous.filter(d=>!onProvider(d.url,seed)).map(d=>new URL(d.url).hostname)]);
   const allowed=(url:string)=>onProvider(url,seed)||allowedExternal.has(new URL(url).hostname);
   while (queue.length && pages.length < (previous.length?3:8) && attempted.size < previous.length+16 && !signal.aborted) {
-    const url = queue.shift()!; if (attempted.has(sourceKey(url)) || !allowed(url)) continue; attempted.add(sourceKey(url));
+    const url = queue.shift()!; if (attempted.has(sourceKey(url)) || !allowed(url) || executable(url)) continue; attempted.add(sourceKey(url));
     emit({stage:'Reading documentation',detail:new URL(url).hostname+new URL(url).pathname,status:'working'});
     try {
       let page: Page;
@@ -231,8 +236,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       attempted.add(sourceKey(page.url));
       if (substantive && !pages.some(p=>p.url===page.url)&&(!previous.some(d=>d.url===page.url)||refreshed.has(sourceKey(page.url)))) pages.push(page);
       for(const link of page.links){
-        const seedVersion=new URL(seed).pathname.match(/\/docs\/(latest|next|v\d[^/]*)\//)?.[1],linkVersion=new URL(link).pathname.match(/\/docs\/(latest|next|v\d[^/]*)\//)?.[1];
-        if(seedVersion&&linkVersion&&seedVersion!==linkVersion)continue;
+        if(!sameDocumentationVersion(link,seed))continue;
         const linked=new URL(link),brand=input.app.toLowerCase().replace(/[^a-z0-9]/g,'');
         const providerBranded=brand.length>2&&(linked.hostname.replace(/[^a-z0-9]/g,'').includes(brand)||linked.pathname.split('/').slice(0,3).some(p=>p.toLowerCase().replace(/[^a-z0-9]/g,'').includes(brand)));
         if(!onProvider(link,seed)&&providerBranded&&onProvider(page.url,seed)&&/docs|developers?|readme\.io|gitbook|readthedocs|mintlify/i.test(link)&&linkScore(link,page.labels[link])+actionLinkScore(link,page.labels[link]||'',input.useCase)>0)allowedExternal.add(linked.hostname);
@@ -253,7 +257,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const missing=topics.filter(t=>!covered.has(t)).map(t=>{const topicRanked=t==='registration'?[...ranked].sort((a,b)=>(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(b[0]+' '+b[1])?100:0)-(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(a[0]+' '+a[1])?100:0)):ranked;const candidate=topicRanked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0):undefined);return {topic:t,url:candidate?.[0]};});
       const schema=ranked.find(([l])=>/swagger.*\.json|openapi.*\.(?:json|ya?ml)/i.test(l));
       const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l])=>/\/paginat/i.test(l)):undefined;
-      const priority=[...(pagination?[pagination[0]]:[]),...(schema?[schema[0]]:[]),...(version?[version[0]]:[]),...(overview?[overview[0]]:[]),...missing.filter(m=>m.topic==='registration'||m.topic==='permissions').flatMap(m=>m.url?[m.url]:[]),...(resource?[resource[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...missing.filter(m=>m.topic!=='registration'&&m.topic!=='permissions').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
+      const priority=[...(pagination?[pagination[0]]:[]),...(schema?[schema[0]]:[]),...(version?[version[0]]:[]),...(overview?[overview[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...missing.filter(m=>m.topic==='registration'||m.topic==='permissions').flatMap(m=>m.url?[m.url]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration'&&m.topic!=='permissions').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
       const promoted=[...new Set(priority)];
       for(const link of promoted){const at=queue.indexOf(link);if(at>=0)queue.splice(at,1);}

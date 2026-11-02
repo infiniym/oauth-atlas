@@ -4,6 +4,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import {generate} from '../lib/live-guide/workflow.ts';
 import {interpretEvidence,validateInterpretation,reviewMappings,sourcePassages,contextPassages} from '../lib/live-guide/interpretation.ts';
+import {documentationScore} from '../lib/live-guide/retrieval.ts';
 import {normalizeInput} from '../lib/live-guide/contracts.ts';
 import type {Interpretation,StoredRun,Document,LiveGuide} from '../lib/live-guide/contracts.ts';
 import {researchedPlan,reviewedPlan} from '../lib/plan/adapters.ts';
@@ -70,12 +71,26 @@ test('completion: an automatically recovered truncated plan has the accepted fin
   if(String(u).startsWith('https://cloudflare-dns.com/'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});
   if(!String(u).includes('anthropic'))return new Response('<title>Permissions</title><main>'+docs[0].text+'</main>');
   const body=JSON.parse(String(init?.body));if(body.system.startsWith('Independently'))return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'The documented permission supports issue reads.'}]});
-  calls++;if(calls===1)return Response.json({type:'message',stop_reason:'max_tokens',content:[{type:'text',text:'{"truncated"'}],usage:{input_tokens:100,output_tokens:100}});return aiResponse(wire(value()));
+  calls++;if(calls<=2)return Response.json({type:'message',stop_reason:'max_tokens',content:[{type:'text',text:'{"truncated"'}],usage:{input_tokens:100,output_tokens:100}});return aiResponse(wire(value()));
  },old);
  assert.equal(result.guide.engine?.outcome,'accepted');assert.equal(result.guide.engine?.followupOutcome,'accepted');assert.ok(result.guide.engine!.attempts>=3);assert.equal(guideReadiness(result.guide),'usable-guide');
 });
 test('completion: unquoted HTML navigation retains setup and requested endpoint links',async()=>{
  const {parsePage}=await import('../lib/live-guide/retrieval.ts');const p=parsePage('https://docs.acme.com/api/oauth/','<main>OAuth registration documentation for individual user access.</main><a href=/api/issues/>Issues API</a><a href=/integrations/oauth_provider/>OAuth scopes</a>');assert.ok(p.links.includes('https://docs.acme.com/api/issues/'));assert.equal(p.labels['https://docs.acme.com/api/issues/'],'Issues API');
+});
+test('completion: exhausted generation retries the same evidence once at lower effort before retrieval',async()=>{
+ let calls=0;const result=await interpretEvidence(run().guide.input,docs,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));calls++;assert.equal(body.output_config.effort,calls===1?'medium':'low');if(calls===1)return Response.json({type:'message',stop_reason:'max_tokens',content:[],usage:{input_tokens:50,output_tokens:16000}});return aiResponse(wire(value()));},[],{final:true,intent:{requestedActions:value().requestedActions,prohibitions:[]}});
+ assert.equal(calls,2);assert.equal(result.mode,'interpreted');assert.equal(result.telemetry.outcome,'accepted');assert.match(result.telemetry.validationIssues!.join(' '),/exhausted the output budget/);
+});
+test('completion: source editing controls cannot outrank published documentation',()=>{
+ const input=run().guide.input;
+ assert.ok(documentationScore('https://code.acme.example/-/ide/project/docs/edit/main/api/oauth.md','Edit in Web IDE',input)<0);
+ assert.ok(documentationScore('https://code.acme.example/docs/commits/branch/latest/api.md','History',input)<0);
+ assert.ok(documentationScore('https://docs.acme.example/api/usage/','API Usage',input)>0);
+});
+test('completion: an OAuth handoff cannot substitute personal or CI token authentication',()=>{
+ const p=value();p.steps[1].request!.example="curl 'https://api.acme.com/issues' -H 'PRIVATE-TOKEN: <token>'";
+ assert.throws(()=>validateInterpretation(p,docs),/personal\/API\/CI token header/);
 });
 test('completion: an OpenAPI reference retains the base path, pagination, security and response fields',async()=>{
  const {openApiText}=await import('../lib/live-guide/openapi.ts');const api=openApiText(JSON.stringify({swagger:'2.0',info:{title:'Acme API'},basePath:'/api/v1',paths:{'/user/items':{get:{summary:'List items visible to the authenticated user',parameters:[{name:'page',in:'query',type:'integer'}],responses:{200:{description:'List of items',schema:{type:'array',items:{$ref:'#/definitions/Item'}}}}}}},definitions:{Item:{type:'object',properties:{id:{type:'integer'},name:{type:'string'}}}}}),'List item names with pagination.');assert.match(api!.text,/GET \/api\/v1\/user\/items/);assert.match(api!.text,/"page"/);assert.match(api!.text,/"name"/);assert.match(api!.text,/List of items/);

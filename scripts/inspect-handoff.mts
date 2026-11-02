@@ -2,8 +2,8 @@
 // calls a provider. Dummy values exercise user inputs, headers and JSON bodies.
 import {spawnSync} from 'node:child_process';
 export function inspectHandoff(guide:any){
- const substitute=(s:string)=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b/g,(whole,...groups)=>{
-  const key=groups.slice(0,4).find(Boolean)||'';
+ const substitute=(s:string)=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}/g,(whole,...groups)=>{
+  const key=groups.slice(0,5).find(Boolean)||'';
   if(/version/i.test(key))return whole;
   if(/(?:base|instance).*(?:url|host)|(?:url|host).*(?:base|instance)/i.test(key))return /url/i.test(key)?'https://instance.example':'instance.example';
   if(/token/i.test(key))return 'test-access-token';

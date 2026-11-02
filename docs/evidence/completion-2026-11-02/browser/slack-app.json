@@ -1,0 +1,564 @@
+{
+  "sourceCommit": "3a8059ddaf14516efe5556c6c43e941999195a21",
+  "status": 200,
+  "share": "https://oauth-launch-advisor.gharkagpt1.chatgpt.site/plan/lp-7d77639b-0060-45a9-b1e0-ee8ee5ff264a",
+  "plan": {
+    "schemaVersion": 1,
+    "id": "lp-7d77639b-0060-45a9-b1e0-ee8ee5ff264a",
+    "provider": "Slack",
+    "request": "Read public channel messages, Post messages",
+    "createdAt": "2026-11-02T15:03:44.479Z",
+    "basis": "Reviewed rules",
+    "status": "Ready to start setup",
+    "summary": "Your requirements justify developer-owned credentials. Follow the scoped plan below and resolve conditional dependencies before launch.",
+    "route": "Slack app with bot and reviewed user permissions",
+    "next": {
+      "id": "register",
+      "title": "Create a developer-owned Slack app",
+      "detail": "Start in a workspace you control. Define app identity and the selected bot/user authorization model.",
+      "owner": "Developer",
+      "stage": "prepare",
+      "doneWhen": "The test app exists, its identity and callback configuration are recorded, and its credentials are stored server-side.",
+      "sourceIds": [
+        "slack-distribution"
+      ],
+      "destination": "https://docs.slack.dev/app-management/distribution/",
+      "fields": [
+        "App name",
+        "App owner",
+        "Test account / workspace",
+        "Provider redirect URI"
+      ]
+    },
+    "steps": [
+      {
+        "id": "register",
+        "title": "Create a developer-owned Slack app",
+        "detail": "Start in a workspace you control. Define app identity and the selected bot/user authorization model.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The test app exists, its identity and callback configuration are recorded, and its credentials are stored server-side.",
+        "sourceIds": [
+          "slack-distribution"
+        ],
+        "destination": "https://docs.slack.dev/app-management/distribution/",
+        "fields": [
+          "App name",
+          "App owner",
+          "Test account / workspace",
+          "Provider redirect URI"
+        ]
+      },
+      {
+        "id": "permissions",
+        "title": "Configure the permissions listed above",
+        "detail": "Add only the selected provider scopes in the appropriate consent or bot/user scope configuration. Reauthorize after scope changes.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The configured grant matches the permission list and contains no unnecessary access.",
+        "sourceIds": [
+          "slack-distribution"
+        ],
+        "destination": "https://docs.slack.dev/app-management/distribution/",
+        "fields": [
+          "channels:history",
+          "chat:write"
+        ]
+      },
+      {
+        "id": "redirect",
+        "title": "Copy the exact provider redirect URI from Composio",
+        "detail": "Begin a custom Auth Config for the correct toolkit and OAuth2 method. Copy its displayed redirect URI into the provider settings; this differs from your product’s Connect Link return URL.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The exact redirect URI displayed by the Auth Config is saved in the provider app.",
+        "sourceIds": [
+          "custom",
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+        "fields": []
+      },
+      {
+        "id": "auth-config",
+        "title": "Finish the custom Auth Config",
+        "detail": "Store provider credentials only in Composio/server-side secret configuration. Record the auth config ID; never paste credentials into this advisor.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+        "sourceIds": [
+          "custom"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+        "fields": [
+          "Toolkit",
+          "Authentication method",
+          "Auth config ID"
+        ]
+      },
+      {
+        "id": "session",
+        "title": "Create a session scoped to the selected toolkit",
+        "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+        "sourceIds": [
+          "sessions"
+        ],
+        "destination": "https://docs.composio.dev/docs/configuring-sessions",
+        "fields": []
+      },
+      {
+        "id": "check-admin",
+        "title": "Check the target organization’s installation policy",
+        "detail": "Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.",
+        "owner": "Developer + admin",
+        "stage": "test",
+        "doneWhen": "The described configuration is saved and ready for the next step.",
+        "sourceIds": [
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication",
+        "fields": []
+      },
+      {
+        "id": "connect",
+        "title": "Authorize a representative account",
+        "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+        "owner": "Developer",
+        "stage": "test",
+        "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+        "sourceIds": [
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication",
+        "fields": []
+      },
+      {
+        "id": "request-read",
+        "title": "Test: Read public channel messages",
+        "stage": "test",
+        "testKind": "action",
+        "actionIds": [
+          "read"
+        ],
+        "owner": "Developer",
+        "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Repeat a read using a private test channel this identity cannot access; it must return ok=false without message data.",
+        "doneWhen": "HTTP 200 with ok=true and the test channel messages. Record the actual response; this example has not been executed.",
+        "fields": [
+          "TEST_CHANNEL_ID: copy the ID from a test channel; add the selected bot/person to that channel"
+        ],
+        "sourceIds": [
+          "slack-request-read",
+          "proxy-execute"
+        ],
+        "destination": "https://docs.slack.dev/reference/methods/conversations.history/",
+        "request": {
+          "method": "GET",
+          "endpoint": "https://slack.com/api/conversations.history?channel=TEST_CHANNEL_ID&limit=1",
+          "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"slackbot\",\n  \"method\": \"GET\",\n  \"endpoint\": \"https://slack.com/api/conversations.history?channel=TEST_CHANNEL_ID&limit=1\"\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+          "language": "javascript"
+        }
+      },
+      {
+        "id": "request-post",
+        "title": "Test: Post messages",
+        "stage": "test",
+        "testKind": "action",
+        "actionIds": [
+          "post"
+        ],
+        "owner": "Developer",
+        "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This posts a real message when run. Use your test channel; inspect the scope and identity before testing an inaccessible channel.",
+        "doneWhen": "HTTP 200 with ok=true, channel and ts; the test message appears in that channel. Record the actual response; this example has not been executed.",
+        "fields": [
+          "TEST_CHANNEL_ID: copy the ID from a disposable test channel and invite the selected identity"
+        ],
+        "sourceIds": [
+          "slack-request-post",
+          "proxy-execute"
+        ],
+        "destination": "https://docs.slack.dev/reference/methods/chat.postMessage/",
+        "request": {
+          "method": "POST",
+          "endpoint": "https://slack.com/api/chat.postMessage",
+          "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"slackbot\",\n  \"method\": \"POST\",\n  \"endpoint\": \"https://slack.com/api/chat.postMessage\",\n  \"body\": {\n    \"channel\": \"TEST_CHANNEL_ID\",\n    \"text\": \"Integration test - test channel only.\"\n  }\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+          "language": "javascript"
+        }
+      },
+      {
+        "id": "gate-SLACK-DISTRIBUTION",
+        "title": "Enable OAuth distribution for customer workspaces",
+        "detail": "A custom app needs an OAuth installation flow and public distribution for external workspaces. A limited pilot can use unlisted distribution, subject to workspace policy.",
+        "owner": "Developer",
+        "stage": "launch",
+        "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+        "sourceIds": [
+          "slack-distribution"
+        ],
+        "destination": "https://docs.slack.dev/app-management/distribution/",
+        "fields": []
+      },
+      {
+        "id": "gate-SLACK-MARKETPLACE",
+        "title": "Plan commercial Marketplace review",
+        "detail": "Slack directs commercial distribution to Marketplace review. Verify product eligibility and submission requirements before broad launch. This is separate from enabling an early-customer pilot.",
+        "owner": "Developer",
+        "stage": "launch",
+        "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+        "sourceIds": [
+          "slack-distribution",
+          "slack-review"
+        ],
+        "destination": "https://docs.slack.dev/app-management/distribution/",
+        "fields": []
+      },
+      {
+        "id": "gate-SLACK-HISTORY-LIMITS",
+        "title": "Validate history access and rate limits",
+        "detail": "Token type, channel membership, plan and distribution status affect history access. Check the current conversations.history limits for your app category before designing a polling summarizer.",
+        "owner": "Developer",
+        "stage": "launch",
+        "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+        "sourceIds": [
+          "slack-limits"
+        ],
+        "destination": "https://docs.slack.dev/reference/methods/conversations.history/",
+        "fields": []
+      },
+      {
+        "id": "gate-SLACK-ADMIN",
+        "title": "Workspace permission is a separate gate",
+        "detail": "A workspace may require administrator approval or allow only Marketplace apps. Ask its administrator about the specific app; enabling distribution alone does not grant installation rights.",
+        "owner": "Developer + admin",
+        "stage": "launch",
+        "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+        "sourceIds": [
+          "slack-distribution"
+        ],
+        "destination": "https://docs.slack.dev/app-management/distribution/",
+        "fields": []
+      },
+      {
+        "id": "review",
+        "title": "Review launch evidence and unresolved questions",
+        "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+        "owner": "Developer",
+        "stage": "launch",
+        "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+        "sourceIds": [
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication",
+        "fields": []
+      }
+    ],
+    "permissions": [
+      {
+        "id": "permission-0",
+        "identifier": "channels:history",
+        "classification": "Bot or user scope",
+        "title": "channels:history",
+        "detail": "Read public-channel history accessible to the selected token.",
+        "sourceIds": [
+          "slack-history"
+        ]
+      },
+      {
+        "id": "permission-1",
+        "identifier": "chat:write",
+        "classification": "Token context must be checked",
+        "title": "chat:write",
+        "detail": "Post messages with the selected app/token identity.",
+        "sourceIds": [
+          "slack-write"
+        ]
+      }
+    ],
+    "requirements": [
+      {
+        "id": "SLACK-DISTRIBUTION",
+        "title": "Enable OAuth distribution for customer workspaces",
+        "detail": "A custom app needs an OAuth installation flow and public distribution for external workspaces. A limited pilot can use unlisted distribution, subject to workspace policy.",
+        "label": "Verified requirement",
+        "sourceIds": [
+          "slack-distribution"
+        ],
+        "stepIds": [
+          "gate-SLACK-DISTRIBUTION"
+        ],
+        "stage": "launch"
+      },
+      {
+        "id": "SLACK-MARKETPLACE",
+        "title": "Plan commercial Marketplace review",
+        "detail": "Slack directs commercial distribution to Marketplace review. Verify product eligibility and submission requirements before broad launch. This is separate from enabling an early-customer pilot.",
+        "label": "Conditional requirement",
+        "sourceIds": [
+          "slack-distribution",
+          "slack-review"
+        ],
+        "stepIds": [
+          "gate-SLACK-MARKETPLACE"
+        ],
+        "stage": "launch"
+      },
+      {
+        "id": "SLACK-HISTORY-LIMITS",
+        "title": "Validate history access and rate limits",
+        "detail": "Token type, channel membership, plan and distribution status affect history access. Check the current conversations.history limits for your app category before designing a polling summarizer.",
+        "label": "Conditional requirement",
+        "sourceIds": [
+          "slack-limits"
+        ],
+        "stepIds": [
+          "gate-SLACK-HISTORY-LIMITS"
+        ],
+        "stage": "launch"
+      },
+      {
+        "id": "SLACK-ADMIN",
+        "title": "Workspace permission is a separate gate",
+        "detail": "A workspace may require administrator approval or allow only Marketplace apps. Ask its administrator about the specific app; enabling distribution alone does not grant installation rights.",
+        "label": "Conditional requirement",
+        "sourceIds": [
+          "slack-distribution"
+        ],
+        "stepIds": [
+          "gate-SLACK-ADMIN"
+        ],
+        "stage": "launch"
+      }
+    ],
+    "blockers": [],
+    "sources": [
+      {
+        "id": "toolkit-api",
+        "title": "Toolkit metadata API and managed auth methods",
+        "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "managed",
+        "title": "Managed OAuth directory",
+        "url": "https://docs.composio.dev/toolkits/managed-auth",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "custom",
+        "title": "Managed vs custom auth",
+        "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "sessions",
+        "title": "Configuring sessions",
+        "url": "https://docs.composio.dev/docs/configuring-sessions",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "auth",
+        "title": "Authentication and connected accounts",
+        "url": "https://docs.composio.dev/docs/authentication",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slackbot-toolkit",
+        "title": "Slackbot authentication and token roles",
+        "url": "https://docs.composio.dev/toolkits/slackbot",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-toolkit",
+        "title": "Slack toolkit authentication",
+        "url": "https://docs.composio.dev/toolkits/slack",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-distribution",
+        "title": "App lifecycle and distribution",
+        "url": "https://docs.slack.dev/app-management/distribution/",
+        "publisher": "Slack",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-history",
+        "title": "Public channel history scope",
+        "url": "https://docs.slack.dev/reference/scopes/channels.history/",
+        "publisher": "Slack",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-write",
+        "title": "Post message scope",
+        "url": "https://docs.slack.dev/reference/scopes/chat.write/",
+        "publisher": "Slack",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-review",
+        "title": "Marketplace requirements",
+        "url": "https://docs.slack.dev/slack-marketplace/slack-marketplace-app-guidelines-and-requirements/",
+        "publisher": "Slack",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-review-timing",
+        "title": "Marketplace review stages and timing",
+        "url": "https://docs.slack.dev/slack-marketplace/slack-marketplace-review-guide/",
+        "publisher": "Slack",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-limits",
+        "title": "Conversations history rate limits",
+        "url": "https://docs.slack.dev/reference/methods/conversations.history/",
+        "publisher": "Slack",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "slack-request-read",
+        "title": "Test: Read public channel messages API reference",
+        "url": "https://docs.slack.dev/reference/methods/conversations.history/",
+        "checkedAt": "2026-11-02"
+      },
+      {
+        "id": "slack-request-post",
+        "title": "Test: Post messages API reference",
+        "url": "https://docs.slack.dev/reference/methods/chat.postMessage/",
+        "checkedAt": "2026-11-02"
+      },
+      {
+        "id": "proxy-execute",
+        "title": "Run provider requests through an authorized Composio session",
+        "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+        "checkedAt": "2026-11-02"
+      }
+    ],
+    "timing": {
+      "work": "1–3 hours",
+      "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+      "wait": "For Marketplace submissions, Slack publishes up to 10 business days for preliminary feedback and up to 10 weeks for functional review of a new app. These are separate stages, not a promised total. Submission prerequisites and requested fixes add time.",
+      "waitSourceIds": [
+        "slack-review-timing"
+      ],
+      "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+    },
+    "integration": "A custom configuration is recommended by your app ownership, permission or provider-model requirements. Managed OAuth availability does not remove those requirements.",
+    "details": [
+      {
+        "id": "AUTH-METHOD",
+        "title": "Check the method, then check the fit",
+        "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+        "label": "Verified requirement",
+        "sourceIds": [
+          "managed",
+          "toolkit-api",
+          "slack-toolkit"
+        ]
+      },
+      {
+        "id": "OWN-BRAND",
+        "title": "Use your own consent identity",
+        "detail": "You requested your app name on the provider consent screen. A custom auth config uses your provider credentials; branding the Connect Link alone does not change provider consent identity.",
+        "label": "Recommendation",
+        "sourceIds": [
+          "custom"
+        ]
+      },
+      {
+        "id": "SLACK-IDENTITY",
+        "title": "Choose Slack versus Slackbot deliberately",
+        "detail": "Evaluate the Slackbot toolkit for bot behavior. Its documented connection can also request user access. Review the actual bot/user scopes and token role for each selected tool.",
+        "label": "Recommendation",
+        "sourceIds": [
+          "slack-toolkit",
+          "slackbot-toolkit"
+        ]
+      }
+    ],
+    "preparation": [
+      {
+        "title": "Permissions rationale",
+        "text": "channels:history: Read public-channel history accessible to the selected token.\nchat:write: Post messages with the selected app/token identity."
+      },
+      {
+        "title": "Registration worksheet",
+        "text": "Provider app: Slack app with bot and reviewed user permissions\nCallback: copy the exact provider redirect URI from the auth configuration.\nKeep client secrets in your backend or secret manager.\nToolkit: slackbot\nPermissions: channels:history, chat:write\nRecord the verified auth config ID."
+      },
+      {
+        "title": "First connection test",
+        "text": "Check the target organization’s installation policy: Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.\nDone when: The described configuration is saved and ready for the next step.\nAuthorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Read public channel messages: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Repeat a read using a private test channel this identity cannot access; it must return ok=false without message data.\nDone when: HTTP 200 with ok=true and the test channel messages. Record the actual response; this example has not been executed.\nTest: Post messages: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This posts a real message when run. Use your test channel; inspect the scope and identity before testing an inaccessible channel.\nDone when: HTTP 200 with ok=true, channel and ts; the test message appears in that channel. Record the actual response; this example has not been executed."
+      }
+    ],
+    "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+    "context": [
+      {
+        "label": "Actions",
+        "value": "Read public channel messages, Post messages"
+      },
+      {
+        "label": "Who will use the integration?",
+        "value": "Customers / public release"
+      },
+      {
+        "label": "What are you preparing for?",
+        "value": "Production launch"
+      },
+      {
+        "label": "Must the provider show your own app name during consent?",
+        "value": "Yes"
+      },
+      {
+        "label": "Who should appear to act in Slack?",
+        "value": "My app / bot · for example, Acme Assistant"
+      }
+    ],
+    "assessment": {
+      "version": 1,
+      "provider": "slack",
+      "description": "",
+      "capabilities": [
+        "read",
+        "post"
+      ],
+      "audience": "public",
+      "stage": "production",
+      "branding": "yes",
+      "background": "unknown",
+      "dataHandling": "unknown",
+      "workspaceOnly": "unknown",
+      "slackIdentity": "bot",
+      "repoAccess": "unknown",
+      "orgPolicy": "unknown",
+      "managedScopes": "unknown",
+      "customScopes": "unknown",
+      "dedicatedQuota": "no",
+      "customInstance": "no",
+      "special": ""
+    },
+    "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"slackbot\"],\n  authConfigs: { slackbot: \"ac_your_config_id\" },\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+    "metadata": {
+      "provider": "slack",
+      "authMethods": [
+        "OAUTH2"
+      ],
+      "managedMethods": [
+        "OAUTH2"
+      ],
+      "origin": "Documentation snapshot",
+      "checkedAt": "2026-10-30",
+      "scopeCoverage": "unknown",
+      "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+      "toolkitSlug": "slackbot"
+    }
+  }
+}

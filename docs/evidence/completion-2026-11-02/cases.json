@@ -90,5 +90,32 @@
     "background": "Foreground / only while the customer is signed in; background automation is not requested in this first-test slice.",
     "application": "Server-side web application.",
     "providerIdentity": "Confirm only the discovered official provider domain; no manually supplied endpoint bundle."
-  }
+  },
+  "uiScope": {
+    "platform": "desktop",
+    "updatedBy": "User instruction on 2026-11-02: desktop application only; narrow/mobile is no longer a release gate."
+  },
+  "holdoutStatus": "Linear and Forgejo are required regressions after their failures informed fixes. They no longer count as unseen validation.",
+  "blindValidation": [
+    {
+      "name": "asana",
+      "declaredBeforeResearch": true,
+      "input": {
+        "app": "Asana",
+        "website": "https://developers.asana.com/docs/",
+        "useCase": "A backend web app reads task names in a project visible to the connected person, including pagination. OAuth for individual customer accounts. Read only; never create, edit, complete or delete tasks.",
+        "audience": "customers"
+      }
+    },
+    {
+      "name": "clickup",
+      "declaredBeforeResearch": true,
+      "input": {
+        "app": "ClickUp",
+        "website": "",
+        "useCase": "A backend web app reads task names in a list visible to the connected person, including pagination. OAuth for individual customer accounts. Read only; never create, edit or delete tasks or change workspace settings.",
+        "audience": "customers"
+      }
+    }
+  ]
 }

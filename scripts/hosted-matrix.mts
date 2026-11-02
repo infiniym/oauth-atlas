@@ -1,5 +1,6 @@
 // @ts-nocheck -- Public HTTP acceptance recorder; persisted envelopes are inspected verbatim.
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {acceptanceAnswers} from './acceptance-choices.mts';
 import {inspectHandoff,paginationHandoff} from './inspect-handoff.mts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
@@ -18,8 +19,7 @@ async function stage(input,record){
 }
 async function run(c){const started=Date.now(),record={name:c.name,round,release,input:c.input,startedAt:new Date().toISOString(),anonymous:true,cache:'Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.',jobs:[],events:[]};
  try{let job=await stage(c.input,record);for(let n=0;job.state==='waiting'&&n<3;n++){
- const g=job.guide,answers={...g.input.answers};
- for(const q of g.questions){const answer=q.id==='provider-identity'?q.options.find(o=>o==='Yes, this is the provider'):/background|offline|later/i.test(q.prompt)?q.options.find(o=>/only while|foreground|when.+signed in|online only/i.test(o)):/server|browser|platform/i.test(q.prompt)?q.options.find(o=>/server|backend/i.test(o)):q.options.find(o=>/connected (?:person|user)|individual (?:account|user)|act as (?:the )?(?:person|user)/i.test(o));if(!answer)throw new Error('Intent clarification needs review: '+JSON.stringify(q));answers[q.id]=answer;}
+ const g=job.guide,answers=acceptanceAnswers(g);
  job=await stage({...g.input,previousId:g.id,answers},record);
  }
  record.job=job;record.readiness=job.guide?guideReadiness(job.guide):'research-failure';record.requests=job.guide?inspectHandoff(job.guide):[];
