@@ -75,4 +75,4 @@ Focused repair was tested with real production functions and model calls, rather
 2. Select a release commit and update the existing public repository and hosted demo together only when requested. Run fresh hosted full-flow checks and verify quota; local success does not establish Cloudflare post-disconnect execution or hosted model configuration.
 3. Recheck both links without an owner-only session. Replace the draft release label in the overview with the verified release identifier, then verify the form's accepted file type. The observed form allows one supported file up to 100 MB; its type allowlist was not exposed by the blank upload frame.
 
-The short README, linked architecture notes, proposed two-page overview and optional notes draft are prepared. **Preparing these materials is the current scope; no submission action is authorized.**
+The short README, linked architecture notes, proposed one-page product overview and optional notes draft are prepared. The overview was rewritten around the developer's problem and journey after feedback on the internal-review tone. **Preparing these materials is the current scope; no submission action is authorized.**

@@ -51,4 +51,4 @@ See [the current evaluation](docs/evaluations/SUBMISSION-READINESS-2026-11-02.md
 
 Live stages have a 90-second budget, bounded page reading and anonymous quota. Unreadable or moved documentation and unsupported provider facts can still require a direct official URL. The independent model check is fallible. No real provider accounts were connected and no approvals were obtained. The 100-guide library, private workspaces and production hardening are outside this focused slice.
 
-[Submission materials and form fields](docs/SUBMISSION.md) · [Product walkthrough](docs/PRODUCT-WALKTHROUGH.md) · [Decision log](docs/DECISIONS.md)
+[Product overview](docs/SUBMISSION-OVERVIEW.md) · [Submission materials and form fields](docs/SUBMISSION.md) · [Product walkthrough](docs/PRODUCT-WALKTHROUGH.md) · [Decision log](docs/DECISIONS.md)

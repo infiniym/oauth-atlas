@@ -16,18 +16,21 @@ The form says the Google account's name, email and photo will be recorded on upl
 
 ## Recommended single attachment
 
-`oauth-launch-advisor-overview.pdf`, two pages:
+`oauth-launch-advisor-overview.pdf`, one page. The reviewer-facing copy is in [the product overview](SUBMISSION-OVERVIEW.md).
 
-1. Problem and chosen scope; clickable demo and repository links; the release identifier; how to try Gmail, Slack/GitHub and a verified unfamiliar-app scenario.
-2. Why the product works this way; evidence from successful and failed runs; clear boundaries between source support, developer reports and executed setup; setup directions through the README.
+Follow the developer's journey: why they get stuck, why the product begins with their feature, how they move from a request to a first test, and the considerations behind that flow. Keep a short statement of current limits. Put installation details and test evidence in the repository. This preparation checklist and release checks are internal; they do not belong in the attachment.
 
 Do not upload source archives or secrets by default. The assignment asks for a working experience and source repository, plus a short README. A PDF can carry those links within the form's single-file requirement. A short walkthrough video may support the demo later; it is not required by the observed form.
 
 ## Optional notes — draft
 
-> OAuth Launch Advisor helps developers choose an OAuth setup and work toward a first representative API test. Working experience: https://oauth-atlas.mossystar19.chatgpt.site/ . Source and setup instructions: https://github.com/infiniym/oauth-atlas . Start with Gmail read-versus-send, then try the live-research example documented in the attached overview. The README distinguishes documented guidance, developer-reported checks and setup that has not been executed. The scope is a few varied providers plus live generation, not 100 finished guides.
+> OAuth Launch Advisor helps developers turn an integration idea into a setup plan and first test. Demo: https://oauth-atlas.mossystar19.chatgpt.site/ · Code: https://github.com/infiniym/oauth-atlas . The attached overview explains the problem, developer journey and product choices.
 
 Use that text only after both URLs serve the selected tested release. The existing public links currently represent an earlier release. The local PDF is a **review draft**, not evidence that release alignment has happened.
+
+## Hosting
+
+The existing Sites project is public and active at the demo URL above (checked 2 November 2026). It runs on Cloudflare Workers and uses D1 for saved plans. Oracle Cloud Infrastructure is not a dependency. Keep this host for the submission; moving to Vercel would add deployment work without improving the developer journey. The current local fixes still need a matching hosted release and hosted checks. No deployment was made as part of this document rewrite.
 
 ## Before a later submission
 
