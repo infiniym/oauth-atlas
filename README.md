@@ -1,10 +1,10 @@
 # OAuth Launch Advisor
 
-[Hosted demo (update pending)](https://oauth-atlas.mossystar19.chatgpt.site/) · [Source](https://github.com/infiniym/oauth-atlas)
+[Hosted demo](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/) · [Source](https://github.com/infiniym/oauth-atlas)
 
 Help an agent developer choose an OAuth app model, understand required permissions and approvals, and reach a first representative API test. Reviewed Gmail, Slack and GitHub rules and live documentation research use the same guide layout, exports and dated share links. Apps can be researched without being in the catalog.
 
-**Release status:** this source contains the submission candidate. The hosted demo has not been updated to match it. Do not describe those links as the tested release until the [release checks](docs/SUBMISSION.md) pass.
+**Release status:** the app is being published under its current owner account. See the [hosted release checks](docs/evaluations/HOSTED-2026-11-02.md) for the tested version and verification limits.
 
 ## Start here
 
@@ -43,7 +43,7 @@ Use **Notion** with `https://developers.notion.com/guides/get-started/authorizat
 
 > A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.
 
-A fresh local HTTP run produced two cited read requests with reviewed permission mappings in 79.3 seconds. This is a generated, unexecuted guide. Hosted generation remains unverified for this candidate because the Sites connector cannot access the recorded project. The [evidence set](docs/evidence/final-2026-11-02/README.md) includes this run and failed cases.
+A fresh local HTTP run produced two cited read requests with reviewed permission mappings in 79.3 seconds. This is a generated, unexecuted guide. The replacement host uses a fresh database; old shared links remain on the earlier host. Hosted checks are recorded in the release evaluation. The [evidence set](docs/evidence/final-2026-11-02/README.md) includes this run and failed cases.
 
 For reviewed providers, the first-test steps include backend JavaScript using an authorized Composio session. The proxy keeps tokens server-side and needs the Project API key's Proxy execute permission. Replace the test inputs, complete the Connect Link, then run the selected request in your backend. Sending, posting, reviewing and PR creation act on real test resources when you run them; use your own disposable test accounts. These examples have been checked with stubbed execution, not real provider accounts.
 

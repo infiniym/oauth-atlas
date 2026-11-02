@@ -107,10 +107,10 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Acceptance criterion.** Each sample should add a materially different developer decision, rather than only changing logos.
 
-- [GitHub example](https://oauth-atlas.mossystar19.chatgpt.site/?guide=github)
-- [Notion example](https://oauth-atlas.mossystar19.chatgpt.site/?guide=notion)
-- [Slack example](https://oauth-atlas.mossystar19.chatgpt.site/?guide=slack)
-- [Gmail example](https://oauth-atlas.mossystar19.chatgpt.site/?guide=gmail)
+- [GitHub example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=github)
+- [Notion example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=notion)
+- [Slack example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=slack)
+- [Gmail example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=gmail)
 
 ## D04 — Describe the launch gate instead of inventing a universal difficulty score
 
@@ -182,8 +182,8 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Acceptance criterion.** Testing instructions cannot be mistaken for confirmation that a public product is approved.
 
-- [Gmail scenario and scopes](https://oauth-atlas.mossystar19.chatgpt.site/?guide=gmail)
-- [Slack distribution example](https://oauth-atlas.mossystar19.chatgpt.site/?guide=slack)
+- [Gmail scenario and scopes](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=gmail)
+- [Slack distribution example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=slack)
 
 ## D07 — Turn guidance into next actions, completion criteria and blocker remedies
 
@@ -305,7 +305,7 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Acceptance criterion.** A share URL opens in a fresh session, and the shared guide does not include personal checkmarks.
 
-- [Live-generated example](https://oauth-atlas.mossystar19.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9)
+- [Live-generated example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9)
 
 ## D12 — Use a Worker, D1 and streamed progress for a small working slice
 

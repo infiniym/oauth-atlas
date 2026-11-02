@@ -2,7 +2,7 @@
 
 Helping developers get past “Where do I start?” when connecting an app.
 
-[Demo](https://oauth-atlas.mossystar19.chatgpt.site/) · [Code and setup](https://github.com/infiniym/oauth-atlas)
+[Demo](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/) · [Code and setup](https://github.com/infiniym/oauth-atlas)
 
 ## The problem
 

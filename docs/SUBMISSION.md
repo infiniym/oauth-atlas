@@ -24,13 +24,13 @@ Do not upload source archives or secrets by default. The assignment asks for a w
 
 ## Optional notes — draft
 
-> OAuth Launch Advisor helps developers turn an integration idea into a setup plan and first test. Demo: https://oauth-atlas.mossystar19.chatgpt.site/ · Code: https://github.com/infiniym/oauth-atlas . The attached overview explains the problem, developer journey and product choices.
+> OAuth Launch Advisor helps developers turn an integration idea into a setup plan and first test. Demo: https://oauth-launch-advisor.gharkagpt1.chatgpt.site/ · Code: https://github.com/infiniym/oauth-atlas . The attached overview explains the problem, developer journey and product choices.
 
-Use that text only after both URLs serve the selected tested release. The hosted demo currently represents an earlier release; updating the repository alone does not complete alignment. The local PDF is a **review draft**, not evidence that release alignment has happened.
+Use that text only after both URLs serve the selected tested release. Use the current hosted release and matching source listed in the hosted evaluation. The local PDF remains a review draft until the hosted checks are complete.
 
 ## Hosting
 
-The existing Sites project is public and active at the demo URL above (checked 2 November 2026). It runs on Cloudflare Workers and uses D1 for saved plans. Oracle Cloud Infrastructure is not a dependency. Keep this host for the submission; moving to Vercel would add deployment work without improving the developer journey. The current local fixes still need a matching hosted release and hosted checks. On the final follow-up, get-site, source credentials and environment reads all returned project not found for the recorded project ID. No new Site was created; deployment is blocked on restoring access to that existing project.
+The replacement Site was created in the current account on 2 November 2026. It uses the tested source, server-side model secrets and a fresh D1 database. The earlier host remains untouched in the other account, with its existing saved guides. No Oracle Cloud infrastructure is required. See [hosted checks](evaluations/HOSTED-2026-11-02.md) for the deployment and verification result.
 
 ## Before a later submission
 
