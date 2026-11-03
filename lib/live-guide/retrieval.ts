@@ -96,7 +96,7 @@ export function parsePage(url: string, body: string,useCase=''): Page {
   return { url, title, text: content.replace(/[\t ]+/g,' ').replace(/\n\s*\n/g,'\n').trim(), links: [...new Set(links)],labels };
 }
 export const topicPatterns={registration:/oauth|authoriz|\/guides\/?$|getting.started|register.{0,20}app|creat.{0,20}(?:app|integration|connection)|app.{0,12}setup/i,permissions:/scopes?|permissions?|capabilities|access.types/i,identity:/actor|app.authentication|bot|agents?|user.authentication/i,distribution:/app.{0,15}review|oauth.{0,15}review|approval|verification|distribution|marketplace|integration.directory|publish|public.connection/i};
-export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/^\/(?:[a-z]{2}(?:[-_][A-Za-z]{2})?)\/(?=docs\/|developers(?:\/|$)|developer\/|api\/)/,'/').replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
+export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/^\/(?:[a-z]{2}(?:[-_][A-Za-z]{2})?)\/(?=docs\/|developers(?:\/|$)|developer\/|api\/|user\/|auth\/|integration\/|administration\/)/,'/').replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
 export type ResearchTopic=keyof typeof topicPatterns;
 function sameDocumentationVersion(url:string,seed:string):boolean{
  const version=(value:string)=>new URL(value).pathname.match(/\/docs\/(latest|next|v\d[^/]*)\//)?.[1];
@@ -146,7 +146,16 @@ export function selectSourceText(text:string,useCase:string,limit=48000,app=''):
  // navigation, sync examples and unrelated schema mentions consume the budget.
  const routes=ranked.filter(({i})=>/\b(?:get|post|put|patch|delete)\s+\/|curl.{0,80}https?:\/\/|https?:\/\/\S+\/\S+/i.test(lines[i])&&terms.some(t=>new RegExp('(?:^|[^a-z])'+t+'(?:s|ies)?(?:[^a-z]|$)','i').test(lines[i]))).sort((a,b)=>{
  const rank=(i:number)=>{const l=lines[i],route=l.match(/\/(?:api\/)?(?:v\d+\/)?[\w/{}/.-]+/)?.[0]||l;return (/\bget\s+\//i.test(l)?100:0)-(/\b(?:post|delete|patch|put)\s+\//i.test(l)?100:0)-route.split('/').length*5;};return rank(b.i)-rank(a.i);});
- for(const {i} of routes.slice(0,8)){if(size>limit*.5)break;for(let n=Math.max(0,i-35);n<=Math.min(lines.length-1,i+70);n++)add(n);}
+ for(const {i} of routes.slice(0,8)){
+  if(size>limit*.5)break;
+  const route=lines[i].match(/\b(?:get|post|put|patch|delete)\s+(\/[^\s]+)/i)?.[1];
+  let end=lines.length;
+  for(let n=i+1;n<end;n++){const next=lines[n].match(/^\s*(?:get|post|put|patch|delete)\s+(\/[^\s]+)/i)?.[1];if(next&&next!==route){end=n;break;}}
+  // Response schemas can follow long parameter/SDK sections. Select actual
+  // response fields inside this operation before filling its prose window.
+  for(let n=i;n<end;n++)if(/"(?:subject|title|name|content|results|_embedded)"\s*:/.test(lines[n]))for(let j=Math.max(i,n-2);j<Math.min(end,n+6);j++)add(j);
+  let blockSize=0;for(let n=Math.max(0,i-35);n<Math.min(end,i+400);n++){blockSize+=lines[n].length;if(blockSize>18000)break;add(n);}
+ }
  for(const {i} of ranked.filter(({i})=>/paginat|next_cursor|has_more|cursor|pageSize/i.test(lines[i])&&lines.slice(Math.max(0,i-15),i+15).some(l=>terms.some(t=>l.toLowerCase().includes(t)))).slice(0,8))for(let n=Math.max(0,i-10);n<=Math.min(lines.length-1,i+24);n++)add(n);
  for(let i=0;i<Math.min(15,lines.length);i++)add(i);
  for(const topic of [/oauth|register.{0,20}app|client.?id/i,/redirect.?uri|authorization.code|client.?secret/i,/scopes?|permissions?|capabilit/i])for(const {i} of ranked.filter(x=>topic.test(lines[x.i])).slice(0,8)){for(let n=Math.max(0,i-4);n<=Math.min(lines.length-1,i+12);n++)add(n);}
@@ -296,7 +305,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
         const navigation=[...new Map([...ranked.filter(([l,label])=>/\/(?:api-reference|reference|endpoints)\//i.test(l)&&actionLinkScore(l,label,input.useCase,input.app)>20).slice(0,50),...ranked.filter(([l,label])=>topicPatterns.registration.test(l+' '+label)||topicPatterns.permissions.test(l+' '+label)).slice(0,35),...ranked].map(pair=>[pair[0],pair])).values()].filter(([l])=>allowed(l)).slice(0,120);
         try{const choice=await chooseNavigation(input,navigation,bindings,signal,fetcher,[...previous,...pages].map(({url,title})=>({url,title})));for(const link of choice.requests)selectedRequests.add(link);for(const link of choice.setup)selectedSetup.add(link);for(const link of choice.context)selectedTargets.add(link);}catch{ /* Bounded selector failure retains deterministic discovery. */ }
       }
-      const resourceRead=[...previous,...pages].filter(p=>actionLinkScore(p.url,p.title,input.useCase,input.app)>20&&/\/(?:get|list|retrieve)[-_\w]+|\/operations?\//.test(p.url)&&/(?:GET|POST|PATCH|DELETE)\s|curl\s/i.test(p.text)).length>=2;
+      const resourceRead=[...previous,...pages].some(p=>actionLinkScore(p.url,p.title,input.useCase,input.app)>20&&/\b(?:GET|POST|PATCH|DELETE)\s+\/|curl\s/i.test(p.text));
       const resource=!resourceRead?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase,input.app)>0&&score(l,label)>20):undefined;
       const reference=ranked.find(([l])=>/\/(?:api-reference|reference)\/?$|\/guides\/?$/.test(new URL(l).pathname));
       const overview=!covered.has('registration')?ranked.find(([l])=>/\/docs\/(?:overview|introduction|getting-started)\/?$/.test(new URL(l).pathname)):undefined;
@@ -304,7 +313,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const registrationRank=(l:string,label:string)=>score(l,label)+(/\/(?:oauth|authorization|authentication|oauth-applications)(?:\/|$)|oauth.guide|register|public.connection/i.test(l+' '+label)?100:0)-(/\/(?:api-reference|endpoints)\/|from.oauth.?1|console\//i.test(l)?150:0);
       const missing=topics.filter(t=>!covered.has(t)).map(t=>{const topicRanked=t==='registration'?[...ranked].sort((a,b)=>registrationRank(b[0],b[1])-registrationRank(a[0],a[1])):ranked;const candidate=topicRanked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase,input.app)>0):undefined);return {topic:t,url:candidate?.[0]};});
       const schema=ranked.find(([l])=>/swagger.*\.json|openapi.*\.(?:json|ya?ml)/i.test(l));
-      const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l,label])=>/paginat/i.test(l+' '+label))||(![...previous,...pages].some(p=>/paginat|general.concepts|api\/usage/i.test(p.url))?ranked.find(([l,label])=>/general.concepts|api\/usage|pagination|collections/i.test(l+' '+label)):undefined):undefined;
+      const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l,label])=>/paginat/i.test(l+' '+label))||(![...previous,...pages].some(p=>/paginat|general.concepts|\/api\/(?:usage|rest)\/?$/i.test(p.url))?ranked.find(([l,label])=>/general.concepts|\/api\/(?:usage|rest)\/?$|pagination|collections/i.test(l)||/^REST API(?:\s|$)/i.test(label)):undefined):undefined;
       const exactResource=ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase,input.app)>20&&/\/(?:api-reference|reference|endpoints)\//i.test(l)&&!/(?:longpoll|latest.cursor|statistics|count|schema)/i.test(l));
       const priority=[...[...selectedSetup].filter(l=>!attempted.has(sourceKey(l))),...missing.filter(m=>m.topic==='registration').flatMap(m=>m.url?[m.url]:[]),...[...selectedRequests].filter(l=>!attempted.has(sourceKey(l))),...(schema?[schema[0]]:[]),...(exactResource&&!resourceRead?[exactResource[0]]:[]),...missing.filter(m=>m.topic==='permissions').flatMap(m=>m.url?[m.url]:[]),...(version?[version[0]]:[]),...(pagination?[pagination[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...(overview?[overview[0]]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration'&&m.topic!=='permissions').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.

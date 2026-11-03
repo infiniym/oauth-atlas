@@ -4,11 +4,11 @@ export function openApiText(body:string,useCase=''):{title:string;text:string}|n
  let spec:any;try{spec=JSON.parse(body);}catch{return null;}
  if(!spec?.paths||!spec.openapi&&!spec.swagger)return null;
  const title=spec.info?.title||'OpenAPI reference',base=spec.basePath||'';
- const resolve=(value:any,depth=0):any=>{
-  if(!value||depth>3)return value;
-  if(value.$ref?.startsWith('#/')){let target=spec;for(const key of value.$ref.slice(2).split('/'))target=target?.[key.replace(/~1/g,'/').replace(/~0/g,'~')];return resolve(target,depth+1);}
-  if(value.type==='array')return {type:'array',items:resolve(value.items,depth+1)};
-  if(value.properties)return {type:value.type||'object',required:value.required,properties:Object.fromEntries(Object.entries(value.properties).slice(0,45).map(([k,v])=>[k,resolve(v,depth+1)]))};
+ const resolve=(value:any,depth=0,seen=new Set<string>()):any=>{
+  if(!value||depth>5)return value;
+  if(value.$ref?.startsWith('#/')){if(seen.has(value.$ref))return value;let target=spec;for(const key of value.$ref.slice(2).split('/'))target=target?.[key.replace(/~1/g,'/').replace(/~0/g,'~')];return resolve(target,depth+1,new Set([...seen,value.$ref]));}
+  if(value.type==='array')return {type:'array',items:resolve(value.items,depth+1,seen)};
+  if(value.properties){const rank=(key:string)=>(value.required?.includes(key)?100:0)+(/names?/i.test(useCase)&&/name/i.test(key)?30:0)+(/titles?|content/i.test(useCase)&&/title|subject|content|summary/i.test(key)?30:0)+(/^(?:data|items|results|nodes|edges|pageInfo|pagination|_embedded|total|count|next|has)/i.test(key)?20:0);return {type:value.type||'object',required:value.required,properties:Object.fromEntries(Object.entries(value.properties).sort((a,b)=>rank(b[0])-rank(a[0])).slice(0,45).map(([k,v])=>[k,resolve(v,depth+1,seen)]))};}
   return value;
  };
  const lines=['# '+title,'Schema version: '+(spec.info?.version||''),'Documented server: '+(spec.host?(spec.schemes?.[0]||'https')+'://'+spec.host+base:JSON.stringify(spec.servers||[])),'Security definitions: '+JSON.stringify(spec.securityDefinitions||spec.components?.securitySchemes||{})];

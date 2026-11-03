@@ -469,7 +469,7 @@ test('completion: explicit retry repeats a failed planning stage and reuses its 
 test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
  const old=run();old.guide.clarificationUsed=true;const draft={...value(),engine:{outcome:'accepted',attempts:99,promptVersion:'obsolete'}} as any;let calls=0;
  const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft,draftAccepted:true}});
- assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.25');assert.equal(guideReadiness(result.guide),'usable-guide');
+ assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.26');assert.equal(guideReadiness(result.guide),'usable-guide');
 });
 
 
@@ -604,4 +604,42 @@ test('completion: setup-field recovery changes only named prerequisites and repe
  assert.equal(body.thinking.type,'disabled');assert.equal(context.steps.length,1);const ps=context.documents.flatMap((d:any)=>d.passages),citation=ps.find((p:any)=>p.citable&&p.text.includes('Use client_id'));
  return aiResponse({steps:[{stepId:'exchange-token',detail:'After consent, exchange the code on the backend using the registered client credentials and callback URI.',doneWhen:'The response contains access_token; store it securely for the authorizing person.',fields:['Client credentials: OAuth registration','Code and redirect URI: authorization callback'],request:{method:'POST',endpoint:'/oauth/token',example:"curl 'https://api.acme.com/oauth/token' -X POST -H 'Content-Type: application/json' -d '{\"client_id\":\"<CLIENT_ID>\",\"client_secret\":\"<CLIENT_SECRET>\",\"code\":\"<CODE>\",\"redirect_uri\":\"<REDIRECT_URI>\",\"grant_type\":\"authorization_code\"}'"},citations:{primary:citation.id,secondary:'',tertiary:''}}]});});
  assert.equal(calls,2);assert.equal(result!.value.coverage[0].support,'reviewed');assert.deepEqual(result!.value.steps[1],original.steps[1]);assert.deepEqual(result!.value.findings,original.findings);assert.deepEqual(before,original);
+});
+
+test('completion: dotted grant identifiers inside a negated clause do not become positive writes',async()=>{
+ const {contradictsGrant}=await import('../lib/live-guide/consistency.ts');const evidence=[{sourceId:'s1',quote:'Required scope files.metadata.read covers reading file and folder metadata.'}];
+ assert.equal(contradictsGrant('This grant does not cover downloading or modifying content, which needs files.content.read or files.content.write.',evidence,'files.metadata.read'),false);
+ assert.equal(contradictsGrant('This grant does not cover writes. It also permits deleting content.',evidence,'files.metadata.read'),true);
+});
+
+test('completion: independent review separates unresolved launch policy from a documented credential identity',async()=>{
+ const p=value();p.researchNeeded=['identity'];p.unknowns=['Whether customer administrators require approval before wider rollout.'];
+ const result=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);assert.equal(context.firstTestGaps.length,2);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'The user OAuth grant and resource read are documented.'}],gapReviews:context.firstTestGaps.map((g:any)=>({id:g.id,status:'launch-only',reason:'Administrator rollout policy is separate from the documented connected-person first test.',passageId:''}))});},docs);
+ assert.deepEqual(result.value.researchNeeded,['distribution']);assert.deepEqual(result.value.unknowns,p.unknowns);assert.equal(result.value.coverage[0].support,'reviewed');assert.ok(result.telemetry.validationIssues?.some(s=>s.includes('launch-only')));
+});
+
+test('completion: a resolved essential gap needs a supplied citable source and invalid review retains the gap',async()=>{
+ const p=value();p.researchNeeded=['registration'];p.unknowns=['Application registration is undocumented.'];p.blockers=[{title:'Registration missing',kind:'missing-evidence',consequence:'test',owner:'developer',resolution:'Find registration instructions.',stepIds:['register']}];
+ const result=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Scope supported.'}],gapReviews:context.firstTestGaps.map((g:any)=>({id:g.id,status:'resolved',reason:'Registration is supposedly documented.',passageId:'s1-p999999'}))});},docs);
+ assert.deepEqual(result.value.researchNeeded,['registration']);assert.deepEqual(result.value.unknowns,p.unknowns);assert.equal(result.value.coverage[0].status,'unresolved');assert.ok(result.value.blockers.some(b=>b.title==='Registration missing'));
+});
+
+test('completion: identical continuations merge instructions and inputs while distinct requests and action IDs remain',async()=>{
+ const {coalesceRequestSteps}=await import('../lib/live-guide/step-shape.ts');const p=value(),first={...p.steps[1],id:'next-a',dependsOn:['read-test'],detail:'Repeat with the next link until no next link is returned.',doneWhen:'Every issue title is collected.',fields:['NEXT_PAGE_URL: previous response Link header'],request:{method:'GET',endpoint:'/issues',example:"curl '<NEXT_PAGE_URL>' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}},duplicate={...first,id:'next-b',dependsOn:[],detail:'Inspect the actual grant and outgoing GET request log.',doneWhen:'No prohibited operations were sent.',fields:['Keep the same HTTPS host and token.'],request:{...first.request,example:"curl '<NEXT_PAGE_URL>' '-H' 'Authorization: Bearer <ACCESS_TOKEN>'"}};
+ p.steps.push(first,duplicate);p.blockers.push({title:'Follow-up check',kind:'verification',consequence:'follow-up',owner:'developer',resolution:'Inspect pagination.',stepIds:['next-b']});const out=coalesceRequestSteps(p);assert.equal(out.steps.filter(s=>s.testKind==='action').length,2);assert.match(out.steps.find(s=>s.id==='next-a')!.detail,/next link.*actual grant/);assert.equal(out.steps.find(s=>s.id==='next-a')!.fields.length,2);assert.deepEqual(out.blockers[0].stepIds,['next-a']);assert.equal(p.steps.length,4);
+ p.steps[3].actionIds=['other-action'];assert.equal(coalesceRequestSteps(p).steps.filter(s=>s.testKind==='action').length,3);
+});
+
+test('completion: long combined references retain actual response fields within the requested operation',()=>{
+ const text='OAuth registration uses a client ID and redirect URI.\nitems:read Grants read-only access to items.\nGet Items Get all active items for the connected user.\nGET /api/v1/items\n'+('A query parameter describes optional metadata and filtering.\n').repeat(650)+'\nSuccessful response 200\n{ "results": [ { "content": "The item title" } ], "next_cursor": null }\nGET /api/v1/unrelated\n{ "name": "Unrelated object" }';
+ const selected=selectSourceText(text,'List active item titles including pagination.',6000,'Acme');assert.match(selected,/GET \/api\/v1\/items/);assert.match(selected,/"content": "The item title"/);assert.match(selected,/next_cursor/);
+});
+
+test('completion: long independent-review text is corrected without changing its rejection',async()=>{
+ const p=value();let calls=0;const result=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{calls++;const body=JSON.parse(String(init?.body));if(body.system.startsWith('Independently'))return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'unresolved',reason:'The requested field is not documented. '.repeat(18)}]});return aiResponse({values:JSON.parse(body.messages[0].content).map(()=> 'The requested response field is not documented; retain the access gap.')});},docs);
+ assert.equal(calls,2);assert.equal(result.value.coverage[0].status,'unresolved');assert.match(result.value.coverage[0].reason,/retain the access gap/);assert.equal(result.telemetry.attempts,2);assert.ok(result.value.coverage[0].reason.length<=400);
+});
+
+test('completion: nested OpenAPI response wrappers retain requested names beyond large object metadata',async()=>{
+ const {openApiText}=await import('../lib/live-guide/openapi.ts');const properties=Object.fromEntries([...Array.from({length:60},(_,i)=>['metadata_'+i,{type:'string'}]),['name',{type:'string',description:'The item name'}]]);const api=openApiText(JSON.stringify({swagger:'2.0',info:{title:'Acme'},paths:{'/items':{get:{summary:'List visible items',responses:{200:{schema:{$ref:'#/definitions/Result'}}}}}},definitions:{Result:{type:'object',properties:{data:{type:'array',items:{$ref:'#/definitions/Item'}}}},Item:{type:'object',properties}}}),'List item names including pagination.');assert.match(api!.text,/"name"/);assert.match(api!.text,/The item name/);assert.match(api!.text,/"data"/);
 });

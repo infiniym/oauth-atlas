@@ -104,7 +104,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
    value.steps=value.steps.map(s=>focused.steps.some(f=>f.id===s.id)?{...focused.steps.find(f=>f.id===s.id)!,dependsOn:s.dependsOn}:s);
    validatePaginationHandoff(value,input.useCase);
    const related=value.steps.filter(s=>!changedIds.has(s.id!)&&s.testKind==='action'&&s.actionIds?.includes(action.id)&&s.request?.endpoint);
-   const reviewed=await reviewMappings({...focused,steps:[...old.steps.filter(s=>s.testKind!=='action'),...focused.steps,...related]},{...input,useCase:action.title+'. Restrictions: '+old.prohibitions.join('; ')},bindings,signal,fetcher,research.documents);
+   const reviewed=await reviewMappings({...focused,steps:value.steps},{...input,useCase:action.title+'. Restrictions: '+old.prohibitions.join('; ')},bindings,signal,fetcher,research.documents);
    value.coverage=value.coverage.filter(c=>c.actionId!==action.id).concat(reviewed.value.coverage.filter(c=>c.actionId===action.id));
    for(const key of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)telemetry[key]=(telemetry[key]||0)+(reviewed.telemetry[key]||0);
    value=reconcile(value);
