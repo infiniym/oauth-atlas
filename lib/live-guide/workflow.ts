@@ -30,6 +30,8 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   if (!input.previousId && Object.keys(input.answers).length) throw new Error('Answers must refer to an existing guide.');
   if (previous) continuation(input,previous);
   if(input.resolution&&previous)return resolveGuide(input,previous,bindings,emit,signal,fetcher,options);
+  let retainedFacts=options.checkpoint?.facts;const originalSave=options.save;
+  options={...options,save:async checkpoint=>{if('facts' in checkpoint)retainedFacts=checkpoint.facts;await originalSave?.({...checkpoint,...(retainedFacts&&!('facts' in checkpoint)?{facts:retainedFacts}:{})});}};
   const cumulative=previous?.guide.journey||{modelCalls:previous?.guide.engine?.attempts||0,inputTokens:previous?.guide.engine?.inputTokens||0,outputTokens:previous?.guide.engine?.outputTokens||0,modelMs:previous?.guide.engine?.elapsedMs||0};
   const decisions=new Map((previous?.guide.decisions||[]).map(d=>[d.id,d]));
   for(const question of previous?.guide.questions||[])if(input.answers[question.id])decisions.set(question.id,{id:question.id,question:question.prompt,answer:input.answers[question.id]});
@@ -51,7 +53,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     if(input.documentationUrl){
       research=await retrieve(input,bindings,emit,signal,fetcher,{previous:research||undefined,urls:[input.documentationUrl],refresh:true});
       // New evidence invalidates a saved interpretation, not confirmed intent.
-      options={...options,checkpoint:undefined};followupDone=false;
+      retainedFacts=undefined;options={...options,checkpoint:undefined};followupDone=false;
       await options.save?.({research,clarificationUsed,followupDone,intent});
     }
     if(!research?.documents.length){research=await retrieve({...input,website:research?.website||input.website},bindings,emit,signal,fetcher);research.inferred=false;await options.save?.({research,clarificationUsed,followupDone,intent});}
@@ -79,7 +81,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       const expanded=await retrieve(input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics});
       if(expanded.documents.length>research.documents.length){
         research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
-        const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions}});
+        const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions},facts:retainedFacts?.oauthSupport==='documented'&&retainedFacts.coverage.every(c=>c.status==='mapped')&&!retainedFacts.researchNeeded.some(t=>t!=='distribution')?retainedFacts:undefined,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
         const original=interpreted.telemetry;
         if(refined.mode==='interpreted')interpreted=refined;else research.warnings.push('Additional evidence was saved, but the follow-up interpretation failed. Earlier findings remain provisional.');
         if(original&&refined.telemetry){const totals={...original,outcome:refined.mode==='interpreted'?refined.telemetry.outcome:original.outcome,followupOutcome:refined.telemetry.outcome,validationIssues:[...original.validationIssues||[],...refined.telemetry.validationIssues||[]]};for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)totals[k]=(original[k]||0)+(refined.telemetry[k]||0);interpreted.telemetry=totals;}
