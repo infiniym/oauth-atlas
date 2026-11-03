@@ -26,6 +26,16 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
  for(const step of result.steps){
   if(!step?.request?.example)continue;
   let example=String(step.request.example);
+  let instanceInput=false;
+  example=example.replace(/https:\/\/((?:<[^>]+>|\[[^\]]+\]|\{[^}]+\}|[^/\s'"])+)/g,(whole,authority)=>{
+   if(!/[<\[{]/.test(authority))return whole;
+   instanceInput=true;return '<INSTANCE_BASE_URL>';
+  });
+  if(instanceInput){
+   const caption='INSTANCE_BASE_URL: your full HTTPS instance URL, without a trailing slash';
+   const at=(step.fields||[]).findIndex((f:string)=>/instance|\bhost\b|_HOST|base.?url/i.test(f));
+   step.fields=step.fields||[];if(at>=0)step.fields[at]=caption;else if(step.fields.length<8)step.fields.push(caption);
+  }
   // Documentation-derived version headers are facts, not developer inputs.
   example=example.replace(/([\w-]+-Version):\s*(<[^>]+>|[A-Z][A-Z_]+|\d{4}-\d{2}-\d{2})/gi,(whole,header,current)=>{
    const literal=[...source.matchAll(new RegExp(header+':?\\s*["\'`]?\\s*(\\d{4}-\\d{2}-\\d{2})','gi'))].map(m=>m[1]).sort().at(-1);

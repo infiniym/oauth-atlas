@@ -2,8 +2,8 @@
 // calls a provider. Dummy values exercise user inputs, headers and JSON bodies.
 import {spawnSync} from 'node:child_process';
 export function inspectHandoff(guide:any){
- const substitute=(s:string)=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}/g,(whole,...groups)=>{
-  const key=groups.slice(0,5).find(Boolean)||'';
+ const substitute=(s:string)=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}|\[([A-Z][A-Z_-]+)\]/g,(whole,...groups)=>{
+  const key=groups.slice(0,6).find(Boolean)||'';
   if(/version/i.test(key))return whole;
   if(/(?:base|instance).*(?:url|host)|(?:url|host).*(?:base|instance)/i.test(key))return /url/i.test(key)?'https://instance.example':'instance.example';
   if(/token/i.test(key))return 'test-access-token';
@@ -19,7 +19,7 @@ export function inspectHandoff(guide:any){
   const method=(values('-X','--request')[0]||(body.length?'POST':'GET')).toUpperCase();
   const rawUrl=values('--url')[0]||args.find(a=>/^https:\/\//.test(a));
   const errors:string[]=[];let url:URL|undefined;
-  try{url=new URL(rawUrl!);if(url.protocol!=='https:'||url.username||url.password)throw Error();}catch{errors.push('No usable HTTPS URL after substituting user inputs');}
+  try{url=new URL(rawUrl!);if(url.protocol!=='https:'||url.username||url.password||/^(?:https?|test-resource-id)$/.test(url.hostname))throw Error();}catch{errors.push('No usable HTTPS URL after substituting user inputs');}
   if(syntax.status!==0||args[0]!=='curl'||args.some(a=>[';','&&','|','>'].includes(a)))errors.push('Example must be one parseable curl request');
   if(method!==step.request?.method.toUpperCase())errors.push('Method differs from request metadata');
   const headers=Object.fromEntries(headerLines.map(h=>{const i=h.indexOf(':');return [h.slice(0,i).toLowerCase(),h.slice(i+1).trim()];}));
@@ -38,6 +38,6 @@ export function inspectHandoff(guide:any){
 }
 export function paginationHandoff(guide:any,requests:ReturnType<typeof inspectHandoff>){
  const instructions=guide.steps.filter((s:any)=>s.testKind==='action').map((s:any)=>s.detail+' '+s.doneWhen).join(' ');
- const continuation=requests.some((r:{stub:unknown})=>/[?&](?:cursor|page|offset|after|before|skip|next_token)=|\/continue(?:[?'"\s]|$)|"(?:cursor|after|offset|page|next_token)"\s*:|\bafter\s*:/i.test(JSON.stringify(r.stub)));
- return continuation&&/repeat|until|next|has_more|hasNextPage|next_cursor|endCursor|exhaust|remaining|last page|all (?:entries|results|pages)/i.test(instructions);
+ const continuation=requests.some((r:{stub:unknown})=>/[?&][\w.\[\]-]*(?:cursor|page|offset|after|before|skip)[\w.\[\]-]*=|"[\w.-]*(?:cursor|after|offset|page|next_token)[\w.-]*"\s*:|\bafter\s*:/i.test(JSON.stringify(r.stub)));
+ return continuation&&/repeat|continu|follow|iterat|next request/i.test(instructions)&&/until|while|has_more|hasNextPage|next_cursor|endCursor|no.{0,30}next|empty|last page|all (?:entries|results|pages)/i.test(instructions);
 }

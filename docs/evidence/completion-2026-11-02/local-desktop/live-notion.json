@@ -1,0 +1,1424 @@
+{
+  "origin": "http://127.0.0.1:5187",
+  "job": {
+    "id": "job-2b2665d1-5ae7-4219-9607-4271269e52d0",
+    "input": {
+      "app": "Notion",
+      "website": "",
+      "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+      "audience": "customers",
+      "answers": {
+        "provider-identity": "Yes, this is the provider"
+      },
+      "previousId": "lg-d0e97142-c99a-4941-b21e-33863628668d"
+    },
+    "state": "ready",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/get-started/authorization",
+        "status": "working",
+        "at": "2026-11-03T05:30:43.001Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-03T05:30:45.852Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion API authorization",
+        "status": "done",
+        "at": "2026-11-03T05:30:49.079Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/versioning",
+        "status": "working",
+        "at": "2026-11-03T05:30:49.079Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Versioning - Notion Docs",
+        "status": "done",
+        "at": "2026-11-03T05:30:49.497Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+        "status": "working",
+        "at": "2026-11-03T05:30:49.497Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-03T05:30:49.900Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Create a Notion OAuth integration for selected workspaces",
+        "status": "done",
+        "at": "2026-11-03T05:30:53.705Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/data-apis/working-with-page-content",
+        "status": "working",
+        "at": "2026-11-03T05:30:53.705Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Working with page content - Notion Docs",
+        "status": "done",
+        "at": "2026-11-03T05:30:54.203Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/data-apis/read-page-property-values",
+        "status": "working",
+        "at": "2026-11-03T05:30:54.203Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Read every item in a page property - Notion Docs",
+        "status": "done",
+        "at": "2026-11-03T05:30:54.737Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/capabilities",
+        "status": "working",
+        "at": "2026-11-03T05:30:54.737Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Connection capabilities - Notion Docs",
+        "status": "done",
+        "at": "2026-11-03T05:30:55.220Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+        "status": "working",
+        "at": "2026-11-03T05:30:55.220Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Create a public Notion integration",
+        "status": "done",
+        "at": "2026-11-03T05:30:55.486Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/pagination",
+        "status": "working",
+        "at": "2026-11-03T05:30:55.486Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Pagination - Notion Docs",
+        "status": "done",
+        "at": "2026-11-03T05:30:56.000Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-03T05:30:56.062Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-03T05:30:59.066Z"
+      },
+      {
+        "stage": "Checking action coverage",
+        "detail": "Reviewing each permission relationship separately from execution.",
+        "status": "working",
+        "at": "2026-11-03T05:31:41.581Z"
+      },
+      {
+        "stage": "Requested test documented",
+        "detail": "The requested API test is documented. Setup and execution have not been verified.",
+        "status": "done",
+        "at": "2026-11-03T05:31:46.656Z"
+      }
+    ],
+    "createdAt": "2026-11-03T05:30:42.539Z",
+    "updatedAt": "2026-11-03T05:31:46.675Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-03T05:30:42.997Z",
+      "finishedAt": "2026-11-03T05:31:46.657Z",
+      "elapsedMs": 63660,
+      "firstActionMs": 63660
+    },
+    "attempts": [
+      {
+        "modelCalls": 4,
+        "inputTokens": 58676,
+        "outputTokens": 12319,
+        "modelMs": 50574
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "read-page-titles",
+          "title": "Read titles of Notion pages shared with the integration",
+          "operation": "read",
+          "category": "resource"
+        },
+        {
+          "id": "read-page-content",
+          "title": "Read content of Notion pages shared with the integration",
+          "operation": "read",
+          "category": "resource"
+        }
+      ],
+      "prohibitions": [
+        "Never create or modify pages",
+        "No workspace administration"
+      ],
+      "oauthSupport": "documented",
+      "summary": "Use a public Notion OAuth integration with only the Read content capability. Each customer authorizes separately and selects pages on the page picker. Test with one representative workspace first. Both read actions map to Read content, but execution is untested. Distribution and review requirements for public integrations are not documented in the supplied sources.",
+      "recommendation": "Use a public Notion OAuth integration with only the Read content capability. Each customer authorizes separately and selects pages on the page picker. Test with one representative workspace first. Both read actions map to Read content, but execution is untested. Distribution and review requirements for public integrations are not documented in the supplied sources.",
+      "nextAction": "Create a public integration with Read content only",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "OAuth integration is the documented model for customer-connected apps",
+          "detail": "OAuth integrations let each user authorize the app and use an access token tied to that user. Tokens must be used as OAuth bearer tokens, not personal or internal tokens.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "Use an OAuth integration when your internal tool needs to act on behalf of each person who uses it. Each user authorizes the app separately and grants it access to"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "a user-scoped static token, and OAuth integrations and public integrations use the OAuth 2.0 protocol."
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Multi-workspace customers require a public integration",
+          "detail": "A connection limited to selected workspaces cannot serve other customer organizations and cannot be listed on the Marketplace. Use a public integration for customers outside your workspace. Installation scope cannot be changed later.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "​ Installation scope Choose Or select 1 or more workspaces when creating your integration. Only those workspaces can install it, and it cannot be listed on the Marketplace. To make"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "your app available to any workspace, create a public integration ."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Installation scope cannot be changed after creation. If you later need to make the app available to any workspace, create a new integration."
+            }
+          ]
+        },
+        {
+          "kind": "permission",
+          "title": "Request the Read content capability for both read actions",
+          "detail": "Read content gives access to read existing content. Retrieving a page and its property values requires this capability plus access to each page.",
+          "appliesWhen": "",
+          "scope": "Read content",
+          "evidence": [
+            {
+              "sourceId": "s6",
+              "quote": "Read content : This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Your connection needs read content capabilities and access to the page. For relations, formulas, and rollups, share the related databases too."
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Do not request Insert or Update content capabilities",
+          "detail": "Insert content and Update content are separate capabilities that allow creating and changing content. Leave both unselected to honor the no-write requirement.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s6",
+              "quote": "Update content : This capability gives a connection permission to update existing content in a Notion workspace. For example, a connection with only this capability is able to call the"
+            },
+            {
+              "sourceId": "s6",
+              "quote": "Insert content : This capability gives a connection permission to create new content in a Notion workspace. This capability does not give the connection access to read full objects. For"
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Each customer must authorize individually and choose pages",
+          "detail": "Each user completes the authorization flow. Notion shows the capabilities, and the user selects which pages to share. Access is limited to shared pages, and a 404 can mean a page is not shared.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "integration, each user needs to complete the authorization flow individually."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "3 The user selects which pages to grant the connection access to using the page picker."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "​ Handle failures A 403 means the connection lacks a required capability. A 404 can mean the page or property is missing, or that your connection lacks access. Check the"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "title": "Create a public integration with Read content only",
+          "detail": "In the Developer portal, create a new connection as a public integration. Add redirect URIs and select only Read content. Leave Insert and Update content unselected. Done when the connection exists and its Configuration tab shows OAuth client ID and secret.",
+          "owner": "developer",
+          "doneWhen": "Connection saved with Read content only and redirect URI set.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "Go to the Developer portal . In the Build section, select Connections . This is also where you create OAuth integrations limited to selected workspaces."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Select Create new connection . Enter the connection name, development workspace, and redirect URIs . Choose Or select 1 or more workspaces , select the workspaces, and choose the capabilities"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "your app available to any workspace, create a public integration ."
+            },
+            {
+              "sourceId": "s6",
+              "quote": "Update content : This capability gives a connection permission to update existing content in a Notion workspace. For example, a connection with only this capability is able to call the"
+            }
+          ],
+          "id": "s1",
+          "dependsOn": [],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "fields": [
+            "Connection name",
+            "Redirect URI",
+            "Capabilities: Read content",
+            "OAuth client ID (from Configuration tab)",
+            "OAuth client secret (store server-side only)"
+          ]
+        },
+        {
+          "title": "Implement the authorization and token-exchange callback",
+          "detail": "Build the authorization redirect and callback. Exchange the returned code at the token endpoint using Basic auth with client ID and secret, grant_type authorization_code, and the same redirect URI. Keep secrets server-side. Done when the callback code path exists and is ready to run.",
+          "owner": "agent",
+          "doneWhen": "Callback and token exchange code exists without secrets in client code.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "Open the Configuration tab to find your OAuth client ID and OAuth client secret . Use them to implement the OAuth authorization flow ."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Next, send the code as part of a POST request to Notion’s token endpoint: https://api.notion.com/v1/oauth/token ."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Content-Type : application/json { \"grant_type\" : \"authorization_code\" , \"code\" : \"e202e8c9-0990-40af-855f-ff8f872b1ec6\" , \"redirect_uri\" : \"https://example.com/auth/notion/callback\" }"
+            }
+          ],
+          "id": "s2",
+          "dependsOn": [
+            "s1"
+          ],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "",
+          "fields": []
+        },
+        {
+          "title": "Authorize one representative test workspace (test account)",
+          "detail": "Using a test workspace you control, open the connection's authorization URL from the Configuration tab. Review the capability prompt, select one test page on the page picker, and approve. Your callback should receive a code and exchange it for an access token. Expected: access token returned. Boundary check: confirm the prompt lists only Read content.",
+          "owner": "developer",
+          "doneWhen": "An access token is issued for the test workspace with one selected test page.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "1 The user visits the connection’s authorization URL. Find this URL in the Configuration tab of your connection in the Developer portal."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "2 Notion presents a prompt describing the connection’s capabilities — what it will be able to do in the user’s workspace."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "3 The user selects which pages to grant the connection access to using the page picker."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "4 After the user approves, Notion redirects them to your redirect URI with a temporary authorization code."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "5 Your connection exchanges the code for an access token, which is used for all subsequent API requests on behalf of that user."
+            }
+          ],
+          "id": "s3",
+          "dependsOn": [
+            "s2"
+          ],
+          "actionIds": [],
+          "testKind": "authorization",
+          "stage": "test",
+          "destination": "",
+          "fields": []
+        },
+        {
+          "title": "Test read page titles (GET page, read-only)",
+          "detail": "Call the documented page route with the OAuth access token and Notion-Version header. Replace the example page ID with your selected test page ID in the path. Expected: the page's properties object, where the title property is found by name. Boundary check: send only GET, and confirm an unshared page ID returns 404 without changes.",
+          "owner": "agent",
+          "doneWhen": "Title property is read for the shared test page and an unshared page does not return it.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "HTTP GET /v1/pages/b55c9c91-384d-452b-81db-d1ef79372b75 HTTP / 1.1"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "\"Notion-Version\" : \"2026-03-11\" ,"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Retrieve the page . Find the property by name in its properties object, then copy its id . Pass that ID as returned, including any URL encoding."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "​ Handle failures A 403 means the connection lacks a required capability. A 404 can mean the page or property is missing, or that your connection lacks access. Check the"
+            }
+          ],
+          "id": "s4",
+          "dependsOn": [
+            "s3"
+          ],
+          "actionIds": [
+            "read-page-titles"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "/v1/pages/b55c9c91-384d-452b-81db-d1ef79372b75",
+            "example": "curl 'https://api.notion.com/v1/pages/b55c9c91-384d-452b-81db-d1ef79372b75' '-H' 'Authorization: Bearer ACCESS_TOKEN' '-H' 'Notion-Version: 2026-03-11'"
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "Test page ID (replaces the documented example ID in the path)",
+            "ACCESS_TOKEN (OAuth access token from step 3)"
+          ]
+        },
+        {
+          "title": "Test read page content (GET block children, read-only)",
+          "detail": "Call the documented block children route for the test page with the same OAuth token and Notion-Version header. Replace the example block ID with your test page ID. Expected: a response containing a results array of block objects and pagination fields. Boundary check: send only GET and confirm no write endpoints are called.",
+          "owner": "agent",
+          "doneWhen": "Child blocks of the shared test page are returned with pagination fields.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "cURL JavaScript curl https://api.notion.com/v1/blocks/16d8004e-5f6a-42a6-9811-51c22ddada12/children?page_size=100 \\"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "-H \"Notion-Version: 2026-03-11\" const { Client } = require ( '@notionhq/client' );"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "In this case, the individual child blocks we requested are in the “results” array."
+            },
+            {
+              "sourceId": "s8",
+              "quote": "start_cursor Omit it on the first request. For the next page, pass the previous response’s next_cursor unchanged."
+            }
+          ],
+          "id": "s5",
+          "dependsOn": [
+            "s3"
+          ],
+          "actionIds": [
+            "read-page-content"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "/v1/blocks/16d8004e-5f6a-42a6-9811-51c22ddada12/children",
+            "example": "curl 'https://api.notion.com/v1/blocks/16d8004e-5f6a-42a6-9811-51c22ddada12/children?page_size=100' '-H' 'Authorization: Bearer ACCESS_TOKEN' '-H' 'Notion-Version: 2026-03-11'"
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "Test page or block ID (replaces the documented example ID in the path)",
+            "ACCESS_TOKEN (OAuth access token from step 3)"
+          ]
+        },
+        {
+          "title": "Confirm public distribution requirements before rollout (optional listing)",
+          "detail": "Marketplace listing is optional for this model. Before customer rollout, check the Developer portal for any review or distribution requirements for public integrations, since the supplied sources do not document them.",
+          "owner": "developer",
+          "doneWhen": "Public integration distribution and review requirements are documented from an official source.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "​ Installation scope Choose Or select 1 or more workspaces when creating your integration. Only those workspaces can install it, and it cannot be listed on the Marketplace. To make"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "your app available to any workspace, create a public integration ."
+            }
+          ],
+          "id": "s6",
+          "dependsOn": [
+            "s5"
+          ],
+          "actionIds": [],
+          "testKind": "launch",
+          "stage": "launch",
+          "destination": "",
+          "fields": []
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "",
+        "assumptions": ""
+      },
+      "unknowns": [
+        "Whether public integrations require provider review before customers can install them.",
+        "Whether Marketplace listing is required for customer installation (listing is optional here).",
+        "Exact provider wait time for any review, if one applies.",
+        "The generic page-retrieve route template and full response schema are not in the supplied text; the page path shown is the documented example and title location is confirmed only through property retrieval.",
+        "Whether page-title retrieval behaves the same for every page type."
+      ],
+      "blockers": [],
+      "coverage": [
+        {
+          "action": "Read titles of Notion pages shared with the integration",
+          "actionId": "read-page-titles",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "mapped",
+          "reason": "Retrieving a page and finding its title property requires Read content and access to the page. Execution is untested.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "Your connection needs read content capabilities and access to the page. For relations, formulas, and rollups, share the related databases too."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Retrieve the page . Find the property by name in its properties object, then copy its id . Pass that ID as returned, including any URL encoding."
+            },
+            {
+              "sourceId": "s6",
+              "quote": "Read content : This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            }
+          ],
+          "support": "reviewed"
+        },
+        {
+          "action": "Read content of Notion pages shared with the integration",
+          "actionId": "read-page-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "mapped",
+          "reason": "Reading child blocks uses the block children route with a read capability. Execution is untested.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "cURL JavaScript curl https://api.notion.com/v1/blocks/16d8004e-5f6a-42a6-9811-51c22ddada12/children?page_size=100 \\"
+            },
+            {
+              "sourceId": "s6",
+              "quote": "Read content : This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            }
+          ],
+          "support": "reviewed"
+        }
+      ],
+      "researchNeeded": [
+        "distribution"
+      ],
+      "semanticsVersion": 2,
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": false,
+      "schemaVersion": 1,
+      "id": "lg-d9127671-8c3e-4c2c-a38c-5a3be83d0252",
+      "previousId": "lg-d0e97142-c99a-4941-b21e-33863628668d",
+      "generatedAt": "2026-11-03T05:31:46.655Z",
+      "input": {
+        "app": "Notion",
+        "website": "",
+        "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-d0e97142-c99a-4941-b21e-33863628668d"
+      },
+      "provider": {
+        "website": "https://developers.notion.com/guides/get-started/authorization",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Generated from retrieved documentation. Citation matching and a separate access review are fallible checks; setup has not been tested.",
+      "warnings": [],
+      "setupTested": false,
+      "decisions": [
+        {
+          "id": "provider-identity",
+          "question": "Continue with developers.notion.com?",
+          "answer": "Yes, this is the provider"
+        }
+      ],
+      "engine": {
+        "model": "claude-haiku-5-5",
+        "attempts": 4,
+        "elapsedMs": 50574,
+        "inputTokens": 58676,
+        "outputTokens": 12319,
+        "thinkingTokens": 5238,
+        "thinking": "adaptive",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "A step destination for an API request is not documented in the supplied sources. {\"path\":[\"steps\",3,\"request\",\"endpoint\"],\"stepId\":\"s4\",\"endpoint\":\"/v1/pages/{page_id}\",\"supported\":false,\"reason\":\"The route template is absent from retrieved source text.\",\"sourceIds\":[]}"
+        ],
+        "reviewOutcome": "accepted",
+        "provider": "anthropic",
+        "promptVersion": "live-guide.15"
+      },
+      "journey": {
+        "modelCalls": 4,
+        "inputTokens": 58676,
+        "outputTokens": 12319,
+        "modelMs": 50574
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://developers.notion.com/guides/authorization/overview",
+          "title": "Notion API authorization",
+          "retrievedAt": "2026-11-03T05:30:56.005Z",
+          "hash": "342551c70fdf9e801caeb1a20a1ea8aaf744df92f7436590a102aae84bb342c6",
+          "links": [
+            "https://developers.notion.com/reference/versioning",
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+            "https://developers.notion.com/reference/capabilities",
+            "https://oauth.net/2/",
+            "https://www.oauth.com/oauth2-servers/redirect-uris/",
+            "https://api.notion.com/v1/oauth/token",
+            "https://www.notion.com/help/sharing-and-permissions",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/guides/agent-skills/overview",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/guides/authorization/overview.md",
+            "https://developers.notion.com/guides/authorization/base-ui-disable-scrollbar",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/guides/connections-and-tokens/overview",
+            "https://developers.notion.com/guides/authorization/credential-security",
+            "https://developers.notion.com/guides/developer-tools/overview",
+            "https://developers.notion.com/guides/mcp/overview",
+            "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+            "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+            "https://developers.notion.com/guides/mcp/notion-skills",
+            "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+            "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values",
+            "https://developers.notion.com/guides/data-apis/working-with-databases",
+            "https://developers.notion.com/guides/data-apis/working-with-views",
+            "https://developers.notion.com/guides/data-apis/working-with-comments",
+            "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+            "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+            "https://developers.notion.com/compliance/overview",
+            "https://developers.notion.com/compliance/siem-events",
+            "https://developers.notion.com/guides/link-previews/introduction",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://app.notion.com/developers/connections",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type",
+            "https://developers.notion.com/reference/status-codes",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication",
+            "https://developers.notion.com/reference/user",
+            "https://developers.notion.com/reference/refresh-a-token"
+          ]
+        },
+        {
+          "id": "s2",
+          "url": "https://developers.notion.com/reference/versioning",
+          "title": "Versioning - Notion Docs",
+          "retrievedAt": "2026-11-03T05:30:56.024Z",
+          "hash": "b23aa8fde3dfcb9bd3052882122ad90f9701a8ecc5337cebdf1cf85a4b878c95",
+          "links": [
+            "https://developers.notion.com/reference/page",
+            "https://developers.notion.com/reference/capabilities",
+            "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+            "https://developers.notion.com/reference/versioning",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/reference/versioning.md",
+            "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/reference/pagination",
+            "https://developers.notion.com/reference/request-limits",
+            "https://developers.notion.com/reference/workspace-block-limits",
+            "https://developers.notion.com/reference/status-codes",
+            "https://developers.notion.com/reference/retrieve-async-task",
+            "https://developers.notion.com/reference/changes-by-version",
+            "https://developers.notion.com/reference/block",
+            "https://developers.notion.com/reference/database",
+            "https://developers.notion.com/reference/data-source",
+            "https://developers.notion.com/reference/view",
+            "https://developers.notion.com/reference/comment-object",
+            "https://developers.notion.com/reference/file-object",
+            "https://developers.notion.com/reference/user",
+            "https://developers.notion.com/reference/parent-object",
+            "https://developers.notion.com/reference/emoji-and-icon",
+            "https://developers.notion.com/reference/unfurl-attribute-object",
+            "https://developers.notion.com/reference/authentication",
+            "https://developers.notion.com/reference/get-users",
+            "https://developers.notion.com/reference/list-custom-emojis",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03"
+          ]
+        },
+        {
+          "id": "s3",
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "title": "Create a Notion OAuth integration for selected workspaces",
+          "retrievedAt": "2026-11-03T05:30:56.030Z",
+          "hash": "712e46e88b15997c7aaac610056ec6763022cc9e8c647dcd3c9f224d7aac7529",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview.md",
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/base-ui-disable-scrollbar",
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users",
+            "https://developers.notion.com/reference/capabilities",
+            "https://www.oauth.com/oauth2-servers/redirect-uris/",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/guides/agent-skills/overview",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/guides/connections-and-tokens/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/guides/developer-tools/overview",
+            "https://developers.notion.com/guides/mcp/overview",
+            "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+            "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+            "https://developers.notion.com/guides/mcp/notion-skills",
+            "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+            "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values",
+            "https://developers.notion.com/guides/data-apis/working-with-databases",
+            "https://developers.notion.com/guides/data-apis/working-with-views",
+            "https://developers.notion.com/guides/data-apis/working-with-comments",
+            "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+            "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+            "https://developers.notion.com/compliance/overview",
+            "https://developers.notion.com/compliance/siem-events",
+            "https://developers.notion.com/guides/link-previews/introduction",
+            "https://app.notion.com/developers/connections"
+          ]
+        },
+        {
+          "id": "s4",
+          "url": "https://developers.notion.com/guides/data-apis/working-with-page-content",
+          "title": "Working with page content - Notion Docs",
+          "retrievedAt": "2026-11-03T05:30:56.036Z",
+          "hash": "6b80a55c1a5af0e453afb5d6870f165b8237fd84fd400f3ad8fa13e7d81a8229",
+          "links": [
+            "https://developers.notion.com/reference/retrieve-page-markdown",
+            "https://developers.notion.com/reference/page-property-values",
+            "https://developers.notion.com/reference/page",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/guides/agent-skills/overview",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content.md",
+            "https://developers.notion.com/guides/data-apis/base-ui-disable-scrollbar",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/guides/connections-and-tokens/overview",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/guides/developer-tools/overview",
+            "https://developers.notion.com/guides/mcp/overview",
+            "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+            "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+            "https://developers.notion.com/guides/mcp/notion-skills",
+            "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+            "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values",
+            "https://developers.notion.com/guides/data-apis/working-with-databases",
+            "https://developers.notion.com/guides/data-apis/working-with-views",
+            "https://developers.notion.com/guides/data-apis/working-with-comments",
+            "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+            "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+            "https://developers.notion.com/compliance/overview",
+            "https://developers.notion.com/compliance/siem-events",
+            "https://developers.notion.com/guides/link-previews/introduction",
+            "https://developers.notion.com/reference/block",
+            "https://developers.notion.com/reference/get-block-children",
+            "https://developers.notion.com/reference/rich-text",
+            "https://developers.notion.com/reference/parent-object",
+            "https://developers.notion.com/reference/request-limits",
+            "https://developers.notion.com/reference/pagination",
+            "https://developers.notion.com/guides/get-started/upgrade-faqs-2025-09-03"
+          ]
+        },
+        {
+          "id": "s5",
+          "url": "https://developers.notion.com/guides/data-apis/read-page-property-values",
+          "title": "Read every item in a page property - Notion Docs",
+          "retrievedAt": "2026-11-03T05:30:56.042Z",
+          "hash": "b5628ccd95f378b34e99a591ee91c6a1cf2493cfd50c97dae1a08b47b042034e",
+          "links": [
+            "https://developers.notion.com/reference/capabilities",
+            "https://developers.notion.com/reference/retrieve-a-page",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/guides/agent-skills/overview",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values.md",
+            "https://developers.notion.com/guides/data-apis/base-ui-disable-scrollbar",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/guides/connections-and-tokens/overview",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/guides/developer-tools/overview",
+            "https://developers.notion.com/guides/mcp/overview",
+            "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+            "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+            "https://developers.notion.com/guides/mcp/notion-skills",
+            "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+            "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content",
+            "https://developers.notion.com/guides/data-apis/working-with-databases",
+            "https://developers.notion.com/guides/data-apis/working-with-views",
+            "https://developers.notion.com/guides/data-apis/working-with-comments",
+            "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+            "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+            "https://developers.notion.com/compliance/overview",
+            "https://developers.notion.com/compliance/siem-events",
+            "https://developers.notion.com/guides/link-previews/introduction",
+            "https://developers.notion.com/reference/property-item-object"
+          ]
+        },
+        {
+          "id": "s6",
+          "url": "https://developers.notion.com/reference/capabilities",
+          "title": "Connection capabilities - Notion Docs",
+          "retrievedAt": "2026-11-03T05:30:56.046Z",
+          "hash": "fd2606185fadf41596ba5ec8e40a6d330231a80335899ffa208e71a4dfa76650",
+          "links": [
+            "https://developers.notion.com/reference/page",
+            "https://developers.notion.com/reference/list-comments",
+            "https://developers.notion.com/reference/capabilities",
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+            "https://developers.notion.com/reference/get-self",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/reference/pagination",
+            "https://developers.notion.com/reference/request-limits",
+            "https://developers.notion.com/reference/workspace-block-limits",
+            "https://developers.notion.com/reference/status-codes",
+            "https://developers.notion.com/reference/retrieve-async-task",
+            "https://developers.notion.com/reference/versioning",
+            "https://developers.notion.com/reference/block",
+            "https://developers.notion.com/reference/database",
+            "https://developers.notion.com/reference/data-source",
+            "https://developers.notion.com/reference/view",
+            "https://developers.notion.com/reference/comment-object",
+            "https://developers.notion.com/reference/file-object",
+            "https://developers.notion.com/reference/user",
+            "https://developers.notion.com/reference/parent-object",
+            "https://developers.notion.com/reference/emoji-and-icon",
+            "https://developers.notion.com/reference/unfurl-attribute-object",
+            "https://developers.notion.com/reference/authentication",
+            "https://developers.notion.com/reference/get-users",
+            "https://developers.notion.com/reference/list-custom-emojis",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://app.notion.com/developers/connections",
+            "https://developers.notion.com/reference/retrieve-a-database",
+            "https://developers.notion.com/reference/get-user"
+          ]
+        },
+        {
+          "id": "s7",
+          "url": "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "title": "Create a public Notion integration",
+          "retrievedAt": "2026-11-03T05:30:56.051Z",
+          "hash": "a249ebd9711c8d68fd2f7f513e8e24ea9a219227cf940007216fdd7a0e6924f7",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users",
+            "https://developers.notion.com/reference/capabilities",
+            "https://oauth.net/2/",
+            "https://www.oauth.com/oauth2-servers/redirect-uris/",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/guides/agent-skills/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview.md",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/base-ui-disable-scrollbar",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/guides/connections-and-tokens/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/guides/developer-tools/overview",
+            "https://developers.notion.com/guides/mcp/overview",
+            "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+            "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+            "https://developers.notion.com/guides/mcp/notion-skills",
+            "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+            "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values",
+            "https://developers.notion.com/guides/data-apis/working-with-databases",
+            "https://developers.notion.com/guides/data-apis/working-with-views",
+            "https://developers.notion.com/guides/data-apis/working-with-comments",
+            "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+            "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+            "https://developers.notion.com/compliance/overview",
+            "https://developers.notion.com/compliance/siem-events",
+            "https://developers.notion.com/guides/link-previews/introduction",
+            "https://app.notion.com/developers/connections"
+          ]
+        },
+        {
+          "id": "s8",
+          "url": "https://developers.notion.com/reference/pagination",
+          "title": "Pagination - Notion Docs",
+          "retrievedAt": "2026-11-03T05:30:56.056Z",
+          "hash": "b38a24d35a9474d7a4a3aaa97604ea8fefdc155764b9e60d3edc1b51c3c29f5d",
+          "links": [
+            "https://developers.notion.com/reference/page",
+            "https://developers.notion.com/reference/capabilities",
+            "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+            "https://developers.notion.com/reference/pagination",
+            "https://developers.notion.com/sitemap.xml",
+            "https://developers.notion.com/reference/pagination.md",
+            "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/notion-api/quick-start",
+            "https://developers.notion.com/reference/intro",
+            "https://developers.notion.com/cli/get-started/overview",
+            "https://developers.notion.com/page/examples",
+            "https://developers.notion.com/reference/request-limits",
+            "https://developers.notion.com/reference/workspace-block-limits",
+            "https://developers.notion.com/reference/status-codes",
+            "https://developers.notion.com/reference/retrieve-async-task",
+            "https://developers.notion.com/reference/versioning",
+            "https://developers.notion.com/reference/block",
+            "https://developers.notion.com/reference/database",
+            "https://developers.notion.com/reference/data-source",
+            "https://developers.notion.com/reference/view",
+            "https://developers.notion.com/reference/comment-object",
+            "https://developers.notion.com/reference/file-object",
+            "https://developers.notion.com/reference/user",
+            "https://developers.notion.com/reference/parent-object",
+            "https://developers.notion.com/reference/emoji-and-icon",
+            "https://developers.notion.com/reference/unfurl-attribute-object",
+            "https://developers.notion.com/reference/authentication",
+            "https://developers.notion.com/reference/get-users",
+            "https://developers.notion.com/reference/list-custom-emojis",
+            "https://developers.notion.com/reference/query-a-data-source",
+            "https://developers.notion.com/reference/property-item-object",
+            "https://developers.notion.com/reference/list-data-source-templates",
+            "https://developers.notion.com/reference/get-view-query-results",
+            "https://developers.notion.com/reference/get-block-children",
+            "https://developers.notion.com/reference/list-comments",
+            "https://developers.notion.com/reference/list-file-uploads",
+            "https://developers.notion.com/reference/list-views",
+            "https://developers.notion.com/guides/data-apis/query-large-data-sources"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "Notion",
+        "docsUrl": "https://docs.composio.dev/toolkits/notion",
+        "message": "Notion appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "resultState": "usable-guide",
+      "researchMetrics": {
+        "navigationCalls": 2
+      }
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://developers.notion.com/guides/authorization/overview",
+        "title": "Notion API authorization",
+        "retrievedAt": "2026-11-03T05:30:56.005Z",
+        "hash": "342551c70fdf9e801caeb1a20a1ea8aaf744df92f7436590a102aae84bb342c6",
+        "links": [
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "https://developers.notion.com/reference/capabilities",
+          "https://oauth.net/2/",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://api.notion.com/v1/oauth/token",
+          "https://www.notion.com/help/sharing-and-permissions",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/guides/agent-skills/overview",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/guides/authorization/overview.md",
+          "https://developers.notion.com/guides/authorization/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/guides/connections-and-tokens/overview",
+          "https://developers.notion.com/guides/authorization/credential-security",
+          "https://developers.notion.com/guides/developer-tools/overview",
+          "https://developers.notion.com/guides/mcp/overview",
+          "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+          "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+          "https://developers.notion.com/guides/mcp/notion-skills",
+          "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+          "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values",
+          "https://developers.notion.com/guides/data-apis/working-with-databases",
+          "https://developers.notion.com/guides/data-apis/working-with-views",
+          "https://developers.notion.com/guides/data-apis/working-with-comments",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+          "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+          "https://developers.notion.com/compliance/overview",
+          "https://developers.notion.com/compliance/siem-events",
+          "https://developers.notion.com/guides/link-previews/introduction",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://app.notion.com/developers/connections",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/refresh-a-token"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://developers.notion.com/reference/versioning",
+        "title": "Versioning - Notion Docs",
+        "retrievedAt": "2026-11-03T05:30:56.024Z",
+        "hash": "b23aa8fde3dfcb9bd3052882122ad90f9701a8ecc5337cebdf1cf85a4b878c95",
+        "links": [
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/reference/versioning.md",
+          "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/workspace-block-limits",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developers.notion.com/reference/retrieve-async-task",
+          "https://developers.notion.com/reference/changes-by-version",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/database",
+          "https://developers.notion.com/reference/data-source",
+          "https://developers.notion.com/reference/view",
+          "https://developers.notion.com/reference/comment-object",
+          "https://developers.notion.com/reference/file-object",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/emoji-and-icon",
+          "https://developers.notion.com/reference/unfurl-attribute-object",
+          "https://developers.notion.com/reference/authentication",
+          "https://developers.notion.com/reference/get-users",
+          "https://developers.notion.com/reference/list-custom-emojis",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03"
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+        "title": "Create a Notion OAuth integration for selected workspaces",
+        "retrievedAt": "2026-11-03T05:30:56.030Z",
+        "hash": "712e46e88b15997c7aaac610056ec6763022cc9e8c647dcd3c9f224d7aac7529",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview.md",
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/base-ui-disable-scrollbar",
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users",
+          "https://developers.notion.com/reference/capabilities",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/guides/agent-skills/overview",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/guides/connections-and-tokens/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/guides/developer-tools/overview",
+          "https://developers.notion.com/guides/mcp/overview",
+          "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+          "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+          "https://developers.notion.com/guides/mcp/notion-skills",
+          "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+          "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values",
+          "https://developers.notion.com/guides/data-apis/working-with-databases",
+          "https://developers.notion.com/guides/data-apis/working-with-views",
+          "https://developers.notion.com/guides/data-apis/working-with-comments",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+          "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+          "https://developers.notion.com/compliance/overview",
+          "https://developers.notion.com/compliance/siem-events",
+          "https://developers.notion.com/guides/link-previews/introduction",
+          "https://app.notion.com/developers/connections"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://developers.notion.com/guides/data-apis/working-with-page-content",
+        "title": "Working with page content - Notion Docs",
+        "retrievedAt": "2026-11-03T05:30:56.036Z",
+        "hash": "6b80a55c1a5af0e453afb5d6870f165b8237fd84fd400f3ad8fa13e7d81a8229",
+        "links": [
+          "https://developers.notion.com/reference/retrieve-page-markdown",
+          "https://developers.notion.com/reference/page-property-values",
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/guides/agent-skills/overview",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content.md",
+          "https://developers.notion.com/guides/data-apis/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/guides/connections-and-tokens/overview",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/guides/developer-tools/overview",
+          "https://developers.notion.com/guides/mcp/overview",
+          "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+          "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+          "https://developers.notion.com/guides/mcp/notion-skills",
+          "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+          "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values",
+          "https://developers.notion.com/guides/data-apis/working-with-databases",
+          "https://developers.notion.com/guides/data-apis/working-with-views",
+          "https://developers.notion.com/guides/data-apis/working-with-comments",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+          "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+          "https://developers.notion.com/compliance/overview",
+          "https://developers.notion.com/compliance/siem-events",
+          "https://developers.notion.com/guides/link-previews/introduction",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/get-block-children",
+          "https://developers.notion.com/reference/rich-text",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/guides/get-started/upgrade-faqs-2025-09-03"
+        ]
+      },
+      {
+        "id": "s5",
+        "url": "https://developers.notion.com/guides/data-apis/read-page-property-values",
+        "title": "Read every item in a page property - Notion Docs",
+        "retrievedAt": "2026-11-03T05:30:56.042Z",
+        "hash": "b5628ccd95f378b34e99a591ee91c6a1cf2493cfd50c97dae1a08b47b042034e",
+        "links": [
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/retrieve-a-page",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/guides/agent-skills/overview",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values.md",
+          "https://developers.notion.com/guides/data-apis/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/guides/connections-and-tokens/overview",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/guides/developer-tools/overview",
+          "https://developers.notion.com/guides/mcp/overview",
+          "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+          "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+          "https://developers.notion.com/guides/mcp/notion-skills",
+          "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+          "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content",
+          "https://developers.notion.com/guides/data-apis/working-with-databases",
+          "https://developers.notion.com/guides/data-apis/working-with-views",
+          "https://developers.notion.com/guides/data-apis/working-with-comments",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+          "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+          "https://developers.notion.com/compliance/overview",
+          "https://developers.notion.com/compliance/siem-events",
+          "https://developers.notion.com/guides/link-previews/introduction",
+          "https://developers.notion.com/reference/property-item-object"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://developers.notion.com/reference/capabilities",
+        "title": "Connection capabilities - Notion Docs",
+        "retrievedAt": "2026-11-03T05:30:56.046Z",
+        "hash": "fd2606185fadf41596ba5ec8e40a6d330231a80335899ffa208e71a4dfa76650",
+        "links": [
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/list-comments",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/reference/get-self",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/workspace-block-limits",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developers.notion.com/reference/retrieve-async-task",
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/database",
+          "https://developers.notion.com/reference/data-source",
+          "https://developers.notion.com/reference/view",
+          "https://developers.notion.com/reference/comment-object",
+          "https://developers.notion.com/reference/file-object",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/emoji-and-icon",
+          "https://developers.notion.com/reference/unfurl-attribute-object",
+          "https://developers.notion.com/reference/authentication",
+          "https://developers.notion.com/reference/get-users",
+          "https://developers.notion.com/reference/list-custom-emojis",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://app.notion.com/developers/connections",
+          "https://developers.notion.com/reference/retrieve-a-database",
+          "https://developers.notion.com/reference/get-user"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+        "title": "Create a public Notion integration",
+        "retrievedAt": "2026-11-03T05:30:56.051Z",
+        "hash": "a249ebd9711c8d68fd2f7f513e8e24ea9a219227cf940007216fdd7a0e6924f7",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users",
+          "https://developers.notion.com/reference/capabilities",
+          "https://oauth.net/2/",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/guides/agent-skills/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview.md",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/guides/connections-and-tokens/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/guides/developer-tools/overview",
+          "https://developers.notion.com/guides/mcp/overview",
+          "https://developers.notion.com/guides/mcp/get-started-with-mcp",
+          "https://developers.notion.com/guides/mcp/mcp-supported-tools",
+          "https://developers.notion.com/guides/mcp/notion-skills",
+          "https://developers.notion.com/guides/mcp/enterprise-managed-authorization",
+          "https://developers.notion.com/guides/mcp/mcp-security-best-practices",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values",
+          "https://developers.notion.com/guides/data-apis/working-with-databases",
+          "https://developers.notion.com/guides/data-apis/working-with-views",
+          "https://developers.notion.com/guides/data-apis/working-with-comments",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content",
+          "https://developers.notion.com/guides/data-apis/working-with-files-and-media",
+          "https://developers.notion.com/compliance/overview",
+          "https://developers.notion.com/compliance/siem-events",
+          "https://developers.notion.com/guides/link-previews/introduction",
+          "https://app.notion.com/developers/connections"
+        ]
+      },
+      {
+        "id": "s8",
+        "url": "https://developers.notion.com/reference/pagination",
+        "title": "Pagination - Notion Docs",
+        "retrievedAt": "2026-11-03T05:30:56.056Z",
+        "hash": "b38a24d35a9474d7a4a3aaa97604ea8fefdc155764b9e60d3edc1b51c3c29f5d",
+        "links": [
+          "https://developers.notion.com/reference/page",
+          "https://developers.notion.com/reference/capabilities",
+          "https://developers.notion.com/reference/agent-skills/list-skills-plugins",
+          "https://developers.notion.com/reference/pagination",
+          "https://developers.notion.com/sitemap.xml",
+          "https://developers.notion.com/reference/pagination.md",
+          "https://developers.notion.com/reference/base-ui-disable-scrollbar",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/notion-api/quick-start",
+          "https://developers.notion.com/reference/intro",
+          "https://developers.notion.com/cli/get-started/overview",
+          "https://developers.notion.com/page/examples",
+          "https://developers.notion.com/reference/request-limits",
+          "https://developers.notion.com/reference/workspace-block-limits",
+          "https://developers.notion.com/reference/status-codes",
+          "https://developers.notion.com/reference/retrieve-async-task",
+          "https://developers.notion.com/reference/versioning",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/database",
+          "https://developers.notion.com/reference/data-source",
+          "https://developers.notion.com/reference/view",
+          "https://developers.notion.com/reference/comment-object",
+          "https://developers.notion.com/reference/file-object",
+          "https://developers.notion.com/reference/user",
+          "https://developers.notion.com/reference/parent-object",
+          "https://developers.notion.com/reference/emoji-and-icon",
+          "https://developers.notion.com/reference/unfurl-attribute-object",
+          "https://developers.notion.com/reference/authentication",
+          "https://developers.notion.com/reference/get-users",
+          "https://developers.notion.com/reference/list-custom-emojis",
+          "https://developers.notion.com/reference/query-a-data-source",
+          "https://developers.notion.com/reference/property-item-object",
+          "https://developers.notion.com/reference/list-data-source-templates",
+          "https://developers.notion.com/reference/get-view-query-results",
+          "https://developers.notion.com/reference/get-block-children",
+          "https://developers.notion.com/reference/list-comments",
+          "https://developers.notion.com/reference/list-file-uploads",
+          "https://developers.notion.com/reference/list-views",
+          "https://developers.notion.com/guides/data-apis/query-large-data-sources"
+        ]
+      }
+    ]
+  }
+}

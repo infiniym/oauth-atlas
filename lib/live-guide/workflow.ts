@@ -79,7 +79,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
         const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions}});
         const original=interpreted.telemetry;
         if(refined.mode==='interpreted')interpreted=refined;else research.warnings.push('Additional evidence was saved, but the follow-up interpretation failed. Earlier findings remain provisional.');
-        if(original&&refined.telemetry){const totals={...original,outcome:refined.mode==='interpreted'?refined.telemetry.outcome:original.outcome,followupOutcome:refined.telemetry.outcome};for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)totals[k]=(original[k]||0)+(refined.telemetry[k]||0);interpreted.telemetry=totals;}
+        if(original&&refined.telemetry){const totals={...original,outcome:refined.mode==='interpreted'?refined.telemetry.outcome:original.outcome,followupOutcome:refined.telemetry.outcome,validationIssues:[...original.validationIssues||[],...refined.telemetry.validationIssues||[]]};for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)totals[k]=(original[k]||0)+(refined.telemetry[k]||0);interpreted.telemetry=totals;}
       }
 
     }

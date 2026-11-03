@@ -19,7 +19,7 @@ import {researchRoute} from '../lib/plan/routing.ts';
 import type {Store} from '../lib/live-guide/http.ts';
 import {endpointEvidence} from '../lib/live-guide/grounding.ts';
 import {sourceKey,linkScore,selectSourceText} from '../lib/live-guide/retrieval.ts';
-import {repairLongFields,planningDocuments} from '../lib/live-guide/interpretation.ts';
+import {repairLongFields,planningDocuments,completeTestInstructions} from '../lib/live-guide/interpretation.ts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
 const url='https://acmetasks.example.com/docs/oauth';
@@ -307,3 +307,43 @@ test('final: font failures do not become provider setup follow-ups',()=>{const o
 test('final: completing preparation cannot highlight customer launch while the first test is blocked',async()=>{const {nextFromProgress}=await import('../lib/plan/presentation.ts');const p=researchedPlan(run().guide);p.steps.push({...p.steps[0],id:'launch',stage:'launch'});p.steps[1].blockedBy=['missing-evidence'];assert.equal(nextFromProgress(p,[p.steps[0].id]),null);});
 test('final: oversized action prose gets one bounded format repair without repeating source reads',async()=>{const old=run(),p=wire(value());let calls=0;const result=await generate({...old.guide.input,previousId:old.guide.id,resolution:{kind:'find-request',actionId:'read',requestId:crypto.randomUUID()}},bindings,()=>{},new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));if(body.system.startsWith('Independently'))return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});calls++;const s={...p.steps[1],detail:calls===1?'A'.repeat(801):p.steps[1].detail};return aiResponse({findings:[],coverage:p.coverage,steps:[s]});},old,{checkpoint:{research:{documents:old.documents,website:url,inferred:false,warnings:[]}}});assert.equal(calls,2);assert.equal(result.guide.engine?.outcome,'accepted');assert.equal(result.documents.length,old.documents.length);assert.equal(result.guide.steps[1].detail,p.steps[1].detail);assert.equal(result.guide.engine?.attempts,3);});
 test('final: independent access review receives source identity alongside exact quoted evidence',async()=>{const p=value();await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_url,init)=>{const body=JSON.parse(String(init?.body)),audit=JSON.parse(body.messages[0].content);assert.deepEqual(audit.mappings[0].sourceContext,[{id:docs[0].id,url:docs[0].url,title:docs[0].title}]);assert.equal(audit.mappings[0].evidence[0].quote,ev[0].quote);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Scope and endpoint occur in the identified reference.'}]});},docs);});
+
+
+test('completion: a paginated request needs both a concrete continuation and an end condition',()=>{
+ const p=value();p.steps[1].request={method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues?page=1'"};p.steps[1].detail='Read the first page. Boundary check: inspect the outgoing request log.';p.steps[1].doneWhen='Two pages returned issue titles.';
+ assert.throws(()=>validateInterpretation(p,docs,'Read all project issues, including pagination.'),/stopping condition/);
+ p.steps[1].detail+=' Repeat with increasing page until the documented empty collection.';
+ assert.doesNotThrow(()=>validateInterpretation(p,docs,'Read all project issues, including pagination.'));
+});
+test('completion: source-backed instruction correction retains exact requests and permissions',async()=>{
+ const sources=[...docs,{...docs[0],id:'s2',url:'https://acmetasks.example.com/docs/pagination',text:'The page parameter starts at one. Repeat with the next page number until the returned issues array is empty.'}];
+ const p=value();p.steps[1].request={method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues?page=1'"};p.steps[1].detail='Read project issue titles. Boundary check: inspect the granted permission and outgoing request log.';p.steps[1].doneWhen='Two pages of issues are returned.';const before=structuredClone(p);let calls=0;
+ const corrected=await completeTestInstructions(p,sources,'Read issues including pagination.',bindings,new AbortController().signal,async(_u,init)=>{
+  calls++;const body=JSON.parse(String(init?.body)),context=JSON.parse(body.messages[0].content),passage=context.documents.flatMap((d:any)=>d.passages).find((x:any)=>x.citable&&x.text.includes('array is empty'));
+  assert.equal(context.paginationRequired,true);assert.ok(passage);
+  return aiResponse({items:[{index:1,detail:'Read project issue titles. Repeat with the next page number until the issues array is empty. Boundary check: inspect the grant and outgoing request log; never write.',doneWhen:'Every returned issue title is collected and the final response has an empty issues array.',passageIds:[passage.id]}]});
+ },()=>{});
+ assert.equal(calls,1);assert.deepEqual(p,before);assert.deepEqual(corrected.findings,before.findings);assert.deepEqual(corrected.coverage,before.coverage);assert.deepEqual(corrected.steps[0],before.steps[0]);assert.deepEqual(corrected.steps[1].request,before.steps[1].request);assert.equal(corrected.steps[1].evidence.length,before.steps[1].evidence.length+1);assert.doesNotThrow(()=>validateInterpretation(corrected,sources,'Read issues including pagination.'));
+});
+test('completion: instance URL inputs have one HTTPS scheme and retain their documented route',async()=>{
+ const {completeRequestExamples}=await import('../lib/live-guide/request-examples.ts');
+ const {inspectHandoff}=await import('../scripts/inspect-handoff.mts');
+ for(const placeholder of ['<instance-base-url>','[YOUR-INSTANCE]','{instanceHost}']){
+  const p=value();p.steps[1].request={method:'GET',endpoint:'/issues',example:`curl 'https://${placeholder}/issues?page=1' -H 'Authorization: Bearer <ACCESS_TOKEN>'`};p.steps[1].fields=['Instance host from your deployment'];const before=structuredClone(p);
+  const fixed=completeRequestExamples(p,docs),request=inspectHandoff(fixed)[0];
+  assert.equal(request.stub.url,'https://instance.example/issues?page=1');assert.deepEqual(request.errors,[]);assert.match(fixed.steps[1].fields![0],/full HTTPS instance URL/);assert.equal(fixed.steps[1].request!.endpoint,'/issues');assert.deepEqual(p,before);
+ }
+});
+test('completion: targeted repair validates a retained continuation together with its replacement',async()=>{
+ const old=run();old.guide.input.useCase+=' Include pagination.';old.documents=[...docs,{...docs[0],id:'s2',url:'https://acmetasks.example.com/docs/pagination',text:'Use cursor with the returned next_cursor. Repeat requests until next_cursor is null.'}];old.guide.steps.push({...old.guide.steps[1],id:'next-page',dependsOn:['read-test'],request:{method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues?cursor=<NEXT_CURSOR>'"},detail:'Repeat using the returned next_cursor until next_cursor is null. Boundary check: inspect the read-only grant and request log.'});const before=structuredClone(old),patch=wire(value());let calls=0;
+ const updated=await generate({...old.guide.input,previousId:old.guide.id,resolution:{kind:'find-request',actionId:'read',requestId:crypto.randomUUID()}},bindings,()=>{},new AbortController().signal,async(_url,init)=>{
+  calls++;const body=JSON.parse(String(init?.body)),context=JSON.parse(body.messages[0].content);
+  if(body.system.startsWith('Independently')){assert.match(JSON.stringify(context),/NEXT_CURSOR/);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'The grant and both requests are documented.'}]});}
+  assert.equal(context.retainedActionSteps.length,1);return aiResponse({findings:[],coverage:patch.coverage,steps:[patch.steps[1]]});
+ },old,{checkpoint:{research:{documents:old.documents,website:url,inferred:false,warnings:[]}}});
+ assert.equal(calls,2);assert.equal(updated.guide.engine!.outcome,'accepted');assert.equal(updated.guide.coverage[0].support,'reviewed');assert.deepEqual(updated.guide.steps.find(s=>s.id==='next-page'),before.guide.steps.find(s=>s.id==='next-page'));assert.deepEqual(old,before);
+});
+test('completion: a grant rejection identifies its exact field and quoted evidence',()=>{
+ const p=value();p.findings[1].scope='issues:read,issues:write';
+ assert.throws(()=>validateInterpretation(p,docs),(error:any)=>/not present/.test(error.message)&&error.message.includes('"path":["findings",1,"scope"]')&&error.message.includes('issues:read,issues:write')&&error.message.includes(ev[0].quote));
+});
