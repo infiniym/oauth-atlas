@@ -58,7 +58,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
    const passages=sourcePassages(research.documents),deadline=AbortSignal.any([signal,AbortSignal.timeout(45000)]);
    const actionSteps=old.steps.filter(s=>s.testKind==='action'&&s.actionIds?.includes(action.id));
    const existing=actionSteps[0];
-   const scoreDocument=(d:typeof research.documents[number])=>resourceDocumentScore(d,action.title)+(old.findings.some(f=>f.kind==='permission'&&f.evidence.some(e=>e.sourceId===d.id))?40:0)+(d.url===(input.documentationUrl||update.url)?60:0);
+   const scoreDocument=(d:typeof research.documents[number])=>resourceDocumentScore(d,action.title,input.app)+(old.findings.some(f=>f.kind==='permission'&&f.evidence.some(e=>e.sourceId===d.id))?40:0)+(d.url===(input.documentationUrl||update.url)?60:0);
    const rankedDocs=[...new Map(research.documents.map(d=>[d.url,d])).values()].sort((a,b)=>scoreDocument(b)-scoreDocument(a));
    const selectedDocs=planningDocuments(rankedDocs,{...input,useCase:action.title},{requestedActions:[action],prohibitions:old.prohibitions});
 
@@ -104,7 +104,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
    value.steps=value.steps.map(s=>focused.steps.some(f=>f.id===s.id)?{...focused.steps.find(f=>f.id===s.id)!,dependsOn:s.dependsOn}:s);
    validatePaginationHandoff(value,input.useCase);
    const related=value.steps.filter(s=>!changedIds.has(s.id!)&&s.testKind==='action'&&s.actionIds?.includes(action.id)&&s.request?.endpoint);
-   const reviewed=await reviewMappings({...focused,steps:[...focused.steps,...related]},{...input,useCase:action.title+'. Restrictions: '+old.prohibitions.join('; ')},bindings,signal,fetcher,research.documents);
+   const reviewed=await reviewMappings({...focused,steps:[...old.steps.filter(s=>s.testKind!=='action'),...focused.steps,...related]},{...input,useCase:action.title+'. Restrictions: '+old.prohibitions.join('; ')},bindings,signal,fetcher,research.documents);
    value.coverage=value.coverage.filter(c=>c.actionId!==action.id).concat(reviewed.value.coverage.filter(c=>c.actionId===action.id));
    for(const key of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)telemetry[key]=(telemetry[key]||0)+(reviewed.telemetry[key]||0);
    value=reconcile(value);

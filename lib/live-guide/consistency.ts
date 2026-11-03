@@ -8,8 +8,9 @@ export function contradictsGrant(action:string,evidence:Evidence[],selectedScope
   const quote=evidence.map(e=>e.quote).join(' ').toLowerCase();
   // Only reject clear read-only contradictions. General write grants require
   // semantic review; a token such as issues:write does not prove delete access.
-  const attributed=selectedScope?action.replace(/\b([a-z][\w:.-]*)\s+scope\s+(?:adds|allows|grants|permits|provides|includes)\b[^.;\n]*/gi,(claim,scope)=>scope===selectedScope?claim:''):action;
-  const positive=attributed.replace(/\b(?:create|edit|update)\s+(?:(?:a|an|the|new|OAuth|public|private|scoped)\s+)*(?:app(?:lication)?|integration|connection|client|redirect|settings)\b/gi,'configure setup').replace(/\b(?:never|not|no|without|don't|do not|disable|deselect|avoid|exclude|omit|uncheck)\b[^.;\n]*/gi,'');
+  const clauses=action.split(/\.(?:\s|$)|[;\n]|\b(?:but|however)\b/i).filter(clause=>!/\b(?:scopes?|permissions?|grants?)\b.{0,140}\b(?:are|is) not (?:needed|required|requested|selected|used|granted)\b/i.test(clause)).join('. ');
+  const attributed=selectedScope?clauses.replace(/\b([a-z][\w:.-]*)\s+scope\s+(?:adds|allows|grants|permits|provides|includes)\b[^.;\n]*/gi,(claim,scope)=>scope===selectedScope?claim:''):clauses;
+  const positive=attributed.replace(/\b(?:create|edit|update)\s+(?:(?:a|an|the|new|OAuth|public|private|scoped)\s+)*(?:app(?:lication)?|integration|connection|client|redirect|settings)\b/gi,'configure setup').replace(/\b(?:never|cannot|can't|won't|not|no|without|don't|do not|disable|deselect|avoid|exclude|omit|uncheck)\b[^.;\n]*/gi,'');
   const mutation=/\b(?:delet\w*|creat\w*|edit\w*|updat\w*|writ\w*|send\w*)\b|\bpost(?:ing)?\s+(?:a\s+)?(?:comment|message|update)/i.test(positive);
   return mutation&&/\bread(?:ing|[- ]only)?\b/.test(quote)&&!/(?:creat|edit|updat|writ|send|post|delet)/.test(quote);
 }

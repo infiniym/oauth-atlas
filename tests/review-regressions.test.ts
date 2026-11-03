@@ -367,7 +367,7 @@ test('completion: targeted repair can correct a continuation while preserving ot
  const old=run();old.guide.input.useCase+=' Include pagination.';old.guide.steps.push({...old.guide.steps[1],id:'next-page',dependsOn:['read-test'],request:{method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues?cursor=<NEXT_CURSOR>' -H 'Authorization: Bearer <ACCESS_TOKEN>'"},detail:'Continue the listing. Boundary check: inspect the grant and request log.'});old.guide.coverage[0].status='unresolved';old.guide.coverage[0].reason='next-page must use documented page pagination.';const before=structuredClone(old),patch=wire(value());let audited=false;
  const result=await generate({...old.guide.input,previousId:old.guide.id,resolution:{kind:'find-request',actionId:'read',requestId:crypto.randomUUID()}},bindings,()=>{},new AbortController().signal,async(_u,init)=>{
   const body=JSON.parse(String(init?.body)),context=JSON.parse(body.messages[0].content);
-  if(body.system.startsWith('Independently')){const requests=context.mappings[0].requestEvidence;assert.equal(requests.length,2);assert.ok(requests.some((s:any)=>s.request.example.includes('page=2')));audited=true;return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Both requests match the documented pagination.'}]});}
+  if(body.system.startsWith('Independently')){assert.ok(context.setupSteps.some((s:any)=>s.id==='register'));const requests=context.mappings[0].requestEvidence;assert.equal(requests.length,2);assert.ok(requests.some((s:any)=>s.request.example.includes('page=2')));audited=true;return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Both requests match the documented pagination.'}]});}
   assert.match(context.currentActionReview.reason,/next-page/);const next={...patch.steps[1],stepId:'next-page',detail:'Continue with the next page until the documented end. Boundary check: inspect the granted read scope and outgoing GET requests.',request:{method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues?page=2' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}};return aiResponse({findings:[],coverage:patch.coverage[0],steps:[next]});
  },old,{checkpoint:{research:{documents:old.documents,website:url,inferred:false,warnings:[]}}});
  assert.ok(audited);assert.equal(result.guide.engine!.outcome,'accepted');assert.deepEqual(result.guide.steps.find(s=>s.id==='read-test'),before.guide.steps.find(s=>s.id==='read-test'));assert.match(result.guide.steps.find(s=>s.id==='next-page')!.request!.example,/page=2/);assert.deepEqual(old,before);
@@ -469,7 +469,7 @@ test('completion: explicit retry repeats a failed planning stage and reuses its 
 test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
  const old=run();old.guide.clarificationUsed=true;const draft={...value(),engine:{outcome:'accepted',attempts:99,promptVersion:'obsolete'}} as any;let calls=0;
  const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft,draftAccepted:true}});
- assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.23');assert.equal(guideReadiness(result.guide),'usable-guide');
+ assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.24');assert.equal(guideReadiness(result.guide),'usable-guide');
 });
 
 
@@ -547,4 +547,35 @@ test('completion: named continuation requests are retained and validated alongsi
 
 test('completion: style and script internals cannot create documentation navigation targets',()=>{
  const p=parsePage('https://docs.acme.com/oauth','<title>OAuth</title><style>a[href="base-ui-disable-scrollbar"] {display:none}</style><script>const link="href=internal-state";</script><main>Register an OAuth app in developer settings.</main><a href="/docs/oauth/register">Register an OAuth app</a>');assert.deepEqual(p.links,['https://docs.acme.com/docs/oauth/register']);
+});
+
+test('completion: negated scope exclusions never certify writes and positive claims still reject',async()=>{
+ const {contradictsGrant}=await import('../lib/live-guide/consistency.ts');
+ assert.equal(contradictsGrant('Read issues. It cannot create, update or delete issues.',ev,'issues:read'),false);
+ assert.equal(contradictsGrant('Write scopes such as issues:create and write are not needed for this read-only request.',ev,'issues:read'),false);
+ assert.equal(contradictsGrant('Write scopes are not needed, but this read grant allows deleting issues.',ev,'issues:read'),true);
+});
+
+test('completion: a generic nonmutating boundary procedure needs no provider fact or model call',async()=>{
+ const v=value();v.steps[1].detail='Read the project issue titles. Boundary check: none.';v.steps[1].doneWhen='HTTP 200 returns issue titles.';const before=structuredClone(v);let calls=0,corrected='';
+ const result=await completeTestInstructions(v,docs,'Read project issue titles.',bindings,new AbortController().signal,async()=>{calls++;throw new Error('No model is needed for the generic check.');},()=>{},reason=>{corrected=reason;});
+ assert.equal(calls,0);assert.match(corrected,/requests and sources unchanged/);assert.match(result.steps[1].doneWhen,/inspect the actual grant/);assert.match(result.steps[1].doneWhen,/outgoing request log/);assert.deepEqual(result.steps[1].request,before.steps[1].request);assert.deepEqual(result.steps[1].evidence,before.steps[1].evidence);assert.deepEqual(v,before);assert.doesNotThrow(()=>validateInterpretation(result,docs));
+});
+
+test('completion: an empty request value requires its own documented parameter meaning',()=>{
+ const p=value();p.steps[1].request={method:'POST',endpoint:'/issues',example:"curl 'https://api.acme.com/issues' -X POST -H 'Authorization: Bearer <ACCESS_TOKEN>' -H 'Content-Type: application/json' -d '{\"container\":\"\"}'"};
+ assert.throws(()=>validateInterpretation(p,docs),/A request constant is not documented.*container/);
+ const unrelated=[{...docs[0],text:docs[0].text+'\nAn empty cursor string resets polling.'}];assert.throws(()=>validateInterpretation(p,unrelated),/A request constant is not documented/);
+ const supported=[{...docs[0],text:docs[0].text+'\nThe container parameter may be the empty string to select the permitted root.'}];assert.doesNotThrow(()=>validateInterpretation(p,supported));
+});
+
+test('completion: provider identity words cannot make unrelated API operations relevant',async()=>{
+ const {actionLinkScore}=await import('../lib/live-guide/retrieval.ts');const request='Customers authorize an Acme web app to list folder names with OAuth. Never write.';
+ assert.ok(actionLinkScore('https://docs.acme.com/acme-api/api-reference/tokens/convert-legacy','Convert legacy token',request,'Acme')<20);
+ assert.ok(actionLinkScore('https://docs.acme.com/acme-api/api-reference/files/list-folders','List folders',request,'Acme')>20);
+});
+
+test('completion: blocked public search can suggest only a screened homepage before identity confirmation',async()=>{
+ const {discoverProvider}=await import('../lib/live-guide/retrieval.ts');let calls=0;const events:any[]=[];const site=await discoverProvider(normalizeInput({app:'Acme Tasks',useCase:'Read issue titles.'}),bindings,e=>events.push(e),new AbortController().signal,async(u,init)=>{const url=String(u);if(url.includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});if(url.includes('anthropic')){assert.match(JSON.parse(String(init?.body)).system,/no guessed documentation or API path/);return aiResponse({website:'https://acmetasks.example.com/'});}if(url==='https://acmetasks.example.com/')return new Response('<title>Acme Tasks official project</title><main>Acme Tasks developer resources and documentation.</main>');return new Response('Search unavailable.',{status:403});},()=>{calls++;});
+ assert.equal(site,'https://acmetasks.example.com/');assert.equal(calls,1);assert.ok(events.some(e=>e.stage==='Checking a suggested provider website'));
 });

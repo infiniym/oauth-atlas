@@ -37,9 +37,9 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   for(const question of previous?.guide.questions||[])if(input.answers[question.id])decisions.set(question.id,{id:question.id,question:question.prompt,answer:input.answers[question.id]});
   if(previous?.guide.questions.some(q=>!input.answers[q.id]))throw new Error('Choose an answer for every current question.');
   const deferred=(previous?.guide.pendingQuestions||[]).filter(q=>!input.answers[q.id]);
-  let research=options.checkpoint?.research||(previous?{documents:previous.documents,website:previous.guide.provider.website,inferred:previous.guide.provider.identity==='inferred',warnings:previous.guide.warnings}:null);
+  let research=options.checkpoint?.research||(previous?{documents:previous.documents,website:previous.guide.provider.website,inferred:previous.guide.provider.identity==='inferred',warnings:previous.guide.warnings,navigationCalls:previous.guide.researchMetrics?.navigationCalls||0}:null);
   let identityConfirmed=!!input.website||input.answers['provider-identity']==='Yes, this is the provider'||previous?.guide.provider.identity==='provided';
-  if(!research&&!input.website){const website=await discoverProvider(input,bindings,emit,signal,fetcher);research={website,inferred:true,documents:[],warnings:[]};}
+  if(!research&&!input.website){let calls=0;const website=await discoverProvider(input,bindings,emit,signal,fetcher,()=>{calls++;});research={website,inferred:true,documents:[],warnings:[],navigationCalls:calls};}
   let clarificationUsed=!!previous?.guide.clarificationUsed||!!options.checkpoint?.clarificationUsed||!!previous?.guide.questions.some(q=>q.id!=='provider-identity');
   let followupDone=previous?.guide.followupDone||options.checkpoint?.followupDone||false;
   const intent=options.checkpoint?.intent||(previous?{requestedActions:previous.guide.requestedActions||[],prohibitions:previous.guide.prohibitions||[]}:undefined);
@@ -78,7 +78,9 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       if(!materialTopics.length)materialTopics.push(interpreted.telemetry?.validationIssues?.some(s=>s.startsWith('Unestablished OAuth'))?'registration':'permissions');
       followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
       emit({stage:'Checking a missing requirement',detail:'Looking only for missing '+materialTopics.join(', ')+' evidence.',status:'working'});
-      const expanded=await retrieve(input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics});
+      const constantGap=interpreted.telemetry?.validationIssues?.find(reason=>reason.startsWith('A request constant is not documented.'));
+      const gap=constantGap?.replace('A request constant is not documented. ','');
+      const expanded=await retrieve(gap?{...input,useCase:input.useCase+' Missing evidence: '+gap}:input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics,...(gap?{query:input.app+' API '+gap}:{} )});
       if(expanded.documents.length>research.documents.length){
         research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
         const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions},facts:retainedFacts?.oauthSupport==='documented'&&retainedFacts.coverage.every(c=>c.status==='mapped')&&!retainedFacts.researchNeeded.some(t=>t!=='distribution')?retainedFacts:undefined,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
