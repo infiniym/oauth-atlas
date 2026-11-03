@@ -216,6 +216,25 @@ test('review: concurrent process execution and replay perform paid work only onc
 test('review: stale processing is interrupted, not automatically rerun',async()=>{
  const {db,sqlite}=database(),job=await createJob(db,{app:'Acme Tasks',website:url},crypto.randomUUID());sqlite.prepare("UPDATE guide_jobs SET state='running',lease_until=1 WHERE id=?").run(job.id);assert.equal((await getJob(db,job.id))!.state,'interrupted');let calls=0;const result=await runJob(db,job.id,bindings,()=>{},new AbortController().signal,async()=>{calls++;throw new Error();});assert.equal(result.state,'interrupted');assert.equal(calls,0);
 });
+test('completion: a transient checkpoint write does not prevent the durable interruption record',async()=>{
+ const {db}=database(),job=await createJob(db,{app:'Acme Tasks',website:url},crypto.randomUUID());
+ let failed=false;
+ const unreliable:Store={prepare(sql){
+  if(!sql.startsWith('UPDATE guide_jobs SET payload='))return db.prepare(sql);
+  return {bind(...args){
+   const statement=db.prepare(sql).bind(...args);
+   return {...statement,async run(){
+    if(!failed){failed=true;throw new Error('Transient database error');}
+    return statement.run();
+   }};
+  }};
+ }};
+ const result=await runJob(unreliable,job.id,bindings,()=>{},new AbortController().signal,async()=>assert.fail('The failing save precedes generation'));
+ assert.ok(failed);
+ assert.equal(result.state,'interrupted');
+ assert.equal((await getJob(db,job.id))?.state,'interrupted');
+ assert.equal((await getJob(db,job.id))?.leaseUntil,0);
+});
 test('review: a public API gets a concrete request test without OAuth registration',()=>{
  const p=value();p.oauthSupport='unknown';p.accessModel='public';p.findings=[];p.coverage=[{actionId:'read',action:'Read public sample posts',permissions:[],status:'mapped',reason:'GET /posts is public.',evidence:ev,support:'reviewed'}];p.steps=[{...p.steps[1],dependsOn:[],title:'GET a public sample post'}];const plan=researchedPlan(run(validateInterpretation(p,docs)).guide);assert.equal(plan.next!.title,'GET a public sample post');assert.equal(plan.permissions.length,0);assert.match(exportPlan(plan),/Request: GET \/issues/);
 });
