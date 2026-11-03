@@ -469,7 +469,7 @@ test('completion: explicit retry repeats a failed planning stage and reuses its 
 test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
  const old=run();old.guide.clarificationUsed=true;const draft={...value(),engine:{outcome:'accepted',attempts:99,promptVersion:'obsolete'}} as any;let calls=0;
  const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft,draftAccepted:true}});
- assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.22');assert.equal(guideReadiness(result.guide),'usable-guide');
+ assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.23');assert.equal(guideReadiness(result.guide),'usable-guide');
 });
 
 
@@ -516,4 +516,35 @@ test('completion: a failed named request stage retains accepted facts through la
  const failed=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(u,init)=>{if(!String(u).includes('anthropic'))return new Response('',{status:404});return JSON.parse(String(init?.body)).system.includes('FACTS STAGE')?aiResponse(facts):new Response('',{status:503});},old,{save:async saved=>{checkpoint=structuredClone(saved);}});
  assert.equal(failed.guide.mode,'evidence-only');assert.equal(checkpoint.facts.findings[1].scope,'issues:read');assert.equal(checkpoint.draft,undefined);let stepCalls=0;
  const retried=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));if(body.system.startsWith('Independently'))return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});assert.ok(body.system.includes('STEPS STAGE'));stepCalls++;return aiResponse({steps:template.steps.map(s=>({...s,evidence:slots(s.evidence as any[])})),blockers:[]});},old,{checkpoint});assert.equal(stepCalls,1);assert.equal(guideReadiness(retried.guide),'usable-guide');
+});
+
+test('completion: missing registration evidence blocks usable status even when resource access passed review',()=>{
+ const g=run().guide;g.coverage[0].support='reviewed';g.researchNeeded=['registration'];g.blockers=[{title:'App registration unknown',kind:'missing-evidence',consequence:'launch',owner:'developer',resolution:'Find registration details.'}];assert.equal(guideReadiness(g),'research-failure');g.researchNeeded=['distribution'];g.blockers=[];assert.equal(guideReadiness(g),'usable-guide');
+});
+
+test('completion: a bounded setup article retains registration beside other credential models',async()=>{
+ const {planningContext}=await import('../lib/live-guide/interpretation.ts');const d={...docs[0],text:'Personal tokens use account settings.\n'+('Access tokens grant read access only to authorized resources.\n').repeat(65)+'\nOAuth integration registration\nCreate a new OAuth integration in Developer settings. Configure its redirect URI and obtain the client ID and client secret.\nAfter consent, exchange the returned authorization code at the token endpoint.\n'+('Access tokens are sent with the bearer authorization header.\n').repeat(60)};
+ const selected=planningContext(sourcePassages([d]),d,run().guide.input).map(p=>p.text).join(' ');assert.match(selected,/Configure its redirect URI/);assert.match(selected,/obtain the client ID and client secret/);assert.match(selected,/exchange the returned authorization code/);
+});
+
+test('completion: a broader-scope comparison does not turn a read grant into a mutation claim',async()=>{
+ const {contradictsGrant}=await import('../lib/live-guide/consistency.ts');const evidence=[{sourceId:'s1',quote:'read_items Grants read access to the API and its items.'}];
+ assert.equal(contradictsGrant('read_items grants read access. It is read-only and the api scope adds write access.',evidence,'read_items'),false);
+ assert.equal(contradictsGrant('The read_items scope grants write access to items.',evidence,'read_items'),true);
+ assert.equal(contradictsGrant('Delete an item',evidence),true);
+});
+
+test('completion: instruction repair accepts a useful boundary check in the completion criterion',async()=>{
+ const v=value();v.steps[1].detail='Read project issues and inspect their titles.';v.steps[1].doneWhen='The titles are returned.';const passages=sourcePassages(docs);const result=await completeTestInstructions(v,docs,'Read issue titles.',bindings,new AbortController().signal,async()=>aiResponse({items:[{index:1,detail:'Read the project issues and expect the returned issue titles.',doneWhen:'Boundary check: inspect the actual granted scope and outgoing request log; confirm only read requests were sent.',citations:{primary:passages.find(p=>p.citable)!.id,secondary:'',tertiary:''}}]}),()=>{});
+ assert.match(result.steps[1].doneWhen,/Boundary check: inspect/);assert.deepEqual(result.steps[1].request,v.steps[1].request);
+});
+
+test('completion: named continuation requests are retained and validated alongside the first request',async()=>{
+ const sources=[{...docs[0],text:docs[0].text+'\nRepeat GET /issues with the returned cursor until next_cursor is null. The response contains issue titles.'}];const v=value();v.steps[1].detail+=' Repeat using the returned cursor until next_cursor is null.';const next={...v.steps[1],id:'continue-read',dependsOn:['read-test'],request:{method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues?cursor=<NEXT_CURSOR>' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}};const template=wire(v),slots=(e:any[])=>({primary:e[0].passageId,secondary:e[1]?.passageId||'',tertiary:e[2]?.passageId||''});let calls=0;
+ const result=await interpretEvidence({...run().guide.input,useCase:'List issue titles including pagination.'},sources,bindings,new AbortController().signal,async(_u,init)=>{calls++;const body=JSON.parse(String(init?.body));if(body.system.includes('FACTS STAGE'))return aiResponse({accessModel:'oauth',oauthSupport:'documented',summary:'Read project issues.',findings:template.findings.map(f=>({...f,evidence:slots(f.evidence as any[])})),coverage:template.coverage.map(c=>({...c,evidence:slots(c.evidence as any[])})),unknowns:[],researchNeeded:[]});assert.equal(JSON.parse(body.messages[0].content).paginationRequired,true);assert.ok(body.output_config.format.schema.$defs.step);return aiResponse({steps:template.steps.map(s=>({...s,evidence:slots(s.evidence as any[])})),continuations:[{...next,evidence:slots((template.steps[1].evidence as any[]))}],blockers:[]});},[],{final:true,intent:{requestedActions:v.requestedActions,prohibitions:v.prohibitions}});
+ assert.equal(result.mode,'interpreted');assert.equal(calls,2);assert.equal(result.value.steps.filter(s=>s.testKind==='action').length,2);assert.equal(result.value.steps.at(-1)!.id,'continue-read');
+});
+
+test('completion: style and script internals cannot create documentation navigation targets',()=>{
+ const p=parsePage('https://docs.acme.com/oauth','<title>OAuth</title><style>a[href="base-ui-disable-scrollbar"] {display:none}</style><script>const link="href=internal-state";</script><main>Register an OAuth app in developer settings.</main><a href="/docs/oauth/register">Register an OAuth app</a>');assert.deepEqual(p.links,['https://docs.acme.com/docs/oauth/register']);
 });

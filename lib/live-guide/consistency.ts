@@ -4,11 +4,12 @@ import {curlArguments} from './request-examples.ts';
 
 const uncertainMapping=/mapping.{0,40}(?:unverified|unresolved|not (?:established|documented))|(?:effect|relationship|scope.{0,8}endpoint).{0,55}(?:needs? verification|unverified|unresolved|not (?:established|documented))|does not (?:map|establish)|no.{0,30}(?:endpoint|mapping).{0,25}(?:source|document)/i;
 export function mappingUnresolved(reason:string):boolean{return uncertainMapping.test(reason);}
-export function contradictsGrant(action:string,evidence:Evidence[]):boolean{
+export function contradictsGrant(action:string,evidence:Evidence[],selectedScope?:string):boolean{
   const quote=evidence.map(e=>e.quote).join(' ').toLowerCase();
   // Only reject clear read-only contradictions. General write grants require
   // semantic review; a token such as issues:write does not prove delete access.
-  const positive=action.replace(/\b(?:create|edit|update)\s+(?:(?:a|an|the|new|OAuth|public|private|scoped)\s+)*(?:app(?:lication)?|integration|connection|client|redirect|settings)\b/gi,'configure setup').replace(/\b(?:never|not|no|without|don't|do not|disable|deselect|avoid|exclude|omit|uncheck)\b[^.;\n]*/gi,'');
+  const attributed=selectedScope?action.replace(/\b([a-z][\w:.-]*)\s+scope\s+(?:adds|allows|grants|permits|provides|includes)\b[^.;\n]*/gi,(claim,scope)=>scope===selectedScope?claim:''):action;
+  const positive=attributed.replace(/\b(?:create|edit|update)\s+(?:(?:a|an|the|new|OAuth|public|private|scoped)\s+)*(?:app(?:lication)?|integration|connection|client|redirect|settings)\b/gi,'configure setup').replace(/\b(?:never|not|no|without|don't|do not|disable|deselect|avoid|exclude|omit|uncheck)\b[^.;\n]*/gi,'');
   const mutation=/\b(?:delet\w*|creat\w*|edit\w*|updat\w*|writ\w*|send\w*)\b|\bpost(?:ing)?\s+(?:a\s+)?(?:comment|message|update)/i.test(positive);
   return mutation&&/\bread(?:ing|[- ]only)?\b/.test(quote)&&!/(?:creat|edit|updat|writ|send|post|delet)/.test(quote);
 }
@@ -54,5 +55,6 @@ export function reconcile(value:Interpretation):Interpretation{
     else v.blockers.push({title:c.action,kind:'missing-evidence',gap:c.actionId?{actionId:c.actionId,fact:'permission'}:undefined,actionId:c.actionId,consequence:'test',owner:'Developer',resolution:c.reason,stepIds:targets});
   }
   if(v.coverage.some(c=>c.status!=='mapped'))v.recommendation='The requested API test is not ready yet. Resolve the access mapping for '+v.coverage.filter(c=>c.status!=='mapped').map(c=>c.action).join('; ')+'. Use “Find missing request” or add official documentation beside that action.';
+  if(v.requestedActions.filter(isResource).length&&v.requestedActions.filter(isResource).every(a=>v.coverage.some(c=>c.actionId===a.id&&c.status==='mapped'&&c.support==='reviewed')&&v.steps.some(s=>s.testKind==='action'&&s.actionIds?.includes(a.id)&&s.request?.endpoint&&s.request.example)))v.researchNeeded=v.researchNeeded.filter(topic=>topic!=='permissions');
   return v;
 }

@@ -1,5 +1,5 @@
 // @ts-nocheck -- Public HTTP acceptance recorder; persisted envelopes are inspected verbatim.
-import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
 import {acceptanceAnswers} from './acceptance-choices.mts';
 import {inspectHandoff,paginationHandoff} from './inspect-handoff.mts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
@@ -20,6 +20,20 @@ async function stage(input,record){
  return job;
 }
 async function run(c){const started=Date.now(),record={name:c.name,round,release,input:c.input,startedAt:new Date().toISOString(),anonymous:true,cache:'Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.',jobs:[],events:[]};
+ const file=dir+'/'+c.name+'-r'+round+'.json';
+ if(existsSync(file)){
+  if(process.env.MATRIX_RESUME!=='1')throw new Error('Evidence already exists: '+file+'. Use another candidate label or MATRIX_RESUME=1; never overwrite an attempt.');
+  const saved=JSON.parse(readFileSync(file,'utf8'));
+  if(saved.release.sourceCommit!==release.sourceCommit||saved.release.guideCodeFingerprint!==release.guideCodeFingerprint)throw new Error('Cannot resume evidence on different guide code.');
+  if(!saved.inProgress){console.log(JSON.stringify({case:c.name,round,retained:true,pass:saved.pass,elapsedMs:saved.elapsedMs}));return saved;}
+  // A process interruption is retained as an unsuccessful initial attempt.
+  // Do not silently retry it and turn a later recovery into a fresh pass.
+  const response=await fetch(origin+'/api/live-guide/jobs/'+saved.jobs.at(-1).id);
+  const job=(await response.json()).job;
+  if(!['ready','waiting','interrupted'].includes(job.state))throw new Error('The saved job is still active. Reconnect to it before resuming this recorder.');
+  saved.job=job;saved.events=job.events;saved.pass=false;saved.error='Acceptance recorder/server interrupted; retained original job without automatic retry.';saved.elapsedMs=Date.now()-Date.parse(saved.startedAt);saved.interruptionRecordedAt=new Date().toISOString();delete saved.inProgress;
+  writeFileSync(file,JSON.stringify(saved,null,2));console.log(JSON.stringify({case:c.name,round,pass:false,error:saved.error}));return saved;
+ }
  try{let job=await stage(c.input,record);for(let n=0;job.state==='waiting'&&n<3;n++){
  const g=job.guide,answers=acceptanceAnswers(g);
  job=await stage({...g.input,previousId:g.id,answers},record);
