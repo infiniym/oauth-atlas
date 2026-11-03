@@ -1,0 +1,1431 @@
+{
+  "name": "todoist",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "80377b687ec665c073501088d8445a11f5f9ce68",
+    "guideCodeFingerprint": "9e3c93e4b6098493be5a0b392d885965ec34ea3985bbc2fc884877770f8e7ce9",
+    "builtAt": "2026-11-03T13:55:44.117Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.26"
+  },
+  "input": {
+    "app": "Todoist",
+    "website": "https://developer.todoist.com/api/v1/",
+    "useCase": "Customers connect their individual Todoist accounts to list active task titles, including pagination. Read only. Never create, update, complete or delete tasks. No team administration.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-03T13:57:53.761Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-7a5072bc-cbd5-42ef-9780-e94f5f9e5662",
+      "key": "c898c184-3476-40d7-ac24-00fcf8b05a49",
+      "input": {
+        "app": "Todoist",
+        "website": "https://developer.todoist.com/api/v1/",
+        "useCase": "Customers connect their individual Todoist accounts to list active task titles, including pagination. Read only. Never create, update, complete or delete tasks. No team administration.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.todoist.com/api/v1/",
+      "status": "working",
+      "at": "2026-11-03T13:57:53.780Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Todoist API",
+      "status": "done",
+      "at": "2026-11-03T13:57:57.665Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.todoist.com/rest/v2",
+      "status": "working",
+      "at": "2026-11-03T13:57:57.665Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Todoist API",
+      "status": "done",
+      "at": "2026-11-03T13:57:59.700Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.todoist.com/guides/",
+      "status": "working",
+      "at": "2026-11-03T13:57:59.700Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Todoist API",
+      "status": "done",
+      "at": "2026-11-03T13:58:02.096Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.todoist.com/sync/v9",
+      "status": "working",
+      "at": "2026-11-03T13:58:02.096Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Todoist API",
+      "status": "done",
+      "at": "2026-11-03T13:58:04.196Z"
+    },
+    {
+      "stage": "Checking setup choices",
+      "detail": "Using 1 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-03T13:58:04.282Z"
+    },
+    {
+      "stage": "Building your guide",
+      "detail": "Requirements are clear. Creating the plan from saved evidence.",
+      "status": "working",
+      "at": "2026-11-03T13:58:08.095Z"
+    },
+    {
+      "stage": "Checking a missing requirement",
+      "detail": "Looking only for missing registration, permissions evidence.",
+      "status": "working",
+      "at": "2026-11-03T13:58:28.524Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.todoist.com/guides/",
+      "status": "working",
+      "at": "2026-11-03T13:58:28.526Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Todoist API",
+      "status": "done",
+      "at": "2026-11-03T13:58:30.387Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.todoist.com/rest/v2",
+      "status": "working",
+      "at": "2026-11-03T13:58:30.387Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Todoist API",
+      "status": "done",
+      "at": "2026-11-03T13:58:34.226Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.todoist.com/sync/v9",
+      "status": "working",
+      "at": "2026-11-03T13:58:34.227Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Todoist API",
+      "status": "done",
+      "at": "2026-11-03T13:58:37.671Z"
+    },
+    {
+      "stage": "Checking action coverage",
+      "detail": "Reviewing each permission relationship separately from execution.",
+      "status": "working",
+      "at": "2026-11-03T13:58:37.679Z"
+    },
+    {
+      "stage": "Requested test documented",
+      "detail": "The requested API test is documented. Setup and execution have not been verified.",
+      "status": "done",
+      "at": "2026-11-03T13:58:49.661Z"
+    }
+  ],
+  "job": {
+    "id": "job-7a5072bc-cbd5-42ef-9780-e94f5f9e5662",
+    "input": {
+      "app": "Todoist",
+      "website": "https://developer.todoist.com/api/v1/",
+      "useCase": "Customers connect their individual Todoist accounts to list active task titles, including pagination. Read only. Never create, update, complete or delete tasks. No team administration.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "ready",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.todoist.com/api/v1/",
+        "status": "working",
+        "at": "2026-11-03T13:57:53.780Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Todoist API",
+        "status": "done",
+        "at": "2026-11-03T13:57:57.665Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.todoist.com/rest/v2",
+        "status": "working",
+        "at": "2026-11-03T13:57:57.665Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Todoist API",
+        "status": "done",
+        "at": "2026-11-03T13:57:59.700Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.todoist.com/guides/",
+        "status": "working",
+        "at": "2026-11-03T13:57:59.700Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Todoist API",
+        "status": "done",
+        "at": "2026-11-03T13:58:02.096Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.todoist.com/sync/v9",
+        "status": "working",
+        "at": "2026-11-03T13:58:02.096Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Todoist API",
+        "status": "done",
+        "at": "2026-11-03T13:58:04.196Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 1 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-03T13:58:04.282Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-03T13:58:08.095Z"
+      },
+      {
+        "stage": "Checking a missing requirement",
+        "detail": "Looking only for missing registration, permissions evidence.",
+        "status": "working",
+        "at": "2026-11-03T13:58:28.524Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.todoist.com/guides/",
+        "status": "working",
+        "at": "2026-11-03T13:58:28.526Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Todoist API",
+        "status": "done",
+        "at": "2026-11-03T13:58:30.387Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.todoist.com/rest/v2",
+        "status": "working",
+        "at": "2026-11-03T13:58:30.387Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Todoist API",
+        "status": "done",
+        "at": "2026-11-03T13:58:34.226Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.todoist.com/sync/v9",
+        "status": "working",
+        "at": "2026-11-03T13:58:34.227Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Todoist API",
+        "status": "done",
+        "at": "2026-11-03T13:58:37.671Z"
+      },
+      {
+        "stage": "Checking action coverage",
+        "detail": "Reviewing each permission relationship separately from execution.",
+        "status": "working",
+        "at": "2026-11-03T13:58:37.679Z"
+      },
+      {
+        "stage": "Requested test documented",
+        "detail": "The requested API test is documented. Setup and execution have not been verified.",
+        "status": "done",
+        "at": "2026-11-03T13:58:49.661Z"
+      }
+    ],
+    "createdAt": "2026-11-03T13:57:53.765Z",
+    "updatedAt": "2026-11-03T13:58:49.675Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-03T13:57:53.778Z",
+      "finishedAt": "2026-11-03T13:58:49.663Z",
+      "elapsedMs": 55885,
+      "firstActionMs": 55885
+    },
+    "attempts": [
+      {
+        "modelCalls": 4,
+        "inputTokens": 131410,
+        "outputTokens": 6470,
+        "modelMs": 36128
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "connect-todoist-account",
+          "title": "Connect an individual Todoist account via OAuth",
+          "category": "authorization",
+          "operation": "authorize"
+        },
+        {
+          "id": "list-active-task-titles",
+          "title": "List active task titles for the connected account, including pagination",
+          "category": "resource",
+          "operation": "read"
+        }
+      ],
+      "prohibitions": [
+        "Creating tasks",
+        "Updating tasks",
+        "Completing tasks",
+        "Deleting tasks",
+        "Team administration"
+      ],
+      "oauthSupport": "documented",
+      "summary": "Todoist documents user-authorized OAuth2 authorization-code flow for external apps to obtain user-scoped API tokens. Read-only listing of active tasks can use the documented data:read scope, which grants read-only access to tasks. Pagination uses cursor-based next_cursor on the tasks endpoint. Pagination details and endpoint coverage are recorded in coverage; no write scope is needed for the confirmed read-only request.",
+      "recommendation": "Todoist documents user-authorized OAuth2 authorization-code flow for external apps to obtain user-scoped API tokens. Read-only listing of active tasks can use the documented data:read scope, which grants read-only access to tasks. Pagination uses cursor-based next_cursor on the tasks endpoint. Pagination details and endpoint coverage are recorded in coverage; no write scope is needed for the confirmed read-only request.",
+      "nextAction": "Resolve the missing evidence below.",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "Individual user OAuth2 authorization code flow is documented",
+          "detail": "External applications obtain a user-authorized API token via the OAuth2 protocol; developers register an app, configure redirect URLs, receive a Client ID and Secret, redirect users to the authorization endpoint, exchange the code at the token endpoint.",
+          "appliesWhen": "Customers connect their individual Todoist accounts.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "external applications to obtain a user authorized API token via the OAuth2"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "and configure one or more valid OAuth2 redirect URLs. A registered Todoist"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "https://app.todoist.com/oauth/authorize?client_id = 0123456789abcdef & scope = data:read,data:delete & state = secretstring & response_type = code"
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "permission",
+          "title": "data:read grants read-only access to tasks",
+          "detail": "data:read grants read-only access to application data, including tasks, projects, labels, and filters. Least-privilege scope for listing active task titles without create, update, complete or delete.",
+          "appliesWhen": "Used for listing active task titles for the connected account.",
+          "scope": "data:read",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "data:read Grants read-only access to application data, including tasks, projects, labels, and filters."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "scope A comma separated list of permissions that you would like the users to grant to your application. See the below table for detail on the available scopes."
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Token exchange and refresh are required setup",
+          "detail": "Authorization code is exchanged at the token endpoint with client credentials; refresh tokens may be issued and must be refreshed with grant_type=refresh_token when access tokens expire.",
+          "appliesWhen": "Applies to every customer connection before and during API calls.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "On success, Todoist returns HTTP 200 with the token in JSON object format. For"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Refreshing access tokens Exchanging a refresh token for a new access token:"
+            }
+          ],
+          "stage": "test"
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Pagination uses cursor parameters on the tasks endpoint",
+          "detail": "GET /api/v1/tasks returns results and next_cursor; continue fetching pages until next_cursor is null, using the same parameters with the cursor and a limit up to 200.",
+          "appliesWhen": "Applies when listing active task titles across multiple pages.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "] , \"next_cursor\" : \"14540000435w8hj8pXXwPQJJch.X9DBH8ya2Xenok55\""
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Important : Always use the same parameters (filters, sorting, etc.) when using a cursor. Changing parameters between paginated requests may result in unexpected behavior or errors."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Continue fetching pages until next_cursor is null ."
+            }
+          ],
+          "stage": "test"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Register the Todoist OAuth application and configure redirect URL",
+          "detail": "Developer creates an app in the Todoist App Management Console, configures an HTTPS redirect URL, and obtains Client ID and Client Secret. No customer consent is implied by this step.",
+          "owner": "developer",
+          "doneWhen": "App exists with a Client ID, Client Secret, and at least one redirect URL configured.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "in the App Management Console"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "and configure one or more valid OAuth2 redirect URLs. A registered Todoist"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "needed for the OAuth2 flow."
+            }
+          ],
+          "id": "register-todoist-app",
+          "dependsOn": [],
+          "actionIds": [
+            "connect-todoist-account"
+          ],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": ""
+          },
+          "stage": "prepare",
+          "destination": "https://developer.todoist.com/api/v1/",
+          "fields": [
+            "Client ID and Client Secret come from the App Management Console registration"
+          ]
+        },
+        {
+          "title": "Redirect the individual customer to the Todoist authorization URL",
+          "detail": "The connecting individual account owner opens the authorization URL with data:read scope and a unique state value. Developer must generate state and compare it on return.",
+          "owner": "customer admin",
+          "doneWhen": "Todoist redirects back to the redirect URL with code and matching state parameters.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "https://app.todoist.com/oauth/authorize?client_id = 0123456789abcdef & scope = data:read,data:delete & state = secretstring & response_type = code"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "https://app.todoist.com/oauth/authorize , with the specified request parameters."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "will come with two query parameters attached: code and state ."
+            }
+          ],
+          "id": "authorize-individual-account",
+          "dependsOn": [
+            "register-todoist-app"
+          ],
+          "actionIds": [
+            "connect-todoist-account"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://app.todoist.com/oauth/authorize",
+            "example": "https://app.todoist.com/oauth/authorize?client_id=<CLIENT_ID>&scope=data:read&state=<RANDOM_STATE>&response_type=code&redirect_uri=<REDIRECT_URI>"
+          },
+          "stage": "test",
+          "destination": "https://developer.todoist.com/api/v1/",
+          "fields": [
+            "CLIENT_ID from app registration",
+            "RANDOM_STATE generated by developer, unguessable",
+            "REDIRECT_URI must match a configured redirect URL"
+          ]
+        },
+        {
+          "title": "Exchange the authorization code for an access token",
+          "detail": "Developer's backend posts client credentials and the returned code to the documented token endpoint. Response includes access_token and, when refresh tokens are enabled, refresh_token.",
+          "owner": "developer",
+          "doneWhen": "Token endpoint returns HTTP 200 with access_token and token_type Bearer.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "$ curl \"https://api.todoist.com/oauth/access_token\" \\"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Name Description client_id The Client ID of the Todoist application that you registered."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "{ \"access_token\" : \"0123456789abcdef0123456789abcdef01234567\" ,"
+            }
+          ],
+          "id": "exchange-authorization-code",
+          "dependsOn": [
+            "authorize-individual-account"
+          ],
+          "actionIds": [
+            "connect-todoist-account"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "POST",
+            "endpoint": "https://api.todoist.com/oauth/access_token",
+            "example": "curl 'https://api.todoist.com/oauth/access_token' '-d' 'client_id=<CLIENT_ID>' '-d' 'client_secret=<CLIENT_SECRET>' '-d' 'code=<AUTH_CODE>' '-d' 'redirect_uri=<REDIRECT_URI>'"
+          },
+          "stage": "test",
+          "destination": "https://developer.todoist.com/api/v1/",
+          "fields": [
+            "CLIENT_ID from app registration",
+            "CLIENT_SECRET from app registration",
+            "AUTH_CODE returned in redirect query string",
+            "REDIRECT_URI matching the authorization request"
+          ]
+        },
+        {
+          "title": "Fetch the first page of active tasks",
+          "detail": "Call GET /api/v1/tasks with the connected account's access token and a limit. Read task content fields as the title and keep next_cursor for pagination.",
+          "owner": "agent",
+          "doneWhen": "HTTP 200 with results array of active tasks and next_cursor returned or null. Boundary check: inspect the actual grant against the documented access above; confirm the outgoing request log contains only the requested operations and no prohibited actions.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "get /api/v1/tasks https://api.todoist.com /api/v1/tasks"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "curl \"https://api.todoist.com/api/v1/tasks?limit=50\" \\ -H \"Authorization: Bearer YOUR_TOKEN\""
+            },
+            {
+              "sourceId": "s1",
+              "quote": "] , \"next_cursor\" : \"14540000435w8hj8pXXwPQJJch.X9DBH8ya2Xenok55\""
+            }
+          ],
+          "id": "list-active-tasks-first-page",
+          "dependsOn": [
+            "exchange-authorization-code"
+          ],
+          "actionIds": [
+            "list-active-task-titles"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "/api/v1/tasks",
+            "example": "curl 'https://api.todoist.com/api/v1/tasks?limit=50' '-H' 'Authorization: Bearer <ACCESS_TOKEN>'"
+          },
+          "stage": "test",
+          "destination": "https://developer.todoist.com/api/v1/",
+          "fields": [
+            "ACCESS_TOKEN from token exchange response",
+            "Map task title to the content property of each result"
+          ]
+        },
+        {
+          "title": "Fetch the next page of active tasks using next_cursor",
+          "detail": "Repeat the same request with cursor set to next_cursor from the prior response, keeping limit unchanged. Continue until next_cursor is null. Final continuation request, repeated with the latest next_cursor until the API returns null.",
+          "owner": "agent",
+          "doneWhen": "Requests continue until next_cursor is null, collecting every active task content value. next_cursor is null in the latest response and all pages were collected. Boundary check: inspect the actual grant against the documented access above; confirm the outgoing request log contains only the requested operations and no prohibited actions.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "curl \"https://api.todoist.com/api/v1/tasks?cursor=eyJwYWdlIjoyLCJsaW1pdCI6NTB9.aGFzaA&limit=50\" \\ -H \"Authorization: Bearer YOUR_TOKEN\""
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Important : Always use the same parameters (filters, sorting, etc.) when using a cursor. Changing parameters between paginated requests may result in unexpected behavior or errors."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Continue fetching pages until next_cursor is null ."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "cursor = data . get ( \"next_cursor\" )"
+            }
+          ],
+          "id": "list-active-tasks-next-page",
+          "dependsOn": [
+            "list-active-tasks-first-page"
+          ],
+          "actionIds": [
+            "list-active-task-titles"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "/api/v1/tasks",
+            "example": "curl 'https://api.todoist.com/api/v1/tasks?cursor=<NEXT_CURSOR>&limit=50' '-H' 'Authorization: Bearer <ACCESS_TOKEN>'"
+          },
+          "stage": "test",
+          "destination": "https://developer.todoist.com/api/v1/",
+          "fields": [
+            "NEXT_CURSOR comes from next_cursor of the previous response",
+            "Keep the same limit and parameters as the first request",
+            "NEXT_CURSOR from the previous page's next_cursor",
+            "Use the same limit value on every page",
+            "Access token: backend OAuth exchange for the test account; keep it out of this guide"
+          ]
+        },
+        {
+          "title": "Confirm read-only scope boundary",
+          "detail": "Inspect the granted scope on the token response and the outgoing request log. Confirm only GET requests to /api/v1/tasks were made and no POST, DELETE, or completion endpoints were called. Do not attempt a write to test enforcement.",
+          "owner": "developer",
+          "doneWhen": "Token scope reads data:read and request log shows only GET calls to the task listing endpoint.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "data:read Grants read-only access to application data, including tasks, projects, labels, and filters."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "{ \"access_token\" : \"0123456789abcdef0123456789abcdef01234567\" ,"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "\"next_cursor\" : \"eyJwYWdlIjoyLCJsaW1pdCI6NTB9.aGFzaA\" }"
+            }
+          ],
+          "id": "boundary-check-read-only",
+          "dependsOn": [
+            "list-active-tasks-first-page"
+          ],
+          "actionIds": [
+            "list-active-task-titles"
+          ],
+          "testKind": "boundary",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": ""
+          },
+          "stage": "test",
+          "destination": "https://developer.todoist.com/api/v1/",
+          "fields": [
+            "Scope value from the token response"
+          ]
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "",
+        "assumptions": ""
+      },
+      "unknowns": [
+        "Whether the connected account has the required Todoist plan or role for the specific workspace tasks is not established by the sources.",
+        "Whether a default or required token lifetime policy affects customer connections beyond the documented refresh flow is not established."
+      ],
+      "blockers": [
+        {
+          "title": "Confirm app registration and client credentials before testing",
+          "consequence": "test",
+          "kind": "prerequisite",
+          "owner": "developer",
+          "resolution": "Register the app in the Todoist App Management Console and record the Client ID and Client Secret.",
+          "stepIds": [
+            "exchange-authorization-code"
+          ],
+          "resolutionStepIds": [
+            "register-todoist-app"
+          ]
+        },
+        {
+          "title": "Plan token refresh for expiring access tokens",
+          "consequence": "follow-up",
+          "kind": "instruction",
+          "owner": "developer",
+          "resolution": "Implement refresh_token grant handling when refresh tokens are issued, since tokens may expire.",
+          "stepIds": [
+            "list-active-tasks-first-page"
+          ],
+          "resolutionStepIds": []
+        }
+      ],
+      "coverage": [
+        {
+          "action": "List active task titles for the connected account, including pagination",
+          "actionId": "list-active-task-titles",
+          "permissions": [
+            "data:read"
+          ],
+          "status": "mapped",
+          "reason": "GET /api/v1/tasks lists active tasks for the user with cursor pagination; data:read covers tasks read-only.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "get /api/v1/tasks https://api.todoist.com /api/v1/tasks"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "data:read Grants read-only access to application data, including tasks, projects, labels, and filters."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "] , \"next_cursor\" : \"14540000435w8hj8pXXwPQJJch.X9DBH8ya2Xenok55\""
+            }
+          ],
+          "support": "reviewed"
+        }
+      ],
+      "researchNeeded": [],
+      "semanticsVersion": 2,
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": true,
+      "schemaVersion": 1,
+      "id": "lg-f5bb13dc-9e4a-4be0-9f5d-0506f9cdb25f",
+      "generatedAt": "2026-11-03T13:58:49.660Z",
+      "input": {
+        "app": "Todoist",
+        "website": "https://developer.todoist.com/api/v1/",
+        "useCase": "Customers connect their individual Todoist accounts to list active task titles, including pagination. Read only. Never create, update, complete or delete tasks. No team administration.",
+        "audience": "customers",
+        "answers": {}
+      },
+      "provider": {
+        "website": "https://developer.todoist.com/api/v1/",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Generated from retrieved documentation. A separate review checks the request and access mapping; setup has not been executed.",
+      "warnings": [],
+      "setupTested": false,
+      "decisions": [],
+      "engine": {
+        "model": "claude-haiku-5-5",
+        "attempts": 4,
+        "elapsedMs": 36128,
+        "inputTokens": 131410,
+        "outputTokens": 6470,
+        "thinkingTokens": 1768,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged.",
+          "Setup gap topic-registration resolved from s1-p76: The docs state developers register an app in the App Management Console, configure OAuth2 redirect URLs, and receive a Client ID and Secret for the representative instance.",
+          "Setup gap topic-permissions resolved from s1-p95: The data:read scope is documented as read-only access to tasks, and the GET /api/v1/tasks request and its pagination are documented.",
+          "First-test gap unknown-0 reclassified as launch-only: Whether the connected account has the required plan or role for workspace tasks is unanswered, but checking the test account's access is a user prerequisite and does not block the representative first test.",
+          "First-test gap unknown-1 reclassified as launch-only: Whether a default token lifetime policy applies beyond the documented refresh flow is unanswered, but the documented refresh flow lets the representative test proceed."
+        ],
+        "reviewOutcome": "accepted",
+        "provider": "anthropic",
+        "promptVersion": "live-guide.26"
+      },
+      "journey": {
+        "modelCalls": 4,
+        "inputTokens": 131410,
+        "outputTokens": 6470,
+        "modelMs": 36128
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://developer.todoist.com/api/v1/",
+          "title": "Todoist API",
+          "retrievedAt": "2026-11-03T13:58:04.239Z",
+          "hash": "bc61bde9d7f4b3c0b860369f13f38ac39ca0ca9eb2c2194f09175355bb801886",
+          "links": [
+            "https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/",
+            "https://redocly.com/redoc/",
+            "https://developer.todoist.com/api/v1/",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization",
+            "https://developer.todoist.com/guides/",
+            "https://developer.mozilla.org/en-US/docs/Web/Media/Formats",
+            "https://developer.todoist.com/sync/v9",
+            "https://developer.todoist.com/rest/v2"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "Todoist",
+        "docsUrl": "https://docs.composio.dev/toolkits/todoist",
+        "message": "Todoist appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "resultState": "usable-guide",
+      "researchMetrics": {
+        "navigationCalls": 0
+      }
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://developer.todoist.com/api/v1/",
+        "title": "Todoist API",
+        "retrievedAt": "2026-11-03T13:58:04.239Z",
+        "hash": "bc61bde9d7f4b3c0b860369f13f38ac39ca0ca9eb2c2194f09175355bb801886",
+        "links": [
+          "https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/",
+          "https://redocly.com/redoc/",
+          "https://developer.todoist.com/api/v1/",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization",
+          "https://developer.todoist.com/guides/",
+          "https://developer.mozilla.org/en-US/docs/Web/Media/Formats",
+          "https://developer.todoist.com/sync/v9",
+          "https://developer.todoist.com/rest/v2"
+        ]
+      }
+    ]
+  },
+  "readiness": "usable-guide",
+  "requests": [
+    {
+      "stepId": "list-active-tasks-first-page",
+      "stub": {
+        "method": "GET",
+        "url": "https://api.todoist.com/api/v1/tasks?limit=50",
+        "headers": {
+          "authorization": "Bearer test-access-token"
+        },
+        "body": []
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    },
+    {
+      "stepId": "list-active-tasks-next-page",
+      "stub": {
+        "method": "GET",
+        "url": "https://api.todoist.com/api/v1/tasks?cursor=test-next-cursor&limit=50",
+        "headers": {
+          "authorization": "Bearer test-access-token"
+        },
+        "body": []
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    }
+  ],
+  "planStatus": 200,
+  "plan": {
+    "schemaVersion": 1,
+    "id": "lg-f5bb13dc-9e4a-4be0-9f5d-0506f9cdb25f",
+    "provider": "Todoist",
+    "request": "Customers connect their individual Todoist accounts to list active task titles, including pagination. Read only. Never create, update, complete or delete tasks. No team administration.",
+    "createdAt": "2026-11-03T13:58:49.660Z",
+    "basis": "Live research",
+    "status": "Provisional plan",
+    "summary": "Todoist documents user-authorized OAuth2 authorization-code flow for external apps to obtain user-scoped API tokens. Read-only listing of active tasks can use the documented data:read scope, which grants read-only access to tasks. Pagination uses cursor-based next_cursor on the tasks endpoint. Pagination details and endpoint coverage are recorded in coverage; no write scope is needed for the confirmed read-only request.",
+    "route": "Todoist documents user-authorized OAuth2 authorization-code flow for external apps to obtain user-scoped API tokens. Read-only listing of active tasks can use the documented data:read scope, which grants read-only access to tasks. Pagination uses cursor-based next_cursor on the tasks endpoint. Pagination details and endpoint coverage are recorded in coverage; no write scope is needed for the confirmed read-only request.",
+    "next": {
+      "id": "register-todoist-app",
+      "testKind": "prepare",
+      "request": {
+        "method": "",
+        "endpoint": "",
+        "example": ""
+      },
+      "dependsOn": [],
+      "actionIds": [
+        "connect-todoist-account"
+      ],
+      "title": "Register the Todoist OAuth application and configure redirect URL",
+      "detail": "Developer creates an app in the Todoist App Management Console, configures an HTTPS redirect URL, and obtains Client ID and Client Secret. No customer consent is implied by this step.",
+      "owner": "developer",
+      "stage": "prepare",
+      "doneWhen": "App exists with a Client ID, Client Secret, and at least one redirect URL configured.",
+      "destination": "https://developer.todoist.com/api/v1/",
+      "fields": [
+        "Client ID and Client Secret come from the App Management Console registration"
+      ],
+      "evidence": [
+        {
+          "sourceId": "s1",
+          "quote": "in the App Management Console"
+        },
+        {
+          "sourceId": "s1",
+          "quote": "and configure one or more valid OAuth2 redirect URLs. A registered Todoist"
+        },
+        {
+          "sourceId": "s1",
+          "quote": "needed for the OAuth2 flow."
+        }
+      ],
+      "sourceIds": [
+        "s1",
+        "s1",
+        "s1"
+      ],
+      "blockedBy": []
+    },
+    "steps": [
+      {
+        "id": "register-todoist-app",
+        "testKind": "prepare",
+        "request": {
+          "method": "",
+          "endpoint": "",
+          "example": ""
+        },
+        "dependsOn": [],
+        "actionIds": [
+          "connect-todoist-account"
+        ],
+        "title": "Register the Todoist OAuth application and configure redirect URL",
+        "detail": "Developer creates an app in the Todoist App Management Console, configures an HTTPS redirect URL, and obtains Client ID and Client Secret. No customer consent is implied by this step.",
+        "owner": "developer",
+        "stage": "prepare",
+        "doneWhen": "App exists with a Client ID, Client Secret, and at least one redirect URL configured.",
+        "destination": "https://developer.todoist.com/api/v1/",
+        "fields": [
+          "Client ID and Client Secret come from the App Management Console registration"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "in the App Management Console"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "and configure one or more valid OAuth2 redirect URLs. A registered Todoist"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "needed for the OAuth2 flow."
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "authorize-individual-account",
+        "testKind": "authorization",
+        "request": {
+          "method": "GET",
+          "endpoint": "https://app.todoist.com/oauth/authorize",
+          "example": "https://app.todoist.com/oauth/authorize?client_id=<CLIENT_ID>&scope=data:read&state=<RANDOM_STATE>&response_type=code&redirect_uri=<REDIRECT_URI>"
+        },
+        "dependsOn": [
+          "register-todoist-app"
+        ],
+        "actionIds": [
+          "connect-todoist-account"
+        ],
+        "title": "Redirect the individual customer to the Todoist authorization URL",
+        "detail": "The connecting individual account owner opens the authorization URL with data:read scope and a unique state value. Developer must generate state and compare it on return.",
+        "owner": "customer admin",
+        "stage": "test",
+        "doneWhen": "Todoist redirects back to the redirect URL with code and matching state parameters.",
+        "destination": "https://developer.todoist.com/api/v1/",
+        "fields": [
+          "CLIENT_ID from app registration",
+          "RANDOM_STATE generated by developer, unguessable",
+          "REDIRECT_URI must match a configured redirect URL"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "https://app.todoist.com/oauth/authorize?client_id = 0123456789abcdef & scope = data:read,data:delete & state = secretstring & response_type = code"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "https://app.todoist.com/oauth/authorize , with the specified request parameters."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "will come with two query parameters attached: code and state ."
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "exchange-authorization-code",
+        "testKind": "authorization",
+        "request": {
+          "method": "POST",
+          "endpoint": "https://api.todoist.com/oauth/access_token",
+          "example": "curl 'https://api.todoist.com/oauth/access_token' '-d' 'client_id=<CLIENT_ID>' '-d' 'client_secret=<CLIENT_SECRET>' '-d' 'code=<AUTH_CODE>' '-d' 'redirect_uri=<REDIRECT_URI>'"
+        },
+        "dependsOn": [
+          "authorize-individual-account"
+        ],
+        "actionIds": [
+          "connect-todoist-account"
+        ],
+        "title": "Exchange the authorization code for an access token",
+        "detail": "Developer's backend posts client credentials and the returned code to the documented token endpoint. Response includes access_token and, when refresh tokens are enabled, refresh_token.",
+        "owner": "developer",
+        "stage": "test",
+        "doneWhen": "Token endpoint returns HTTP 200 with access_token and token_type Bearer.",
+        "destination": "https://developer.todoist.com/api/v1/",
+        "fields": [
+          "CLIENT_ID from app registration",
+          "CLIENT_SECRET from app registration",
+          "AUTH_CODE returned in redirect query string",
+          "REDIRECT_URI matching the authorization request"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "$ curl \"https://api.todoist.com/oauth/access_token\" \\"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Name Description client_id The Client ID of the Todoist application that you registered."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "{ \"access_token\" : \"0123456789abcdef0123456789abcdef01234567\" ,"
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": [
+          "blocker-0"
+        ]
+      },
+      {
+        "id": "list-active-tasks-first-page",
+        "testKind": "action",
+        "request": {
+          "method": "GET",
+          "endpoint": "/api/v1/tasks",
+          "example": "curl 'https://api.todoist.com/api/v1/tasks?limit=50' '-H' 'Authorization: Bearer <ACCESS_TOKEN>'"
+        },
+        "dependsOn": [
+          "exchange-authorization-code"
+        ],
+        "actionIds": [
+          "list-active-task-titles"
+        ],
+        "title": "Fetch the first page of active tasks",
+        "detail": "Call GET /api/v1/tasks with the connected account's access token and a limit. Read task content fields as the title and keep next_cursor for pagination.",
+        "owner": "agent",
+        "stage": "test",
+        "doneWhen": "HTTP 200 with results array of active tasks and next_cursor returned or null. Boundary check: inspect the actual grant against the documented access above; confirm the outgoing request log contains only the requested operations and no prohibited actions.",
+        "destination": "https://developer.todoist.com/api/v1/",
+        "fields": [
+          "ACCESS_TOKEN from token exchange response",
+          "Map task title to the content property of each result"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "get /api/v1/tasks https://api.todoist.com /api/v1/tasks"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "curl \"https://api.todoist.com/api/v1/tasks?limit=50\" \\ -H \"Authorization: Bearer YOUR_TOKEN\""
+          },
+          {
+            "sourceId": "s1",
+            "quote": "] , \"next_cursor\" : \"14540000435w8hj8pXXwPQJJch.X9DBH8ya2Xenok55\""
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": [
+          "blocker-0"
+        ]
+      },
+      {
+        "id": "list-active-tasks-next-page",
+        "testKind": "action",
+        "request": {
+          "method": "GET",
+          "endpoint": "/api/v1/tasks",
+          "example": "curl 'https://api.todoist.com/api/v1/tasks?cursor=<NEXT_CURSOR>&limit=50' '-H' 'Authorization: Bearer <ACCESS_TOKEN>'"
+        },
+        "dependsOn": [
+          "list-active-tasks-first-page"
+        ],
+        "actionIds": [
+          "list-active-task-titles"
+        ],
+        "title": "Fetch the next page of active tasks using next_cursor",
+        "detail": "Repeat the same request with cursor set to next_cursor from the prior response, keeping limit unchanged. Continue until next_cursor is null. Final continuation request, repeated with the latest next_cursor until the API returns null.",
+        "owner": "agent",
+        "stage": "test",
+        "doneWhen": "Requests continue until next_cursor is null, collecting every active task content value. next_cursor is null in the latest response and all pages were collected. Boundary check: inspect the actual grant against the documented access above; confirm the outgoing request log contains only the requested operations and no prohibited actions.",
+        "destination": "https://developer.todoist.com/api/v1/",
+        "fields": [
+          "NEXT_CURSOR comes from next_cursor of the previous response",
+          "Keep the same limit and parameters as the first request",
+          "NEXT_CURSOR from the previous page's next_cursor",
+          "Use the same limit value on every page",
+          "Access token: backend OAuth exchange for the test account; keep it out of this guide"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "curl \"https://api.todoist.com/api/v1/tasks?cursor=eyJwYWdlIjoyLCJsaW1pdCI6NTB9.aGFzaA&limit=50\" \\ -H \"Authorization: Bearer YOUR_TOKEN\""
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Important : Always use the same parameters (filters, sorting, etc.) when using a cursor. Changing parameters between paginated requests may result in unexpected behavior or errors."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Continue fetching pages until next_cursor is null ."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "cursor = data . get ( \"next_cursor\" )"
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": [
+          "blocker-0"
+        ]
+      },
+      {
+        "id": "boundary-check-read-only",
+        "testKind": "boundary",
+        "request": {
+          "method": "",
+          "endpoint": "",
+          "example": ""
+        },
+        "dependsOn": [
+          "list-active-tasks-first-page"
+        ],
+        "actionIds": [
+          "list-active-task-titles"
+        ],
+        "title": "Confirm read-only scope boundary",
+        "detail": "Inspect the granted scope on the token response and the outgoing request log. Confirm only GET requests to /api/v1/tasks were made and no POST, DELETE, or completion endpoints were called. Do not attempt a write to test enforcement.",
+        "owner": "developer",
+        "stage": "test",
+        "doneWhen": "Token scope reads data:read and request log shows only GET calls to the task listing endpoint.",
+        "destination": "https://developer.todoist.com/api/v1/",
+        "fields": [
+          "Scope value from the token response"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "data:read Grants read-only access to application data, including tasks, projects, labels, and filters."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "{ \"access_token\" : \"0123456789abcdef0123456789abcdef01234567\" ,"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "\"next_cursor\" : \"eyJwYWdlIjoyLCJsaW1pdCI6NTB9.aGFzaA\" }"
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": [
+          "blocker-0"
+        ]
+      }
+    ],
+    "nextNote": "Resolve the missing evidence below.",
+    "coverage": [
+      {
+        "action": "List active task titles for the connected account, including pagination",
+        "actionId": "list-active-task-titles",
+        "permissions": [
+          "data:read"
+        ],
+        "status": "mapped",
+        "reason": "GET /api/v1/tasks lists active tasks for the user with cursor pagination; data:read covers tasks read-only.",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "get /api/v1/tasks https://api.todoist.com /api/v1/tasks"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "data:read Grants read-only access to application data, including tasks, projects, labels, and filters."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "] , \"next_cursor\" : \"14540000435w8hj8pXXwPQJJch.X9DBH8ya2Xenok55\""
+          }
+        ],
+        "support": "reviewed",
+        "execution": "untested"
+      }
+    ],
+    "permissions": [
+      {
+        "id": "permission-0",
+        "identifier": "data:read",
+        "classification": "Provider permission",
+        "title": "data:read grants read-only access to tasks",
+        "detail": "GET /api/v1/tasks lists active tasks for the user with cursor pagination; data:read covers tasks read-only.",
+        "appliesWhen": "Used for listing active task titles for the connected account.",
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "get /api/v1/tasks https://api.todoist.com /api/v1/tasks"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "data:read Grants read-only access to application data, including tasks, projects, labels, and filters."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "] , \"next_cursor\" : \"14540000435w8hj8pXXwPQJJch.X9DBH8ya2Xenok55\""
+          }
+        ]
+      }
+    ],
+    "requirements": [
+      {
+        "id": "requirement-0",
+        "kind": "prerequisite",
+        "title": "Token exchange and refresh are required setup",
+        "detail": "Authorization code is exchanged at the token endpoint with client credentials; refresh tokens may be issued and must be refreshed with grant_type=refresh_token when access tokens expire.",
+        "appliesWhen": "Applies to every customer connection before and during API calls.",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "On success, Todoist returns HTTP 200 with the token in JSON object format. For"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Refreshing access tokens Exchanging a refresh token for a new access token:"
+          }
+        ],
+        "stage": "test",
+        "sourceIds": [
+          "s1",
+          "s1"
+        ]
+      },
+      {
+        "id": "requirement-1",
+        "kind": "prerequisite",
+        "title": "Pagination uses cursor parameters on the tasks endpoint",
+        "detail": "GET /api/v1/tasks returns results and next_cursor; continue fetching pages until next_cursor is null, using the same parameters with the cursor and a limit up to 200.",
+        "appliesWhen": "Applies when listing active task titles across multiple pages.",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "] , \"next_cursor\" : \"14540000435w8hj8pXXwPQJJch.X9DBH8ya2Xenok55\""
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Important : Always use the same parameters (filters, sorting, etc.) when using a cursor. Changing parameters between paginated requests may result in unexpected behavior or errors."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Continue fetching pages until next_cursor is null ."
+          }
+        ],
+        "stage": "test",
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "id": "blocker-0",
+        "title": "Confirm app registration and client credentials before testing",
+        "consequence": "test",
+        "kind": "prerequisite",
+        "owner": "developer",
+        "resolution": "Register the app in the Todoist App Management Console and record the Client ID and Client Secret.",
+        "stepIds": [
+          "exchange-authorization-code"
+        ],
+        "resolutionStepIds": [
+          "register-todoist-app"
+        ]
+      },
+      {
+        "id": "blocker-1",
+        "title": "Plan token refresh for expiring access tokens",
+        "consequence": "follow-up",
+        "kind": "instruction",
+        "owner": "developer",
+        "resolution": "Implement refresh_token grant handling when refresh tokens are issued, since tokens may expire.",
+        "stepIds": [
+          "list-active-tasks-first-page"
+        ],
+        "resolutionStepIds": []
+      },
+      {
+        "id": "unknown-0",
+        "title": "Whether the connected account has the required Todoist plan or role for the specific workspace tasks is not established by the sources.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Whether the connected account has the required Todoist plan or role for the specific workspace tasks is not established by the sources."
+      },
+      {
+        "id": "unknown-1",
+        "title": "Whether a default or required token lifetime policy affects customer connections beyond the documented refresh flow is not established.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Whether a default or required token lifetime policy affects customer connections beyond the documented refresh flow is not established."
+      }
+    ],
+    "sources": [
+      {
+        "id": "s1",
+        "url": "https://developer.todoist.com/api/v1/",
+        "title": "Todoist API",
+        "retrievedAt": "2026-11-03T13:58:04.239Z",
+        "hash": "bc61bde9d7f4b3c0b860369f13f38ac39ca0ca9eb2c2194f09175355bb801886",
+        "links": [
+          "https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/",
+          "https://redocly.com/redoc/",
+          "https://developer.todoist.com/api/v1/",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization",
+          "https://developer.todoist.com/guides/",
+          "https://developer.mozilla.org/en-US/docs/Web/Media/Formats",
+          "https://developer.todoist.com/sync/v9",
+          "https://developer.todoist.com/rest/v2"
+        ],
+        "checkedAt": "2026-11-03T13:58:04.239Z"
+      }
+    ],
+    "timing": {
+      "work": "Not estimated",
+      "workBasis": "No supported hands-on estimate was established for this path.",
+      "wait": "No applicable published review time was established.",
+      "waitSourceIds": [],
+      "external": "Customer administrator actions and provider review are separate dependencies."
+    },
+    "integration": "Todoist appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility.",
+    "details": [
+      {
+        "id": "rationale-0",
+        "kind": "oauth",
+        "title": "Individual user OAuth2 authorization code flow is documented",
+        "detail": "External applications obtain a user-authorized API token via the OAuth2 protocol; developers register an app, configure redirect URLs, receive a Client ID and Secret, redirect users to the authorization endpoint, exchange the code at the token endpoint.",
+        "appliesWhen": "Customers connect their individual Todoist accounts.",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "external applications to obtain a user authorized API token via the OAuth2"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "and configure one or more valid OAuth2 redirect URLs. A registered Todoist"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "https://app.todoist.com/oauth/authorize?client_id = 0123456789abcdef & scope = data:read,data:delete & state = secretstring & response_type = code"
+          }
+        ],
+        "stage": "prepare",
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ]
+      }
+    ],
+    "preparation": [
+      {
+        "title": "Permissions rationale",
+        "text": "data:read: GET /api/v1/tasks lists active tasks for the user with cursor pagination; data:read covers tasks read-only."
+      },
+      {
+        "title": "Registration worksheet",
+        "text": "Register the Todoist OAuth application and configure redirect URL\nDeveloper creates an app in the Todoist App Management Console, configures an HTTPS redirect URL, and obtains Client ID and Client Secret. No customer consent is implied by this step.\nFields: Client ID and Client Secret come from the App Management Console registration"
+      },
+      {
+        "title": "First connection test",
+        "text": "Redirect the individual customer to the Todoist authorization URL\nDone when: Todoist redirects back to the redirect URL with code and matching state parameters.\n\nExchange the authorization code for an access token\nDone when: Token endpoint returns HTTP 200 with access_token and token_type Bearer.\n\nFetch the first page of active tasks\nDone when: HTTP 200 with results array of active tasks and next_cursor returned or null. Boundary check: inspect the actual grant against the documented access above; confirm the outgoing request log contains only the requested operations and no prohibited actions.\n\nFetch the next page of active tasks using next_cursor\nDone when: Requests continue until next_cursor is null, collecting every active task content value. next_cursor is null in the latest response and all pages were collected. Boundary check: inspect the actual grant against the documented access above; confirm the outgoing request log contains only the requested operations and no prohibited actions.\n\nConfirm read-only scope boundary\nDone when: Token scope reads data:read and request log shows only GET calls to the task listing endpoint."
+      },
+      {
+        "title": "Provider clarification draft",
+        "text": "No provider clarification draft is needed from the current findings."
+      }
+    ],
+    "verification": "Generated from retrieved documentation. A separate review checks the request and access mapping; setup has not been executed. This setup has not been executed or approved.",
+    "context": [
+      {
+        "label": "Actions",
+        "value": "List active task titles for the connected account, including pagination"
+      },
+      {
+        "label": "Restrictions",
+        "value": "Creating tasks; Updating tasks; Completing tasks; Deleting tasks; Team administration"
+      },
+      {
+        "label": "Audience",
+        "value": "customers"
+      }
+    ],
+    "researchId": "lg-f5bb13dc-9e4a-4be0-9f5d-0506f9cdb25f"
+  },
+  "share": "http://127.0.0.1:5187/plan/lg-f5bb13dc-9e4a-4be0-9f5d-0506f9cdb25f",
+  "errors": [],
+  "speed": {
+    "kind": "automatic-recovery",
+    "budgetMs": 180000
+  },
+  "pass": true,
+  "elapsedMs": 56025
+}

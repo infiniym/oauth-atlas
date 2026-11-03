@@ -469,7 +469,7 @@ test('completion: explicit retry repeats a failed planning stage and reuses its 
 test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
  const old=run();old.guide.clarificationUsed=true;const draft={...value(),engine:{outcome:'accepted',attempts:99,promptVersion:'obsolete'}} as any;let calls=0;
  const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft,draftAccepted:true}});
- assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.26');assert.equal(guideReadiness(result.guide),'usable-guide');
+ assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.27');assert.equal(guideReadiness(result.guide),'usable-guide');
 });
 
 
@@ -575,8 +575,8 @@ test('completion: provider identity words cannot make unrelated API operations r
  assert.ok(actionLinkScore('https://docs.acme.com/acme-api/api-reference/files/list-folders','List folders',request,'Acme')>20);
 });
 
-test('completion: blocked public search can suggest only a screened homepage before identity confirmation',async()=>{
- const {discoverProvider}=await import('../lib/live-guide/retrieval.ts');let calls=0;const events:any[]=[];const site=await discoverProvider(normalizeInput({app:'Acme Tasks',useCase:'Read issue titles.'}),bindings,e=>events.push(e),new AbortController().signal,async(u,init)=>{const url=String(u);if(url.includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});if(url.includes('anthropic')){assert.match(JSON.parse(String(init?.body)).system,/no guessed documentation or API path/);return aiResponse({website:'https://acmetasks.example.com/'});}if(url==='https://acmetasks.example.com/')return new Response('<title>Acme Tasks official project</title><main>Acme Tasks developer resources and documentation.</main>');return new Response('Search unavailable.',{status:403});},()=>{calls++;});
+test('completion: blocked public search screens the suggested docs and homepage before identity confirmation',async()=>{
+ const {discoverProvider}=await import('../lib/live-guide/retrieval.ts');let calls=0;const events:any[]=[];const site=await discoverProvider(normalizeInput({app:'Acme Tasks',useCase:'Read issue titles.'}),bindings,e=>events.push(e),new AbortController().signal,async(u,init)=>{const url=String(u);if(url.includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});if(url.includes('anthropic')){assert.match(JSON.parse(String(init?.body)).system,/no guessed documentation or API path/);return aiResponse({website:'https://docs.acmetasks.example.com/',homepage:'https://acmetasks.example.com/'});}if(url==='https://acmetasks.example.com/')return new Response('<title>Acme Tasks official project</title><main>Acme Tasks developer resources and documentation.</main>');return new Response('Search unavailable.',{status:403});},()=>{calls++;});
  assert.equal(site,'https://acmetasks.example.com/');assert.equal(calls,1);assert.ok(events.some(e=>e.stage==='Checking a suggested provider website'));
 });
 
@@ -642,4 +642,23 @@ test('completion: long independent-review text is corrected without changing its
 
 test('completion: nested OpenAPI response wrappers retain requested names beyond large object metadata',async()=>{
  const {openApiText}=await import('../lib/live-guide/openapi.ts');const properties=Object.fromEntries([...Array.from({length:60},(_,i)=>['metadata_'+i,{type:'string'}]),['name',{type:'string',description:'The item name'}]]);const api=openApiText(JSON.stringify({swagger:'2.0',info:{title:'Acme'},paths:{'/items':{get:{summary:'List visible items',responses:{200:{schema:{$ref:'#/definitions/Result'}}}}}},definitions:{Result:{type:'object',properties:{data:{type:'array',items:{$ref:'#/definitions/Item'}}}},Item:{type:'object',properties}}}),'List item names including pagination.');assert.match(api!.text,/"name"/);assert.match(api!.text,/The item name/);assert.match(api!.text,/"data"/);
+});
+
+test('completion: a collection reference wins before adjacent API utilities and the reader skips linked execution URLs',async()=>{
+ const {retrieve}=await import('../lib/live-guide/retrieval.ts');
+ const website='https://docs.acme.com/integrations/oauth';
+ const primary='https://docs.acme.com/api/issues/';
+ const utility='https://docs.acme.com/api/project_statistics/';
+ const execution='https://community.acme.com/api/v3/issues';
+ const html='<main>Register an OAuth application and configure a redirect URI. The read_api scope grants read access.</main>';
+ const links='<a href="'+utility+'">Project statistics and issue access</a><a href="'+execution+'">Live issue collection</a><a href="'+primary+'">Issues API</a>';
+ const reads:string[]=[];
+ await retrieve(normalizeInput({app:'Acme',website,useCase:'Read issue titles in a project with pagination.'}),{},()=>{},new AbortController().signal,async u=>{
+  const url=String(u);
+  if(url.includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});
+  reads.push(url);
+  return new Response(url===website?html+links:'<main>GET /projects/{project_id}/issues lists the project issues and their titles.</main>');
+ });
+ assert.equal(reads[1],primary);
+ assert.ok(!reads.includes(execution));
 });

@@ -1,0 +1,98 @@
+{
+  "name": "forgejo",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "80377b687ec665c073501088d8445a11f5f9ce68",
+    "guideCodeFingerprint": "9e3c93e4b6098493be5a0b392d885965ec34ea3985bbc2fc884877770f8e7ce9",
+    "builtAt": "2026-11-03T13:55:44.117Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.26"
+  },
+  "input": {
+    "app": "Forgejo",
+    "website": "",
+    "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-03T14:24:47.444Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-a0006647-28c8-46b9-b104-d0a0c8379050",
+      "key": "94a29b2f-db74-4286-a704-f42bfdea295e",
+      "input": {
+        "app": "Forgejo",
+        "website": "",
+        "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Finding the provider",
+      "detail": "Searching for Forgejo OAuth documentation.",
+      "status": "working",
+      "at": "2026-11-03T14:24:49.166Z"
+    },
+    {
+      "stage": "Checking a suggested provider website",
+      "detail": "Public search returned no usable result. Checking a homepage candidate before asking you to confirm it.",
+      "status": "working",
+      "at": "2026-11-03T14:24:49.178Z"
+    }
+  ],
+  "job": {
+    "id": "job-a0006647-28c8-46b9-b104-d0a0c8379050",
+    "input": {
+      "app": "Forgejo",
+      "website": "",
+      "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Finding the provider",
+        "detail": "Searching for Forgejo OAuth documentation.",
+        "status": "working",
+        "at": "2026-11-03T14:24:49.166Z"
+      },
+      {
+        "stage": "Checking a suggested provider website",
+        "detail": "Public search returned no usable result. Checking a homepage candidate before asking you to confirm it.",
+        "status": "working",
+        "at": "2026-11-03T14:24:49.178Z"
+      }
+    ],
+    "createdAt": "2026-11-03T14:24:48.917Z",
+    "updatedAt": "2026-11-03T14:24:49.192Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-03T14:24:49.156Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "Could not identify this app confidently from public search or a verified homepage. Add its official website or direct OAuth documentation URL."
+    },
+    "error": "Could not identify this app confidently from public search or a verified homepage. Add its official website or direct OAuth documentation URL.",
+    "savedSources": []
+  },
+  "readiness": "research-failure",
+  "requests": [],
+  "errors": [
+    "No usable guide for the declared task",
+    "No shareable plan",
+    "Request contract check failed",
+    "Required concrete pagination handoff absent"
+  ],
+  "speed": {
+    "kind": "normal",
+    "budgetMs": 90000
+  },
+  "pass": false,
+  "elapsedMs": 1770
+}
