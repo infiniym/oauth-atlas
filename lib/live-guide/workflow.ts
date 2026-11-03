@@ -4,7 +4,7 @@ import catalog from '../../data/catalog.json' with { type:'json' };
 import { normalizeInput,interpretationSchema } from './contracts.ts';
 import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun,WorkflowCheckpoint,Interpretation } from './contracts.ts';
 import { retrieve,discoverProvider } from './retrieval.ts';
-import { interpretEvidence, reviewMappings,evidenceOnly, PROMPT_VERSION } from './interpretation.ts';
+import { interpretEvidence, reviewMappings,repairReviewedSetup,evidenceOnly, PROMPT_VERSION } from './interpretation.ts';
 import {guideReadiness} from './readiness.ts';
 
 export function integrationContext(app: string): LiveGuide['integration'] {
@@ -80,7 +80,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       emit({stage:'Checking a missing requirement',detail:'Looking only for missing '+materialTopics.join(', ')+' evidence.',status:'working'});
       const constantGap=interpreted.telemetry?.validationIssues?.find(reason=>reason.startsWith('A request constant is not documented.'));
       const gap=constantGap?.replace('A request constant is not documented. ','');
-      const expanded=await retrieve(gap?{...input,useCase:input.useCase+' Missing evidence: '+gap}:input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics,...(gap?{query:input.app+' API '+gap}:{} )});
+      const expanded=await retrieve(gap?{...input,useCase:input.useCase+' Missing evidence: '+gap}:input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics,...(gap?{query:input.app+' API '+gap,emptyField:gap.match(/^Field ([\w.-]+)/)?.[1]}:{} )});
       if(expanded.documents.length>research.documents.length){
         research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
         const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions},facts:retainedFacts?.oauthSupport==='documented'&&retainedFacts.coverage.every(c=>c.status==='mapped')&&!retainedFacts.researchNeeded.some(t=>t!=='distribution')?retainedFacts:undefined,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
@@ -90,7 +90,19 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       }
 
     }
-    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});const review=await reviewMappings(interpreted.value,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;if(!interpreted.telemetry)interpreted.telemetry={...review.telemetry,attempts:0,inputTokens:0,outputTokens:0,elapsedMs:0,thinkingTokens:0};if(interpreted.telemetry){interpreted.telemetry.reviewOutcome=review.telemetry.outcome;for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(review.telemetry[k]||0);}await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});}
+    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){
+      await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value,draftAccepted:true});
+      emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});
+      const beforeReview=structuredClone(interpreted.value),review=await reviewMappings(beforeReview,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;
+      if(!interpreted.telemetry)interpreted.telemetry={...review.telemetry,attempts:0,inputTokens:0,outputTokens:0,elapsedMs:0,thinkingTokens:0};
+      const add=(telemetry:NonNullable<typeof interpreted.telemetry>)=>{for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry![k]=(interpreted.telemetry![k]||0)+(telemetry[k]||0);if(telemetry.validationIssues?.length)interpreted.telemetry!.validationIssues=[...interpreted.telemetry!.validationIssues||[],...telemetry.validationIssues];};
+      interpreted.telemetry.reviewOutcome=review.telemetry.outcome;add(review.telemetry);
+      const feedback=review.value.coverage.filter(c=>c.status!=='mapped').map(c=>c.reason).join(' ');
+      if(beforeReview.steps.some(s=>s.testKind!=='action'&&s.id&&feedback.includes(s.id)))emit({stage:'Repairing setup instructions',detail:'Correcting only the prerequisite fields identified by the access review, using saved official evidence.',status:'working'});
+      const corrected=await repairReviewedSetup(beforeReview,review.value,input,research.documents,bindings,signal,fetcher);
+      if(corrected){interpreted.value=corrected.value;add(corrected.telemetry);}
+      await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value,draftAccepted:true});
+    }
   }
   research=research!;signal.throwIfAborted();
   const value=interpreted.value;
