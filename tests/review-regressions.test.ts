@@ -88,6 +88,11 @@ test('completion: source editing controls cannot outrank published documentation
  assert.ok(documentationScore('https://code.acme.example/docs/commits/branch/latest/api.md','History',input)<0);
  assert.ok(documentationScore('https://docs.acme.example/api/usage/','API Usage',input)>0);
 });
+test('completion: name discovery ranks the requested product area instead of the first OAuth search hit',async()=>{
+ const {discoverProvider}=await import('../lib/live-guide/retrieval.ts');
+ const seed=await discoverProvider(normalizeInput({app:'Acme',useCase:'Read page titles shared by the connected customer.'}),{},()=>{},new AbortController().signal,async u=>String(u).includes('cloudflare-dns')?Response.json({Answer:[{type:1,data:'104.18.40.45'}]}):new Response('<main>Official results</main><a href="https://docs.acme.example.com/workers/oauth">Worker OAuth</a><a href="https://docs.acme.example.com/guides/oauth">OAuth applications</a>'));
+ assert.equal(seed,'https://docs.acme.example.com/guides/oauth');
+});
 test('completion: an OAuth handoff cannot substitute personal or CI token authentication',()=>{
  const p=value();p.steps[1].request!.example="curl 'https://api.acme.com/issues' -H 'PRIVATE-TOKEN: <token>'";
  assert.throws(()=>validateInterpretation(p,docs),/personal\/API\/CI token header/);
@@ -131,6 +136,10 @@ test('completion: resource search definitions precede an operation index and ret
  paths['/items/search']={get:{summary:'Search for items',parameters:[{in:'query',name:'private',type:'boolean',description:'Include private items the connected account can access.'},{in:'query',name:'page',type:'integer',description:'Page number, starting at one.'}],responses:{200:{$ref:'#/responses/Results'}}}} as any;
  const api=openApiText(JSON.stringify({swagger:'2.0',basePath:'/v1',info:{title:'Acme'},paths,responses:{Results:{description:'Matching accessible items',schema:{type:'object',properties:{data:{type:'array',items:{type:'object',properties:{name:{type:'string'}}}}}}}}}),'List item names visible to the connected person, including pagination. Read only.');
  assert.ok(api!.text.indexOf('Parameter private')<api!.text.indexOf('Operation index:'));assert.match(api!.text,/Matching accessible items/);assert.match(api!.text,/"name"/);
+});
+test('completion: a large schema index cannot displace search access conditions from model context',()=>{
+ const d={...docs[0],text:'Schema version: 1\nSecurity definitions: {}\n## GET /v1/items/search | Search for items\nParameter private in query (boolean, optional): include private items this user has access to.\nParameter page in query (integer, optional): page number.\nSuccessful response 200: Matching items with names.\nOperation index:\n'+Array.from({length:100},(_,i)=>'GET /v1/items/{id}/related/'+i+' | List related items').join('\n')};
+ const selected=contextPassages(sourcePassages([d]),d.id,'List item names visible to the connected person.',1000).map(p=>p.text).join(' ');assert.match(selected,/include private items/);assert.match(selected,/Parameter page/);assert.doesNotMatch(selected,/related\/99/);
 });
 function aiResponse(data:unknown){return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(data)}],usage:{input_tokens:100,output_tokens:100,output_tokens_details:{thinking_tokens:30}}});}
 function wire(v:Interpretation){const all=sourcePassages(docs);const copy=structuredClone(v);for(const item of [...copy.findings,...copy.steps,...copy.coverage])if(item.evidence)(item as unknown as {evidence:unknown[]}).evidence=item.evidence.map(e=>({passageId:all.find(p=>p.text.includes(e.quote))!.id}));return copy;}

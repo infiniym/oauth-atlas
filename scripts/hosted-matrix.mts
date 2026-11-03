@@ -15,6 +15,7 @@ async function stage(input,record){
  const created=await fetch(origin+'/api/live-guide/jobs',{method:'POST',headers,signal:AbortSignal.timeout(15000),body:JSON.stringify({input})});
  const body=await created.json();if(!created.ok)throw new Error(JSON.stringify(body));
  record.jobs.push({id:body.job.id,key,input});
+ record.inProgress=true;writeFileSync(dir+'/'+record.name+'-r'+record.round+'.json',JSON.stringify(record,null,2));
  const job=await monitorJob(body.job,{signal:AbortSignal.timeout(200000),fetcher:(path,init)=>fetch(origin+path,{...init,headers:{...init?.headers,origin}}),onProgress:event=>record.events.push(event)});
  return job;
 }
@@ -30,7 +31,7 @@ async function run(c){const started=Date.now(),record={name:c.name,round,release
  const recovered=record.events.some(e=>/missing requirement|Repairing|Updating action|Action instructions/i.test(e.stage))||job.guide?.engine?.validationIssues?.length;record.speed={kind:recovered?'automatic-recovery':'normal',budgetMs:recovered?180000:90000};if(Date.now()-started>record.speed.budgetMs)record.errors.push('Generation exceeded '+record.speed.kind+' budget');
  record.pass=!record.errors.length;
  }catch(e){record.pass=false;record.error=e.message;}
- record.elapsedMs=Date.now()-started;writeFileSync(dir+'/'+c.name+'-r'+round+'.json',JSON.stringify(record,null,2));console.log(JSON.stringify({case:c.name,round,pass:record.pass,elapsedMs:record.elapsedMs,share:record.share,error:record.error,errors:record.errors,requests:record.requests?.map(r=>({stepId:r.stepId,errors:r.errors}))}));return record;
+ record.elapsedMs=Date.now()-started;delete record.inProgress;writeFileSync(dir+'/'+c.name+'-r'+round+'.json',JSON.stringify(record,null,2));console.log(JSON.stringify({case:c.name,round,pass:record.pass,elapsedMs:record.elapsedMs,share:record.share,error:record.error,errors:record.errors,requests:record.requests?.map(r=>({stepId:r.stepId,errors:r.errors}))}));return record;
 }
 // Two concurrent public journeys keep the acceptance load bounded.
 const results=[];for(let i=0;i<declared.length;i+=2)results.push(...await Promise.all(declared.slice(i,i+2).map(run)));

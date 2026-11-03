@@ -26,11 +26,11 @@ const at=Date.now(),r={input:moved,events:[]};try{r.old=await finish(await creat
 const interruptionAt=Date.now(),ir={events:[]};try{
  const c=JSON.parse(readFileSync('docs/evidence/completion-2026-11-02/cases.json')).live.find(c=>c.name==='notion');
  const initial=await finish(await create({...c.input,website:''}),ir);if(!initial.guide?.questions.length)throw Error('Expected provider confirmation before the disconnected stage');
- const input={...initial.guide.input,previousId:initial.guide.id,answers:acceptanceAnswers(initial.guide)},key=crypto.randomUUID();ir.input=input;ir.jobBefore=await create(input,key);ir.duplicateCreate=await create(input,key);if(ir.jobBefore.id!==ir.duplicateCreate.id)throw Error('Duplicate job was created');
+ ir.initial=initial;const input={...initial.guide.input,previousId:initial.guide.id,answers:acceptanceAnswers(initial.guide)},key=crypto.randomUUID();ir.input=input;ir.jobBefore=await create(input,key);ir.duplicateCreate=await create(input,key);if(ir.jobBefore.id!==ir.duplicateCreate.id)throw Error('Duplicate job was created');
  const controller=new AbortController(),response=await fetcher('/api/live-guide/jobs/'+ir.jobBefore.id,{method:'POST',headers,body:'{}',signal:controller.signal});const reader=response.body.getReader();ir.firstProgress=new TextDecoder().decode((await reader.read()).value);controller.abort();await reader.cancel().catch(()=>{});
  ir.reopened=(await (await fetcher('/api/live-guide/jobs/'+ir.jobBefore.id)).json()).job;ir.finished=await finish(ir.reopened,ir);
  const replay=await fetcher('/api/live-guide/jobs/'+ir.finished.id,{method:'POST',headers,body:'{}'});ir.replayed=(await replay.json()).job;
- ir.pass=ir.finished.id===ir.jobBefore.id&&ir.replayed.guide?.id===ir.finished.guide?.id&&JSON.stringify(ir.finished.input.answers)===JSON.stringify(input.answers)&&guideReadiness(ir.finished.guide)==='usable-guide';
+ ir.pass=!!ir.finished.guide&&ir.finished.id===ir.jobBefore.id&&ir.replayed.guide?.id===ir.finished.guide?.id&&JSON.stringify(ir.finished.input.answers)===JSON.stringify(input.answers)&&guideReadiness(ir.finished.guide)==='usable-guide';
 }catch(e){ir.pass=false;ir.error=e.message;}ir.elapsedMs=Date.now()-interruptionAt;save('interrupted-reload',ir);
 // New public documentation is actually reread on an action update. The old
 // guide/plan remain byte-for-byte unchanged; no success is database-seeded.

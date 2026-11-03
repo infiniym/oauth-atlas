@@ -105,7 +105,7 @@ export function actionLinkScore(url:string,label:string,useCase:string):number{
   const positive=useCase.replace(/\b(?:never|not|no|without|don't)\b[^.!?;\n]*/gi,'');
   const writes=/\b(?:create|add|post|insert|edit|update|modify|write|delete|remove)\b/i.test(positive);
   if(!writes&&/\/(?:create|post|insert|update|modify|delete|remove|trash|archive|patch|put|add|set)[\w-]*(?:\.md)?$/i.test(path))return -60;
-  for(const t of ['oauth','including','pagination','developer','owned','instance','instances','retain','input','inputs','explain','whether','base','read','only','titles','names'])stop.add(t);
+  for(const t of ['oauth','including','pagination','developer','owned','instance','instances','retain','input','inputs','explain','whether','base','read','only','titles','names','list','retrieve','fetch','person','backend'])stop.add(t);
   const words=positive.toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).map(t=>t.replace(/s$/,''));
   const terms=[...new Set(words)],resources=terms.filter(t=>text.includes(t)).length;
   const direct=terms.reduce((n,t)=>n+(new RegExp('(?:get|list|retrieve|create|post|update|delete)[-_ ]*(?:(?:all|a|an)[-_ ]*)?'+t+'s?(?:[-_ ]|for|by|$|\\.)').test(text)?Math.min(2,words.filter(w=>w===t).length)*20:0),0);
@@ -126,7 +126,7 @@ export function documentationScore(url:string,label:string,input:Pick<GuideInput
  return linkScore(parsed.origin+parsed.pathname,label)+actionLinkScore(url,label,input.useCase)-penalty-otherProduct-(/forum\.|new-topic|trial_registrations|\/-\/work_items/.test(text)?100:0);
 }
 export function requestTerms(value:string,app=''):string[]{
- const stop=new Set(('read only with from their when they that this then them will into have other customer customers request requests should connect connected connection never without internal user users account accounts workspace workspaces shared explicitly public individual each application integration agent title titles names including pagination oauth developer owned instance instances retain input inputs explain whether base '+app.toLowerCase()).split(/\W+/));
+ const stop=new Set(('read only list retrieve fetch person backend with from their when they that this then them will into have other customer customers request requests should connect connected connection never without internal user users account accounts workspace workspaces shared explicitly public individual each application integration agent title titles names including pagination oauth developer owned instance instances retain input inputs explain whether base '+app.toLowerCase()).split(/\W+/));
  return [...new Set(value.replace(/\b(?:never|not|no|without|don't|do not)\b[^.!?;\n]*/gi,'').toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).flatMap(t=>{const stem=t.replace(/ies$/,'y').replace(/s$/,'');return stem.length>6?[stem,stem.slice(0,5)]:[stem];}))];
 }
 export function selectSourceText(text:string,useCase:string,limit=48000,app=''):string{
@@ -156,15 +156,15 @@ export async function discoverProvider(input:GuideInput,bindings:Bindings,emit:(
     emit({stage:'Finding the provider',detail:`Searching for ${input.app} OAuth documentation.`,status:'working'});
     if (bindings.LIVE_GUIDE_FIRECRAWL_KEY) {
       const data = await search({query:`${input.app} official OAuth developer documentation`,limit:4,sources:[{type:'web'}]});
-      seed = (data.data?.web || []).find((x: {url:string}) => { try { return !/composio|zapier|pipedream|reddit|medium|youtube/.test(new URL(x.url).hostname) && !!publicUrl(x.url); } catch { return false; } })?.url || '';
+      seed = (data.data?.web || []).filter((x: {url:string}) => { try { return !/composio|zapier|pipedream|reddit|medium|youtube/.test(new URL(x.url).hostname) && !!publicUrl(x.url) && documentationScore(x.url,'',input)>=0; } catch { return false; } }).sort((a:{url:string},b:{url:string})=>documentationScore(b.url,'',input)-documentationScore(a.url,'',input))[0]?.url || '';
     } else {
       for (const url of [`https://html.duckduckgo.com/html/?q=${encodeURIComponent(input.app+' official OAuth developer documentation')}`,`https://search.brave.com/search?q=${encodeURIComponent(input.app+' official OAuth developer documentation')}`]) {
         try {
           const result = await reader.read(url); const candidates = parsePage(result.url,result.body).links.map(x => {
             const u = new URL(x); return u.searchParams.get('uddg') || x;
           }).filter(x => {
-            try { const host = publicUrl(x).hostname; return !/duckduckgo|brave\.com|github\.com|composio|zapier|pipedream|reddit|medium|youtube/.test(host) && input.app.toLowerCase().split(/\W+/).filter(t=>t.length>2).some(t => host.includes(t)); } catch { return false; }
-          }).sort((a,b)=>linkScore(b)-linkScore(a));
+            try { const host = publicUrl(x).hostname; return !/duckduckgo|brave\.com|github\.com|composio|zapier|pipedream|reddit|medium|youtube/.test(host) && input.app.toLowerCase().split(/\W+/).filter(t=>t.length>2).some(t => host.includes(t)) && documentationScore(x,'',input)>=0; } catch { return false; }
+          }).sort((a,b)=>documentationScore(b,'',input)-documentationScore(a,'',input));
           if (candidates.length) { seed = candidates[0]; break; }
         } catch { /* Try another public discovery route. */ }
       }
