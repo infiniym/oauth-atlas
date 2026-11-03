@@ -55,6 +55,7 @@ export function contextPassages(passages:Passage[],sourceId:string,useCase:strin
   // The end condition and actual response field are part of an executable
   // handoff. Keep these ahead of incidental early response samples.
   for(const [i] of [...all.entries()].filter(([,p])=>/(?:until|when|while|end).{0,80}(?:next_cursor|has_more|hasNextPage|nextByOffset|nextLink)|(?:next_cursor|has_more|hasNextPage|nextByOffset|nextLink).{0,80}(?:null|false|absent|end|last)/i.test(p.text)).slice(0,4)){add(i);add(i+1);}
+  if(/paginat|continuation/i.test(useCase))for(const [i] of [...all.entries()].filter(([,p])=>/\b(?:link headers? (?:are|contain)|rel\s*=\s*["']?\s*next|(?:offset|keyset|cursor)(?:[- ]based)? pagination.{0,28}default|(?:per_page|page_size) (?:no |yes )?number of items)/i.test(p.text)).slice(0,5)){add(i-1);add(i);add(i+1);}
   if(/titles?|names?|content/i.test(useCase))for(const name of ['subject','summary','title','name','content']){const found=all.findIndex(p=>new RegExp('^(?:[\"`])?'+name+'(?:[\"`])?(?:\\s|:)','i').test(p.text));if(found>=0){add(found);add(found+1);}}
   // Required protocol constants precede incidental response examples and
   // pagination text. A version page must actually supply its version value.
@@ -199,7 +200,7 @@ For instance-specific or self-hosted APIs, use the documented relative API path 
 Length and item limits are mandatory: each evidence array has 1-3 passage references. Finding/step titles at most 120 characters; detail at most 800; appliesWhen and doneWhen at most 400. Each fields entry at most 100 characters, with at most eight inputs per step. Summary and recommendation at most 700; nextAction at most 400. Question id uses lowercase letters, digits and hyphens only (starts with a letter, at most 60 characters); prompt at most 200; why at most 300; each of 2-3 option labels at most 120. Each coverage reason at most 400 characters. Each unknown at most 400 characters. Prefer 1-2 short sentences per detail and 1-2 references per item. Avoid duplicating the same uncertainty in unknowns and blockers. Do not repeat the same facts in every step.
 A deadline to apply or submit is not provider waiting time. Provider-wait findings must cite a passage with a published applicable duration. If none exists, record the unknown rather than assuming zero wait. activeEffort is an explicitly labeled planning estimate: provide a broad range ONLY with assumptions grounded in documented steps; otherwise return empty strings. Do not estimate a calendar launch date. Unknown provider policy must remain in unknowns with a concrete verification action.
 Summary, recommendation and nextAction must follow from the cited findings. Never claim Composio supports this app; integration availability is checked separately. Output the required JSON only.`;
-export const PROMPT_VERSION = 'live-guide.27';
+export const PROMPT_VERSION = 'live-guide.28';
 
 function durations(text:string):string[] {
   const numbers:Record<string,number>={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
@@ -256,8 +257,8 @@ export function validateInterpretation(raw: unknown, documents: Document[],reque
     if(!parts.url){if(completeHandoff)throw new Error('A step destination needs one executable curl request, including its documented URL and authentication.');else throw new Error('A step destination needs one executable curl request.');}
     if(parts.method!==s.request!.method.toUpperCase())throw new Error('A step destination example uses a different method from its request metadata.');
     const nextLink=/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(parts.url);
-    const nextPattern=/\bnext\b.{0,60}(?:link|url)|\b(?:link|url).{0,60}next\b|nextByOffset|nextLink|rel=[\"']?next/i;
-    let context=documents.filter(d=>s.evidence.some(e=>e.sourceId===d.id)).map(d=>d.text).join(' ');
+    const nextPattern=/\bnext\b.{0,60}(?:link|url)|\b(?:link|url).{0,60}next\b|nextByOffset|nextLink|rel\s*=\s*[\"']?\s*next/i;
+    let context=normalizeText(documents.filter(d=>s.evidence.some(e=>e.sourceId===d.id)).map(d=>d.text).join(' '));
     if(nextLink&&!nextPattern.test(context)){
       const passage=sourcePassages(documents).find(p=>p.citable&&nextPattern.test(p.text));
       if(passage&&s.evidence.length<6){s.evidence.push({sourceId:passage.sourceId,quote:passage.text});check(s.evidence);context+=passage.text;}
@@ -336,7 +337,7 @@ export function planningDocuments(documents:Document[],input:GuideInput,intent?:
  // Concrete parameter/root semantics and response aliases can live in a tutorial
  // instead of a method reference; keep that fact beside the endpoint itself.
  add(ranked.find(d=>requestTerms(input.useCase,input.app).some(t=>d.text.toLowerCase().includes(t))&&/empty (?:path|string)|root of (?:our|the|your|an?)|(?:subject|content).{0,60}(?:title|name)|(?:title|name).{0,60}(?:subject|content)/i.test(d.text)));
- if(/paginat|continuation|cursor/i.test(input.useCase))add(documents.find(d=>/paginat/i.test(d.url))||documents.find(d=>/general.concepts|api\/usage/i.test(d.url)));
+ if(/paginat|continuation|cursor/i.test(input.useCase))add(documents.find(d=>/paginat/i.test(d.url))||documents.find(d=>/general.concepts|api\/(?:usage|rest)\/?$/i.test(d.url)));
  for(const action of (intent?.requestedActions||[]).filter(a=>a.operation!=='authorize'&&a.category!=='authorization'))for(const d of [...ranked].sort((a,b)=>resourceDocumentScore(b,action.title,input.app)-resourceDocumentScore(a,action.title,input.app)).slice(0,2))if(resourceDocumentScore(d,action.title,input.app)>20)add(d);
  // Several operations can share a resource name. Retain retrieved operation
  // references before filling with object schemas or generic setup pages; a

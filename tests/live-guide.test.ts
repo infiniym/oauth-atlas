@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { normalizeInput, onProvider, publicUrl } from '../lib/live-guide/contracts.ts';
 import type { Bindings, Document, Interpretation, StoredRun, LiveGuide,Progress } from '../lib/live-guide/contracts.ts';
 import { retrieve, publicReader, boundedText,linkScore,actionLinkScore,parsePage } from '../lib/live-guide/retrieval.ts';
-import { evidenceOnly, interpretEvidence, validateInterpretation, sourcePassages, contextPassages,expandPassageReferences } from '../lib/live-guide/interpretation.ts';
+import { evidenceOnly, interpretEvidence, validateInterpretation, sourcePassages, contextPassages,expandPassageReferences,PROMPT_VERSION } from '../lib/live-guide/interpretation.ts';
 import { generate, integrationContext } from '../lib/live-guide/workflow.ts';
 import { getGuide, postGuide } from '../lib/live-guide/http.ts';
 import type { Store } from '../lib/live-guide/http.ts';
@@ -180,7 +180,7 @@ test('questions suppress firm setup steps until answers arrive; refinement reuse
   const p=plan();p.questions=[{id:'identity',prompt:'Who should comments appear from?',why:'This changes the app installation model.',options:['The connected person','The app']}];const net=network({model:p});
   const first=await generate({app:'Task',website:base,useCase:'Post comments'},ai,()=>{},new AbortController().signal,net.fetcher);
   assert.equal(first.guide.status,'needs-input');assert.equal(first.guide.steps.length,0);assert.equal(first.guide.activeEffort.range,'');
-  assert.match(first.guide.summary,/Confirm the setup choices/);assert.equal(first.guide.engine?.model,'test-model');assert.equal(first.guide.engine?.promptVersion,'live-guide.27');
+  assert.match(first.guide.summary,/Confirm the setup choices/);assert.equal(first.guide.engine?.model,'test-model');assert.equal(first.guide.engine?.promptVersion,PROMPT_VERSION);
   const later=network();const refined=await generate({...first.guide.input,previousId:first.guide.id,answers:{identity:'The app'}},ai,()=>{},new AbortController().signal,later.fetcher,first);
   assert.notEqual(refined.guide.id,first.guide.id);assert.equal(refined.guide.previousId,first.guide.id);assert.equal(refined.guide.steps.length,1);assert.ok(later.calls.every(c=>c.url.includes('anthropic')));assert.deepEqual(refined.documents,first.documents);
   const context=JSON.parse(JSON.parse(String(later.calls[0].init?.body)).messages[0].content);

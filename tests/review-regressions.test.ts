@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import {generate} from '../lib/live-guide/workflow.ts';
-import {interpretEvidence,validateInterpretation,reviewMappings,sourcePassages,contextPassages} from '../lib/live-guide/interpretation.ts';
+import {interpretEvidence,validateInterpretation,reviewMappings,sourcePassages,contextPassages,PROMPT_VERSION} from '../lib/live-guide/interpretation.ts';
 import {documentationScore} from '../lib/live-guide/retrieval.ts';
 import {normalizeInput} from '../lib/live-guide/contracts.ts';
 import type {Interpretation,StoredRun,Document,LiveGuide} from '../lib/live-guide/contracts.ts';
@@ -38,6 +38,19 @@ test('completion: endpoint templates, API hosts and query names are grounded ind
  assert.ok(!endpointEvidence('/v1/pages/{page_id}/delete',sources).supported);
  assert.ok(!endpointEvidence('/v1/pages/{page_id}?invented=true',sources).supported);
  assert.ok(!endpointEvidence(url,sources).supported);
+});
+test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
+ const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[
+  'Pagination','Offset-based pagination. The default method.','Offset-based pagination','Parameter Description','page Page number.','Keyset-based pagination','Parameter Required Description','pagination yes keyset (enables keyset pagination).','per_page no Number of items per page.','The response mentions arbitrary and has a link to the next page.',
+ ].join('\n')};
+ const operation={...docs[0],text:'GET /issues\nThis operation supports offset-based and keyset-based pagination.',links:[reference.url+'#pagination']};
+ const source=[operation,reference];
+ assert.deepEqual(endpointEvidence('/issues?pagination=keyset&per_page=50',source).sourceIds,['s1','s2']);
+ assert.ok(endpointEvidence('/issues?pagination=keyset&per_page=50',source).supported);
+ assert.ok(endpointEvidence('/issues?page=2',source).supported);
+ assert.ok(!endpointEvidence('/issues?pagination=keyset&page=2',source).supported);
+ assert.ok(!endpointEvidence('/issues?pagination=keyset&arbitrary=2',source).supported);
+ assert.ok(!endpointEvidence('/issues?pagination=keyset&per_page=50',[{...operation,links:[]},reference]).supported);
 });
 test('completion: localized aliases and assets cannot consume the documentation budget',()=>{
  assert.equal(sourceKey('https://acme.com/de/docs/api/'),sourceKey('https://acme.com/docs/api'));
@@ -469,7 +482,7 @@ test('completion: explicit retry repeats a failed planning stage and reuses its 
 test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
  const old=run();old.guide.clarificationUsed=true;const draft={...value(),engine:{outcome:'accepted',attempts:99,promptVersion:'obsolete'}} as any;let calls=0;
  const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft,draftAccepted:true}});
- assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.27');assert.equal(guideReadiness(result.guide),'usable-guide');
+ assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,PROMPT_VERSION);assert.equal(guideReadiness(result.guide),'usable-guide');
 });
 
 

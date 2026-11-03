@@ -4,7 +4,7 @@ import {acceptanceAnswers} from './acceptance-choices.mts';
 import {inspectHandoff,paginationHandoff} from './inspect-handoff.mts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
-const origin=process.env.MATRIX_ORIGIN||'https://oauth-launch-advisor.gharkagpt1.chatgpt.site';
+const origin=process.env.MATRIX_ORIGIN||'http://127.0.0.1:5187';
 const label=process.argv[2]||'candidate',names=(process.argv[3]||'').split(',').filter(Boolean),round=Number(process.argv[4]||1);
 const cases=JSON.parse(readFileSync('docs/evidence/completion-2026-11-02/cases.json','utf8'));
 const declared=[...cases.live,...(names.length?cases.blindValidation||[]:[])].filter(c=>!names.length||names.includes(c.name));
@@ -44,7 +44,14 @@ async function run(c){const started=Date.now(),record={name:c.name,round,release
  if(/paginat|continuation/.test(c.input.useCase)&&(!job.guide||!paginationHandoff(job.guide,record.requests)))record.errors.push('Required concrete pagination handoff absent');
  const recovered=record.events.some(e=>/missing requirement|Repairing|Updating action|Action instructions/i.test(e.stage))||job.guide?.engine?.validationIssues?.length;record.speed={kind:recovered?'automatic-recovery':'normal',budgetMs:recovered?180000:90000};if(Date.now()-started>record.speed.budgetMs)record.errors.push('Generation exceeded '+record.speed.kind+' budget');
  record.pass=!record.errors.length;
- }catch(e){record.pass=false;record.error=e.message;}
+ }catch(e){
+   record.pass=false;record.error=e.message;
+   const last=record.jobs.at(-1);
+   if(last)try{
+     const response=await fetch(origin+'/api/live-guide/jobs/'+last.id,{signal:AbortSignal.timeout(4000)});
+     if(response.ok)record.savedJobReadback=(await response.json()).job;
+   }catch{ /* Keep the original failure and job ID when readback is unavailable. */ }
+ }
  record.elapsedMs=Date.now()-started;delete record.inProgress;writeFileSync(dir+'/'+c.name+'-r'+round+'.json',JSON.stringify(record,null,2));console.log(JSON.stringify({case:c.name,round,pass:record.pass,elapsedMs:record.elapsedMs,share:record.share,error:record.error,errors:record.errors,requests:record.requests?.map(r=>({stepId:r.stepId,errors:r.errors}))}));return record;
 }
 // Two concurrent public journeys keep the acceptance load bounded.
