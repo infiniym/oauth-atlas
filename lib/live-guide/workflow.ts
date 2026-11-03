@@ -58,13 +58,13 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     emit({stage:clarificationUsed?'Building your guide':'Checking setup choices',detail:'Using '+research.documents.length+' saved source snapshots. Your request and previous answers are retained.',status:'working'});
     const savedDraft=options.checkpoint?.draft;
     const acceptedDraft=savedDraft&&(options.checkpoint?.draftAccepted===true||savedDraft.oauthSupport!=='unknown'&&savedDraft.requestedActions?.length&&savedDraft.steps.some(s=>s.testKind==='action'))?draftFields(savedDraft):undefined;
-    interpreted=acceptedDraft?{value:acceptedDraft,mode:'interpreted',notice:'Continuing the saved plan checkpoint. No completed planning call was repeated.'}:await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:clarificationUsed,intent});
+    interpreted=acceptedDraft?{value:acceptedDraft,mode:'interpreted',notice:'Continuing the saved plan checkpoint. No completed planning call was repeated.'}:await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:clarificationUsed,intent,facts:options.checkpoint?.facts,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
     if('decisionOnly' in interpreted&&interpreted.decisionOnly&&!interpreted.value.questions.length){
       const decisionTelemetry=interpreted.telemetry;
       const confirmedIntent={requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions};
       clarificationUsed=true;await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent});
       emit({stage:'Building your guide',detail:'Requirements are clear. Creating the plan from saved evidence.',status:'working'});
-      interpreted=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:confirmedIntent});
+      interpreted=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:confirmedIntent,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent:confirmedIntent,facts});}});
       if(decisionTelemetry&&interpreted.telemetry)for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(decisionTelemetry[k]||0);
     }
     if(clarificationUsed&&interpreted.value.questions.length){

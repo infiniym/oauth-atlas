@@ -83,7 +83,7 @@ export type Bindings = IntentAiBindings & {
   LIVE_GUIDE_FIRECRAWL_KEY?: string;
 };
 export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[];navigationCalls?:number };
-export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;draft?:Interpretation;draftAccepted?:boolean};
+export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;facts?:Interpretation;draft?:Interpretation;draftAccepted?:boolean};
 
 export function normalizeInput(raw: unknown): GuideInput {
   const parsed = inputSchema.safeParse(raw);

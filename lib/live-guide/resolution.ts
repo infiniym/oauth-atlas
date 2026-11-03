@@ -47,8 +47,10 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
     emit({stage:'Finding the missing request',detail:'Checking only '+action.title+'. Your other instructions and confirmed choices are retained.',status:'working'});
     const supplied=input.documentationUrl||update.url;
     const currentReview=old.coverage.find(c=>c.actionId===action.id)?.reason||'';
-    const query=`site:${new URL(input.website||research.website).hostname.replace(/^(www|docs|developers|developer)\./,'')} ${input.app} ${action.title} ${currentReview} API documentation`;
-    research=await retrieve({...input,useCase:action.title},bindings,emit,signal,fetcher,{previous:research,topics:['permissions'],urls:supplied?[supplied]:undefined,refresh:!!supplied,query});
+    const gap=currentReview.split(/\b(?:but|however)\b/i).at(-1)||currentReview;
+    const terms=gap.replace(/\b(?:step|source|supplied|quoted|documented|documentation|request|handoff|supported|supports|unresolved|correction|correct|needs|which|that|with|from|the|and|for|its|this|does|not|no)\b/gi,' ').replace(/\b(?:s\d+-p\d+|[a-z][a-z-]{12,})\b/g,' ').replace(/[^a-zA-Z0-9_:/ ]/g,' ').replace(/\s+/g,' ').trim().split(' ').slice(0,16).join(' ');
+    const query=`site:${new URL(input.website||research.website).hostname.replace(/^(www|docs|developers|developer)\./,'')} ${input.app} ${terms||action.title} API`;
+    research=await retrieve({...input,useCase:action.title+(gap?' Missing evidence: '+gap:'')},bindings,emit,signal,fetcher,{previous:research,topics:['permissions'],urls:supplied?[supplied]:undefined,refresh:!!supplied,query});
     await options.save?.({research});
    }
    emit({stage:'Updating action instructions',detail:'Using saved evidence for '+action.title+'. Your other steps are retained.',status:'working'});
