@@ -28,7 +28,7 @@ export function inspectHandoff(guide:any){
   const parsedBody=body.map(b=>{if(/^\s*[\[{]/.test(b))try{return JSON.parse(b);}catch{errors.push('Malformed JSON body after substitution');}return b;});
   if(/-Version:\s*(?:<|\$|[A-Z_]+(?:'|"|\s|$))/i.test(example))errors.push('Unresolved documentation-derived version header');
   const boundary=step.detail+' '+step.doneWhen+' '+guide.steps.filter((s:any)=>s.testKind==='boundary').map((s:any)=>s.detail).join(' ');
-  if(!/boundary|unshared|unselected|outside.+(?:reject|denied|403|404)|inspect.+(?:grant|request log)|unauthori[sz]ed.+401/i.test(boundary))errors.push('No safe boundary check instruction');
+  if(!/boundary check:\s*(?!none\b|not (?:needed|required|applicable)\b|n\/a\b)\S[^.;\n]{11}/i.test(step.detail+' '+step.doneWhen))errors.push('No safe boundary check instruction');
   if(!step.fields?.length)errors.push('User input provenance absent');
   if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(step.doneWhen+' '+step.detail))errors.push('Expected successful response absent');
   // This is the request received by the stub, not a canned HTTP success.

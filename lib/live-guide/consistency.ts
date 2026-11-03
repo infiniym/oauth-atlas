@@ -1,5 +1,6 @@
 import {migrateSemantics,isResource,legacyRequestGap} from './semantics.ts';
 import type {Interpretation,Evidence} from './contracts.ts';
+import {curlArguments} from './request-examples.ts';
 
 const uncertainMapping=/mapping.{0,40}(?:unverified|unresolved|not (?:established|documented))|(?:effect|relationship|scope.{0,8}endpoint).{0,55}(?:needs? verification|unverified|unresolved|not (?:established|documented))|does not (?:map|establish)|no.{0,30}(?:endpoint|mapping).{0,25}(?:source|document)/i;
 export function mappingUnresolved(reason:string):boolean{return uncertainMapping.test(reason);}
@@ -7,7 +8,7 @@ export function contradictsGrant(action:string,evidence:Evidence[]):boolean{
   const quote=evidence.map(e=>e.quote).join(' ').toLowerCase();
   // Only reject clear read-only contradictions. General write grants require
   // semantic review; a token such as issues:write does not prove delete access.
-  const positive=action.replace(/\b(?:never|not|no|without|don't|do not)\b[^.;\n]*/gi,'');
+  const positive=action.replace(/\b(?:never|not|no|without|don't|do not|disable|deselect|avoid|exclude|omit|uncheck)\b[^.;\n]*/gi,'');
   const mutation=/\b(?:delet\w*|creat\w*|edit\w*|updat\w*|writ\w*|send\w*)\b|\bpost(?:ing)?\s+(?:a\s+)?(?:comment|message|update)/i.test(positive);
   return mutation&&/\bread(?:ing|[- ]only)?\b/.test(quote)&&!/(?:creat|edit|updat|writ|send|post|delet)/.test(quote);
 }
@@ -20,7 +21,7 @@ export function reconcile(value:Interpretation):Interpretation{
   for(const a of v.requestedActions.filter(isResource)){
     if(!v.coverage.some(c=>c.actionId===a.id))v.coverage.push({actionId:a.id,action:a.title,permissions:[],status:'unresolved',reason:'The requested action has no documented permission mapping in this plan.',support:'unresolved',evidence:[]});
     let actionSteps=v.steps.filter(s=>s.stage==='test'&&s.actionIds?.includes(a.id)&&s.testKind==='action');
-    if(actionSteps.length>1&&actionSteps.every(s=>s.actionIds?.length===1)&&new Set(actionSteps.map(s=>JSON.stringify(s.request))).size===1){
+    if(actionSteps.length>1&&actionSteps.every(s=>s.actionIds?.length===1)&&new Set(actionSteps.map(s=>JSON.stringify(s.request?{method:s.request.method,endpoint:s.request.endpoint,args:curlArguments(s.request.example).length?curlArguments(s.request.example):s.request.example}:null))).size===1){
       const keep=actionSteps.find(s=>s.request?.endpoint&&s.request.example)||actionSteps[0];
       const removed=new Set(actionSteps.filter(s=>s!==keep).map(s=>s.id).filter(Boolean));
       v.steps=v.steps.filter(s=>!removed.has(s.id));

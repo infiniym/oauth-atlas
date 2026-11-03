@@ -1,0 +1,2809 @@
+{
+  "name": "forgejo",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "d1737ca71a60f611c12d7610f5611be53de1a3c9",
+    "builtAt": "2026-11-03T05:47:35.556Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.16"
+  },
+  "input": {
+    "app": "Forgejo",
+    "website": "",
+    "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-03T05:53:29.021Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-0a2c3ded-12f2-4d8d-93c4-d935974cae52",
+      "key": "729f7a08-b179-4d09-8c38-4867c3342e58",
+      "input": {
+        "app": "Forgejo",
+        "website": "",
+        "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+        "audience": "customers"
+      }
+    },
+    {
+      "id": "job-820cbb05-4802-4bd6-a3d7-8be9fa86add8",
+      "key": "e70ccf76-c4a2-4300-a97b-1e759f071ca5",
+      "input": {
+        "app": "Forgejo",
+        "website": "",
+        "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-08b97bf8-3cc7-4ab1-ab67-e2428c0180a7"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Finding the provider",
+      "detail": "Searching for Forgejo OAuth documentation.",
+      "status": "working",
+      "at": "2026-11-03T05:53:29.046Z"
+    },
+    {
+      "stage": "Waiting for your choices",
+      "detail": "Continue this saved request; completed work will be reused.",
+      "status": "done",
+      "at": "2026-11-03T05:53:30.429Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/oauth2-provider/",
+      "status": "working",
+      "at": "2026-11-03T05:53:30.465Z"
+    },
+    {
+      "stage": "Choosing relevant documentation",
+      "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+      "status": "working",
+      "at": "2026-11-03T05:53:34.116Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "OAuth2 provider | Forgejo – Beyond coding. We forge.",
+      "status": "done",
+      "at": "2026-11-03T05:53:37.484Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/api/authorized-integrations/",
+      "status": "working",
+      "at": "2026-11-03T05:53:37.485Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Authorized Integrations | Forgejo – Beyond coding. We forge.",
+      "status": "done",
+      "at": "2026-11-03T05:53:38.767Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/api/",
+      "status": "working",
+      "at": "2026-11-03T05:53:38.767Z"
+    },
+    {
+      "stage": "Choosing relevant documentation",
+      "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+      "status": "working",
+      "at": "2026-11-03T05:53:39.135Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "API | Forgejo – Beyond coding. We forge.",
+      "status": "done",
+      "at": "2026-11-03T05:53:41.894Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "next.forgejo.org/swagger.v1.json",
+      "status": "working",
+      "at": "2026-11-03T05:53:41.894Z"
+    },
+    {
+      "stage": "Following moved API documentation",
+      "detail": "Reading the documented schema path on its new official host.",
+      "status": "working",
+      "at": "2026-11-03T05:53:48.549Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Forgejo API",
+      "status": "done",
+      "at": "2026-11-03T05:53:50.172Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/authentication/token-scope/",
+      "status": "working",
+      "at": "2026-11-03T05:53:50.172Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Access Token Scope | Forgejo – Beyond coding. We forge.",
+      "status": "done",
+      "at": "2026-11-03T05:53:51.801Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+      "status": "working",
+      "at": "2026-11-03T05:53:51.802Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Repository Permissions | Forgejo – Beyond coding. We forge.",
+      "status": "done",
+      "at": "2026-11-03T05:53:52.180Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/api/usage/",
+      "status": "working",
+      "at": "2026-11-03T05:53:52.180Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "API Usage | Forgejo – Beyond coding. We forge.",
+      "status": "done",
+      "at": "2026-11-03T05:53:52.721Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/api/authentication/token-scope/",
+      "status": "working",
+      "at": "2026-11-03T05:53:52.721Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read forgejo.org/docs/latest/user/api/authentication/token-scope/.",
+      "status": "warning",
+      "at": "2026-11-03T05:53:53.063Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "forgejo.org/docs/latest/user/getting-started/",
+      "status": "working",
+      "at": "2026-11-03T05:53:53.063Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Your First Repository | Forgejo – Beyond coding. We forge.",
+      "status": "done",
+      "at": "2026-11-03T05:53:56.328Z"
+    },
+    {
+      "stage": "Checking setup choices",
+      "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-03T05:53:56.429Z"
+    },
+    {
+      "stage": "Building your guide",
+      "detail": "Requirements are clear. Creating the plan from saved evidence.",
+      "status": "working",
+      "at": "2026-11-03T05:54:00.097Z"
+    },
+    {
+      "stage": "Checking action coverage",
+      "detail": "Reviewing each permission relationship separately from execution.",
+      "status": "working",
+      "at": "2026-11-03T05:54:29.848Z"
+    },
+    {
+      "stage": "Requested test documented",
+      "detail": "The requested API test is documented. Setup and execution have not been verified.",
+      "status": "done",
+      "at": "2026-11-03T05:54:33.995Z"
+    }
+  ],
+  "job": {
+    "id": "job-820cbb05-4802-4bd6-a3d7-8be9fa86add8",
+    "input": {
+      "app": "Forgejo",
+      "website": "",
+      "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+      "audience": "customers",
+      "answers": {
+        "provider-identity": "Yes, this is the provider"
+      },
+      "previousId": "lg-08b97bf8-3cc7-4ab1-ab67-e2428c0180a7"
+    },
+    "state": "ready",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/oauth2-provider/",
+        "status": "working",
+        "at": "2026-11-03T05:53:30.465Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-03T05:53:34.116Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "OAuth2 provider | Forgejo – Beyond coding. We forge.",
+        "status": "done",
+        "at": "2026-11-03T05:53:37.484Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/api/authorized-integrations/",
+        "status": "working",
+        "at": "2026-11-03T05:53:37.485Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Authorized Integrations | Forgejo – Beyond coding. We forge.",
+        "status": "done",
+        "at": "2026-11-03T05:53:38.767Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/api/",
+        "status": "working",
+        "at": "2026-11-03T05:53:38.767Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-03T05:53:39.135Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "API | Forgejo – Beyond coding. We forge.",
+        "status": "done",
+        "at": "2026-11-03T05:53:41.894Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "next.forgejo.org/swagger.v1.json",
+        "status": "working",
+        "at": "2026-11-03T05:53:41.894Z"
+      },
+      {
+        "stage": "Following moved API documentation",
+        "detail": "Reading the documented schema path on its new official host.",
+        "status": "working",
+        "at": "2026-11-03T05:53:48.549Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Forgejo API",
+        "status": "done",
+        "at": "2026-11-03T05:53:50.172Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/authentication/token-scope/",
+        "status": "working",
+        "at": "2026-11-03T05:53:50.172Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Access Token Scope | Forgejo – Beyond coding. We forge.",
+        "status": "done",
+        "at": "2026-11-03T05:53:51.801Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+        "status": "working",
+        "at": "2026-11-03T05:53:51.802Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Repository Permissions | Forgejo – Beyond coding. We forge.",
+        "status": "done",
+        "at": "2026-11-03T05:53:52.180Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/api/usage/",
+        "status": "working",
+        "at": "2026-11-03T05:53:52.180Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "API Usage | Forgejo – Beyond coding. We forge.",
+        "status": "done",
+        "at": "2026-11-03T05:53:52.721Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/api/authentication/token-scope/",
+        "status": "working",
+        "at": "2026-11-03T05:53:52.721Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read forgejo.org/docs/latest/user/api/authentication/token-scope/.",
+        "status": "warning",
+        "at": "2026-11-03T05:53:53.063Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "forgejo.org/docs/latest/user/getting-started/",
+        "status": "working",
+        "at": "2026-11-03T05:53:53.063Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Your First Repository | Forgejo – Beyond coding. We forge.",
+        "status": "done",
+        "at": "2026-11-03T05:53:56.328Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-03T05:53:56.429Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-03T05:54:00.097Z"
+      },
+      {
+        "stage": "Checking action coverage",
+        "detail": "Reviewing each permission relationship separately from execution.",
+        "status": "working",
+        "at": "2026-11-03T05:54:29.848Z"
+      },
+      {
+        "stage": "Requested test documented",
+        "detail": "The requested API test is documented. Setup and execution have not been verified.",
+        "status": "done",
+        "at": "2026-11-03T05:54:33.995Z"
+      }
+    ],
+    "createdAt": "2026-11-03T05:53:30.450Z",
+    "updatedAt": "2026-11-03T05:54:34.016Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-03T05:53:30.463Z",
+      "finishedAt": "2026-11-03T05:54:33.999Z",
+      "elapsedMs": 63535,
+      "firstActionMs": 63535
+    },
+    "attempts": [
+      {
+        "modelCalls": 3,
+        "inputTokens": 27679,
+        "outputTokens": 7849,
+        "modelMs": 37532
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "list-visible-repository-names",
+          "title": "List repository names visible to the connected person, including pagination",
+          "operation": "read",
+          "category": "resource"
+        }
+      ],
+      "prohibitions": [
+        "Never create repositories",
+        "Never edit repositories",
+        "Never delete repositories"
+      ],
+      "oauthSupport": "documented",
+      "summary": "Use OAuth2 against each customer's own Forgejo instance. The instance administrator must register the app at the instance admin applications page. Forgejo's OAuth grant has no scope selection, and the token carries administrative rights, so the read-only boundary cannot be enforced by the grant. Use the repository search endpoint for visible repositories and follow pagination links until none remain. Test with your own instance first. Whether an empty query returns every visible repository is unverified.",
+      "recommendation": "Use OAuth2 against each customer's own Forgejo instance. The instance administrator must register the app at the instance admin applications page. Forgejo's OAuth grant has no scope selection, and the token carries administrative rights, so the read-only boundary cannot be enforced by the grant. Use the repository search endpoint for visible repositories and follow pagination links until none remain. Test with your own instance first. Whether an empty query returns every visible repository is unverified.",
+      "nextAction": "Register the OAuth app on your test Forgejo instance",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "OAuth2 provider is documented for third-party apps",
+          "detail": "Forgejo supports third-party apps obtaining user consent. OAuth apps are registered instance-wide by an administrator, so each customer's instance needs its own registration.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "OAuth2 provider Forgejo supports acting as an OAuth2 provider to allow third party applications to access its resources with the user’s consent."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Forgejo can act as an instance-wide OAuth2 provider. To achieve that, OAuth2 applications must be created on the /admin/applications page."
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "OAuth token has administrative rights, not a narrow grant",
+          "detail": "A third-party app that obtains a user token gets administrative rights. OAuth scopes are not implemented, so the read-only use case cannot be enforced through the grant. Disclose this to customers.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Note Third-party applications obtaining a token for a user via such an application will have administrative rights."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "OAuth2 scopes are not yet implemented."
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "No OAuth scope to request for the read",
+          "detail": "No OAuth scope identifier is documented, so no permission is requested. Scoped access tokens and personal tokens are separate from OAuth and are not used for this flow.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "OAuth2 scopes are not yet implemented."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Note Scoped tokens or personal access tokens are entirely different from OAuth2;"
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Repository search covers visible repositories",
+          "detail": "The search endpoint includes private repositories the user can access by default. The owned-repositories endpoint returns only repositories the user owns, so it is not sufficient for visible repositories.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "## GET /api/v1/repos/search | Search for repositories"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "Parameter private in query (boolean, optional): include private repositories this user has access to (defaults to true)"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "## GET /api/v1/user/repos | List the repos that the authenticated user owns"
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Pagination uses page, limit and Link headers",
+          "detail": "The API supports page and limit parameters. Link headers give next and last pages, and x-total-count gives the total. Maximum page size is read from the instance settings endpoint.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s7",
+              "quote": "Pagination The API supports pagination. The page and limit parameters are used to specify the page number and the number of items per page. As well, the Link header is"
+            },
+            {
+              "sourceId": "s7",
+              "quote": "returned with the next, previous, and last page links if there are more than one page. The x-total-count is also returned to indicate the total number of items."
+            },
+            {
+              "sourceId": "s7",
+              "quote": "The default and maximum values for the page parameter can be obtained from the https://forgejo.example.org/api/v1/settings/api endpoint."
+            }
+          ]
+        },
+        {
+          "kind": "oauth",
+          "title": "Authorization and token exchange endpoints",
+          "detail": "Redirect the user to the authorize endpoint with client ID, redirect URI, response type code and state. Exchange the returned code at the token endpoint. The redirect URI must match in both requests. Use the access token as a Bearer header.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "https://[ YOUR-FORGEJO-URL ]/login/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE The CLIENT_ID can be obtained by registering an application in the settings. The STATE is a random string that will be"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "POST https://[YOUR-FORGEJO-URL]/login/oauth/access_token { \"client_id\" : \"YOUR_CLIENT_ID\" ,"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "The REDIRECT_URI in the access_token request must match the REDIRECT_URI in the authorize request."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Use the access_token to make API requests to access the user’s resources."
+            },
+            {
+              "sourceId": "s7",
+              "quote": "HTTP basic authentication Authorization: Bearer ... header in HTTP headers"
+            }
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "title": "Register the OAuth app on your test Forgejo instance",
+          "detail": "As a site administrator on the test instance, create an OAuth2 application at the admin applications page. Record the client ID and secret and register the redirect URI.",
+          "owner": "customer admin",
+          "doneWhen": "Client ID and secret are stored securely and the redirect URI is registered on the test instance.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Forgejo can act as an instance-wide OAuth2 provider. To achieve that, OAuth2 applications must be created on the /admin/applications page."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "https://[ YOUR-FORGEJO-URL ]/login/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE The CLIENT_ID can be obtained by registering an application in the settings. The STATE is a random string that will be"
+            }
+          ],
+          "appliesWhen": "Applies to each customer instance; a test instance is used first.",
+          "id": "s-app",
+          "dependsOn": [],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "fields": [
+            "Instance base URL",
+            "CLIENT_ID",
+            "CLIENT_SECRET",
+            "REDIRECT_URI"
+          ]
+        },
+        {
+          "title": "Implement authorize redirect and code-to-token exchange",
+          "detail": "Build the authorize redirect with a random state value, the callback handler, and the POST token exchange using a form body. Keep the same redirect URI in both requests. Do not implement a write endpoint.",
+          "owner": "agent",
+          "doneWhen": "Code builds the authorize URL, validates state, and posts the token request against the test instance URL.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "https://[ YOUR-FORGEJO-URL ]/login/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE The CLIENT_ID can be obtained by registering an application in the settings. The STATE is a random string that will be"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "sent back to your application after the user authorizes. The state parameter is optional but should be used to prevent CSRF attacks."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "https://[ REDIRECT_URI ]?code=RETURNED_CODE&state=STATE Using the provided code from the redirect, you can request a new application and refresh token. The access token endpoint accepts POST requests with application/json and"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "The REDIRECT_URI in the access_token request must match the REDIRECT_URI in the authorize request."
+            }
+          ],
+          "id": "s-impl",
+          "dependsOn": [],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "",
+          "fields": []
+        },
+        {
+          "title": "Authorize the representative test account and exchange the code",
+          "detail": "Sign in as the representative test user on the test instance, approve the app, and exchange the returned code for an access token. This is setup only and is not a resource test.",
+          "owner": "developer",
+          "doneWhen": "The test user approves the app, and the token exchange returns an access token for that user.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "The user will now be asked to authorize your application. If they authorize it, the user will be redirected to the REDIRECT_URL , for example:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "POST https://[YOUR-FORGEJO-URL]/login/oauth/access_token { \"client_id\" : \"YOUR_CLIENT_ID\" ,"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Use the access_token to make API requests to access the user’s resources."
+            }
+          ],
+          "appliesWhen": "Applies to the representative test account on the test instance.",
+          "id": "s-auth",
+          "dependsOn": [
+            "s-app",
+            "s-impl"
+          ],
+          "actionIds": [],
+          "testKind": "authorization",
+          "stage": "test",
+          "destination": "",
+          "fields": []
+        },
+        {
+          "title": "Test listing visible repository names with pagination",
+          "detail": "Call the repository search endpoint with the OAuth Bearer token and follow the Link rel=next header until it is absent. Expected: repository names with x-total-count. Boundary check: confirm that only GET requests appear in the outgoing request log and that the authorization screen shows administrative access. Do not run any write call.",
+          "owner": "developer",
+          "doneWhen": "All pages are collected, the count matches x-total-count, and the request log shows only GET requests.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "## GET /api/v1/repos/search | Search for repositories"
+            },
+            {
+              "sourceId": "s7",
+              "quote": "Pagination The API supports pagination. The page and limit parameters are used to specify the page number and the number of items per page. As well, the Link header is"
+            },
+            {
+              "sourceId": "s7",
+              "quote": "HTTP basic authentication Authorization: Bearer ... header in HTTP headers"
+            }
+          ],
+          "appliesWhen": "Test against the representative account on the test instance.",
+          "id": "s-action",
+          "dependsOn": [
+            "s-auth"
+          ],
+          "actionIds": [
+            "list-visible-repository-names"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "/api/v1/repos/search",
+            "example": "curl '-H' 'Authorization: Bearer ACCESS_TOKEN' 'https://YOUR-FORGEJO-INSTANCE/api/v1/repos/search?limit=50&page=1'"
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "Access token: backend OAuth exchange for the test account; keep it out of this guide"
+          ]
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "",
+        "assumptions": ""
+      },
+      "unknowns": [
+        "Provider review, listing and distribution requirements for OAuth apps are not documented in the supplied sources. Verify before customer rollout.",
+        "Token lifetime and refresh behavior are not documented clearly enough to plan production handling.",
+        "Whether customers' instance admins will approve installation for each customer is not documented."
+      ],
+      "blockers": [
+        {
+          "title": "Instance admin must register the OAuth app",
+          "consequence": "test",
+          "kind": "prerequisite",
+          "owner": "customer admin",
+          "resolution": "Have a site administrator create the app on each instance before authorization.",
+          "stepIds": [
+            "s-app"
+          ],
+          "resolutionStepIds": [
+            "s-app"
+          ]
+        },
+        {
+          "title": "Verify the token's real access on each customer instance",
+          "consequence": "follow-up",
+          "kind": "verification",
+          "owner": "developer",
+          "resolution": "Record the consent screen's access level and disclose the administrative rights to customers.",
+          "stepIds": [
+            "s-action"
+          ],
+          "resolutionStepIds": [
+            "s-action"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "action": "List repository names visible to the connected person, including pagination",
+          "actionId": "list-visible-repository-names",
+          "permissions": [],
+          "status": "mapped",
+          "reason": "The documented OAuth grant has no scope selection, so no permission is requested. The token carries administrative rights, so the read-only boundary is not enforced by the grant. Execution is untested.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "## GET /api/v1/repos/search | Search for repositories"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Note Third-party applications obtaining a token for a user via such an application will have administrative rights."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "OAuth2 scopes are not yet implemented."
+            }
+          ],
+          "support": "reviewed"
+        }
+      ],
+      "researchNeeded": [
+        "distribution"
+      ],
+      "semanticsVersion": 2,
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": false,
+      "schemaVersion": 1,
+      "id": "lg-46fc6b8f-0e9f-4dbf-bd95-b7f51d85f11c",
+      "previousId": "lg-08b97bf8-3cc7-4ab1-ab67-e2428c0180a7",
+      "generatedAt": "2026-11-03T05:54:33.993Z",
+      "input": {
+        "app": "Forgejo",
+        "website": "",
+        "useCase": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-08b97bf8-3cc7-4ab1-ab67-e2428c0180a7"
+      },
+      "provider": {
+        "website": "https://forgejo.org/docs/latest/user/oauth2-provider/",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Generated from retrieved documentation. Citation matching and a separate access review are fallible checks; setup has not been tested.",
+      "warnings": [
+        "Could not read forgejo.org/docs/latest/user/api/authentication/token-scope/."
+      ],
+      "setupTested": false,
+      "decisions": [
+        {
+          "id": "provider-identity",
+          "question": "Continue with forgejo.org?",
+          "answer": "Yes, this is the provider"
+        }
+      ],
+      "engine": {
+        "model": "claude-haiku-5-5",
+        "attempts": 3,
+        "elapsedMs": 37532,
+        "inputTokens": 27679,
+        "outputTokens": 7849,
+        "thinkingTokens": 4633,
+        "thinking": "adaptive",
+        "effort": "low",
+        "outcome": "accepted",
+        "reviewOutcome": "accepted",
+        "provider": "anthropic",
+        "promptVersion": "live-guide.16"
+      },
+      "journey": {
+        "modelCalls": 3,
+        "inputTokens": 27679,
+        "outputTokens": 7849,
+        "modelMs": 37532
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "title": "OAuth2 provider | Forgejo – Beyond coding. We forge.",
+          "retrievedAt": "2026-11-03T05:53:56.348Z",
+          "hash": "c9f2916c64464b6b5a2a3a1b52cc1b43bfef33b3ed4b148d4f7812da4b931de8",
+          "links": [
+            "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/next/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/v15.0/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+            "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/oauth2-provider.en-us.md",
+            "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+            "https://oauthdebugger.com/",
+            "https://github.com/hickford/git-credential-oauth",
+            "https://github.com/hickford/git-credential-oauth/releases/download/v0.11.0/git-credential-oauth_0.11.0_linux_amd64.tar.gz",
+            "https://forgejo.org/docs/latest/user/api/usage/",
+            "https://forgejo.org/docs/latest/user/getting-started/",
+            "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+            "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+            "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+            "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/v17.0/",
+            "https://forgejo.org/docs/latest/contributor/",
+            "https://forgejo.org/docs/latest/contributor/architecture/",
+            "https://forgejo.org/docs/latest/contributor/discussions/",
+            "https://forgejo.org/docs/latest/contributor/coc/",
+            "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+            "https://forgejo.org/docs/latest/contributor/from-source/",
+            "https://forgejo.org/docs/latest/contributor/dependencies/",
+            "https://forgejo.org/docs/latest/contributor/dco/",
+            "https://forgejo.org/docs/latest/contributor/development-environment/",
+            "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+            "https://forgejo.org/docs/latest/contributor/governance/",
+            "https://forgejo.org/docs/latest/contributor/infrastructure/",
+            "https://forgejo.org/docs/latest/contributor/customization/",
+            "https://forgejo.org/docs/latest/contributor/localization/",
+            "https://forgejo.org/docs/latest/contributor/localization/english/",
+            "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+            "https://forgejo.org/docs/latest/contributor/release/",
+            "https://forgejo.org/docs/latest/contributor/secrets/",
+            "https://forgejo.org/docs/latest/contributor/static-pages/",
+            "https://forgejo.org/docs/latest/contributor/testing/",
+            "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+            "https://forgejo.org/docs/latest/contributor/browser-support/",
+            "https://forgejo.org/docs/latest/contributor/welcome/",
+            "https://forgejo.org/docs/latest/user/",
+            "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+            "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+            "https://forgejo.org/docs/latest/user/actions/github-actions/",
+            "https://forgejo.org/docs/latest/user/actions/quick-start/",
+            "https://forgejo.org/docs/latest/user/actions/reference/",
+            "https://forgejo.org/docs/latest/user/actions/security/",
+            "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+            "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+            "https://forgejo.org/docs/latest/user/actions/overview/",
+            "https://forgejo.org/docs/latest/user/actions/actions/",
+            "https://forgejo.org/docs/latest/user/api/",
+            "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/latest/user/api/versions/",
+            "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+            "https://forgejo.org/docs/latest/user/collaboration/labels/",
+            "https://forgejo.org/docs/latest/user/collaboration/profile/",
+            "https://forgejo.org/docs/latest/user/collaboration/project/",
+            "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+            "https://forgejo.org/docs/latest/user/forgejo-next/",
+            "https://forgejo.org/docs/latest/user/git-cli/"
+          ]
+        },
+        {
+          "id": "s2",
+          "url": "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "title": "Authorized Integrations | Forgejo – Beyond coding. We forge.",
+          "retrievedAt": "2026-11-03T05:53:56.363Z",
+          "hash": "23b7c1be14ae3346c6f5a98f866bd3086caeb74078d6f2275812dc547642070c",
+          "links": [
+            "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+            "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/latest/user/api/authentication/token-scope/",
+            "https://forgejo.org/docs/latest/user/api/usage/",
+            "https://forgejo.org/docs/latest/user/getting-started/",
+            "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+            "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+            "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+            "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/v17.0/",
+            "https://forgejo.org/docs/next/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/latest/contributor/",
+            "https://forgejo.org/docs/latest/contributor/architecture/",
+            "https://forgejo.org/docs/latest/contributor/discussions/",
+            "https://forgejo.org/docs/latest/contributor/coc/",
+            "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+            "https://forgejo.org/docs/latest/contributor/from-source/",
+            "https://forgejo.org/docs/latest/contributor/dependencies/",
+            "https://forgejo.org/docs/latest/contributor/dco/",
+            "https://forgejo.org/docs/latest/contributor/development-environment/",
+            "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+            "https://forgejo.org/docs/latest/contributor/governance/",
+            "https://forgejo.org/docs/latest/contributor/infrastructure/",
+            "https://forgejo.org/docs/latest/contributor/customization/",
+            "https://forgejo.org/docs/latest/contributor/localization/",
+            "https://forgejo.org/docs/latest/contributor/localization/english/",
+            "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+            "https://forgejo.org/docs/latest/contributor/release/",
+            "https://forgejo.org/docs/latest/contributor/secrets/",
+            "https://forgejo.org/docs/latest/contributor/static-pages/",
+            "https://forgejo.org/docs/latest/contributor/testing/",
+            "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+            "https://forgejo.org/docs/latest/contributor/browser-support/",
+            "https://forgejo.org/docs/latest/contributor/welcome/",
+            "https://forgejo.org/docs/latest/user/",
+            "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+            "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+            "https://forgejo.org/docs/latest/user/actions/github-actions/",
+            "https://forgejo.org/docs/latest/user/actions/quick-start/",
+            "https://forgejo.org/docs/latest/user/actions/reference/",
+            "https://forgejo.org/docs/latest/user/actions/security/",
+            "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+            "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+            "https://forgejo.org/docs/latest/user/actions/overview/",
+            "https://forgejo.org/docs/latest/user/actions/actions/",
+            "https://forgejo.org/docs/latest/user/api/",
+            "https://forgejo.org/docs/latest/user/api/versions/",
+            "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+            "https://forgejo.org/docs/latest/user/collaboration/labels/",
+            "https://forgejo.org/docs/latest/user/collaboration/profile/",
+            "https://forgejo.org/docs/latest/user/collaboration/project/",
+            "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+            "https://forgejo.org/docs/latest/user/forgejo-next/",
+            "https://forgejo.org/docs/latest/user/git-cli/",
+            "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+            "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+            "https://forgejo.org/docs/latest/user/packages/",
+            "https://forgejo.org/docs/latest/user/packages/alpine/"
+          ]
+        },
+        {
+          "id": "s3",
+          "url": "https://forgejo.org/docs/latest/user/api/",
+          "title": "API | Forgejo – Beyond coding. We forge.",
+          "retrievedAt": "2026-11-03T05:53:56.371Z",
+          "hash": "b87b5c2476b3467320c83387c3a63a9b0958415751a2a07a5c70192b82364a85",
+          "links": [
+            "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+            "https://next.forgejo.org/swagger.v1.json",
+            "https://next.forgejo.org/api/swagger",
+            "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/latest/user/api/usage/",
+            "https://forgejo.org/docs/latest/user/getting-started/",
+            "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+            "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+            "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+            "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/latest/user/api/",
+            "https://forgejo.org/docs/v17.0/",
+            "https://forgejo.org/docs/next/user/api/",
+            "https://forgejo.org/docs/v15.0/user/api/",
+            "https://forgejo.org/docs/latest/contributor/",
+            "https://forgejo.org/docs/latest/contributor/architecture/",
+            "https://forgejo.org/docs/latest/contributor/discussions/",
+            "https://forgejo.org/docs/latest/contributor/coc/",
+            "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+            "https://forgejo.org/docs/latest/contributor/from-source/",
+            "https://forgejo.org/docs/latest/contributor/dependencies/",
+            "https://forgejo.org/docs/latest/contributor/dco/",
+            "https://forgejo.org/docs/latest/contributor/development-environment/",
+            "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+            "https://forgejo.org/docs/latest/contributor/governance/",
+            "https://forgejo.org/docs/latest/contributor/infrastructure/",
+            "https://forgejo.org/docs/latest/contributor/customization/",
+            "https://forgejo.org/docs/latest/contributor/localization/",
+            "https://forgejo.org/docs/latest/contributor/localization/english/",
+            "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+            "https://forgejo.org/docs/latest/contributor/release/",
+            "https://forgejo.org/docs/latest/contributor/secrets/",
+            "https://forgejo.org/docs/latest/contributor/static-pages/",
+            "https://forgejo.org/docs/latest/contributor/testing/",
+            "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+            "https://forgejo.org/docs/latest/contributor/browser-support/",
+            "https://forgejo.org/docs/latest/contributor/welcome/",
+            "https://forgejo.org/docs/latest/user/",
+            "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+            "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+            "https://forgejo.org/docs/latest/user/actions/github-actions/",
+            "https://forgejo.org/docs/latest/user/actions/quick-start/",
+            "https://forgejo.org/docs/latest/user/actions/reference/",
+            "https://forgejo.org/docs/latest/user/actions/security/",
+            "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+            "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+            "https://forgejo.org/docs/latest/user/actions/overview/",
+            "https://forgejo.org/docs/latest/user/actions/actions/",
+            "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/latest/user/api/versions/",
+            "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+            "https://forgejo.org/docs/latest/user/collaboration/labels/",
+            "https://forgejo.org/docs/latest/user/collaboration/profile/",
+            "https://forgejo.org/docs/latest/user/collaboration/project/",
+            "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+            "https://forgejo.org/docs/latest/user/forgejo-next/",
+            "https://forgejo.org/docs/latest/user/git-cli/",
+            "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+            "https://forgejo.org/docs/latest/user/git-cli/push-to-create/"
+          ]
+        },
+        {
+          "id": "s4",
+          "url": "https://v17.next.forgejo.org/swagger.v1.json",
+          "title": "Forgejo API",
+          "retrievedAt": "2026-11-03T05:53:56.381Z",
+          "hash": "e0d88b2ccd1972e99d5e659af8af2c17074e2048bc196bc0df34bef51f43d79d",
+          "links": []
+        },
+        {
+          "id": "s5",
+          "url": "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "title": "Access Token Scope | Forgejo – Beyond coding. We forge.",
+          "retrievedAt": "2026-11-03T05:53:56.381Z",
+          "hash": "00aadeba086635cedcc17321e9ad8eed2b7940fdad1d83ae5d001679ecfb882a",
+          "links": [
+            "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+            "https://forgejo.org/docs/next/user/authentication/token-scope/",
+            "https://forgejo.org/docs/v15.0/user/authentication/token-scope/",
+            "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/oauth2-provider.en-us.md",
+            "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/latest/user/api/usage/",
+            "https://forgejo.org/docs/latest/user/getting-started/",
+            "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+            "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+            "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+            "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/v17.0/",
+            "https://forgejo.org/docs/latest/contributor/",
+            "https://forgejo.org/docs/latest/contributor/architecture/",
+            "https://forgejo.org/docs/latest/contributor/discussions/",
+            "https://forgejo.org/docs/latest/contributor/coc/",
+            "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+            "https://forgejo.org/docs/latest/contributor/from-source/",
+            "https://forgejo.org/docs/latest/contributor/dependencies/",
+            "https://forgejo.org/docs/latest/contributor/dco/",
+            "https://forgejo.org/docs/latest/contributor/development-environment/",
+            "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+            "https://forgejo.org/docs/latest/contributor/governance/",
+            "https://forgejo.org/docs/latest/contributor/infrastructure/",
+            "https://forgejo.org/docs/latest/contributor/customization/",
+            "https://forgejo.org/docs/latest/contributor/localization/",
+            "https://forgejo.org/docs/latest/contributor/localization/english/",
+            "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+            "https://forgejo.org/docs/latest/contributor/release/",
+            "https://forgejo.org/docs/latest/contributor/secrets/",
+            "https://forgejo.org/docs/latest/contributor/static-pages/",
+            "https://forgejo.org/docs/latest/contributor/testing/",
+            "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+            "https://forgejo.org/docs/latest/contributor/browser-support/",
+            "https://forgejo.org/docs/latest/contributor/welcome/",
+            "https://forgejo.org/docs/latest/user/",
+            "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+            "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+            "https://forgejo.org/docs/latest/user/actions/github-actions/",
+            "https://forgejo.org/docs/latest/user/actions/quick-start/",
+            "https://forgejo.org/docs/latest/user/actions/reference/",
+            "https://forgejo.org/docs/latest/user/actions/security/",
+            "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+            "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+            "https://forgejo.org/docs/latest/user/actions/overview/",
+            "https://forgejo.org/docs/latest/user/actions/actions/",
+            "https://forgejo.org/docs/latest/user/api/",
+            "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/latest/user/api/versions/",
+            "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+            "https://forgejo.org/docs/latest/user/collaboration/labels/",
+            "https://forgejo.org/docs/latest/user/collaboration/profile/",
+            "https://forgejo.org/docs/latest/user/collaboration/project/",
+            "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+            "https://forgejo.org/docs/latest/user/forgejo-next/",
+            "https://forgejo.org/docs/latest/user/git-cli/",
+            "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+            "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+            "https://forgejo.org/docs/latest/user/packages/"
+          ]
+        },
+        {
+          "id": "s6",
+          "url": "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "title": "Repository Permissions | Forgejo – Beyond coding. We forge.",
+          "retrievedAt": "2026-11-03T05:53:56.393Z",
+          "hash": "8b18dcccefe5cf12bd6f2d34d54529592e3115f733228531290cc3635c3788bb",
+          "links": [
+            "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+            "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/next/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/v15.0/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/latest/user/api/usage/",
+            "https://forgejo.org/docs/latest/user/getting-started/",
+            "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+            "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+            "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+            "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/v17.0/",
+            "https://forgejo.org/docs/latest/contributor/",
+            "https://forgejo.org/docs/latest/contributor/architecture/",
+            "https://forgejo.org/docs/latest/contributor/discussions/",
+            "https://forgejo.org/docs/latest/contributor/coc/",
+            "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+            "https://forgejo.org/docs/latest/contributor/from-source/",
+            "https://forgejo.org/docs/latest/contributor/dependencies/",
+            "https://forgejo.org/docs/latest/contributor/dco/",
+            "https://forgejo.org/docs/latest/contributor/development-environment/",
+            "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+            "https://forgejo.org/docs/latest/contributor/governance/",
+            "https://forgejo.org/docs/latest/contributor/infrastructure/",
+            "https://forgejo.org/docs/latest/contributor/customization/",
+            "https://forgejo.org/docs/latest/contributor/localization/",
+            "https://forgejo.org/docs/latest/contributor/localization/english/",
+            "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+            "https://forgejo.org/docs/latest/contributor/release/",
+            "https://forgejo.org/docs/latest/contributor/secrets/",
+            "https://forgejo.org/docs/latest/contributor/static-pages/",
+            "https://forgejo.org/docs/latest/contributor/testing/",
+            "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+            "https://forgejo.org/docs/latest/contributor/browser-support/",
+            "https://forgejo.org/docs/latest/contributor/welcome/",
+            "https://forgejo.org/docs/latest/user/",
+            "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+            "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+            "https://forgejo.org/docs/latest/user/actions/github-actions/",
+            "https://forgejo.org/docs/latest/user/actions/quick-start/",
+            "https://forgejo.org/docs/latest/user/actions/reference/",
+            "https://forgejo.org/docs/latest/user/actions/security/",
+            "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+            "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+            "https://forgejo.org/docs/latest/user/actions/overview/",
+            "https://forgejo.org/docs/latest/user/actions/actions/",
+            "https://forgejo.org/docs/latest/user/api/",
+            "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/latest/user/api/versions/",
+            "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+            "https://forgejo.org/docs/latest/user/collaboration/labels/",
+            "https://forgejo.org/docs/latest/user/collaboration/profile/",
+            "https://forgejo.org/docs/latest/user/collaboration/project/",
+            "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+            "https://forgejo.org/docs/latest/user/forgejo-next/",
+            "https://forgejo.org/docs/latest/user/git-cli/",
+            "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+            "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+            "https://forgejo.org/docs/latest/user/packages/",
+            "https://forgejo.org/docs/latest/user/packages/alpine/"
+          ]
+        },
+        {
+          "id": "s7",
+          "url": "https://forgejo.org/docs/latest/user/api/usage/",
+          "title": "API Usage | Forgejo – Beyond coding. We forge.",
+          "retrievedAt": "2026-11-03T05:53:56.404Z",
+          "hash": "17951a443e5ee7576cb271cbcb5ce178adb5da04bc2429ce68827cce1a2abaec",
+          "links": [
+            "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+            "https://try.next.forgejo.org/api/swagger",
+            "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/latest/user/api/usage/",
+            "https://forgejo.org/docs/next/user/api/usage/",
+            "https://forgejo.org/docs/v15.0/user/api/usage/",
+            "https://forgejo.org/docs/latest/user/getting-started/",
+            "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+            "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+            "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+            "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+            "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/api-usage.en-us.md",
+            "https://forgejo.org/docs/v17.0/",
+            "https://forgejo.org/docs/latest/contributor/",
+            "https://forgejo.org/docs/latest/contributor/architecture/",
+            "https://forgejo.org/docs/latest/contributor/discussions/",
+            "https://forgejo.org/docs/latest/contributor/coc/",
+            "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+            "https://forgejo.org/docs/latest/contributor/from-source/",
+            "https://forgejo.org/docs/latest/contributor/dependencies/",
+            "https://forgejo.org/docs/latest/contributor/dco/",
+            "https://forgejo.org/docs/latest/contributor/development-environment/",
+            "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+            "https://forgejo.org/docs/latest/contributor/governance/",
+            "https://forgejo.org/docs/latest/contributor/infrastructure/",
+            "https://forgejo.org/docs/latest/contributor/customization/",
+            "https://forgejo.org/docs/latest/contributor/localization/",
+            "https://forgejo.org/docs/latest/contributor/localization/english/",
+            "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+            "https://forgejo.org/docs/latest/contributor/release/",
+            "https://forgejo.org/docs/latest/contributor/secrets/",
+            "https://forgejo.org/docs/latest/contributor/static-pages/",
+            "https://forgejo.org/docs/latest/contributor/testing/",
+            "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+            "https://forgejo.org/docs/latest/contributor/browser-support/",
+            "https://forgejo.org/docs/latest/contributor/welcome/",
+            "https://forgejo.org/docs/latest/user/",
+            "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+            "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+            "https://forgejo.org/docs/latest/user/actions/github-actions/",
+            "https://forgejo.org/docs/latest/user/actions/quick-start/",
+            "https://forgejo.org/docs/latest/user/actions/reference/",
+            "https://forgejo.org/docs/latest/user/actions/security/",
+            "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+            "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+            "https://forgejo.org/docs/latest/user/actions/overview/",
+            "https://forgejo.org/docs/latest/user/actions/actions/",
+            "https://forgejo.org/docs/latest/user/api/",
+            "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/latest/user/api/versions/",
+            "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+            "https://forgejo.org/docs/latest/user/collaboration/labels/",
+            "https://forgejo.org/docs/latest/user/collaboration/profile/",
+            "https://forgejo.org/docs/latest/user/collaboration/project/",
+            "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+            "https://forgejo.org/docs/latest/user/forgejo-next/",
+            "https://forgejo.org/docs/latest/user/git-cli/",
+            "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+            "https://forgejo.org/docs/latest/user/git-cli/push-to-create/"
+          ]
+        },
+        {
+          "id": "s8",
+          "url": "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "title": "Your First Repository | Forgejo – Beyond coding. We forge.",
+          "retrievedAt": "2026-11-03T05:53:56.414Z",
+          "hash": "853f77717f88dee37f1b53fb7e15870af803853ce113ebf2fa372721a2a81e46",
+          "links": [
+            "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+            "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+            "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+            "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/next/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/v15.0/user/getting-started/first-repository/",
+            "https://forgejo.org/docs/latest/user/api/usage/",
+            "https://forgejo.org/docs/latest/user/getting-started/",
+            "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+            "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+            "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+            "https://docs.codeberg.org/getting-started/licensing/",
+            "https://forgejo.org/docs/v17.0/",
+            "https://forgejo.org/docs/latest/contributor/",
+            "https://forgejo.org/docs/latest/contributor/architecture/",
+            "https://forgejo.org/docs/latest/contributor/discussions/",
+            "https://forgejo.org/docs/latest/contributor/coc/",
+            "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+            "https://forgejo.org/docs/latest/contributor/from-source/",
+            "https://forgejo.org/docs/latest/contributor/dependencies/",
+            "https://forgejo.org/docs/latest/contributor/dco/",
+            "https://forgejo.org/docs/latest/contributor/development-environment/",
+            "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+            "https://forgejo.org/docs/latest/contributor/governance/",
+            "https://forgejo.org/docs/latest/contributor/infrastructure/",
+            "https://forgejo.org/docs/latest/contributor/customization/",
+            "https://forgejo.org/docs/latest/contributor/localization/",
+            "https://forgejo.org/docs/latest/contributor/localization/english/",
+            "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+            "https://forgejo.org/docs/latest/contributor/release/",
+            "https://forgejo.org/docs/latest/contributor/secrets/",
+            "https://forgejo.org/docs/latest/contributor/static-pages/",
+            "https://forgejo.org/docs/latest/contributor/testing/",
+            "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+            "https://forgejo.org/docs/latest/contributor/browser-support/",
+            "https://forgejo.org/docs/latest/contributor/welcome/",
+            "https://forgejo.org/docs/latest/user/",
+            "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+            "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+            "https://forgejo.org/docs/latest/user/actions/github-actions/",
+            "https://forgejo.org/docs/latest/user/actions/quick-start/",
+            "https://forgejo.org/docs/latest/user/actions/reference/",
+            "https://forgejo.org/docs/latest/user/actions/security/",
+            "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+            "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+            "https://forgejo.org/docs/latest/user/actions/overview/",
+            "https://forgejo.org/docs/latest/user/actions/actions/",
+            "https://forgejo.org/docs/latest/user/api/",
+            "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+            "https://forgejo.org/docs/latest/user/api/versions/",
+            "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+            "https://forgejo.org/docs/latest/user/collaboration/labels/",
+            "https://forgejo.org/docs/latest/user/collaboration/profile/",
+            "https://forgejo.org/docs/latest/user/collaboration/project/",
+            "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+            "https://forgejo.org/docs/latest/user/forgejo-next/",
+            "https://forgejo.org/docs/latest/user/git-cli/",
+            "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+            "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+            "https://forgejo.org/docs/latest/user/packages/"
+          ]
+        }
+      ],
+      "integration": {
+        "message": "No exact match was found in the dated Composio catalog. This provider guide does not establish a supported Composio toolkit. Confirm the integration route separately before following toolkit configuration instructions."
+      },
+      "resultState": "usable-guide",
+      "researchMetrics": {
+        "navigationCalls": 2
+      }
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+        "title": "OAuth2 provider | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.348Z",
+        "hash": "c9f2916c64464b6b5a2a3a1b52cc1b43bfef33b3ed4b148d4f7812da4b931de8",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/next/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/v15.0/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/oauth2-provider.en-us.md",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://oauthdebugger.com/",
+          "https://github.com/hickford/git-credential-oauth",
+          "https://github.com/hickford/git-credential-oauth/releases/download/v0.11.0/git-credential-oauth_0.11.0_linux_amd64.tar.gz",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+        "title": "Authorized Integrations | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.363Z",
+        "hash": "23b7c1be14ae3346c6f5a98f866bd3086caeb74078d6f2275812dc547642070c",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/next/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/",
+          "https://forgejo.org/docs/latest/user/packages/alpine/"
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://forgejo.org/docs/latest/user/api/",
+        "title": "API | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.371Z",
+        "hash": "b87b5c2476b3467320c83387c3a63a9b0958415751a2a07a5c70192b82364a85",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://next.forgejo.org/swagger.v1.json",
+          "https://next.forgejo.org/api/swagger",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/next/user/api/",
+          "https://forgejo.org/docs/v15.0/user/api/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://v17.next.forgejo.org/swagger.v1.json",
+        "title": "Forgejo API",
+        "retrievedAt": "2026-11-03T05:53:56.381Z",
+        "hash": "e0d88b2ccd1972e99d5e659af8af2c17074e2048bc196bc0df34bef51f43d79d",
+        "links": []
+      },
+      {
+        "id": "s5",
+        "url": "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+        "title": "Access Token Scope | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.381Z",
+        "hash": "00aadeba086635cedcc17321e9ad8eed2b7940fdad1d83ae5d001679ecfb882a",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/next/user/authentication/token-scope/",
+          "https://forgejo.org/docs/v15.0/user/authentication/token-scope/",
+          "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/oauth2-provider.en-us.md",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+        "title": "Repository Permissions | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.393Z",
+        "hash": "8b18dcccefe5cf12bd6f2d34d54529592e3115f733228531290cc3635c3788bb",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/next/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/v15.0/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/",
+          "https://forgejo.org/docs/latest/user/packages/alpine/"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://forgejo.org/docs/latest/user/api/usage/",
+        "title": "API Usage | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.404Z",
+        "hash": "17951a443e5ee7576cb271cbcb5ce178adb5da04bc2429ce68827cce1a2abaec",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://try.next.forgejo.org/api/swagger",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/next/user/api/usage/",
+          "https://forgejo.org/docs/v15.0/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/api-usage.en-us.md",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/"
+        ]
+      },
+      {
+        "id": "s8",
+        "url": "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+        "title": "Your First Repository | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.414Z",
+        "hash": "853f77717f88dee37f1b53fb7e15870af803853ce113ebf2fa372721a2a81e46",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/next/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v15.0/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://docs.codeberg.org/getting-started/licensing/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/"
+        ]
+      }
+    ]
+  },
+  "readiness": "usable-guide",
+  "requests": [
+    {
+      "stepId": "s-action",
+      "stub": {
+        "method": "GET",
+        "url": "https://your-forgejo-instance/api/v1/repos/search?limit=50&page=1",
+        "headers": {
+          "authorization": "Bearer test-access-token"
+        },
+        "body": []
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    }
+  ],
+  "planStatus": 200,
+  "plan": {
+    "schemaVersion": 1,
+    "id": "lg-46fc6b8f-0e9f-4dbf-bd95-b7f51d85f11c",
+    "provider": "Forgejo",
+    "request": "List repository names visible to the connected person, including pagination. Read only. Never create, edit or delete repositories. Use OAuth for individual customer accounts on their own instances; retain the instance base URL as a user input.",
+    "createdAt": "2026-11-03T05:54:33.993Z",
+    "basis": "Live research",
+    "status": "Provisional plan",
+    "summary": "Use OAuth2 against each customer's own Forgejo instance. The instance administrator must register the app at the instance admin applications page. Forgejo's OAuth grant has no scope selection, and the token carries administrative rights, so the read-only boundary cannot be enforced by the grant. Use the repository search endpoint for visible repositories and follow pagination links until none remain. Test with your own instance first. Whether an empty query returns every visible repository is unverified.",
+    "route": "Use OAuth2 against each customer's own Forgejo instance. The instance administrator must register the app at the instance admin applications page. Forgejo's OAuth grant has no scope selection, and the token carries administrative rights, so the read-only boundary cannot be enforced by the grant. Use the repository search endpoint for visible repositories and follow pagination links until none remain. Test with your own instance first. Whether an empty query returns every visible repository is unverified.",
+    "next": {
+      "id": "s-app",
+      "testKind": "prepare",
+      "dependsOn": [],
+      "actionIds": [],
+      "title": "Register the OAuth app on your test Forgejo instance",
+      "detail": "As a site administrator on the test instance, create an OAuth2 application at the admin applications page. Record the client ID and secret and register the redirect URI.",
+      "owner": "customer admin",
+      "stage": "prepare",
+      "doneWhen": "Client ID and secret are stored securely and the redirect URI is registered on the test instance.",
+      "appliesWhen": "Applies to each customer instance; a test instance is used first.",
+      "destination": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+      "fields": [
+        "Instance base URL",
+        "CLIENT_ID",
+        "CLIENT_SECRET",
+        "REDIRECT_URI"
+      ],
+      "evidence": [
+        {
+          "sourceId": "s1",
+          "quote": "Forgejo can act as an instance-wide OAuth2 provider. To achieve that, OAuth2 applications must be created on the /admin/applications page."
+        },
+        {
+          "sourceId": "s1",
+          "quote": "https://[ YOUR-FORGEJO-URL ]/login/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE The CLIENT_ID can be obtained by registering an application in the settings. The STATE is a random string that will be"
+        }
+      ],
+      "sourceIds": [
+        "s1",
+        "s1"
+      ],
+      "blockedBy": []
+    },
+    "steps": [
+      {
+        "id": "s-app",
+        "testKind": "prepare",
+        "dependsOn": [],
+        "actionIds": [],
+        "title": "Register the OAuth app on your test Forgejo instance",
+        "detail": "As a site administrator on the test instance, create an OAuth2 application at the admin applications page. Record the client ID and secret and register the redirect URI.",
+        "owner": "customer admin",
+        "stage": "prepare",
+        "doneWhen": "Client ID and secret are stored securely and the redirect URI is registered on the test instance.",
+        "appliesWhen": "Applies to each customer instance; a test instance is used first.",
+        "destination": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+        "fields": [
+          "Instance base URL",
+          "CLIENT_ID",
+          "CLIENT_SECRET",
+          "REDIRECT_URI"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "Forgejo can act as an instance-wide OAuth2 provider. To achieve that, OAuth2 applications must be created on the /admin/applications page."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "https://[ YOUR-FORGEJO-URL ]/login/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE The CLIENT_ID can be obtained by registering an application in the settings. The STATE is a random string that will be"
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "s-impl",
+        "testKind": "prepare",
+        "dependsOn": [],
+        "actionIds": [],
+        "title": "Implement authorize redirect and code-to-token exchange",
+        "detail": "Build the authorize redirect with a random state value, the callback handler, and the POST token exchange using a form body. Keep the same redirect URI in both requests. Do not implement a write endpoint.",
+        "owner": "agent",
+        "stage": "prepare",
+        "doneWhen": "Code builds the authorize URL, validates state, and posts the token request against the test instance URL.",
+        "destination": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+        "fields": [],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "https://[ YOUR-FORGEJO-URL ]/login/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE The CLIENT_ID can be obtained by registering an application in the settings. The STATE is a random string that will be"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "sent back to your application after the user authorizes. The state parameter is optional but should be used to prevent CSRF attacks."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "https://[ REDIRECT_URI ]?code=RETURNED_CODE&state=STATE Using the provided code from the redirect, you can request a new application and refresh token. The access token endpoint accepts POST requests with application/json and"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "The REDIRECT_URI in the access_token request must match the REDIRECT_URI in the authorize request."
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "s-auth",
+        "testKind": "authorization",
+        "dependsOn": [
+          "s-app",
+          "s-impl"
+        ],
+        "actionIds": [],
+        "title": "Authorize the representative test account and exchange the code",
+        "detail": "Sign in as the representative test user on the test instance, approve the app, and exchange the returned code for an access token. This is setup only and is not a resource test.",
+        "owner": "developer",
+        "stage": "test",
+        "doneWhen": "The test user approves the app, and the token exchange returns an access token for that user.",
+        "appliesWhen": "Applies to the representative test account on the test instance.",
+        "destination": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+        "fields": [],
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "The user will now be asked to authorize your application. If they authorize it, the user will be redirected to the REDIRECT_URL , for example:"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "POST https://[YOUR-FORGEJO-URL]/login/oauth/access_token { \"client_id\" : \"YOUR_CLIENT_ID\" ,"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Use the access_token to make API requests to access the user’s resources."
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "s-action",
+        "testKind": "action",
+        "request": {
+          "method": "GET",
+          "endpoint": "/api/v1/repos/search",
+          "example": "curl '-H' 'Authorization: Bearer ACCESS_TOKEN' 'https://YOUR-FORGEJO-INSTANCE/api/v1/repos/search?limit=50&page=1'"
+        },
+        "dependsOn": [
+          "s-auth"
+        ],
+        "actionIds": [
+          "list-visible-repository-names"
+        ],
+        "title": "Test listing visible repository names with pagination",
+        "detail": "Call the repository search endpoint with the OAuth Bearer token and follow the Link rel=next header until it is absent. Expected: repository names with x-total-count. Boundary check: confirm that only GET requests appear in the outgoing request log and that the authorization screen shows administrative access. Do not run any write call.",
+        "owner": "developer",
+        "stage": "test",
+        "doneWhen": "All pages are collected, the count matches x-total-count, and the request log shows only GET requests.",
+        "appliesWhen": "Test against the representative account on the test instance.",
+        "destination": "https://v17.next.forgejo.org/swagger.v1.json",
+        "fields": [
+          "Access token: backend OAuth exchange for the test account; keep it out of this guide"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s4",
+            "quote": "## GET /api/v1/repos/search | Search for repositories"
+          },
+          {
+            "sourceId": "s7",
+            "quote": "Pagination The API supports pagination. The page and limit parameters are used to specify the page number and the number of items per page. As well, the Link header is"
+          },
+          {
+            "sourceId": "s7",
+            "quote": "HTTP basic authentication Authorization: Bearer ... header in HTTP headers"
+          }
+        ],
+        "sourceIds": [
+          "s4",
+          "s7",
+          "s7"
+        ],
+        "blockedBy": []
+      }
+    ],
+    "nextNote": "Register the OAuth app on your test Forgejo instance",
+    "coverage": [
+      {
+        "action": "List repository names visible to the connected person, including pagination",
+        "actionId": "list-visible-repository-names",
+        "permissions": [],
+        "status": "mapped",
+        "reason": "The documented OAuth grant has no scope selection, so no permission is requested. The token carries administrative rights, so the read-only boundary is not enforced by the grant. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s4",
+            "quote": "## GET /api/v1/repos/search | Search for repositories"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Note Third-party applications obtaining a token for a user via such an application will have administrative rights."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "OAuth2 scopes are not yet implemented."
+          }
+        ],
+        "support": "reviewed",
+        "execution": "untested"
+      }
+    ],
+    "permissions": [],
+    "requirements": [
+      {
+        "id": "requirement-0",
+        "kind": "prerequisite",
+        "title": "OAuth token has administrative rights, not a narrow grant",
+        "detail": "A third-party app that obtains a user token gets administrative rights. OAuth scopes are not implemented, so the read-only use case cannot be enforced through the grant. Disclose this to customers.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "Note Third-party applications obtaining a token for a user via such an application will have administrative rights."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "OAuth2 scopes are not yet implemented."
+          }
+        ],
+        "stage": "launch",
+        "sourceIds": [
+          "s1",
+          "s1"
+        ]
+      },
+      {
+        "id": "requirement-1",
+        "kind": "prerequisite",
+        "title": "No OAuth scope to request for the read",
+        "detail": "No OAuth scope identifier is documented, so no permission is requested. Scoped access tokens and personal tokens are separate from OAuth and are not used for this flow.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "OAuth2 scopes are not yet implemented."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Note Scoped tokens or personal access tokens are entirely different from OAuth2;"
+          }
+        ],
+        "stage": "launch",
+        "sourceIds": [
+          "s1",
+          "s1"
+        ]
+      },
+      {
+        "id": "requirement-2",
+        "kind": "prerequisite",
+        "title": "Repository search covers visible repositories",
+        "detail": "The search endpoint includes private repositories the user can access by default. The owned-repositories endpoint returns only repositories the user owns, so it is not sufficient for visible repositories.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s4",
+            "quote": "## GET /api/v1/repos/search | Search for repositories"
+          },
+          {
+            "sourceId": "s4",
+            "quote": "Parameter private in query (boolean, optional): include private repositories this user has access to (defaults to true)"
+          },
+          {
+            "sourceId": "s4",
+            "quote": "## GET /api/v1/user/repos | List the repos that the authenticated user owns"
+          }
+        ],
+        "stage": "launch",
+        "sourceIds": [
+          "s4",
+          "s4",
+          "s4"
+        ]
+      },
+      {
+        "id": "requirement-3",
+        "kind": "prerequisite",
+        "title": "Pagination uses page, limit and Link headers",
+        "detail": "The API supports page and limit parameters. Link headers give next and last pages, and x-total-count gives the total. Maximum page size is read from the instance settings endpoint.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s7",
+            "quote": "Pagination The API supports pagination. The page and limit parameters are used to specify the page number and the number of items per page. As well, the Link header is"
+          },
+          {
+            "sourceId": "s7",
+            "quote": "returned with the next, previous, and last page links if there are more than one page. The x-total-count is also returned to indicate the total number of items."
+          },
+          {
+            "sourceId": "s7",
+            "quote": "The default and maximum values for the page parameter can be obtained from the https://forgejo.example.org/api/v1/settings/api endpoint."
+          }
+        ],
+        "stage": "launch",
+        "sourceIds": [
+          "s7",
+          "s7",
+          "s7"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "id": "blocker-0",
+        "title": "Instance admin must register the OAuth app",
+        "consequence": "test",
+        "kind": "prerequisite",
+        "owner": "customer admin",
+        "resolution": "Have a site administrator create the app on each instance before authorization.",
+        "stepIds": [
+          "s-app"
+        ],
+        "resolutionStepIds": [
+          "s-app"
+        ]
+      },
+      {
+        "id": "blocker-1",
+        "title": "Verify the token's real access on each customer instance",
+        "consequence": "follow-up",
+        "kind": "verification",
+        "owner": "developer",
+        "resolution": "Record the consent screen's access level and disclose the administrative rights to customers.",
+        "stepIds": [
+          "s-action"
+        ],
+        "resolutionStepIds": [
+          "s-action"
+        ]
+      },
+      {
+        "id": "unknown-0",
+        "title": "Provider review, listing and distribution requirements for OAuth apps are not documented in the supplied sources. Verify before customer rollout.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Provider review, listing and distribution requirements for OAuth apps are not documented in the supplied sources. Verify before customer rollout."
+      },
+      {
+        "id": "unknown-1",
+        "title": "Token lifetime and refresh behavior are not documented clearly enough to plan production handling.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Token lifetime and refresh behavior are not documented clearly enough to plan production handling."
+      },
+      {
+        "id": "unknown-2",
+        "title": "Whether customers' instance admins will approve installation for each customer is not documented.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Whether customers' instance admins will approve installation for each customer is not documented."
+      },
+      {
+        "id": "source-warning-0",
+        "title": "Could not read forgejo.org/docs/latest/user/api/authentication/token-scope/.",
+        "consequence": "follow-up",
+        "owner": "Research",
+        "resolution": "Retry with a direct public documentation URL if this source affects an unresolved requirement."
+      }
+    ],
+    "sources": [
+      {
+        "id": "s1",
+        "url": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+        "title": "OAuth2 provider | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.348Z",
+        "hash": "c9f2916c64464b6b5a2a3a1b52cc1b43bfef33b3ed4b148d4f7812da4b931de8",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/next/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/v15.0/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/oauth2-provider.en-us.md",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://oauthdebugger.com/",
+          "https://github.com/hickford/git-credential-oauth",
+          "https://github.com/hickford/git-credential-oauth/releases/download/v0.11.0/git-credential-oauth_0.11.0_linux_amd64.tar.gz",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/"
+        ],
+        "checkedAt": "2026-11-03T05:53:56.348Z"
+      },
+      {
+        "id": "s2",
+        "url": "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+        "title": "Authorized Integrations | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.363Z",
+        "hash": "23b7c1be14ae3346c6f5a98f866bd3086caeb74078d6f2275812dc547642070c",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/next/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/",
+          "https://forgejo.org/docs/latest/user/packages/alpine/"
+        ],
+        "checkedAt": "2026-11-03T05:53:56.363Z"
+      },
+      {
+        "id": "s3",
+        "url": "https://forgejo.org/docs/latest/user/api/",
+        "title": "API | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.371Z",
+        "hash": "b87b5c2476b3467320c83387c3a63a9b0958415751a2a07a5c70192b82364a85",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://next.forgejo.org/swagger.v1.json",
+          "https://next.forgejo.org/api/swagger",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/next/user/api/",
+          "https://forgejo.org/docs/v15.0/user/api/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/"
+        ],
+        "checkedAt": "2026-11-03T05:53:56.371Z"
+      },
+      {
+        "id": "s4",
+        "url": "https://v17.next.forgejo.org/swagger.v1.json",
+        "title": "Forgejo API",
+        "retrievedAt": "2026-11-03T05:53:56.381Z",
+        "hash": "e0d88b2ccd1972e99d5e659af8af2c17074e2048bc196bc0df34bef51f43d79d",
+        "links": [],
+        "checkedAt": "2026-11-03T05:53:56.381Z"
+      },
+      {
+        "id": "s5",
+        "url": "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+        "title": "Access Token Scope | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.381Z",
+        "hash": "00aadeba086635cedcc17321e9ad8eed2b7940fdad1d83ae5d001679ecfb882a",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/next/user/authentication/token-scope/",
+          "https://forgejo.org/docs/v15.0/user/authentication/token-scope/",
+          "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/oauth2-provider.en-us.md",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/"
+        ],
+        "checkedAt": "2026-11-03T05:53:56.381Z"
+      },
+      {
+        "id": "s6",
+        "url": "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+        "title": "Repository Permissions | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.393Z",
+        "hash": "8b18dcccefe5cf12bd6f2d34d54529592e3115f733228531290cc3635c3788bb",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/next/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/v15.0/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/",
+          "https://forgejo.org/docs/latest/user/packages/alpine/"
+        ],
+        "checkedAt": "2026-11-03T05:53:56.393Z"
+      },
+      {
+        "id": "s7",
+        "url": "https://forgejo.org/docs/latest/user/api/usage/",
+        "title": "API Usage | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.404Z",
+        "hash": "17951a443e5ee7576cb271cbcb5ce178adb5da04bc2429ce68827cce1a2abaec",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://try.next.forgejo.org/api/swagger",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/next/user/api/usage/",
+          "https://forgejo.org/docs/v15.0/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://github.com/go-gitea/gitea/blob/e865de1e9d65dc09797d165a51c8e705d2a86030/docs/content/development/api-usage.en-us.md",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/"
+        ],
+        "checkedAt": "2026-11-03T05:53:56.404Z"
+      },
+      {
+        "id": "s8",
+        "url": "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+        "title": "Your First Repository | Forgejo – Beyond coding. We forge.",
+        "retrievedAt": "2026-11-03T05:53:56.414Z",
+        "hash": "853f77717f88dee37f1b53fb7e15870af803853ce113ebf2fa372721a2a81e46",
+        "links": [
+          "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/next/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/v15.0/user/getting-started/first-repository/",
+          "https://forgejo.org/docs/latest/user/api/usage/",
+          "https://forgejo.org/docs/latest/user/getting-started/",
+          "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "https://docs.codeberg.org/getting-started/licensing/",
+          "https://forgejo.org/docs/v17.0/",
+          "https://forgejo.org/docs/latest/contributor/",
+          "https://forgejo.org/docs/latest/contributor/architecture/",
+          "https://forgejo.org/docs/latest/contributor/discussions/",
+          "https://forgejo.org/docs/latest/contributor/coc/",
+          "https://forgejo.org/docs/latest/contributor/code-forgejo-org/",
+          "https://forgejo.org/docs/latest/contributor/from-source/",
+          "https://forgejo.org/docs/latest/contributor/dependencies/",
+          "https://forgejo.org/docs/latest/contributor/dco/",
+          "https://forgejo.org/docs/latest/contributor/development-environment/",
+          "https://forgejo.org/docs/latest/contributor/finding-what-to-work-on/",
+          "https://forgejo.org/docs/latest/contributor/governance/",
+          "https://forgejo.org/docs/latest/contributor/infrastructure/",
+          "https://forgejo.org/docs/latest/contributor/customization/",
+          "https://forgejo.org/docs/latest/contributor/localization/",
+          "https://forgejo.org/docs/latest/contributor/localization/english/",
+          "https://forgejo.org/docs/latest/contributor/repositories-dependencies/",
+          "https://forgejo.org/docs/latest/contributor/release/",
+          "https://forgejo.org/docs/latest/contributor/secrets/",
+          "https://forgejo.org/docs/latest/contributor/static-pages/",
+          "https://forgejo.org/docs/latest/contributor/testing/",
+          "https://forgejo.org/docs/latest/contributor/threat-analysis/",
+          "https://forgejo.org/docs/latest/contributor/browser-support/",
+          "https://forgejo.org/docs/latest/contributor/welcome/",
+          "https://forgejo.org/docs/latest/user/",
+          "https://forgejo.org/docs/latest/user/actions/advanced-features/",
+          "https://forgejo.org/docs/latest/user/actions/basic-concepts/",
+          "https://forgejo.org/docs/latest/user/actions/github-actions/",
+          "https://forgejo.org/docs/latest/user/actions/quick-start/",
+          "https://forgejo.org/docs/latest/user/actions/reference/",
+          "https://forgejo.org/docs/latest/user/actions/security/",
+          "https://forgejo.org/docs/latest/user/actions/security-openid-connect/",
+          "https://forgejo.org/docs/latest/user/actions/troubleshooting/",
+          "https://forgejo.org/docs/latest/user/actions/overview/",
+          "https://forgejo.org/docs/latest/user/actions/actions/",
+          "https://forgejo.org/docs/latest/user/api/",
+          "https://forgejo.org/docs/latest/user/api/authorized-integrations/",
+          "https://forgejo.org/docs/latest/user/api/versions/",
+          "https://forgejo.org/docs/latest/user/collaboration/blocking-user/",
+          "https://forgejo.org/docs/latest/user/collaboration/labels/",
+          "https://forgejo.org/docs/latest/user/collaboration/profile/",
+          "https://forgejo.org/docs/latest/user/collaboration/project/",
+          "https://forgejo.org/docs/latest/user/collaboration/repository-activity/",
+          "https://forgejo.org/docs/latest/user/forgejo-next/",
+          "https://forgejo.org/docs/latest/user/git-cli/",
+          "https://forgejo.org/docs/latest/user/git-cli/agit-support/",
+          "https://forgejo.org/docs/latest/user/git-cli/push-to-create/",
+          "https://forgejo.org/docs/latest/user/packages/"
+        ],
+        "checkedAt": "2026-11-03T05:53:56.414Z"
+      }
+    ],
+    "timing": {
+      "work": "Not estimated",
+      "workBasis": "No supported hands-on estimate was established for this path.",
+      "wait": "No applicable published review time was established.",
+      "waitSourceIds": [],
+      "external": "Customer administrator actions and provider review are separate dependencies."
+    },
+    "integration": "No exact match was found in the dated Composio catalog. This provider guide does not establish a supported Composio toolkit. Confirm the integration route separately before following toolkit configuration instructions.",
+    "details": [
+      {
+        "id": "rationale-0",
+        "kind": "oauth",
+        "title": "OAuth2 provider is documented for third-party apps",
+        "detail": "Forgejo supports third-party apps obtaining user consent. OAuth apps are registered instance-wide by an administrator, so each customer's instance needs its own registration.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "OAuth2 provider Forgejo supports acting as an OAuth2 provider to allow third party applications to access its resources with the user’s consent."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Forgejo can act as an instance-wide OAuth2 provider. To achieve that, OAuth2 applications must be created on the /admin/applications page."
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1"
+        ]
+      },
+      {
+        "id": "rationale-1",
+        "kind": "oauth",
+        "title": "Authorization and token exchange endpoints",
+        "detail": "Redirect the user to the authorize endpoint with client ID, redirect URI, response type code and state. Exchange the returned code at the token endpoint. The redirect URI must match in both requests. Use the access token as a Bearer header.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s1",
+            "quote": "https://[ YOUR-FORGEJO-URL ]/login/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE The CLIENT_ID can be obtained by registering an application in the settings. The STATE is a random string that will be"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "POST https://[YOUR-FORGEJO-URL]/login/oauth/access_token { \"client_id\" : \"YOUR_CLIENT_ID\" ,"
+          },
+          {
+            "sourceId": "s1",
+            "quote": "The REDIRECT_URI in the access_token request must match the REDIRECT_URI in the authorize request."
+          },
+          {
+            "sourceId": "s1",
+            "quote": "Use the access_token to make API requests to access the user’s resources."
+          },
+          {
+            "sourceId": "s7",
+            "quote": "HTTP basic authentication Authorization: Bearer ... header in HTTP headers"
+          }
+        ],
+        "sourceIds": [
+          "s1",
+          "s1",
+          "s1",
+          "s1",
+          "s7"
+        ]
+      }
+    ],
+    "preparation": [
+      {
+        "title": "Permissions rationale",
+        "text": "Permission mapping is unresolved."
+      },
+      {
+        "title": "Registration worksheet",
+        "text": "Register the OAuth app on your test Forgejo instance\nAs a site administrator on the test instance, create an OAuth2 application at the admin applications page. Record the client ID and secret and register the redirect URI.\nFields: Instance base URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI\n\nImplement authorize redirect and code-to-token exchange\nBuild the authorize redirect with a random state value, the callback handler, and the POST token exchange using a form body. Keep the same redirect URI in both requests. Do not implement a write endpoint.\nFields: "
+      },
+      {
+        "title": "First connection test",
+        "text": "Authorize the representative test account and exchange the code\nDone when: The test user approves the app, and the token exchange returns an access token for that user.\n\nTest listing visible repository names with pagination\nDone when: All pages are collected, the count matches x-total-count, and the request log shows only GET requests."
+      },
+      {
+        "title": "Provider clarification draft",
+        "text": "No provider clarification draft is needed from the current findings."
+      }
+    ],
+    "verification": "Generated from retrieved documentation. Citation matching and a separate access review are fallible checks; setup has not been tested. This setup has not been executed or approved.",
+    "context": [
+      {
+        "label": "Actions",
+        "value": "List repository names visible to the connected person, including pagination"
+      },
+      {
+        "label": "Restrictions",
+        "value": "Never create repositories; Never edit repositories; Never delete repositories"
+      },
+      {
+        "label": "Audience",
+        "value": "customers"
+      },
+      {
+        "label": "Continue with forgejo.org?",
+        "value": "Yes, this is the provider"
+      }
+    ],
+    "researchId": "lg-46fc6b8f-0e9f-4dbf-bd95-b7f51d85f11c",
+    "previousId": "lg-08b97bf8-3cc7-4ab1-ab67-e2428c0180a7"
+  },
+  "share": "http://127.0.0.1:5187/plan/lg-46fc6b8f-0e9f-4dbf-bd95-b7f51d85f11c",
+  "errors": [],
+  "speed": {
+    "kind": "normal",
+    "budgetMs": 90000
+  },
+  "pass": true,
+  "elapsedMs": 65083
+}

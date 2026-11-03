@@ -2,9 +2,9 @@ import type {Document} from './contracts.ts';
 
 // Parse only the single curl command, then quote arguments literally. Never
 // execute generated text. Newlines inside JSON/headers stay inside their word.
-export function shellSafeCurl(example:string):string{
+export function curlArguments(example:string):string[]{
  const text=example.replace(/\\\r?\n/g,' ').replace(/\\ (?=-[A-Za-z])/g,' ');
- if(!/^curl\s/.test(text.trim()))return example;
+ if(!/^curl\s/.test(text.trim()))return [];
  const words:string[]=[];let word='',quote='',active=false;
  for(let i=0;i<text.length;i++){
   const ch=text[i];
@@ -17,7 +17,16 @@ export function shellSafeCurl(example:string):string{
  if(quote)throw new Error('A request example has an unclosed shell quote.');
  if(active)words.push(word);
  if(words.some(w=>/^(?:\||&&|;|>)$/.test(w)))throw new Error('A request example must contain one curl command.');
+ return words;
+}
+export function shellSafeCurl(example:string):string{
+ const words=curlArguments(example);if(!words.length)return example;
  return words.map((w,i)=>i===0?w:"'"+w.replace(/'/g,"'\\''")+"'").join(' ');
+}
+export function requestExampleParts(example:string){
+ const args=curlArguments(example),values=(...flags:string[])=>args.flatMap((a,i)=>flags.includes(a)&&args[i+1]?[args[i+1]]:[]);
+ const bodies=values('-d','--data','--data-raw','--data-binary','--json'),headers=Object.fromEntries(values('-H','--header').map(h=>{const at=h.indexOf(':');return [h.slice(0,at).toLowerCase(),h.slice(at+1).trim()];}));
+ return {method:(values('-X','--request')[0]||(bodies.length?'POST':'GET')).toUpperCase(),url:values('--url')[0]||args.find(a=>/^https:\/\//.test(a)||a.startsWith('<INSTANCE_BASE_URL>'))||'',headers,bodies};
 }
 export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,documents:Document[]):T{
  const result=structuredClone(raw);
@@ -28,7 +37,7 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
   let example=String(step.request.example);
   let instanceInput=false;
   example=example.replace(/https:\/\/((?:<[^>]+>|\[[^\]]+\]|\{[^}]+\}|[^/\s'"])+)/g,(whole,authority)=>{
-   if(!/[<\[{]/.test(authority))return whole;
+   if(!/[<\[{]/.test(authority)&&!(/^[A-Z][A-Z0-9_.-]+$/.test(authority)&&/[A-Z]{3}/.test(authority)))return whole;
    instanceInput=true;return '<INSTANCE_BASE_URL>';
   });
   if(instanceInput){

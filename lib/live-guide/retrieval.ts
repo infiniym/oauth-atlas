@@ -190,7 +190,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const topics=options.topics||(['registration','permissions','identity','distribution'] as ResearchTopic[]);
   const candidates=new Map<string,string>();
   for(const d of previous)for(const link of d.links||[])if(sameDocumentationVersion(link,seed)&&!previous.some(p=>p.url===link)&&score(link)>0)candidates.set(link,'');
-  const queue = options.urls?.length?options.urls.map(u=>publicUrl(u).href):previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase)>0)||(/paginat|continuation|cursor/i.test(input.useCase)&&/paginat|swagger|openapi/i.test(l))).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed];
+  const queue = options.urls?.length?options.urls.map(u=>publicUrl(u).href):previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase)>0)||(/paginat|continuation|cursor/i.test(input.useCase)&&/paginat|swagger|openapi|general.concepts|api\/usage/i.test(l))).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed];
   if(previous.length&&!queue.length){
     emit({stage:'Finding missing evidence',detail:'Looking for '+topics.join(', ')+' documentation.',status:'working'});
     try{const query=options.query||`site:${new URL(seed).hostname.replace(/^(docs|developers|developer)\./,'')} ${input.app} OAuth ${topics.join(' ')}`;
@@ -257,7 +257,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const version=[...pages,...previous].some(p=>/[\w-]+-Version/.test(p.text))&&!pages.some(p=>/\/versioning(?:\/|$)/.test(p.url))?ranked.find(([l])=>/\/versioning(?:\/|$)/.test(new URL(l).pathname)):undefined;
       const missing=topics.filter(t=>!covered.has(t)).map(t=>{const topicRanked=t==='registration'?[...ranked].sort((a,b)=>(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(b[0]+' '+b[1])?100:0)-(/oauth.app|oauth.guide|authoriz|register|public.connection/i.test(a[0]+' '+a[1])?100:0)):ranked;const candidate=topicRanked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase)>0):undefined);return {topic:t,url:candidate?.[0]};});
       const schema=ranked.find(([l])=>/swagger.*\.json|openapi.*\.(?:json|ya?ml)/i.test(l));
-      const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l])=>/\/paginat/i.test(l)):undefined;
+      const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l,label])=>/paginat/i.test(l+' '+label))||(![...previous,...pages].some(p=>/paginat|general.concepts|api\/usage/i.test(p.url))?ranked.find(([l,label])=>/general.concepts|api\/usage|pagination|collections/i.test(l+' '+label)):undefined):undefined;
       const priority=[...(pagination?[pagination[0]]:[]),...(schema?[schema[0]]:[]),...(version?[version[0]]:[]),...(overview?[overview[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...missing.filter(m=>m.topic==='registration'||m.topic==='permissions').flatMap(m=>m.url?[m.url]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration'&&m.topic!=='permissions').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
       const promoted=[...new Set(priority)];
