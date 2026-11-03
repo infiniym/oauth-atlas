@@ -8,7 +8,7 @@ export function contradictsGrant(action:string,evidence:Evidence[]):boolean{
   const quote=evidence.map(e=>e.quote).join(' ').toLowerCase();
   // Only reject clear read-only contradictions. General write grants require
   // semantic review; a token such as issues:write does not prove delete access.
-  const positive=action.replace(/\b(?:never|not|no|without|don't|do not|disable|deselect|avoid|exclude|omit|uncheck)\b[^.;\n]*/gi,'');
+  const positive=action.replace(/\b(?:create|edit|update)\s+(?:(?:a|an|the|new|OAuth|public|private|scoped)\s+)*(?:app(?:lication)?|integration|connection|client|redirect|settings)\b/gi,'configure setup').replace(/\b(?:never|not|no|without|don't|do not|disable|deselect|avoid|exclude|omit|uncheck)\b[^.;\n]*/gi,'');
   const mutation=/\b(?:delet\w*|creat\w*|edit\w*|updat\w*|writ\w*|send\w*)\b|\bpost(?:ing)?\s+(?:a\s+)?(?:comment|message|update)/i.test(positive);
   return mutation&&/\bread(?:ing|[- ]only)?\b/.test(quote)&&!/(?:creat|edit|updat|writ|send|post|delet)/.test(quote);
 }

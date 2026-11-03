@@ -406,3 +406,45 @@ test('completion: escaped markup links cannot become malformed public documentat
 test('completion: a full instance URL variable retains the required HTTPS input contract',()=>{
  for(const token of ['$INSTANCE_URL','${BASE_URL}','<INSTANCE_BASE_URL>']){const p=value();p.steps[1].request!.example=`curl '${token}/issues' -H 'Authorization: Bearer <ACCESS_TOKEN>'`;const fixed=validateInterpretation(p,docs);assert.match(fixed.steps[1].request!.example,/<INSTANCE_BASE_URL>\/issues/);assert.ok(fixed.steps[1].fields!.some(f=>/full HTTPS instance URL/.test(f)));}
 });
+
+
+test('completion: a stalled response body is cancelled as soon as its stage aborts',async()=>{
+ const {boundedText}=await import('../lib/live-guide/retrieval.ts');let cancelled=false;const controller=new AbortController();const body=new ReadableStream({start(c){c.enqueue(new TextEncoder().encode('partial'));},cancel(){cancelled=true;}});const result=boundedText(new Response(body),controller.signal);controller.abort(new DOMException('Stage expired','TimeoutError'));await assert.rejects(()=>result,/Stage expired/);assert.equal(cancelled,true);
+});
+test('completion: documented route variables accept literal representative IDs without accepting invented paths',()=>{
+ const p=value();p.steps[1].request={method:'GET',endpoint:'/issues/{issue_id}',example:"curl 'https://api.acme.com/issues/ISSUE_ID' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};const source=[{...docs[0],text:docs[0].text+'\nGET /issues/{issue_id} returns the issue.'}];const fixed=validateInterpretation(p,source);assert.match(fixed.steps[1].request!.example,/issues\/<issue_id>/);
+ p.steps[1].request!.example="curl 'https://attacker.example.com/issues/ISSUE_ID' -H 'Authorization: Bearer <ACCESS_TOKEN>'";assert.throws(()=>validateInterpretation(p,source),/API host is not documented/);
+ p.steps[1].request!.example="curl 'https://api.acme.com/undocumented/issues/ISSUE_ID' -H 'Authorization: Bearer <ACCESS_TOKEN>'";assert.throws(()=>validateInterpretation(p,source),/route template is absent/);
+});
+test('completion: permission descriptions can include OAuth app registration without granting resource writes',()=>{
+ const p=value();p.findings[1].detail='Create a scoped app and select issues:read to read issue content.';assert.doesNotThrow(()=>validateInterpretation(p,docs));p.findings[1].detail='Create issue content using issues:read.';assert.throws(()=>validateInterpretation(p,docs),/contradicts/);
+});
+test('completion: named compact transport enforces citation shape without relaxing the local contract',async()=>{
+ const {wireColumns,wireSchema,decodeWirePlan}=await import('../lib/live-guide/wire.ts');const raw:any={tableVersion:'launch-guide-table.v2',summary:'Test',accessModel:'oauth',oauthSupport:'documented',actions:[],prohibitions:[],findings:[],steps:[],coverage:[],blockers:[],unknowns:[],researchNeeded:[]};
+ raw.actions=[{id:'read',title:'Read issues',operation:'read'}];raw.coverage=[{actionId:'read',permissions:'issues:read',status:'mapped',reason:'Source-backed.',passageIds:'s1-p1,s1-p2'}];const decoded=decodeWirePlan(raw);assert.deepEqual((decoded.coverage as any[])[0].permissions,['issues:read']);assert.deepEqual((decoded.coverage as any[])[0].evidence,[{passageId:'s1-p1'},{passageId:'s1-p2'}]);
+ const pattern=new RegExp((wireSchema.properties.facts as any).properties.coverage.items.properties.citations.properties.primary.pattern);assert.ok(pattern.test('s1-p1'));assert.equal(pattern.test(''),false);assert.equal(pattern.test('s1-p1,s1-p2,s1-p3,s1-p4'),false);assert.ok(wireColumns.steps.includes('example'));
+});
+
+
+test('completion: redirects may reuse an already established official documentation host',async()=>{
+ const {publicReader}=await import('../lib/live-guide/retrieval.ts');const calls:string[]=[];const reader=publicReader(async u=>{const s=String(u);calls.push(s);if(s.includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});if(s==='https://acme.example.com/old')return new Response('',{status:302,headers:{location:'https://docs.acmeapi.example.net/start'}});if(s==='https://docs.acmeapi.example.net/start')return new Response('The previously established official documentation page.');return new Response('',{status:404});},new AbortController().signal);
+ const result=await reader.read('https://acme.example.com/old',['https://acme.example.com','https://docs.acmeapi.example.net']);assert.equal(result.url,'https://docs.acmeapi.example.net/start');assert.ok(calls.includes(result.url));
+ await assert.rejects(()=>reader.read('https://acme.example.com/old','https://acme.example.com'),/outside the selected provider/);
+});
+test('completion: pagination transport requires a separate concrete continuation from ordinary input',async()=>{
+ const {wireSchemaForRequest}=await import('../lib/live-guide/wire.ts');const schema=wireSchemaForRequest('List issue titles including pagination.');assert.equal((schema.properties.continuations as any).minItems,1);assert.equal((wireSchemaForRequest('Read a shared page.').properties.continuations as any).minItems,undefined);
+});
+test('completion: pagination end conditions and title aliases survive response-example noise',()=>{
+ const d={...docs[0],text:('Response example has a next_cursor value and unrelated metadata.\n').repeat(100)+'\nsubject The text describing this work item, shown as its title.\nWhen next_cursor is null, you have reached the end of the results.\nGET /issues lists issue titles.'};const context=contextPassages(sourcePassages([d]),d.id,'Read issue titles, including pagination.',1400).map(p=>p.text).join(' ');assert.match(context,/next_cursor is null/);assert.match(context,/subject The text/);
+});
+
+
+test('completion: malformed links on an established provider resolve to cited instructions, while external destinations remain rejected',async()=>{
+ const {repairDocumentationLinks}=await import('../lib/live-guide/interpretation.ts');const p=value();p.steps[0].destination='https://acmetasks.example.com/apps/guessed';const fixed=repairDocumentationLinks(p,docs);assert.equal(fixed.corrected,1);assert.equal(fixed.value.steps[0].destination,docs[0].url);assert.deepEqual(fixed.value.steps[1].request,p.steps[1].request);assert.doesNotThrow(()=>validateInterpretation(fixed.value,docs));
+ p.steps[0].destination='https://attacker.example.net/apps';const rejected=repairDocumentationLinks(p,docs);assert.equal(rejected.corrected,0);assert.throws(()=>validateInterpretation(rejected.value,docs),/destination/);
+});
+test('completion: repeated transport rows merge only identical facts and keep distinct continuation requests',async()=>{
+ const {decodeWirePlan}=await import('../lib/live-guide/wire.ts');const row=['read-test','Read issues','Read issues.','developer','Response has titles.','test','action','','read','GET','/issues',"curl 'https://api.acme.com/issues'",'', '', 's1-p1'];const partial=[...row];partial[3]='';partial[4]='';const raw:any={tableVersion:'launch-guide-table.v1',summary:'Test',accessModel:'oauth',oauthSupport:'documented',actions:[['read','Read issues','read']],prohibitions:[],findings:[],steps:[row,partial],coverage:[],blockers:[],unknowns:[],researchNeeded:[]};
+ const decoded=decodeWirePlan(raw);assert.equal((decoded.steps as any[]).length,1);assert.equal((decoded.steps as any[])[0].owner,'developer');assert.equal((decoded.steps as any[])[0].doneWhen,'Response has titles.');
+ const conflict=[...row];conflict[10]='/other';assert.throws(()=>decodeWirePlan({...raw,steps:[row,conflict]}),/conflicting duplicate/);const next=[...row];next[0]='next';next[11]="curl 'https://api.acme.com/issues?page=2'";assert.equal((decodeWirePlan({...raw,steps:[row,next]}).steps as any[]).length,2);
+});

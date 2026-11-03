@@ -47,6 +47,15 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
    step.fields=step.fields||[];if(at>=0)step.fields[at]=caption;else if(step.fields.length<8)step.fields.push(caption);
   }
   if(/<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/.test(example)){step.fields=step.fields||[];if(step.fields.length<8&&!step.fields.some((f:string)=>/next.+(?:url|link)|(?:url|link).+next/i.test(f)))step.fields.push('Next-page URL: full next link from the prior response; keep the original HTTPS host');}
+  // Normalize values only at the route variables declared by endpoint metadata.
+  // A real sample ID and PAGE_ID are both developer inputs, not new API paths.
+  const template=String(step.request.endpoint||'').split('?')[0].replace(/^https:\/\/[^/]+/,'').split('/').filter(Boolean);
+  const parts=requestExampleParts(example);
+  if(/^https:\/\/|^<INSTANCE_BASE_URL>\//.test(parts.url)){let path=parts.url.replace(/^https:\/\/[^/]+|^<INSTANCE_BASE_URL>/,'').split('?')[0];const segments=path.split('/').filter(Boolean),shift=segments.length-template.length;
+   if(shift>=0){let changed=false;for(const [i,segment] of template.entries())if(/^\{[^}]+\}$|^:[\w-]+$|^<[^>]+>$/.test(segment)){const at=i+shift,key=segment.replace(/^[{<:]|[}>]$/g,'');if(segments[at]&&!/^<[^>]+>$/.test(segments[at])){segments[at]='<'+key+'>';changed=true;}}
+    const normalized='/'+segments.join('/')+(path.endsWith('/')?'/':'');if(changed&&normalized!==path)example=example.replace(parts.url,parts.url.replace(path,normalized));
+   }
+  }
   // Documentation-derived version headers are facts, not developer inputs.
   example=example.replace(/([\w-]+-Version):\s*(<[^>]+>|[A-Z][A-Z_]+|\d{4}-\d{2}-\d{2})/gi,(whole,header,current)=>{
    const literal=[...source.matchAll(new RegExp(header+':?\\s*["\'`]?\\s*(\\d{4}-\\d{2}-\\d{2})','gi'))].map(m=>m[1]).sort().at(-1);

@@ -45,9 +45,10 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
   try{
    if(!options.checkpoint||input.documentationUrl){
     emit({stage:'Finding the missing request',detail:'Checking only '+action.title+'. Your other instructions and confirmed choices are retained.',status:'working'});
-    const existingReference=[...previous.documents].filter(d=>/reference|\/api\//.test(d.url)).sort((a,b)=>resourceDocumentScore(b,action.title)-resourceDocumentScore(a,action.title))[0]?.url;
     const supplied=input.documentationUrl||update.url;
-    research=await retrieve({...input,useCase:action.title},bindings,emit,signal,fetcher,{previous:research,topics:['permissions'],urls:supplied?[supplied]:existingReference?[existingReference]:undefined,refresh:true,query:`site:${new URL(research.website).hostname.replace(/^(docs|developers|developer)\./,'')} ${input.app} ${action.title} API request permission example`});
+    const currentReview=old.coverage.find(c=>c.actionId===action.id)?.reason||'';
+    const query=`site:${new URL(input.website||research.website).hostname.replace(/^(www|docs|developers|developer)\./,'')} ${input.app} ${action.title} ${currentReview} API documentation`;
+    research=await retrieve({...input,useCase:action.title},bindings,emit,signal,fetcher,{previous:research,topics:['permissions'],urls:supplied?[supplied]:undefined,refresh:!!supplied,query});
     await options.save?.({research});
    }
    emit({stage:'Updating action instructions',detail:'Using saved evidence for '+action.title+'. Your other steps are retained.',status:'working'});
