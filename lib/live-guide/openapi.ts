@@ -14,12 +14,18 @@ export function openApiText(body:string,useCase=''):{title:string;text:string}|n
  const lines=['# '+title,'Schema version: '+(spec.info?.version||''),'Documented server: '+(spec.host?(spec.schemes?.[0]||'https')+'://'+spec.host+base:JSON.stringify(spec.servers||[])),'Security definitions: '+JSON.stringify(spec.securityDefinitions||spec.components?.securitySchemes||{})];
  const operations:[string,string,any,any][]=[];
  for(const [path,item] of Object.entries(spec.paths) as [string,any][])for(const method of ['get','post','put','patch','delete','head'])if(item[method])operations.push([path,method,item[method],item]);
- const words=useCase.toLowerCase().replace(/\b(?:never|no|do not)\b[^.;]*/g,'').split(/\W+/).filter(w=>w.length>3&&!['names','titles','connected','person','individual','customers','accounts','including','pagination','oauth','only'].includes(w)).map(w=>w.length>6?w.slice(0,5):w.replace(/s$/,''));
- const rank=([path,method,op]:typeof operations[number])=>words.filter(w=>(path+' '+op.summary+' '+op.description).toLowerCase().includes(w)).length*10+(method==='get'?8:0)-path.split('/').length;
+ const words=[...new Set(useCase.toLowerCase().replace(/\b(?:never|no|do not)\b[^.;]*/g,'').split(/\W+/).filter(w=>w.length>3&&!['list','read','names','titles','visible','connected','person','individual','customer','customers','accounts','including','pagination','oauth','only','backend','application','their','with','that','each','user','input','retain','instance','instances','base'].includes(w)).map(w=>w.length>6?w.slice(0,5):w.replace(/s$/,'')))];
+ const rank=([path,method,op]:typeof operations[number])=>words.filter(w=>(path+' '+op.summary+' '+op.description).toLowerCase().includes(w)).length*10+words.filter(w=>path.includes(w)).length*20+(method==='get'?8:0)-path.split('/').length*2-(path.match(/\{/g)||[]).length*4;
  operations.sort((a,b)=>rank(b)-rank(a));
- lines.push('Operation index:',...operations.map(([path,method,op])=>method.toUpperCase()+' '+base+path+' | '+(op.summary||op.operationId||'')));
  for(const [path,method,op,item] of operations.slice(0,12)){
- lines.push('\n## '+method.toUpperCase()+' '+base+path+' | '+(op.summary||op.operationId||''),op.description||'',JSON.stringify({parameters:[...item.parameters||[],...op.parameters||[]].map(p=>resolve(p)),requestBody:resolve(op.requestBody),security:op.security||spec.security||[],responses:Object.fromEntries(Object.entries(op.responses||{}).filter(([status])=>/^2/.test(status)).map(([status,r]:[string,any])=>[status,{description:r.description,headers:r.headers,schema:resolve(r.schema||r.content?.['application/json']?.schema)}]))},null,2));
+ lines.push('\n## '+method.toUpperCase()+' '+base+path+' | '+(op.summary||op.operationId||''),op.description||'');
+ for(const p of [...item.parameters||[],...op.parameters||[]].map(p=>resolve(p)))lines.push('Parameter '+p.name+' in '+p.in+' ('+(p.type||p.schema?.type||'unspecified type')+', '+(p.required?'required':'optional')+'): '+(p.description||JSON.stringify(p.schema||{})));
+ if(op.requestBody)lines.push('Request body: '+JSON.stringify(resolve(op.requestBody)));
+ lines.push('Operation security: '+JSON.stringify(op.security||spec.security||[]));
+ for(const [status,reference] of Object.entries(op.responses||{}).filter(([status])=>/^2/.test(status)) as [string,any][]){const r=resolve(reference);lines.push('Successful response '+status+': '+(r.description||''),JSON.stringify({headers:r.headers,schema:resolve(r.schema||r.content?.['application/json']?.schema)},null,2));}
  }
+ // The compact index supplements the actual operation definitions. It must not
+ // push the requested parameters and response schema beyond extraction limits.
+ lines.push('Operation index:',...operations.map(([path,method,op])=>method.toUpperCase()+' '+base+path+' | '+(op.summary||op.operationId||'')));
  return {title,text:lines.join('\n')};
 }

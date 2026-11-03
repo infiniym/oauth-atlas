@@ -6,7 +6,8 @@ import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
 const origin=process.env.MATRIX_ORIGIN||'https://oauth-launch-advisor.gharkagpt1.chatgpt.site';
 const label=process.argv[2]||'candidate',names=(process.argv[3]||'').split(',').filter(Boolean),round=Number(process.argv[4]||1);
-const declared=JSON.parse(readFileSync('docs/evidence/completion-2026-11-02/cases.json','utf8')).live.filter(c=>!names.length||names.includes(c.name));
+const cases=JSON.parse(readFileSync('docs/evidence/completion-2026-11-02/cases.json','utf8'));
+const declared=[...cases.live,...(names.length?cases.blindValidation||[]:[])].filter(c=>!names.length||names.includes(c.name));
 const dir='docs/evidence/completion-2026-11-02/'+label;mkdirSync(dir,{recursive:true});
 const release=await (await fetch(origin+'/api/release')).json();
 async function stage(input,record){

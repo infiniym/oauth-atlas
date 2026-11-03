@@ -157,7 +157,7 @@ For instance-specific or self-hosted APIs, use the documented relative API path 
 Length and item limits are mandatory: each evidence array has 1-3 passage references. Finding/step titles at most 120 characters; detail at most 800; appliesWhen and doneWhen at most 400. Summary and recommendation at most 700; nextAction at most 400. Question id uses lowercase letters, digits and hyphens only (starts with a letter, at most 60 characters); prompt at most 200; why at most 300; each of 2-3 option labels at most 120. Each coverage reason at most 400 characters. Each unknown at most 400 characters. Prefer 1-2 short sentences per detail and 1-2 references per item. Avoid duplicating the same uncertainty in unknowns and blockers. Do not repeat the same facts in every step.
 A deadline to apply or submit is not provider waiting time. Provider-wait findings must cite a passage with a published applicable duration. If none exists, record the unknown rather than assuming zero wait. activeEffort is an explicitly labeled planning estimate: provide a broad range ONLY with assumptions grounded in documented steps; otherwise return empty strings. Do not estimate a calendar launch date. Unknown provider policy must remain in unknowns with a concrete verification action.
 Summary, recommendation and nextAction must follow from the cited findings. Never claim Composio supports this app; integration availability is checked separately. Output the required JSON only.`;
-export const PROMPT_VERSION = 'live-guide.13';
+export const PROMPT_VERSION = 'live-guide.14';
 
 function durations(text:string):string[] {
   const numbers:Record<string,number>={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
@@ -168,7 +168,7 @@ export function documentedEndpoint(endpoint:string,documents:Document[]):boolean
  return endpointEvidence(endpoint,documents).supported;
 }
 
-export function validateInterpretation(raw: unknown, documents: Document[]): Interpretation {
+export function validateInterpretation(raw: unknown, documents: Document[],requestContext=''): Interpretation {
   const value = interpretationSchema.parse(completeRequestExamples(raw as {steps?:unknown},documents));
   const sources = new Map(documents.map(d=>[d.id,normalizeText(d.text)]));
   const check = (items: Evidence[]) => {
@@ -188,6 +188,7 @@ export function validateInterpretation(raw: unknown, documents: Document[]): Int
   for(const s of value.steps)if(s.destination&&!destinations.has(s.destination)&&!documents.some(d=>d.text.includes(s.destination)))throw new Error('A step destination is not documented in the supplied sources.');
   for(const [index,s] of value.steps.entries())if(s.request?.endpoint){const check=endpointEvidence(s.request.endpoint,documents);if(!check.supported)throw new Error('A step destination for an API request is not documented in the supplied sources. '+JSON.stringify({path:['steps',index,'request','endpoint'],stepId:s.id,endpoint:s.request.endpoint,...check}));}
   for(const s of value.steps)if(value.accessModel==='oauth'&&s.testKind==='action'&&/(?:PRIVATE-TOKEN|JOB-TOKEN|X-API-KEY)\s*:/i.test(s.request?.example||''))throw new Error('A step destination uses a personal/API/CI token header for an OAuth resource request. Use the documented OAuth access-token authentication; retain method, route and user inputs.');
+  if((/paginat|continuation/i.test(requestContext)||value.requestedActions.some(a=>/paginat|continuation/i.test(a.title)))&&value.steps.some(s=>s.testKind==='action'&&s.request?.endpoint)&&!value.steps.some(s=>s.testKind==='action'&&/[?&](?:cursor|page|offset|after|before|skip|next_token|page_token)=|"(?:cursor|after|offset|page|next_token|page_token)"\s*:|\bafter\s*:/i.test(s.request?.example||'')))throw new Error('A step destination has no concrete pagination request. Retain the initial request and add a documented continuation request using the returned cursor/page/offset, including how to repeat until complete. Prose alone is insufficient.');
   const permissions=new Set(value.findings.filter(f=>f.kind==='permission').map(f=>f.scope));
   for(const c of value.coverage)if(c.status==='mapped'&&c.permissions.some(p=>!permissions.has(p)))throw new Error('Action coverage references a permission that was not selected. Copy identifiers exactly. Selected: '+[...permissions].join(', ')+'. Invalid mapping: '+c.permissions.join(', '));
   for(const c of value.coverage){if(c.evidence?.length)check(c.evidence);const supporting=c.evidence||value.findings.filter(f=>c.permissions.includes(f.scope)).flatMap(f=>f.evidence);if(c.status==='mapped'&&contradictsGrant(c.action,supporting))throw new Error('Action coverage contradicts its permission evidence.');}
@@ -315,9 +316,9 @@ export async function interpretEvidence(input: GuideInput, documents: Document[]
       const {outcome:_outcome,...flat}=raw;
       const expanded=expandPassageReferences(completePlan(raw.plan||flat),passages) as Record<string,unknown>;
       const corrected=await repairLongFields(expanded,bindings,deadline,fetcher,usage=>{attempts++;inputTokens+=usage.inputTokens;outputTokens+=usage.outputTokens;thinkingTokens+=usage.thinkingTokens;validationIssues.push('Overlength display fields corrected; evidence and requests retained.');});
-      let value = validateInterpretation(corrected,documents);
+      let value = validateInterpretation(corrected,documents,input.useCase);
       value=await completeBoundaryInstructions(value,bindings,deadline,fetcher,usage=>{attempts++;inputTokens+=usage.inputTokens;outputTokens+=usage.outputTokens;thinkingTokens+=usage.thinkingTokens;validationIssues.push('Missing boundary instructions repaired; requests and evidence retained.');});
-      value=validateInterpretation(value,documents);
+      value=validateInterpretation(value,documents,input.useCase);
       // Preserve known actions while allowing an answered action-choice to add
       // the explicitly selected behavior. Never replace confirmed restrictions.
       for(const action of options.intent?.requestedActions||[])if(!value.requestedActions.some(a=>a.id===action.id||a.title.toLowerCase()===action.title.toLowerCase()))value.requestedActions.push(action);

@@ -1,0 +1,2937 @@
+{
+  "name": "dropbox",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "3aced2c5044ec80e8ec1ca41188d79b6ba1a904d",
+    "builtAt": "2026-11-02T15:34:00.456Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.13"
+  },
+  "input": {
+    "app": "Dropbox",
+    "website": "https://www.dropbox.com/developers",
+    "useCase": "Customers authorize a web app to list file and folder names in their Dropbox App Folder only, including continuation until all entries are listed. Read metadata only. Do not download file content or upload, edit, move, or delete any files. Use OAuth for each individual account; no team administration.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-02T15:36:55.276Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-01b56f3c-5aff-4c94-b8e0-983890ec1562",
+      "key": "2ef0de38-b7e3-4588-8f9e-af62fee8b946",
+      "input": {
+        "app": "Dropbox",
+        "website": "https://www.dropbox.com/developers",
+        "useCase": "Customers authorize a web app to list file and folder names in their Dropbox App Folder only, including continuation until all entries are listed. Read metadata only. Do not download file content or upload, edit, move, or delete any files. Use OAuth for each individual account; no team administration.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "www.dropbox.com/developers",
+      "status": "working",
+      "at": "2026-11-02T15:36:55.322Z"
+    },
+    {
+      "stage": "Choosing relevant documentation",
+      "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+      "status": "working",
+      "at": "2026-11-02T15:36:57.015Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "DBX Platform for Developers - Dropbox",
+      "status": "done",
+      "at": "2026-11-02T15:37:00.272Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.dropboxapi.com/dropbox-api/docs/overview",
+      "status": "working",
+      "at": "2026-11-02T15:37:00.272Z"
+    },
+    {
+      "stage": "Choosing relevant documentation",
+      "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+      "status": "working",
+      "at": "2026-11-02T15:37:02.847Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Overview | Dropbox API Documentation",
+      "status": "done",
+      "at": "2026-11-02T15:37:05.952Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "www.dropbox.com/developers/apps",
+      "status": "working",
+      "at": "2026-11-02T15:37:05.952Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read www.dropbox.com/developers/apps.",
+      "status": "warning",
+      "at": "2026-11-02T15:37:07.730Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+      "status": "working",
+      "at": "2026-11-02T15:37:07.730Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Files | Dropbox API Documentation",
+      "status": "done",
+      "at": "2026-11-02T15:37:10.248Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+      "status": "working",
+      "at": "2026-11-02T15:37:10.248Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Authorization | Dropbox API Documentation",
+      "status": "done",
+      "at": "2026-11-02T15:37:12.820Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.dropboxapi.com/dropbox-api/docs/oauth",
+      "status": "working",
+      "at": "2026-11-02T15:37:12.820Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "OAuth | Dropbox API Documentation",
+      "status": "done",
+      "at": "2026-11-02T15:37:15.516Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.dropboxapi.com/dropbox-api/docs/file-access",
+      "status": "working",
+      "at": "2026-11-02T15:37:15.516Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "File Access | Dropbox API Documentation",
+      "status": "done",
+      "at": "2026-11-02T15:37:17.161Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+      "status": "working",
+      "at": "2026-11-02T15:37:17.161Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "List Folder | Dropbox API Documentation",
+      "status": "done",
+      "at": "2026-11-02T15:37:18.766Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+      "status": "working",
+      "at": "2026-11-02T15:37:18.766Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "List Folder Continue | Dropbox API Documentation",
+      "status": "done",
+      "at": "2026-11-02T15:37:20.261Z"
+    },
+    {
+      "stage": "Checking setup choices",
+      "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-02T15:37:20.382Z"
+    },
+    {
+      "stage": "Building your guide",
+      "detail": "Requirements are clear. Creating the plan from saved evidence.",
+      "status": "working",
+      "at": "2026-11-02T15:37:24.612Z"
+    },
+    {
+      "stage": "Checking action coverage",
+      "detail": "Reviewing each permission relationship separately from execution.",
+      "status": "working",
+      "at": "2026-11-02T15:37:52.689Z"
+    },
+    {
+      "stage": "Requested test documented",
+      "detail": "The requested API test is documented. Setup and execution have not been verified.",
+      "status": "done",
+      "at": "2026-11-02T15:37:56.370Z"
+    }
+  ],
+  "job": {
+    "id": "job-01b56f3c-5aff-4c94-b8e0-983890ec1562",
+    "input": {
+      "app": "Dropbox",
+      "website": "https://www.dropbox.com/developers",
+      "useCase": "Customers authorize a web app to list file and folder names in their Dropbox App Folder only, including continuation until all entries are listed. Read metadata only. Do not download file content or upload, edit, move, or delete any files. Use OAuth for each individual account; no team administration.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "ready",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "www.dropbox.com/developers",
+        "status": "working",
+        "at": "2026-11-02T15:36:55.322Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-02T15:36:57.015Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "DBX Platform for Developers - Dropbox",
+        "status": "done",
+        "at": "2026-11-02T15:37:00.272Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.dropboxapi.com/dropbox-api/docs/overview",
+        "status": "working",
+        "at": "2026-11-02T15:37:00.272Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-02T15:37:02.847Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Overview | Dropbox API Documentation",
+        "status": "done",
+        "at": "2026-11-02T15:37:05.952Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "www.dropbox.com/developers/apps",
+        "status": "working",
+        "at": "2026-11-02T15:37:05.952Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read www.dropbox.com/developers/apps.",
+        "status": "warning",
+        "at": "2026-11-02T15:37:07.730Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+        "status": "working",
+        "at": "2026-11-02T15:37:07.730Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Files | Dropbox API Documentation",
+        "status": "done",
+        "at": "2026-11-02T15:37:10.248Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+        "status": "working",
+        "at": "2026-11-02T15:37:10.248Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Authorization | Dropbox API Documentation",
+        "status": "done",
+        "at": "2026-11-02T15:37:12.820Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.dropboxapi.com/dropbox-api/docs/oauth",
+        "status": "working",
+        "at": "2026-11-02T15:37:12.820Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "OAuth | Dropbox API Documentation",
+        "status": "done",
+        "at": "2026-11-02T15:37:15.516Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.dropboxapi.com/dropbox-api/docs/file-access",
+        "status": "working",
+        "at": "2026-11-02T15:37:15.516Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "File Access | Dropbox API Documentation",
+        "status": "done",
+        "at": "2026-11-02T15:37:17.161Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+        "status": "working",
+        "at": "2026-11-02T15:37:17.161Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "List Folder | Dropbox API Documentation",
+        "status": "done",
+        "at": "2026-11-02T15:37:18.766Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+        "status": "working",
+        "at": "2026-11-02T15:37:18.766Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "List Folder Continue | Dropbox API Documentation",
+        "status": "done",
+        "at": "2026-11-02T15:37:20.261Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-02T15:37:20.382Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-02T15:37:24.612Z"
+      },
+      {
+        "stage": "Checking action coverage",
+        "detail": "Reviewing each permission relationship separately from execution.",
+        "status": "working",
+        "at": "2026-11-02T15:37:52.689Z"
+      },
+      {
+        "stage": "Requested test documented",
+        "detail": "The requested API test is documented. Setup and execution have not been verified.",
+        "status": "done",
+        "at": "2026-11-02T15:37:56.370Z"
+      }
+    ],
+    "createdAt": "2026-11-02T15:36:55.291Z",
+    "updatedAt": "2026-11-02T15:37:56.381Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-02T15:36:55.320Z",
+      "finishedAt": "2026-11-02T15:37:56.372Z",
+      "elapsedMs": 61052,
+      "firstActionMs": 61052
+    },
+    "attempts": [
+      {
+        "modelCalls": 3,
+        "inputTokens": 27726,
+        "outputTokens": 7777,
+        "modelMs": 35971
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "list-app-folder-entries",
+          "title": "List file and folder names in the connected customer's App Folder",
+          "operation": "read",
+          "category": "resource"
+        },
+        {
+          "id": "continue-app-folder-listing",
+          "title": "Continue listing App Folder entries until all entries are returned",
+          "operation": "read",
+          "category": "resource"
+        },
+        {
+          "id": "authorize-individual-account",
+          "title": "Let each customer authorize the app with OAuth for their individual account",
+          "operation": "authorize",
+          "category": "authorization"
+        }
+      ],
+      "prohibitions": [
+        "Downloading file content",
+        "Uploading files",
+        "Editing files",
+        "Moving files",
+        "Deleting files",
+        "Team administration"
+      ],
+      "oauthSupport": "documented",
+      "summary": "Register a Dropbox app, request files.metadata.read, and use the OAuth code flow so each individual user authorizes read-only metadata access. Test with one representative individual account by listing the App Folder and following has_more with the cursor. Multi-workspace distribution rules are not in the supplied sources and remain unresolved.",
+      "recommendation": "Register a Dropbox app, request files.metadata.read, and use the OAuth code flow so each individual user authorizes read-only metadata access. Test with one representative individual account by listing the App Folder and following has_more with the cursor. Multi-workspace distribution rules are not in the supplied sources and remain unresolved.",
+      "nextAction": "Register the Dropbox app and select files.metadata.read",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "Dropbox supports OAuth 2.0 for app access to user data",
+          "detail": "Each user signs into dropbox.com to grant the app access, and the flow returns an access token. Apps are registered in the App Console.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "Overview When working with the Dropbox APIs, your app will access Dropbox on behalf of your users. You’ll need to have each user of your app sign into dropbox.com to"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Dropbox uses OAuth 2.0"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Before you can get started, you’ll need to register your app with Dropbox by creating a new app in the App Console"
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "permission",
+          "title": "Request files.metadata.read for both listing actions",
+          "detail": "list_folder and list_folder/continue both require this scope. It covers reading metadata only and does not cover downloading or changing files.",
+          "appliesWhen": "",
+          "scope": "files.metadata.read",
+          "evidence": [
+            {
+              "sourceId": "s7",
+              "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "list_folder . Required scope: files.metadata.read"
+            },
+            {
+              "sourceId": "s7",
+              "quote": "OR Authorization Bearer OAuth 2.0 token issued to a specific user. Use Authorization: Bearer <token> ."
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "customer-approval",
+          "title": "Each customer authorizes their own individual account",
+          "detail": "Each user must sign in and grant the app access. A user token scoped to user API permissions is associated with the authorizing user, not a team.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "grant your app permission to access their data on Dropbox."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Apps that request only scopes from the User API will receive a token associated with the user that authorizes the app."
+            }
+          ],
+          "stage": "launch"
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Listing is incomplete until has_more is false",
+          "detail": "When has_more is true, call list_folder/continue with the returned cursor, and repeat until has_more is false.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s7",
+              "quote": "If true, then there are more entries available. Pass the"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "Once a cursor has been retrieved from list_folder , use this to paginate through all"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "If true, then there are more entries available. Pass the"
+            }
+          ],
+          "stage": "test"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Register the Dropbox app and select files.metadata.read",
+          "detail": "In the App Console, create the app, select the metadata read permission, record the app key and secret server-side, and add the redirect URI.",
+          "owner": "developer",
+          "doneWhen": "App exists in the App Console with files.metadata.read selected, an app key stored in a secret manager, and a registered redirect URI.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "Before you can get started, you’ll need to register your app with Dropbox by creating a new app in the App Console"
+            },
+            {
+              "sourceId": "s5",
+              "quote": ". That page will guide you through the process of registering your app, selecting permissions, and obtaining an app key and secret (a.k.a. client_id and client_secret ) and inputting redirect"
+            }
+          ],
+          "id": "S1",
+          "dependsOn": [],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "https://www.dropbox.com/developers",
+          "fields": [
+            "APP_KEY",
+            "APP_SECRET (server-side only)",
+            "REDIRECT_URI"
+          ]
+        },
+        {
+          "title": "Implement the authorization URL and code-to-token callback",
+          "detail": "Build the authorization URL with response_type=code and the redirect URI. On callback, exchange the code at the token endpoint using the client secret on the server. Store the resulting user token per customer account.",
+          "owner": "agent",
+          "doneWhen": "Code builds an authorization URL and a callback handler that exchanges the code for an access token in a test environment.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "Method: GET Example: Auth URL for code flow"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "Example: code flow access token request"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Call the /oauth2/token endpoint with your app’s client_secret to exchange the code for an access token in order to make API calls"
+            }
+          ],
+          "id": "S2",
+          "dependsOn": [
+            "S1"
+          ],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "",
+          "fields": []
+        },
+        {
+          "title": "Authorize a representative individual test account",
+          "detail": "Sign in with a test individual Dropbox account (not a team admin) and grant the app access. The callback must return a code and the token exchange must succeed. Boundary check: the consent screen and granted access show only the metadata read permission, and no team scope is requested.",
+          "owner": "developer",
+          "doneWhen": "The test individual account completes consent and the callback yields an access token with the metadata read scope only.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "https://www.dropbox.com/oauth2/authorize?client_id=MY_CLIENT_ID&redirect_uri=MY_REDIRECT_URI&response_type=code Wait for the end user to complete authorization on dropbox.com, whom is then redirected back to your URI with an authorization code in the"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "Example: code flow access token request"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Apps that request only scopes from the User API will receive a token associated with the user that authorizes the app."
+            }
+          ],
+          "id": "S3",
+          "dependsOn": [
+            "S2"
+          ],
+          "actionIds": [],
+          "testKind": "authorization",
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "TEST_ACCOUNT_EMAIL",
+            "USER_ACCESS_TOKEN (from callback, never shared)"
+          ]
+        },
+        {
+          "title": "Test list_folder on the App Folder root",
+          "detail": "Call list_folder with the user token. Boundary check: confirm the response lists only names and metadata, and that the outgoing request log contains only api.dropboxapi.com list_folder calls, with no content download or write endpoints.",
+          "owner": "developer",
+          "doneWhen": "The response returns an entries array and has_more or cursor, and the request log contains only list_folder calls.",
+          "evidence": [
+            {
+              "sourceId": "s7",
+              "quote": "Starts returning the contents of a folder. If the result’s ListFolderResult.has_more"
+            },
+            {
+              "sourceId": "s7",
+              "quote": "OR Authorization Bearer OAuth 2.0 token issued to a specific user. Use Authorization: Bearer <token> ."
+            },
+            {
+              "sourceId": "s8",
+              "quote": "entries list of objects"
+            },
+            {
+              "sourceId": "s7",
+              "quote": "Response Successful response cursor string >=1 character"
+            }
+          ],
+          "id": "S4",
+          "dependsOn": [
+            "S3"
+          ],
+          "actionIds": [
+            "list-app-folder-entries"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "POST",
+            "endpoint": "/2/files/list_folder",
+            "example": "curl '-X' 'POST' 'https://api.dropboxapi.com/2/files/list_folder' '-H' 'Authorization: Bearer <USER_ACCESS_TOKEN>' '-H' 'Content-Type: application/json' '-d' '{\"path\":\"<APP_FOLDER_PATH>\",\"recursive\":false}'"
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "USER_ACCESS_TOKEN",
+            "APP_FOLDER_PATH (value to confirm)"
+          ]
+        },
+        {
+          "title": "Test list_folder/continue until has_more is false",
+          "detail": "Pass the returned cursor to list_folder/continue and repeat while has_more is true. Boundary check: confirm each page is metadata only and the loop stops when has_more is false.",
+          "owner": "developer",
+          "doneWhen": "Continuation returns further entries and the loop ends with has_more false.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "Once a cursor has been retrieved from list_folder , use this to paginate through all"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder/continue \\"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "If true, then there are more entries available. Pass the"
+            }
+          ],
+          "id": "S5",
+          "dependsOn": [
+            "S4"
+          ],
+          "actionIds": [
+            "continue-app-folder-listing"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "POST",
+            "endpoint": "/2/files/list_folder/continue",
+            "example": "curl '-X' 'POST' 'https://api.dropboxapi.com/2/files/list_folder/continue' '-H' 'Authorization: Bearer <USER_ACCESS_TOKEN>' '-H' 'Content-Type: application/json' '-d' '{\"cursor\":\"<CURSOR_FROM_PREVIOUS_PAGE>\"}'"
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "USER_ACCESS_TOKEN",
+            "CURSOR_FROM_PREVIOUS_PAGE"
+          ]
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "",
+        "assumptions": ""
+      },
+      "unknowns": [
+        "Provider review, distribution, or approval requirements for customers in other organizations or workspaces are not in the supplied sources. Verify in the Dropbox developer documentation before launch.",
+        "The App Folder root path value and any App Folder app-type requirement are not documented in the supplied sources.",
+        "Provider review waiting time and any launch wait are not documented in the supplied sources.",
+        "Whether an app-level token is appropriate is not needed for this per-account use case, but the supplied sources do not state a restriction on it beyond the endpoint's authentication list."
+      ],
+      "blockers": [
+        {
+          "title": "Verify the App Console permission selection before consent",
+          "consequence": "follow-up",
+          "kind": "verification",
+          "owner": "developer",
+          "resolution": "Confirm only files.metadata.read is selected so the consent screen does not request extra access.",
+          "stepIds": [
+            "S3"
+          ],
+          "resolutionStepIds": [
+            "S3"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "action": "List file and folder names in the connected customer's App Folder",
+          "actionId": "list-app-folder-entries",
+          "permissions": [
+            "files.metadata.read"
+          ],
+          "status": "mapped",
+          "reason": "list_folder requires files.metadata.read and accepts user tokens. Execution is untested and the App Folder root path value is unconfirmed.",
+          "evidence": [
+            {
+              "sourceId": "s7",
+              "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+            },
+            {
+              "sourceId": "s7",
+              "quote": "OR Authorization Bearer OAuth 2.0 token issued to a specific user. Use Authorization: Bearer <token> ."
+            }
+          ],
+          "support": "reviewed"
+        },
+        {
+          "action": "Continue listing App Folder entries until all entries are returned",
+          "actionId": "continue-app-folder-listing",
+          "permissions": [
+            "files.metadata.read"
+          ],
+          "status": "mapped",
+          "reason": "list_folder/continue requires files.metadata.read and paginates using the cursor until has_more is false. Execution is untested.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "list_folder . Required scope: files.metadata.read"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "Once a cursor has been retrieved from list_folder , use this to paginate through all"
+            }
+          ],
+          "support": "reviewed"
+        }
+      ],
+      "researchNeeded": [
+        "distribution"
+      ],
+      "semanticsVersion": 2,
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": false,
+      "schemaVersion": 1,
+      "id": "lg-7d25b56f-c776-494f-9474-1459708cc926",
+      "generatedAt": "2026-11-02T15:37:56.369Z",
+      "input": {
+        "app": "Dropbox",
+        "website": "https://www.dropbox.com/developers",
+        "useCase": "Customers authorize a web app to list file and folder names in their Dropbox App Folder only, including continuation until all entries are listed. Read metadata only. Do not download file content or upload, edit, move, or delete any files. Use OAuth for each individual account; no team administration.",
+        "audience": "customers",
+        "answers": {}
+      },
+      "provider": {
+        "website": "https://www.dropbox.com/developers",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Generated from retrieved documentation. Citation matching and a separate access review are fallible checks; setup has not been tested.",
+      "warnings": [
+        "Could not read www.dropbox.com/developers/apps."
+      ],
+      "setupTested": false,
+      "decisions": [],
+      "engine": {
+        "model": "claude-haiku-5-5",
+        "attempts": 3,
+        "elapsedMs": 35971,
+        "inputTokens": 27726,
+        "outputTokens": 7777,
+        "thinkingTokens": 4056,
+        "thinking": "adaptive",
+        "effort": "low",
+        "outcome": "accepted",
+        "reviewOutcome": "accepted",
+        "provider": "anthropic",
+        "promptVersion": "live-guide.13"
+      },
+      "journey": {
+        "modelCalls": 3,
+        "inputTokens": 27726,
+        "outputTokens": 7777,
+        "modelMs": 35971
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://www.dropbox.com/developers",
+          "title": "DBX Platform for Developers - Dropbox",
+          "retrievedAt": "2026-11-02T15:37:20.261Z",
+          "hash": "49f9f81a6c38392b8f37ac1050ff501e35681457cffa261c2c62960e1558fb7e",
+          "links": [
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/users/get-current-account?explorer=true",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+            "https://www.dropbox.com/developers",
+            "https://www.dropbox.com/da_DK/developers",
+            "https://www.dropbox.com/de/developers",
+            "https://www.dropbox.com/en_GB/developers",
+            "https://www.dropbox.com/es/developers",
+            "https://www.dropbox.com/es_ES/developers",
+            "https://www.dropbox.com/fr/developers",
+            "https://www.dropbox.com/fr_CA/developers",
+            "https://www.dropbox.com/id/developers",
+            "https://www.dropbox.com/it/developers",
+            "https://www.dropbox.com/ja/developers",
+            "https://www.dropbox.com/ko/developers",
+            "https://www.dropbox.com/ms/developers",
+            "https://www.dropbox.com/nb_NO/developers",
+            "https://www.dropbox.com/nl_NL/developers",
+            "https://www.dropbox.com/pl/developers",
+            "https://www.dropbox.com/pt_BR/developers",
+            "https://www.dropbox.com/ru/developers",
+            "https://www.dropbox.com/sv_SE/developers",
+            "https://www.dropbox.com/th_TH/developers",
+            "https://www.dropbox.com/uk_UA/developers",
+            "https://www.dropbox.com/zh_CN/developers",
+            "https://www.dropbox.com/zh_TW/developers",
+            "https://www.dropbox.com/docsend",
+            "https://docs.dropboxapi.com/",
+            "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+            "https://www.dropbox.com/developers/support",
+            "https://www.dropbox.com/developers/apps?_tk=pilot_lp&_ad=topbar4&_camp=myapps",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+            "https://www.hellosign.com/developers",
+            "https://dropbox.tech/developers/how-dow-jones-automated-their-gdpr-compliance-process-with-the-dropbox-apis?_tk=pilot_lp&_ad=apps1&_camp=dowjones",
+            "https://dropbox.tech/developers/build-dropbox-and-zapier-into-your-development-workflow?_tk=pilot_lp&_ad=apps2&_camp=zapier",
+            "https://dropbox.tech/developers/developer-stories-streamlining-workflows-with-dropbox-apis?_tk=pilot_lp&_ad=apps3&_camp=smartsheet",
+            "https://www.docsend.com/?utm_medium=Referral&utm_source=Dropbox%20Web%20Referral&utm_campaign=dbx-footer"
+          ]
+        },
+        {
+          "id": "s2",
+          "url": "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "title": "Overview | Dropbox API Documentation",
+          "retrievedAt": "2026-11-02T15:37:20.266Z",
+          "hash": "c653e4ebadb8eddd36595f75ae07dad93c311568caacf5b4e19f8cbdfb0df1e5",
+          "links": [
+            "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+            "https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+            "https://docs.dropboxapi.com/agentfs",
+            "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/overview.md",
+            "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+            "https://docs.dropboxapi.com/llms.txt",
+            "https://docs.dropboxapi.com/%22",
+            "https://www.dropbox.com/developers/support",
+            "https://www.dropbox.com/developers/apps",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+            "https://docs.dropboxapi.com/%22/dropbox-api/docs/developer-resources/developer-guide/%22%3E/n",
+            "https://docs.dropboxapi.com/%22/dropbox-api/docs/get-started/tutorial/overview/%22%3E/n",
+            "https://docs.dropboxapi.com/%22/dropbox-api/docs/developer-resources/branding-guide/%22%3E/n",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+            "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+            "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+            "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+            "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+            "https://dropbox.tech/developers/streamline-file-collection-with-the-file-request-api?_tk=guides_lp&_ad=python_tutorial3&_camp=file_request",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+            "https://docs.dropboxapi.com/dropbox-api",
+            "https://docs.dropboxapi.com/riviera",
+            "https://developers.hellosign.com/docs/overview",
+            "https://www.dropbox.com/developers",
+            "https://docs.dropboxapi.com/dropbox-api/docs/r",
+            "https://docs.dropboxapi.com/dropbox-api/docs/async("
+          ]
+        },
+        {
+          "id": "s3",
+          "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "title": "Files | Dropbox API Documentation",
+          "retrievedAt": "2026-11-02T15:37:20.274Z",
+          "hash": "d206cd3b60e3286874035197292744a8b61307854a4469273ec30dbd92516742",
+          "links": [
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files.md",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+          ]
+        },
+        {
+          "id": "s4",
+          "url": "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "title": "Authorization | Dropbox API Documentation",
+          "retrievedAt": "2026-11-02T15:37:20.301Z",
+          "hash": "c19ac32b47841b7a67bae334304d1a40e5e0be7b2ad46d8b98ec07c9380920d9",
+          "links": [
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/users/get-current-account",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+            "https://oauth.net/2/pkce/",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+            "https://docs.dropboxapi.com/agentfs",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization.md",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/llms.txt",
+            "https://docs.dropboxapi.com/llms.txt",
+            "https://docs.dropboxapi.com/%22",
+            "https://www.dropbox.com/developers/support",
+            "https://www.dropbox.com/developers/apps",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+            "https://developers.dropbox.com/oidc-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+            "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+            "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+            "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+            "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+            "https://docs.dropboxapi.com/dropbox-api",
+            "https://docs.dropboxapi.com/riviera",
+            "https://developers.hellosign.com/docs/overview",
+            "https://www.dropbox.com/developers",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/r",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/async("
+          ]
+        },
+        {
+          "id": "s5",
+          "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "title": "OAuth | Dropbox API Documentation",
+          "retrievedAt": "2026-11-02T15:37:20.309Z",
+          "hash": "2da569451b62c94fce9f844847d46cf76d9f42f2b8a72ab1d5ba553eedbe4fb0",
+          "links": [
+            "https://oauth.net/2/scope/",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/auth/token-revoke",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oauth.md",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+            "https://oauth.net/2/grant-types/authorization-code/",
+            "https://oauth.net/2/pkce/",
+            "https://oauth.net/2/grant-types/implicit/",
+            "https://oauth.net/2/grant-types/refresh-token/",
+            "https://help.dropbox.com/installs-integrations/third-party/third-party-apps",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference",
+            "https://docs.dropboxapi.com/agentfs",
+            "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+            "https://docs.dropboxapi.com/llms.txt",
+            "https://docs.dropboxapi.com/%22",
+            "https://www.dropbox.com/developers/support",
+            "https://www.dropbox.com/developers/apps",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+            "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+            "https://dropbox.tech/developers/pkce--what-and-why-",
+            "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+            "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+            "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+            "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+            "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+            "https://docs.dropboxapi.com/dropbox-api",
+            "https://docs.dropboxapi.com/riviera",
+            "https://developers.hellosign.com/docs/overview",
+            "https://www.dropbox.com/developers",
+            "https://docs.dropboxapi.com/dropbox-api/docs/r"
+          ]
+        },
+        {
+          "id": "s6",
+          "url": "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "title": "File Access | Dropbox API Documentation",
+          "retrievedAt": "2026-11-02T15:37:20.316Z",
+          "hash": "33e8fb717ae28a0500117a0439a7af77ed2fa32975ae629df85839684a3c45bb",
+          "links": [
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+            "https://docs.dropboxapi.com/agentfs",
+            "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+            "https://docs.dropboxapi.com/dropbox-api/docs/file-access.md",
+            "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+            "https://docs.dropboxapi.com/llms.txt",
+            "https://docs.dropboxapi.com/%22",
+            "https://www.dropbox.com/developers/support",
+            "https://www.dropbox.com/developers/apps",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+            "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+            "https://help.dropbox.com/files-folders/share/edit-microsoft-office-documents",
+            "https://dropbox.tech/developers/file-locking-using-the-dropbox-api",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+            "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+            "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+            "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+            "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+            "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+            "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+            "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+            "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+            "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+            "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+            "https://docs.dropboxapi.com/dropbox-api",
+            "https://docs.dropboxapi.com/riviera"
+          ]
+        },
+        {
+          "id": "s7",
+          "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "title": "List Folder | Dropbox API Documentation",
+          "retrievedAt": "2026-11-02T15:37:20.322Z",
+          "hash": "ebe35cd7f5dd63e3871d6845102e86bfa5fcefd009b2284475464ac5eb6ded3e",
+          "links": [
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder.md",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+          ]
+        },
+        {
+          "id": "s8",
+          "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "title": "List Folder Continue | Dropbox API Documentation",
+          "retrievedAt": "2026-11-02T15:37:20.350Z",
+          "hash": "d78c7ddf9e8e07943da3b7a34f0da1e2eaecf49f3ea4ca955149dfd9ea7ccf3c",
+          "links": [
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue.md",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+            "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "Dropbox",
+        "docsUrl": "https://docs.composio.dev/toolkits/dropbox",
+        "message": "Dropbox appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "resultState": "usable-guide",
+      "researchMetrics": {
+        "navigationCalls": 2
+      }
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://www.dropbox.com/developers",
+        "title": "DBX Platform for Developers - Dropbox",
+        "retrievedAt": "2026-11-02T15:37:20.261Z",
+        "hash": "49f9f81a6c38392b8f37ac1050ff501e35681457cffa261c2c62960e1558fb7e",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/users/get-current-account?explorer=true",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://www.dropbox.com/developers",
+          "https://www.dropbox.com/da_DK/developers",
+          "https://www.dropbox.com/de/developers",
+          "https://www.dropbox.com/en_GB/developers",
+          "https://www.dropbox.com/es/developers",
+          "https://www.dropbox.com/es_ES/developers",
+          "https://www.dropbox.com/fr/developers",
+          "https://www.dropbox.com/fr_CA/developers",
+          "https://www.dropbox.com/id/developers",
+          "https://www.dropbox.com/it/developers",
+          "https://www.dropbox.com/ja/developers",
+          "https://www.dropbox.com/ko/developers",
+          "https://www.dropbox.com/ms/developers",
+          "https://www.dropbox.com/nb_NO/developers",
+          "https://www.dropbox.com/nl_NL/developers",
+          "https://www.dropbox.com/pl/developers",
+          "https://www.dropbox.com/pt_BR/developers",
+          "https://www.dropbox.com/ru/developers",
+          "https://www.dropbox.com/sv_SE/developers",
+          "https://www.dropbox.com/th_TH/developers",
+          "https://www.dropbox.com/uk_UA/developers",
+          "https://www.dropbox.com/zh_CN/developers",
+          "https://www.dropbox.com/zh_TW/developers",
+          "https://www.dropbox.com/docsend",
+          "https://docs.dropboxapi.com/",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps?_tk=pilot_lp&_ad=topbar4&_camp=myapps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://www.hellosign.com/developers",
+          "https://dropbox.tech/developers/how-dow-jones-automated-their-gdpr-compliance-process-with-the-dropbox-apis?_tk=pilot_lp&_ad=apps1&_camp=dowjones",
+          "https://dropbox.tech/developers/build-dropbox-and-zapier-into-your-development-workflow?_tk=pilot_lp&_ad=apps2&_camp=zapier",
+          "https://dropbox.tech/developers/developer-stories-streamlining-workflows-with-dropbox-apis?_tk=pilot_lp&_ad=apps3&_camp=smartsheet",
+          "https://www.docsend.com/?utm_medium=Referral&utm_source=Dropbox%20Web%20Referral&utm_campaign=dbx-footer"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+        "title": "Overview | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.266Z",
+        "hash": "c653e4ebadb8eddd36595f75ae07dad93c311568caacf5b4e19f8cbdfb0df1e5",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://docs.dropboxapi.com/%22/dropbox-api/docs/developer-resources/developer-guide/%22%3E/n",
+          "https://docs.dropboxapi.com/%22/dropbox-api/docs/get-started/tutorial/overview/%22%3E/n",
+          "https://docs.dropboxapi.com/%22/dropbox-api/docs/developer-resources/branding-guide/%22%3E/n",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://dropbox.tech/developers/streamline-file-collection-with-the-file-request-api?_tk=guides_lp&_ad=python_tutorial3&_camp=file_request",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera",
+          "https://developers.hellosign.com/docs/overview",
+          "https://www.dropbox.com/developers",
+          "https://docs.dropboxapi.com/dropbox-api/docs/r",
+          "https://docs.dropboxapi.com/dropbox-api/docs/async("
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+        "title": "Files | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.274Z",
+        "hash": "d206cd3b60e3286874035197292744a8b61307854a4469273ec30dbd92516742",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files.md",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+        "title": "Authorization | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.301Z",
+        "hash": "c19ac32b47841b7a67bae334304d1a40e5e0be7b2ad46d8b98ec07c9380920d9",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/users/get-current-account",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://oauth.net/2/pkce/",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://developers.dropbox.com/oidc-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera",
+          "https://developers.hellosign.com/docs/overview",
+          "https://www.dropbox.com/developers",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/r",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/async("
+        ]
+      },
+      {
+        "id": "s5",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+        "title": "OAuth | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.309Z",
+        "hash": "2da569451b62c94fce9f844847d46cf76d9f42f2b8a72ab1d5ba553eedbe4fb0",
+        "links": [
+          "https://oauth.net/2/scope/",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/auth/token-revoke",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://oauth.net/2/grant-types/authorization-code/",
+          "https://oauth.net/2/pkce/",
+          "https://oauth.net/2/grant-types/implicit/",
+          "https://oauth.net/2/grant-types/refresh-token/",
+          "https://help.dropbox.com/installs-integrations/third-party/third-party-apps",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://dropbox.tech/developers/pkce--what-and-why-",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera",
+          "https://developers.hellosign.com/docs/overview",
+          "https://www.dropbox.com/developers",
+          "https://docs.dropboxapi.com/dropbox-api/docs/r"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+        "title": "File Access | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.316Z",
+        "hash": "33e8fb717ae28a0500117a0439a7af77ed2fa32975ae629df85839684a3c45bb",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://help.dropbox.com/files-folders/share/edit-microsoft-office-documents",
+          "https://dropbox.tech/developers/file-locking-using-the-dropbox-api",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+        "title": "List Folder | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.322Z",
+        "hash": "ebe35cd7f5dd63e3871d6845102e86bfa5fcefd009b2284475464ac5eb6ded3e",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder.md",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+        ]
+      },
+      {
+        "id": "s8",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+        "title": "List Folder Continue | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.350Z",
+        "hash": "d78c7ddf9e8e07943da3b7a34f0da1e2eaecf49f3ea4ca955149dfd9ea7ccf3c",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue.md",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+        ]
+      }
+    ]
+  },
+  "readiness": "usable-guide",
+  "requests": [
+    {
+      "stepId": "S4",
+      "stub": {
+        "method": "POST",
+        "url": "https://api.dropboxapi.com/2/files/list_folder",
+        "headers": {
+          "authorization": "Bearer test-access-token",
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "path": "test-resource-id",
+            "recursive": false
+          }
+        ]
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    },
+    {
+      "stepId": "S5",
+      "stub": {
+        "method": "POST",
+        "url": "https://api.dropboxapi.com/2/files/list_folder/continue",
+        "headers": {
+          "authorization": "Bearer test-access-token",
+          "content-type": "application/json"
+        },
+        "body": [
+          {
+            "cursor": "test-next-cursor"
+          }
+        ]
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    }
+  ],
+  "planStatus": 200,
+  "plan": {
+    "schemaVersion": 1,
+    "id": "lg-7d25b56f-c776-494f-9474-1459708cc926",
+    "provider": "Dropbox",
+    "request": "Customers authorize a web app to list file and folder names in their Dropbox App Folder only, including continuation until all entries are listed. Read metadata only. Do not download file content or upload, edit, move, or delete any files. Use OAuth for each individual account; no team administration.",
+    "createdAt": "2026-11-02T15:37:56.369Z",
+    "basis": "Live research",
+    "status": "Provisional plan",
+    "summary": "Register a Dropbox app, request files.metadata.read, and use the OAuth code flow so each individual user authorizes read-only metadata access. Test with one representative individual account by listing the App Folder and following has_more with the cursor. Multi-workspace distribution rules are not in the supplied sources and remain unresolved.",
+    "route": "Register a Dropbox app, request files.metadata.read, and use the OAuth code flow so each individual user authorizes read-only metadata access. Test with one representative individual account by listing the App Folder and following has_more with the cursor. Multi-workspace distribution rules are not in the supplied sources and remain unresolved.",
+    "next": {
+      "id": "S1",
+      "testKind": "prepare",
+      "dependsOn": [],
+      "actionIds": [],
+      "title": "Register the Dropbox app and select files.metadata.read",
+      "detail": "In the App Console, create the app, select the metadata read permission, record the app key and secret server-side, and add the redirect URI.",
+      "owner": "developer",
+      "stage": "prepare",
+      "doneWhen": "App exists in the App Console with files.metadata.read selected, an app key stored in a secret manager, and a registered redirect URI.",
+      "destination": "https://www.dropbox.com/developers",
+      "fields": [
+        "APP_KEY",
+        "APP_SECRET (server-side only)",
+        "REDIRECT_URI"
+      ],
+      "evidence": [
+        {
+          "sourceId": "s5",
+          "quote": "Before you can get started, you’ll need to register your app with Dropbox by creating a new app in the App Console"
+        },
+        {
+          "sourceId": "s5",
+          "quote": ". That page will guide you through the process of registering your app, selecting permissions, and obtaining an app key and secret (a.k.a. client_id and client_secret ) and inputting redirect"
+        }
+      ],
+      "sourceIds": [
+        "s5",
+        "s5"
+      ],
+      "blockedBy": []
+    },
+    "steps": [
+      {
+        "id": "S1",
+        "testKind": "prepare",
+        "dependsOn": [],
+        "actionIds": [],
+        "title": "Register the Dropbox app and select files.metadata.read",
+        "detail": "In the App Console, create the app, select the metadata read permission, record the app key and secret server-side, and add the redirect URI.",
+        "owner": "developer",
+        "stage": "prepare",
+        "doneWhen": "App exists in the App Console with files.metadata.read selected, an app key stored in a secret manager, and a registered redirect URI.",
+        "destination": "https://www.dropbox.com/developers",
+        "fields": [
+          "APP_KEY",
+          "APP_SECRET (server-side only)",
+          "REDIRECT_URI"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s5",
+            "quote": "Before you can get started, you’ll need to register your app with Dropbox by creating a new app in the App Console"
+          },
+          {
+            "sourceId": "s5",
+            "quote": ". That page will guide you through the process of registering your app, selecting permissions, and obtaining an app key and secret (a.k.a. client_id and client_secret ) and inputting redirect"
+          }
+        ],
+        "sourceIds": [
+          "s5",
+          "s5"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "S2",
+        "testKind": "prepare",
+        "dependsOn": [
+          "S1"
+        ],
+        "actionIds": [],
+        "title": "Implement the authorization URL and code-to-token callback",
+        "detail": "Build the authorization URL with response_type=code and the redirect URI. On callback, exchange the code at the token endpoint using the client secret on the server. Store the resulting user token per customer account.",
+        "owner": "agent",
+        "stage": "prepare",
+        "doneWhen": "Code builds an authorization URL and a callback handler that exchanges the code for an access token in a test environment.",
+        "destination": "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+        "fields": [],
+        "evidence": [
+          {
+            "sourceId": "s4",
+            "quote": "Method: GET Example: Auth URL for code flow"
+          },
+          {
+            "sourceId": "s4",
+            "quote": "Example: code flow access token request"
+          },
+          {
+            "sourceId": "s5",
+            "quote": "Call the /oauth2/token endpoint with your app’s client_secret to exchange the code for an access token in order to make API calls"
+          }
+        ],
+        "sourceIds": [
+          "s4",
+          "s4",
+          "s5"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "S3",
+        "testKind": "authorization",
+        "dependsOn": [
+          "S2"
+        ],
+        "actionIds": [],
+        "title": "Authorize a representative individual test account",
+        "detail": "Sign in with a test individual Dropbox account (not a team admin) and grant the app access. The callback must return a code and the token exchange must succeed. Boundary check: the consent screen and granted access show only the metadata read permission, and no team scope is requested.",
+        "owner": "developer",
+        "stage": "test",
+        "doneWhen": "The test individual account completes consent and the callback yields an access token with the metadata read scope only.",
+        "destination": "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+        "fields": [
+          "TEST_ACCOUNT_EMAIL",
+          "USER_ACCESS_TOKEN (from callback, never shared)"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s5",
+            "quote": "https://www.dropbox.com/oauth2/authorize?client_id=MY_CLIENT_ID&redirect_uri=MY_REDIRECT_URI&response_type=code Wait for the end user to complete authorization on dropbox.com, whom is then redirected back to your URI with an authorization code in the"
+          },
+          {
+            "sourceId": "s4",
+            "quote": "Example: code flow access token request"
+          },
+          {
+            "sourceId": "s5",
+            "quote": "Apps that request only scopes from the User API will receive a token associated with the user that authorizes the app."
+          }
+        ],
+        "sourceIds": [
+          "s5",
+          "s4",
+          "s5"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "S4",
+        "testKind": "action",
+        "request": {
+          "method": "POST",
+          "endpoint": "/2/files/list_folder",
+          "example": "curl '-X' 'POST' 'https://api.dropboxapi.com/2/files/list_folder' '-H' 'Authorization: Bearer <USER_ACCESS_TOKEN>' '-H' 'Content-Type: application/json' '-d' '{\"path\":\"<APP_FOLDER_PATH>\",\"recursive\":false}'"
+        },
+        "dependsOn": [
+          "S3"
+        ],
+        "actionIds": [
+          "list-app-folder-entries"
+        ],
+        "title": "Test list_folder on the App Folder root",
+        "detail": "Call list_folder with the user token. Boundary check: confirm the response lists only names and metadata, and that the outgoing request log contains only api.dropboxapi.com list_folder calls, with no content download or write endpoints.",
+        "owner": "developer",
+        "stage": "test",
+        "doneWhen": "The response returns an entries array and has_more or cursor, and the request log contains only list_folder calls.",
+        "destination": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+        "fields": [
+          "USER_ACCESS_TOKEN",
+          "APP_FOLDER_PATH (value to confirm)"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s7",
+            "quote": "Starts returning the contents of a folder. If the result’s ListFolderResult.has_more"
+          },
+          {
+            "sourceId": "s7",
+            "quote": "OR Authorization Bearer OAuth 2.0 token issued to a specific user. Use Authorization: Bearer <token> ."
+          },
+          {
+            "sourceId": "s8",
+            "quote": "entries list of objects"
+          },
+          {
+            "sourceId": "s7",
+            "quote": "Response Successful response cursor string >=1 character"
+          }
+        ],
+        "sourceIds": [
+          "s7",
+          "s7",
+          "s8",
+          "s7"
+        ],
+        "blockedBy": []
+      },
+      {
+        "id": "S5",
+        "testKind": "action",
+        "request": {
+          "method": "POST",
+          "endpoint": "/2/files/list_folder/continue",
+          "example": "curl '-X' 'POST' 'https://api.dropboxapi.com/2/files/list_folder/continue' '-H' 'Authorization: Bearer <USER_ACCESS_TOKEN>' '-H' 'Content-Type: application/json' '-d' '{\"cursor\":\"<CURSOR_FROM_PREVIOUS_PAGE>\"}'"
+        },
+        "dependsOn": [
+          "S4"
+        ],
+        "actionIds": [
+          "continue-app-folder-listing"
+        ],
+        "title": "Test list_folder/continue until has_more is false",
+        "detail": "Pass the returned cursor to list_folder/continue and repeat while has_more is true. Boundary check: confirm each page is metadata only and the loop stops when has_more is false.",
+        "owner": "developer",
+        "stage": "test",
+        "doneWhen": "Continuation returns further entries and the loop ends with has_more false.",
+        "destination": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+        "fields": [
+          "USER_ACCESS_TOKEN",
+          "CURSOR_FROM_PREVIOUS_PAGE"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s8",
+            "quote": "Once a cursor has been retrieved from list_folder , use this to paginate through all"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "curl -X POST https://api.dropboxapi.com/2/files/list_folder/continue \\"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "If true, then there are more entries available. Pass the"
+          }
+        ],
+        "sourceIds": [
+          "s8",
+          "s8",
+          "s8"
+        ],
+        "blockedBy": []
+      }
+    ],
+    "nextNote": "Register the Dropbox app and select files.metadata.read",
+    "coverage": [
+      {
+        "action": "List file and folder names in the connected customer's App Folder",
+        "actionId": "list-app-folder-entries",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "mapped",
+        "reason": "list_folder requires files.metadata.read and accepts user tokens. Execution is untested and the App Folder root path value is unconfirmed.",
+        "evidence": [
+          {
+            "sourceId": "s7",
+            "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+          },
+          {
+            "sourceId": "s7",
+            "quote": "OR Authorization Bearer OAuth 2.0 token issued to a specific user. Use Authorization: Bearer <token> ."
+          }
+        ],
+        "support": "reviewed",
+        "execution": "untested"
+      },
+      {
+        "action": "Continue listing App Folder entries until all entries are returned",
+        "actionId": "continue-app-folder-listing",
+        "permissions": [
+          "files.metadata.read"
+        ],
+        "status": "mapped",
+        "reason": "list_folder/continue requires files.metadata.read and paginates using the cursor until has_more is false. Execution is untested.",
+        "evidence": [
+          {
+            "sourceId": "s8",
+            "quote": "list_folder . Required scope: files.metadata.read"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "Once a cursor has been retrieved from list_folder , use this to paginate through all"
+          }
+        ],
+        "support": "reviewed",
+        "execution": "untested"
+      }
+    ],
+    "permissions": [
+      {
+        "id": "permission-0",
+        "identifier": "files.metadata.read",
+        "classification": "Provider permission",
+        "title": "Request files.metadata.read for both listing actions",
+        "detail": "list_folder requires files.metadata.read and accepts user tokens. Execution is untested and the App Folder root path value is unconfirmed. list_folder/continue requires files.metadata.read and paginates using the cursor until has_more is false. Execution is untested.",
+        "appliesWhen": "",
+        "sourceIds": [
+          "s7",
+          "s7",
+          "s8",
+          "s8"
+        ],
+        "evidence": [
+          {
+            "sourceId": "s7",
+            "quote": "Required scope: files.metadata.read Endpoint format: RPC"
+          },
+          {
+            "sourceId": "s7",
+            "quote": "OR Authorization Bearer OAuth 2.0 token issued to a specific user. Use Authorization: Bearer <token> ."
+          },
+          {
+            "sourceId": "s8",
+            "quote": "list_folder . Required scope: files.metadata.read"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "Once a cursor has been retrieved from list_folder , use this to paginate through all"
+          }
+        ]
+      }
+    ],
+    "requirements": [
+      {
+        "id": "requirement-0",
+        "kind": "customer-approval",
+        "title": "Each customer authorizes their own individual account",
+        "detail": "Each user must sign in and grant the app access. A user token scoped to user API permissions is associated with the authorizing user, not a team.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s5",
+            "quote": "grant your app permission to access their data on Dropbox."
+          },
+          {
+            "sourceId": "s5",
+            "quote": "Apps that request only scopes from the User API will receive a token associated with the user that authorizes the app."
+          }
+        ],
+        "stage": "launch",
+        "sourceIds": [
+          "s5",
+          "s5"
+        ]
+      },
+      {
+        "id": "requirement-1",
+        "kind": "prerequisite",
+        "title": "Listing is incomplete until has_more is false",
+        "detail": "When has_more is true, call list_folder/continue with the returned cursor, and repeat until has_more is false.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s7",
+            "quote": "If true, then there are more entries available. Pass the"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "Once a cursor has been retrieved from list_folder , use this to paginate through all"
+          },
+          {
+            "sourceId": "s8",
+            "quote": "If true, then there are more entries available. Pass the"
+          }
+        ],
+        "stage": "test",
+        "sourceIds": [
+          "s7",
+          "s8",
+          "s8"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "id": "blocker-0",
+        "title": "Verify the App Console permission selection before consent",
+        "consequence": "follow-up",
+        "kind": "verification",
+        "owner": "developer",
+        "resolution": "Confirm only files.metadata.read is selected so the consent screen does not request extra access.",
+        "stepIds": [
+          "S3"
+        ],
+        "resolutionStepIds": [
+          "S3"
+        ]
+      },
+      {
+        "id": "unknown-0",
+        "title": "Provider review, distribution, or approval requirements for customers in other organizations or workspaces are not in the supplied sources. Verify in the Dropbox developer documentation before launch.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Provider review, distribution, or approval requirements for customers in other organizations or workspaces are not in the supplied sources. Verify in the Dropbox developer documentation before launch."
+      },
+      {
+        "id": "unknown-1",
+        "title": "The App Folder root path value and any App Folder app-type requirement are not documented in the supplied sources.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "The App Folder root path value and any App Folder app-type requirement are not documented in the supplied sources."
+      },
+      {
+        "id": "unknown-2",
+        "title": "Provider review waiting time and any launch wait are not documented in the supplied sources.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Provider review waiting time and any launch wait are not documented in the supplied sources."
+      },
+      {
+        "id": "unknown-3",
+        "title": "Whether an app-level token is appropriate is not needed for this per-account use case, but the supplied sources do not state a restriction on it beyond the endpoint's authentication list.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Whether an app-level token is appropriate is not needed for this per-account use case, but the supplied sources do not state a restriction on it beyond the endpoint's authentication list."
+      },
+      {
+        "id": "source-warning-0",
+        "title": "Could not read www.dropbox.com/developers/apps.",
+        "consequence": "follow-up",
+        "owner": "Research",
+        "resolution": "Retry with a direct public documentation URL if this source affects an unresolved requirement."
+      }
+    ],
+    "sources": [
+      {
+        "id": "s1",
+        "url": "https://www.dropbox.com/developers",
+        "title": "DBX Platform for Developers - Dropbox",
+        "retrievedAt": "2026-11-02T15:37:20.261Z",
+        "hash": "49f9f81a6c38392b8f37ac1050ff501e35681457cffa261c2c62960e1558fb7e",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/users/get-current-account?explorer=true",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://www.dropbox.com/developers",
+          "https://www.dropbox.com/da_DK/developers",
+          "https://www.dropbox.com/de/developers",
+          "https://www.dropbox.com/en_GB/developers",
+          "https://www.dropbox.com/es/developers",
+          "https://www.dropbox.com/es_ES/developers",
+          "https://www.dropbox.com/fr/developers",
+          "https://www.dropbox.com/fr_CA/developers",
+          "https://www.dropbox.com/id/developers",
+          "https://www.dropbox.com/it/developers",
+          "https://www.dropbox.com/ja/developers",
+          "https://www.dropbox.com/ko/developers",
+          "https://www.dropbox.com/ms/developers",
+          "https://www.dropbox.com/nb_NO/developers",
+          "https://www.dropbox.com/nl_NL/developers",
+          "https://www.dropbox.com/pl/developers",
+          "https://www.dropbox.com/pt_BR/developers",
+          "https://www.dropbox.com/ru/developers",
+          "https://www.dropbox.com/sv_SE/developers",
+          "https://www.dropbox.com/th_TH/developers",
+          "https://www.dropbox.com/uk_UA/developers",
+          "https://www.dropbox.com/zh_CN/developers",
+          "https://www.dropbox.com/zh_TW/developers",
+          "https://www.dropbox.com/docsend",
+          "https://docs.dropboxapi.com/",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps?_tk=pilot_lp&_ad=topbar4&_camp=myapps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://www.hellosign.com/developers",
+          "https://dropbox.tech/developers/how-dow-jones-automated-their-gdpr-compliance-process-with-the-dropbox-apis?_tk=pilot_lp&_ad=apps1&_camp=dowjones",
+          "https://dropbox.tech/developers/build-dropbox-and-zapier-into-your-development-workflow?_tk=pilot_lp&_ad=apps2&_camp=zapier",
+          "https://dropbox.tech/developers/developer-stories-streamlining-workflows-with-dropbox-apis?_tk=pilot_lp&_ad=apps3&_camp=smartsheet",
+          "https://www.docsend.com/?utm_medium=Referral&utm_source=Dropbox%20Web%20Referral&utm_campaign=dbx-footer"
+        ],
+        "checkedAt": "2026-11-02T15:37:20.261Z"
+      },
+      {
+        "id": "s2",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+        "title": "Overview | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.266Z",
+        "hash": "c653e4ebadb8eddd36595f75ae07dad93c311568caacf5b4e19f8cbdfb0df1e5",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://dropbox.tech/developers/migrating-app-permissions-and-access-tokens",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://docs.dropboxapi.com/%22/dropbox-api/docs/developer-resources/developer-guide/%22%3E/n",
+          "https://docs.dropboxapi.com/%22/dropbox-api/docs/get-started/tutorial/overview/%22%3E/n",
+          "https://docs.dropboxapi.com/%22/dropbox-api/docs/developer-resources/branding-guide/%22%3E/n",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://dropbox.tech/developers/streamline-file-collection-with-the-file-request-api?_tk=guides_lp&_ad=python_tutorial3&_camp=file_request",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera",
+          "https://developers.hellosign.com/docs/overview",
+          "https://www.dropbox.com/developers",
+          "https://docs.dropboxapi.com/dropbox-api/docs/r",
+          "https://docs.dropboxapi.com/dropbox-api/docs/async("
+        ],
+        "checkedAt": "2026-11-02T15:37:20.266Z"
+      },
+      {
+        "id": "s3",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+        "title": "Files | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.274Z",
+        "hash": "d206cd3b60e3286874035197292744a8b61307854a4469273ec30dbd92516742",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files.md",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+        ],
+        "checkedAt": "2026-11-02T15:37:20.274Z"
+      },
+      {
+        "id": "s4",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+        "title": "Authorization | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.301Z",
+        "hash": "c19ac32b47841b7a67bae334304d1a40e5e0be7b2ad46d8b98ec07c9380920d9",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/users/get-current-account",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://oauth.net/2/pkce/",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://developers.dropbox.com/oidc-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera",
+          "https://developers.hellosign.com/docs/overview",
+          "https://www.dropbox.com/developers",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/r",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/async("
+        ],
+        "checkedAt": "2026-11-02T15:37:20.301Z"
+      },
+      {
+        "id": "s5",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+        "title": "OAuth | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.309Z",
+        "hash": "2da569451b62c94fce9f844847d46cf76d9f42f2b8a72ab1d5ba553eedbe4fb0",
+        "links": [
+          "https://oauth.net/2/scope/",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/auth/token-revoke",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://oauth.net/2/grant-types/authorization-code/",
+          "https://oauth.net/2/pkce/",
+          "https://oauth.net/2/grant-types/implicit/",
+          "https://oauth.net/2/grant-types/refresh-token/",
+          "https://help.dropbox.com/installs-integrations/third-party/third-party-apps",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://dropbox.tech/developers/pkce--what-and-why-",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera",
+          "https://developers.hellosign.com/docs/overview",
+          "https://www.dropbox.com/developers",
+          "https://docs.dropboxapi.com/dropbox-api/docs/r"
+        ],
+        "checkedAt": "2026-11-02T15:37:20.309Z"
+      },
+      {
+        "id": "s6",
+        "url": "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+        "title": "File Access | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.316Z",
+        "hash": "33e8fb717ae28a0500117a0439a7af77ed2fa32975ae629df85839684a3c45bb",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oauth",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/overview",
+          "https://docs.dropboxapi.com/agentfs",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access",
+          "https://docs.dropboxapi.com/dropbox-api/docs/file-access.md",
+          "https://docs.dropboxapi.com/dropbox-api/docs/llms.txt",
+          "https://docs.dropboxapi.com/llms.txt",
+          "https://docs.dropboxapi.com/%22",
+          "https://www.dropbox.com/developers/support",
+          "https://www.dropbox.com/developers/apps",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/welcome",
+          "https://docs.dropboxapi.com/dropbox-api/docs/overview",
+          "https://help.dropbox.com/files-folders/share/edit-microsoft-office-documents",
+          "https://dropbox.tech/developers/file-locking-using-the-dropbox-api",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/content-hash",
+          "https://docs.dropboxapi.com/dropbox-api/docs/oidc",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sharing",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/quick-start",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/authorization",
+          "https://docs.dropboxapi.com/dropbox-api/docs/auth-types",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-files",
+          "https://docs.dropboxapi.com/dropbox-api/docs/team-administration",
+          "https://docs.dropboxapi.com/dropbox-api/docs/error-handling",
+          "https://docs.dropboxapi.com/dropbox-api/docs/performance",
+          "https://docs.dropboxapi.com/dropbox-api/docs/detecting-changes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/extensions",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/chooser",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/saver",
+          "https://docs.dropboxapi.com/dropbox-api/docs/pre-built-components/embedder",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/swift",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/objective-c",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/python",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/dotnet",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/java",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/javascript",
+          "https://docs.dropboxapi.com/dropbox-api/docs/sdks/community-sdks",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/json-encoding",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/data-transport-limit",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/request-response-formats",
+          "https://docs.dropboxapi.com/dropbox-api/docs/technical-reference/path-root-header-modes",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/developer-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/developer-resources/branding-guide",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/overview",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/app-console",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/api-documentation",
+          "https://docs.dropboxapi.com/dropbox-api/docs/get-started/tutorial/writing-a-script",
+          "https://docs.dropboxapi.com/dropbox-api",
+          "https://docs.dropboxapi.com/riviera"
+        ],
+        "checkedAt": "2026-11-02T15:37:20.316Z"
+      },
+      {
+        "id": "s7",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+        "title": "List Folder | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.322Z",
+        "hash": "ebe35cd7f5dd63e3871d6845102e86bfa5fcefd009b2284475464ac5eb6ded3e",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder.md",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+        ],
+        "checkedAt": "2026-11-02T15:37:20.322Z"
+      },
+      {
+        "id": "s8",
+        "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+        "title": "List Folder Continue | Dropbox API Documentation",
+        "retrievedAt": "2026-11-02T15:37:20.350Z",
+        "hash": "d78c7ddf9e8e07943da3b7a34f0da1e2eaecf49f3ea4ca955149dfd9ea7ccf3c",
+        "links": [
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue.md",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-get-latest-cursor",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-folder-info",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/folders-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/alpha-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-file-metadata-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-file-members-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-file-lock-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-get-metadata",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-revisions",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties/templates-list-for-user",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/paper/docs-folder-users-list-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-mountable-folders-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-received-files-continue",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/llms.txt",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-properties",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-get",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-reference-save",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/copy-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/download-zip",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/export",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-preview",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-temporary-upload-link",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/get-thumbnail-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/lock-file-batch",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-check-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-batch-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-create",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/paper-update",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/permanently-delete",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/restore",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/save-url-check-job-status",
+          "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/search-continue-v-2"
+        ],
+        "checkedAt": "2026-11-02T15:37:20.350Z"
+      }
+    ],
+    "timing": {
+      "work": "Not estimated",
+      "workBasis": "No supported hands-on estimate was established for this path.",
+      "wait": "No applicable published review time was established.",
+      "waitSourceIds": [],
+      "external": "Customer administrator actions and provider review are separate dependencies."
+    },
+    "integration": "Dropbox appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility.",
+    "details": [
+      {
+        "id": "rationale-0",
+        "kind": "oauth",
+        "title": "Dropbox supports OAuth 2.0 for app access to user data",
+        "detail": "Each user signs into dropbox.com to grant the app access, and the flow returns an access token. Apps are registered in the App Console.",
+        "appliesWhen": "",
+        "scope": "",
+        "evidence": [
+          {
+            "sourceId": "s5",
+            "quote": "Overview When working with the Dropbox APIs, your app will access Dropbox on behalf of your users. You’ll need to have each user of your app sign into dropbox.com to"
+          },
+          {
+            "sourceId": "s5",
+            "quote": "Dropbox uses OAuth 2.0"
+          },
+          {
+            "sourceId": "s5",
+            "quote": "Before you can get started, you’ll need to register your app with Dropbox by creating a new app in the App Console"
+          }
+        ],
+        "stage": "prepare",
+        "sourceIds": [
+          "s5",
+          "s5",
+          "s5"
+        ]
+      }
+    ],
+    "preparation": [
+      {
+        "title": "Permissions rationale",
+        "text": "files.metadata.read: list_folder requires files.metadata.read and accepts user tokens. Execution is untested and the App Folder root path value is unconfirmed. list_folder/continue requires files.metadata.read and paginates using the cursor until has_more is false. Execution is untested."
+      },
+      {
+        "title": "Registration worksheet",
+        "text": "Register the Dropbox app and select files.metadata.read\nIn the App Console, create the app, select the metadata read permission, record the app key and secret server-side, and add the redirect URI.\nFields: APP_KEY, APP_SECRET (server-side only), REDIRECT_URI\n\nImplement the authorization URL and code-to-token callback\nBuild the authorization URL with response_type=code and the redirect URI. On callback, exchange the code at the token endpoint using the client secret on the server. Store the resulting user token per customer account.\nFields: "
+      },
+      {
+        "title": "First connection test",
+        "text": "Authorize a representative individual test account\nDone when: The test individual account completes consent and the callback yields an access token with the metadata read scope only.\n\nTest list_folder on the App Folder root\nDone when: The response returns an entries array and has_more or cursor, and the request log contains only list_folder calls.\n\nTest list_folder/continue until has_more is false\nDone when: Continuation returns further entries and the loop ends with has_more false."
+      },
+      {
+        "title": "Provider clarification draft",
+        "text": "No provider clarification draft is needed from the current findings."
+      }
+    ],
+    "verification": "Generated from retrieved documentation. Citation matching and a separate access review are fallible checks; setup has not been tested. This setup has not been executed or approved.",
+    "context": [
+      {
+        "label": "Actions",
+        "value": "List file and folder names in the connected customer's App Folder; Continue listing App Folder entries until all entries are returned"
+      },
+      {
+        "label": "Restrictions",
+        "value": "Downloading file content; Uploading files; Editing files; Moving files; Deleting files; Team administration"
+      },
+      {
+        "label": "Audience",
+        "value": "customers"
+      }
+    ],
+    "researchId": "lg-7d25b56f-c776-494f-9474-1459708cc926"
+  },
+  "share": "http://127.0.0.1:5187/plan/lg-7d25b56f-c776-494f-9474-1459708cc926",
+  "errors": [],
+  "speed": {
+    "kind": "normal",
+    "budgetMs": 90000
+  },
+  "pass": true,
+  "elapsedMs": 61185
+}

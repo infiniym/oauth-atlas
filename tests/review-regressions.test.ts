@@ -93,7 +93,7 @@ test('completion: an OAuth handoff cannot substitute personal or CI token authen
  assert.throws(()=>validateInterpretation(p,docs),/personal\/API\/CI token header/);
 });
 test('completion: an OpenAPI reference retains the base path, pagination, security and response fields',async()=>{
- const {openApiText}=await import('../lib/live-guide/openapi.ts');const api=openApiText(JSON.stringify({swagger:'2.0',info:{title:'Acme API'},basePath:'/api/v1',paths:{'/user/items':{get:{summary:'List items visible to the authenticated user',parameters:[{name:'page',in:'query',type:'integer'}],responses:{200:{description:'List of items',schema:{type:'array',items:{$ref:'#/definitions/Item'}}}}}}},definitions:{Item:{type:'object',properties:{id:{type:'integer'},name:{type:'string'}}}}}),'List item names with pagination.');assert.match(api!.text,/GET \/api\/v1\/user\/items/);assert.match(api!.text,/"page"/);assert.match(api!.text,/"name"/);assert.match(api!.text,/List of items/);
+ const {openApiText}=await import('../lib/live-guide/openapi.ts');const api=openApiText(JSON.stringify({swagger:'2.0',info:{title:'Acme API'},basePath:'/api/v1',paths:{'/user/items':{get:{summary:'List items visible to the authenticated user',parameters:[{name:'page',in:'query',type:'integer'}],responses:{200:{description:'List of items',schema:{type:'array',items:{$ref:'#/definitions/Item'}}}}}}},definitions:{Item:{type:'object',properties:{id:{type:'integer'},name:{type:'string'}}}}}),'List item names with pagination.');assert.match(api!.text,/GET \/api\/v1\/user\/items/);assert.match(api!.text,/Parameter page in query/);assert.match(api!.text,/"name"/);assert.match(api!.text,/List of items/);
 });
 test('completion: a stalled event stream recovers the saved terminal job without starting duplicate work',async()=>{
  const {db}=database(),job=await createJob(db,run().guide.input,crypto.randomUUID());let posts=0,reads=0,cancelled=false;
@@ -112,6 +112,25 @@ test('completion: a simple default scope definition survives alongside namespace
 test('completion: the requested nested route takes priority over response JSON and a generic collection',()=>{
  const d={...docs[0],text:'GET /issues\nLists all visible issues.\n'+('"title": "Example response title", "_links": { "self": "/issues/42" }\n').repeat(60)+'\nList project issues\nGET /projects/:id/issues\nLists issues within one project. Accepts page and per_page; use the Link header for the next page.\n'};
  const selected=contextPassages(sourcePassages([d]),d.id,'Read issue titles in a project, including pagination.',900).map(p=>p.text).join(' ');assert.match(selected,/GET \/projects\/:id\/issues/);assert.match(selected,/per_page/);
+});
+test('completion: documented base paths and named variables with spaces are grounded without accepting unrelated suffixes',()=>{
+ const ds=[{...docs[0],text:'The path must start with /api/v8.\nGET /projects/:id/issues\nRead issues with the documented read grant.'},{...docs[0],id:'s2',text:'Use GET https://api.acme.com/api/v8/items/{id or name}/ to retrieve an item by ID or name.'}];
+ assert.ok(endpointEvidence('/api/v8/projects/{project_id}/issues',ds).supported);
+ assert.ok(endpointEvidence('https://api.acme.com/api/v8/items/{item}/',ds).supported);
+ assert.equal(endpointEvidence('/arbitrary/projects/:id/issues',ds).supported,false);
+});
+test('completion: pagination prose cannot pass without a concrete continuation request',()=>{
+ const p=value();p.steps[1].detail+=' Repeat until every page has been read.';
+ assert.throws(()=>validateInterpretation(p,docs,'Read issues including pagination.'),/no concrete pagination request/);
+ p.steps.push({...p.steps[1],id:'next',request:{...p.steps[1].request!,example:"curl 'https://api.acme.com/issues?cursor=NEXT_CURSOR'"}});
+ assert.doesNotThrow(()=>validateInterpretation(p,docs,'Read issues including pagination.'));
+});
+test('completion: resource search definitions precede an operation index and retain referenced success schemas',async()=>{
+ const {openApiText}=await import('../lib/live-guide/openapi.ts');
+ const paths=Object.fromEntries(Array.from({length:40},(_,i)=>['/users/{id}/items/'+i+'/notifications',{get:{summary:'List the notifications for the user in an item'}}]));
+ paths['/items/search']={get:{summary:'Search for items',parameters:[{in:'query',name:'private',type:'boolean',description:'Include private items the connected account can access.'},{in:'query',name:'page',type:'integer',description:'Page number, starting at one.'}],responses:{200:{$ref:'#/responses/Results'}}}} as any;
+ const api=openApiText(JSON.stringify({swagger:'2.0',basePath:'/v1',info:{title:'Acme'},paths,responses:{Results:{description:'Matching accessible items',schema:{type:'object',properties:{data:{type:'array',items:{type:'object',properties:{name:{type:'string'}}}}}}}}}),'List item names visible to the connected person, including pagination. Read only.');
+ assert.ok(api!.text.indexOf('Parameter private')<api!.text.indexOf('Operation index:'));assert.match(api!.text,/Matching accessible items/);assert.match(api!.text,/"name"/);
 });
 function aiResponse(data:unknown){return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(data)}],usage:{input_tokens:100,output_tokens:100,output_tokens_details:{thinking_tokens:30}}});}
 function wire(v:Interpretation){const all=sourcePassages(docs);const copy=structuredClone(v);for(const item of [...copy.findings,...copy.steps,...copy.coverage])if(item.evidence)(item as unknown as {evidence:unknown[]}).evidence=item.evidence.map(e=>({passageId:all.find(p=>p.text.includes(e.quote))!.id}));return copy;}

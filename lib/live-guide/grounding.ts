@@ -8,9 +8,13 @@ export function endpointEvidence(endpoint:string,documents:Document[]):{supporte
  let path:string,host='',query:URLSearchParams;
  try{const relative=endpoint.startsWith('/');if(!relative&&!/^https:\/\//.test(endpoint))throw new Error();const u=new URL(endpoint,'https://instance.invalid');if(u.username||u.password)throw new Error();path=routeKey(u.pathname);host=relative?'':u.origin;query=u.searchParams;}catch{return {supported:false,reason:'Use a documented HTTPS API URL or relative route template.',sourceIds:[]};}
  const matching=documents.filter(d=>{
-  const paths:string[]=d.text.match(/\/(?:[a-zA-Z0-9_{}<>:.-]+\/)*[a-zA-Z0-9_{}<>:.-]+/g)||[];
-  for(const literal of d.text.match(/https?:\/\/[^\s"'`<>]+/g)||[])try{paths.push(new URL(literal).pathname);}catch{}
-  return paths.some(p=>{try{return routeKey(p)===path;}catch{return false;}});
+  // Named URI variables may contain spaces (for example {id or name}).
+  // Normalize only variable labels before extracting paths, not source quotes.
+  const text=d.text.replace(/\{[a-zA-Z_][a-zA-Z0-9_| -]*\}/g,'{input}');
+  const paths:string[]=text.match(/\/(?:[a-zA-Z0-9_{}<>:.-]+\/)*[a-zA-Z0-9_{}<>:.-]+/g)||[];
+  for(const literal of text.match(/https?:\/\/[^\s"'`<>]+/g)||[])try{paths.push(new URL(literal).pathname);}catch{}
+  const bases=documents.flatMap(source=>[...source.text.matchAll(/\b(?:base (?:path|url)|path must start with|API (?:base )?prefix)[^\r\n/]{0,60}(\/[a-zA-Z0-9_.\/-]+)/gi)].map(m=>m[1].replace(/[.\/]+$/,'')));
+  return paths.some(p=>{try{return routeKey(p)===path||bases.some(base=>routeKey(base+p)===path);}catch{return false;}});
  });
  if(!matching.length)return {supported:false,reason:'The route template is absent from retrieved source text.',sourceIds:[]};
  if(host&&!documents.some(d=>d.text.includes(host)||[d.url,...d.links||[]].some(l=>{try{return new URL(l).origin===host&&!/docs|developers|reference/i.test(new URL(l).hostname);}catch{return false;}})))return {supported:false,reason:'The API host is not documented; retain an instance URL as user input when appropriate.',sourceIds:matching.map(d=>d.id)};
