@@ -469,7 +469,7 @@ test('completion: explicit retry repeats a failed planning stage and reuses its 
 test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
  const old=run();old.guide.clarificationUsed=true;const draft={...value(),engine:{outcome:'accepted',attempts:99,promptVersion:'obsolete'}} as any;let calls=0;
  const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft,draftAccepted:true}});
- assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.21');assert.equal(guideReadiness(result.guide),'usable-guide');
+ assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.22');assert.equal(guideReadiness(result.guide),'usable-guide');
 });
 
 
@@ -496,4 +496,16 @@ test('completion: resumed named planning reuses validated facts and counts only 
 
 test('completion: a tutorial supplying root parameter semantics remains beside endpoint references',()=>{
  const sources=Array.from({length:10},(_,i)=>({...docs[0],id:'r'+i,url:'https://acmetasks.example.com/reference/list-folders-'+i,text:'GET /folders/'+i+' returns folder names and list metadata.'}));const tutorial={...docs[0],id:'root',url:'https://acmetasks.example.com/tutorial/writing-a-script',text:'For the folder permission model, the empty path string represents the root of your permitted folder. This only lists names.'};const input={...run().guide.input,useCase:'List folder names within the configured permitted folder only.'};assert.ok(planningDocuments([...docs,...sources,tutorial],input,{...value(),requestedActions:[{id:'folders',title:'List folder names',operation:'read'}]}).includes(tutorial));
+});
+
+
+test('completion: an operation summary remains visible beside a distant route and long parameter table',()=>{
+ const d={...docs[0],text:('OAuth clients require scopes and authorization codes.\n').repeat(60)+'\nGet Items Get all active items for the user.\n'+('Optional query parameter describing unrelated metadata.\n').repeat(60)+'\nGET /items Returns matching items.\nWhen next_cursor is null, the result is complete.'};const context=contextPassages(sourcePassages([d]),d.id,'List active item titles including pagination.',2400).map(p=>p.text).join(' ');assert.match(context,/Get all active items/);assert.match(context,/next_cursor is null/);
+});
+
+
+test('completion: navigation indexes do not displace exact requests and their continuation',async()=>{
+ const {retrieve}=await import('../lib/live-guide/retrieval.ts');const home='https://acme.example.com/docs/',auth=home+'oauth',first=home+'reference/list-items',next=home+'reference/list-items-next';const links=[auth,first,next,...Array.from({length:24},(_,i)=>home+'guides/overview-'+i)];const reads:string[]=[];
+ const result=await retrieve(normalizeInput({app:'Acme',website:home,useCase:'List item names including pagination. Read only.',audience:'customers'}),bindings,()=>{},new AbortController().signal,async(u,init)=>{const s=String(u);if(s.includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});if(s.includes('anthropic')){const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);return aiResponse({requests:context.links.filter((l:any)=>l.url===first||l.url===next).map((l:any)=>l.index),setup:context.links.filter((l:any)=>l.url===auth).map((l:any)=>l.index),support:[]});}reads.push(s);if(s===home)return new Response('<title>API index</title><main>Browse the official API documentation.</main>'+links.map(l=>`<a href="${l}">${l.includes('/reference/')?'List items API request':'OAuth guide overview'}</a>`).join(''));if(s===auth)return new Response('<main>Create an OAuth application with a client ID and redirect URI. The items:read scope allows reading items.</main>');if(s===first)return new Response('<main>GET /items lists item names. Required scope: items:read. Pass the returned cursor to continue listing.</main>');if(s===next)return new Response('<main>GET /items?cursor=NEXT_CURSOR continues the item list. Required scope: items:read. Stop when next_cursor is null.</main>');return new Response('<main>Supplementary guide for OAuth setup and item behavior.</main>');});
+ assert.ok(result.documents.some(d=>d.url===first));assert.ok(result.documents.some(d=>d.url===next));assert.ok(!result.documents.some(d=>d.url===home));assert.ok(reads.indexOf(first)<reads.findIndex(l=>l.includes('/guides/'))||!reads.some(l=>l.includes('/guides/')));
 });
