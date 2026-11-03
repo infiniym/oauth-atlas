@@ -18,7 +18,7 @@ import {interpret} from '../lib/advisor/intent-parser.ts';
 import {researchRoute} from '../lib/plan/routing.ts';
 import type {Store} from '../lib/live-guide/http.ts';
 import {endpointEvidence} from '../lib/live-guide/grounding.ts';
-import {sourceKey,linkScore,selectSourceText} from '../lib/live-guide/retrieval.ts';
+import {sourceKey,linkScore,selectSourceText,parsePage} from '../lib/live-guide/retrieval.ts';
 import {repairLongFields,planningDocuments,completeTestInstructions} from '../lib/live-guide/interpretation.ts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
@@ -380,4 +380,29 @@ test('completion: common pagination concepts remain in a full planning context',
 test('completion: disabled write capabilities are negative constraints, not requested mutations',()=>{
  const p=value();p.findings[1].detail='Read issues. Disable write and update capabilities.';assert.doesNotThrow(()=>validateInterpretation(p,docs));
  p.findings[1].detail='Read issues and update their content.';assert.throws(()=>validateInterpretation(p,docs),/contradicts/);
+});
+
+
+test('completion: compact structured transport preserves action grants, requests and exact citations',async()=>{
+ const {wireSchema,decodeWirePlan}=await import('../lib/live-guide/wire.ts');const ps=sourcePassages(docs),permission=ps.find(p=>p.text.includes('issues:read permission'))!.id,oauth=ps.find(p=>p.text.includes('Create an OAuth'))!.id;
+ const wire={tableVersion:'launch-guide-table.v1',summary:'Read project issues with the documented grant.',accessModel:'oauth',oauthSupport:'documented',actions:[['read','Read project issues','read']],prohibitions:['Never write or delete issues.'],findings:[['oauth','Register an app','Create a test OAuth app.','','','prepare',oauth],['permission','Read issues','Read issue content.','issues:read','','test',permission]],steps:[['read-test','Read project issues','Read the test project issue titles. Boundary check: inspect the actual grant and outgoing GET requests.','developer','Response 200 contains the issue titles.','test','action','','read','GET','/issues',"curl 'https://api.acme.com/issues' -H 'Authorization: Bearer $ACCESS_TOKEN'",'', 'ACCESS_TOKEN: test account OAuth token',permission]],coverage:[['read','issues:read','mapped','The source permits issue reads.',permission]],blockers:[],unknowns:[],researchNeeded:[]};
+ const result=await interpretEvidence(run().guide.input,docs,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));assert.deepEqual(body.output_config.format.schema,wireSchema);return aiResponse(wire);},[],{final:true,intent:{requestedActions:value().requestedActions,prohibitions:value().prohibitions}});
+ assert.equal(result.mode,'interpreted');assert.equal(result.telemetry.attempts,1);assert.equal(result.value.findings[1].scope,'issues:read');assert.deepEqual(result.value.coverage[0].permissions,['issues:read']);assert.match(result.value.steps[0].request!.example,/<ACCESS_TOKEN>/);assert.deepEqual(result.value.steps[0].evidence,ev);assert.equal(result.value.prohibitions[0],'Never write or delete issues.');
+ assert.throws(()=>decodeWirePlan({...wire,steps:[wire.steps[0].slice(1)]}),/exactly 15 string columns/);
+});
+test('completion: shell variable inputs are normalized before actual request grounding',()=>{
+ const p=value();p.steps[1].request={method:'GET',endpoint:'/issues/{issue_id}',example:"curl 'https://api.acme.com/issues/$ISSUE_ID' -H 'Authorization: Bearer ${ACCESS_TOKEN}'"};const source=[{...docs[0],text:docs[0].text+'\nGET /issues/{issue_id} returns the requested issue.'}];
+ const fixed=validateInterpretation(p,source);assert.match(fixed.steps[1].request!.example,/issues\/<ISSUE_ID>/);assert.match(fixed.steps[1].request!.example,/Bearer <ACCESS_TOKEN>/);
+});
+test('completion: returned next-link requests retain grounding and input provenance',async()=>{
+ const p=value();p.steps[1].request={method:'GET',endpoint:'/issues',example:"curl '<NEXT_PAGE_URL>' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};p.steps[1].detail='Follow the next Link URL unchanged until no next link is returned. Boundary check: inspect the actual grant and outgoing GET requests.';p.steps[1].evidence=[...ev,{sourceId:'s1',quote:'Follow the Link header next URL until it is absent.'}];const source=[{...docs[0],text:docs[0].text+'\nFollow the Link header next URL until it is absent.'}];
+ const fixed=validateInterpretation(p,source,'Read issues including pagination.');const {inspectHandoff,paginationHandoff}=await import('../scripts/inspect-handoff.mts');const requests=inspectHandoff(fixed);assert.deepEqual(requests[0].errors,[]);assert.equal(requests[0].stub.url,'https://instance.example/issues?page=2');assert.ok(paginationHandoff(fixed,requests));assert.ok(fixed.steps[1].fields!.some(f=>/Next-page URL/.test(f)));
+ assert.throws(()=>validateInterpretation({...p,steps:p.steps.map(s=>({...s,evidence:ev}))},docs,'Read issues including pagination.'),/without documented next-link/);
+});
+test('completion: escaped markup links cannot become malformed public documentation paths',()=>{
+ const p=parsePage('https://docs.acme.com/api/','<main>Documentation for the public developer API.</main><a href="/oauth">OAuth</a><script>const example="<a href=\\"https://other.example.com/page\\">click</a>"</script>');assert.ok(p.links.includes('https://docs.acme.com/oauth'));assert.ok(p.links.every(l=>!/%22|%3C|%3E/.test(l)));
+});
+
+test('completion: a full instance URL variable retains the required HTTPS input contract',()=>{
+ for(const token of ['$INSTANCE_URL','${BASE_URL}','<INSTANCE_BASE_URL>']){const p=value();p.steps[1].request!.example=`curl '${token}/issues' -H 'Authorization: Bearer <ACCESS_TOKEN>'`;const fixed=validateInterpretation(p,docs);assert.match(fixed.steps[1].request!.example,/<INSTANCE_BASE_URL>\/issues/);assert.ok(fixed.steps[1].fields!.some(f=>/full HTTPS instance URL/.test(f)));}
 });

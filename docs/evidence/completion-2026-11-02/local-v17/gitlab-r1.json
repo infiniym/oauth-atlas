@@ -1,0 +1,2400 @@
+{
+  "name": "gitlab",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "48a87e68fae6e88fd87ef4fe624632a290003fca",
+    "builtAt": "2026-11-03T06:05:37.602Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.17"
+  },
+  "input": {
+    "app": "GitLab",
+    "website": "",
+    "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-03T06:08:53.290Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-4651a505-ce66-44c8-8075-0e674d14039a",
+      "key": "abb9931a-7204-4ac7-85ad-9d5bbe8f4384",
+      "input": {
+        "app": "GitLab",
+        "website": "",
+        "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+        "audience": "customers"
+      }
+    },
+    {
+      "id": "job-ac6ef8ff-19d2-43d1-90ef-b0e9989f6da2",
+      "key": "0ecca482-584b-4c04-bb1c-751e667f4ba1",
+      "input": {
+        "app": "GitLab",
+        "website": "",
+        "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-1ef0d289-47e2-4cf3-adb4-82e1b41bd192"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Finding the provider",
+      "detail": "Searching for GitLab OAuth documentation.",
+      "status": "working",
+      "at": "2026-11-03T06:08:53.324Z"
+    },
+    {
+      "stage": "Waiting for your choices",
+      "detail": "Continue this saved request; completed work will be reused.",
+      "status": "done",
+      "at": "2026-11-03T06:08:54.730Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/oauth2/",
+      "status": "working",
+      "at": "2026-11-03T06:08:54.750Z"
+    },
+    {
+      "stage": "Choosing relevant documentation",
+      "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+      "status": "working",
+      "at": "2026-11-03T06:08:56.325Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "OAuth 2.0 identity provider API | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:00.931Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/get_started/get_started_extending/",
+      "status": "working",
+      "at": "2026-11-03T06:09:00.931Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Get started extending GitLab | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:01.960Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/integration/oauth_provider/",
+      "status": "working",
+      "at": "2026-11-03T06:09:01.960Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Configure GitLab as an OAuth 2.0 authentication identity provider | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:03.218Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/rest/",
+      "status": "working",
+      "at": "2026-11-03T06:09:03.218Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "REST API | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:04.175Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/issues/",
+      "status": "working",
+      "at": "2026-11-03T06:09:04.175Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Issues API | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:05.692Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/usage_data/",
+      "status": "working",
+      "at": "2026-11-03T06:09:05.692Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Service Ping API | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:06.620Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/milestones/",
+      "status": "working",
+      "at": "2026-11-03T06:09:06.621Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Project milestones API | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:07.589Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/projects/",
+      "status": "working",
+      "at": "2026-11-03T06:09:07.589Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Projects API | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:08.684Z"
+    },
+    {
+      "stage": "Checking setup choices",
+      "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-03T06:09:08.786Z"
+    },
+    {
+      "stage": "Building your guide",
+      "detail": "Requirements are clear. Creating the plan from saved evidence.",
+      "status": "working",
+      "at": "2026-11-03T06:09:11.880Z"
+    },
+    {
+      "stage": "Checking action coverage",
+      "detail": "Reviewing each permission relationship separately from execution.",
+      "status": "working",
+      "at": "2026-11-03T06:09:52.178Z"
+    },
+    {
+      "stage": "Repairing an incomplete action",
+      "detail": "Checking the missing request or access evidence for Read issue titles in accessible projects, including pagination. Completed setup and your answers are retained.",
+      "status": "working",
+      "at": "2026-11-03T06:09:57.877Z"
+    },
+    {
+      "stage": "Finding the missing request",
+      "detail": "Checking only Read issue titles in accessible projects, including pagination. Your other instructions and confirmed choices are retained.",
+      "status": "working",
+      "at": "2026-11-03T06:09:57.878Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/projects/",
+      "status": "working",
+      "at": "2026-11-03T06:09:57.892Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Projects API | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:58.897Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/auth/user_permissions/",
+      "status": "working",
+      "at": "2026-11-03T06:09:58.897Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "User permissions | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:09:59.883Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "docs.gitlab.com/api/epic_issues/",
+      "status": "working",
+      "at": "2026-11-03T06:09:59.884Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Epic Issues API (deprecated) | GitLab Docs",
+      "status": "done",
+      "at": "2026-11-03T06:10:00.891Z"
+    },
+    {
+      "stage": "Updating action instructions",
+      "detail": "Using saved evidence for Read issue titles in accessible projects, including pagination. Your other steps are retained.",
+      "status": "working",
+      "at": "2026-11-03T06:10:00.981Z"
+    },
+    {
+      "stage": "Action update unfinished",
+      "detail": "The earlier guide is unchanged. Sources collected for this action are saved for retry.",
+      "status": "warning",
+      "at": "2026-11-03T06:10:16.249Z"
+    },
+    {
+      "stage": "Guide unfinished",
+      "detail": "Your request and 8 sources are saved. Retry the unfinished planning step.",
+      "status": "warning",
+      "at": "2026-11-03T06:10:16.278Z"
+    }
+  ],
+  "job": {
+    "id": "job-ac6ef8ff-19d2-43d1-90ef-b0e9989f6da2",
+    "input": {
+      "app": "GitLab",
+      "website": "",
+      "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+      "audience": "customers",
+      "answers": {
+        "provider-identity": "Yes, this is the provider"
+      },
+      "previousId": "lg-1ef0d289-47e2-4cf3-adb4-82e1b41bd192"
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/oauth2/",
+        "status": "working",
+        "at": "2026-11-03T06:08:54.750Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-03T06:08:56.325Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "OAuth 2.0 identity provider API | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:00.931Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/get_started/get_started_extending/",
+        "status": "working",
+        "at": "2026-11-03T06:09:00.931Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Get started extending GitLab | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:01.960Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/integration/oauth_provider/",
+        "status": "working",
+        "at": "2026-11-03T06:09:01.960Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Configure GitLab as an OAuth 2.0 authentication identity provider | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:03.218Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/rest/",
+        "status": "working",
+        "at": "2026-11-03T06:09:03.218Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "REST API | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:04.175Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/issues/",
+        "status": "working",
+        "at": "2026-11-03T06:09:04.175Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Issues API | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:05.692Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/usage_data/",
+        "status": "working",
+        "at": "2026-11-03T06:09:05.692Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Service Ping API | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:06.620Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/milestones/",
+        "status": "working",
+        "at": "2026-11-03T06:09:06.621Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Project milestones API | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:07.589Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/projects/",
+        "status": "working",
+        "at": "2026-11-03T06:09:07.589Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Projects API | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:08.684Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-03T06:09:08.786Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-03T06:09:11.880Z"
+      },
+      {
+        "stage": "Checking action coverage",
+        "detail": "Reviewing each permission relationship separately from execution.",
+        "status": "working",
+        "at": "2026-11-03T06:09:52.178Z"
+      },
+      {
+        "stage": "Repairing an incomplete action",
+        "detail": "Checking the missing request or access evidence for Read issue titles in accessible projects, including pagination. Completed setup and your answers are retained.",
+        "status": "working",
+        "at": "2026-11-03T06:09:57.877Z"
+      },
+      {
+        "stage": "Finding the missing request",
+        "detail": "Checking only Read issue titles in accessible projects, including pagination. Your other instructions and confirmed choices are retained.",
+        "status": "working",
+        "at": "2026-11-03T06:09:57.878Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/projects/",
+        "status": "working",
+        "at": "2026-11-03T06:09:57.892Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Projects API | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:58.897Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/auth/user_permissions/",
+        "status": "working",
+        "at": "2026-11-03T06:09:58.897Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "User permissions | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:09:59.883Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "docs.gitlab.com/api/epic_issues/",
+        "status": "working",
+        "at": "2026-11-03T06:09:59.884Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Epic Issues API (deprecated) | GitLab Docs",
+        "status": "done",
+        "at": "2026-11-03T06:10:00.891Z"
+      },
+      {
+        "stage": "Updating action instructions",
+        "detail": "Using saved evidence for Read issue titles in accessible projects, including pagination. Your other steps are retained.",
+        "status": "working",
+        "at": "2026-11-03T06:10:00.981Z"
+      },
+      {
+        "stage": "Action update unfinished",
+        "detail": "The earlier guide is unchanged. Sources collected for this action are saved for retry.",
+        "status": "warning",
+        "at": "2026-11-03T06:10:16.249Z"
+      },
+      {
+        "stage": "Guide unfinished",
+        "detail": "Your request and 8 sources are saved. Retry the unfinished planning step.",
+        "status": "warning",
+        "at": "2026-11-03T06:10:16.278Z"
+      }
+    ],
+    "createdAt": "2026-11-03T06:08:54.740Z",
+    "updatedAt": "2026-11-03T06:10:16.296Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-03T06:08:54.749Z",
+      "finishedAt": "2026-11-03T06:10:16.282Z",
+      "elapsedMs": 81533,
+      "firstActionMs": 81533
+    },
+    "attempts": [
+      {
+        "modelCalls": 4,
+        "inputTokens": 63205,
+        "outputTokens": 13520,
+        "modelMs": 67431
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "read-issue-titles",
+          "title": "Read issue titles in accessible projects, including pagination",
+          "operation": "read",
+          "category": "resource"
+        }
+      ],
+      "prohibitions": [
+        "Create issues",
+        "Update issues",
+        "Delete issues"
+      ],
+      "oauthSupport": "documented",
+      "summary": "OAuth is documented for third-party apps. Register a user-owned OAuth app in a representative test account, authorize with the read_api scope, and call the project issues endpoint with a Bearer OAuth token. read_api is read-only but broader than issues: it grants read access to all groups and projects the user can access, and no issue-only scope is documented. Pagination continuation is only partly documented. Customer admin and provider review requirements remain unknown.",
+      "recommendation": "The requested API test is not ready yet. Resolve the access mapping for Read issue titles in accessible projects, including pagination. Use “Find missing request” or add official documentation beside that action.",
+      "nextAction": "Register a test OAuth app in the representative account",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "OAuth apps can be registered for user-authorized third-party access",
+          "detail": "GitLab documents OAuth 2.0 identity provider use for third-party services that access resources for a user. Registration happens in the user's account settings, which yields a client ID.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Use this API to allow third-party services to access GitLab resources for a user"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "registered first via the /user_settings/applications page in your user&rsquo;s account."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "resources which the application can access. Upon creation, you obtain the"
+            }
+          ]
+        },
+        {
+          "kind": "permission",
+          "title": "read_api covers read access to project issues",
+          "detail": "read_api grants read access to the API, including projects, and the project issues endpoint is documented as a GET call. Request read_api only. It is documented as read-only, but it is broader than issue titles.",
+          "appliesWhen": "",
+          "scope": "read_api",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "read_api Grants read access to the API, including all groups and projects, the container registry, and the package registry."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "GET /projects/:id/issues GET /projects/:id/issues?assignee_id=5"
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Real token boundary is broader than issues",
+          "detail": "The narrowest documented scope for this read is read_api. It covers all groups and projects the authorized user can access, and no issue-only scope is documented. Do not describe the token as limited to issue titles.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "read_api Grants read access to the API, including all groups and projects, the container registry, and the package registry."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Scope Description api Grants complete read/write access to the API, including all groups and projects, the container registry, the dependency proxy, and the package registry."
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Use the OAuth Bearer header, not a personal token header",
+          "detail": "The token may go in the Authorization header or as a GET parameter, but not both. Personal access token examples use PRIVATE-TOKEN and must not be copied for OAuth calls.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "You can pass the token either as a GET parameter or in the Authorization header, but not both."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "--header \"Authorization: Bearer <OAUTH-TOKEN>\" \\"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "The preferred way to do this is by using personal access tokens ."
+            }
+          ]
+        },
+        {
+          "kind": "customer-approval",
+          "title": "Each connected person approves access for their own account",
+          "detail": "The authorization page asks the signed-in user to approve the app's request to access their account. Each individual customer connects their own account. Whether a customer administrator must approve is not documented in the supplied sources.",
+          "appliesWhen": "Individual customer accounts connect through OAuth.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "/oauth/authorize page with the following query parameters:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "the user to approve the request from the app to access their"
+            }
+          ]
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Pagination uses documented keyset parameters",
+          "detail": "Issue lists return 20 results by default. Keyset pagination with the cursor parameter is documented for consecutive pages. The supplied sources do not show how the next cursor is returned.",
+          "appliesWhen": "",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "Responses in this API are paginated and return 20 results by default."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "cursor string No Parameter used in keyset pagination."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "pagination when requesting consecutive pages of results."
+            }
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "title": "Register a test OAuth app in the representative account",
+          "detail": "In the developer's own test account, create a user-owned OAuth application with read_api selected and a test redirect URI. Record the client ID. Store the client secret outside source control.",
+          "owner": "developer",
+          "doneWhen": "The application is saved and its client ID is recorded.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "Select Add new application ."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Enter a Name and Redirect URI ."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Select OAuth 2 Scopes as defined in Authorized Applications ."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "The OAuth 2 Client ID in the Application ID field."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "registered first via the /user_settings/applications page in your user&rsquo;s account."
+            }
+          ],
+          "appliesWhen": "",
+          "id": "register-app",
+          "dependsOn": [],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "",
+          "fields": [
+            "Application name",
+            "Redirect URI",
+            "Scope: read_api",
+            "Client ID",
+            "Client secret (store securely)"
+          ]
+        },
+        {
+          "title": "Implement the redirect and code-to-token exchange",
+          "detail": "Build the redirect handler and the code-to-token exchange. PKCE parameters are optional in the documented authorization URL. The exchange must run only after the callback returns an authorization code.",
+          "owner": "agent",
+          "doneWhen": "The callback handler accepts a code and posts a token request to the documented token endpoint in a test environment.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "The redirect includes the authorization code , for example:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "https://example.com/oauth/redirect?code=1234567890&state=STATE With the authorization code returned from the previous request (denoted as"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "RETURNED_CODE in the following example), you can request an access_token , with"
+            }
+          ],
+          "appliesWhen": "",
+          "id": "implement-callback",
+          "dependsOn": [
+            "register-app"
+          ],
+          "actionIds": [],
+          "testKind": "prepare",
+          "stage": "prepare",
+          "destination": "",
+          "fields": [
+            "Redirect URI",
+            "Client ID",
+            "Client secret",
+            "Instance base URL"
+          ]
+        },
+        {
+          "title": "Authorize the test account and obtain an OAuth token",
+          "detail": "Open the authorization URL for the representative test account, approve the request, and let the callback exchange the code. Record the access token for test use only. This is authorization setup, not a resource action.",
+          "owner": "developer",
+          "doneWhen": "The callback completes and an OAuth access token is stored for the test account.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "/oauth/authorize page with the following query parameters:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "https://gitlab.example.com/oauth/authorize?client_id=APP_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE&scope=REQUESTED_SCOPES&code_challenge=CODE_CHALLENGE&code_challenge_method=S256&root_namespace_id=ROOT_NAMESPACE_ID This page asks"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "the user to approve the request from the app to access their"
+            }
+          ],
+          "appliesWhen": "",
+          "id": "authorize-test-account",
+          "dependsOn": [
+            "implement-callback"
+          ],
+          "actionIds": [],
+          "testKind": "authorization",
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "Authorization URL parameters: client_id, redirect_uri, scope=read_api, state",
+            "Test account username",
+            "OAuth access token (store securely)"
+          ]
+        },
+        {
+          "title": "Read project issues with an OAuth Bearer token",
+          "detail": "Call the project issues endpoint for a project the test account can access. Use the OAuth Bearer header. Expected response: 200 with issue objects that include title fields. Boundary check: confirm that only GET is sent and that the response includes only issues from the accessible project.",
+          "owner": "developer",
+          "doneWhen": "A 200 response lists issue titles from an accessible project, and the request log shows only GET calls.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "Lists all issues for a specified project."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "GET /projects/:id/issues GET /projects/:id/issues?assignee_id=5"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "id integer or string Yes The global ID or URL-encoded path of the project ."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "shell curl --request GET \\"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "--header \"Authorization: Bearer <OAUTH-TOKEN>\" \\"
+            }
+          ],
+          "appliesWhen": "",
+          "id": "read-issue-titles-test",
+          "dependsOn": [
+            "authorize-test-account"
+          ],
+          "actionIds": [
+            "read-issue-titles"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "/api/v4/projects/:id/issues",
+            "example": "curl '--request' 'GET' '--header' 'Authorization: Bearer <OAUTH-TOKEN>' '--url' '<INSTANCE_BASE_URL>/api/v4/projects/<project-id>/issues'"
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "INSTANCE_BASE_URL: your full HTTPS instance URL, without a trailing slash",
+            "Project ID or URL-encoded path",
+            "OAuth access token"
+          ]
+        },
+        {
+          "title": "Continue issue reads with the cursor parameter",
+          "detail": "Request the next keyset page with the cursor value from the previous response. Repeat until the response has no further cursor. The exact way the next cursor is returned is not in the supplied sources, so confirm it in the response. Boundary check: confirm only GET calls are sent.",
+          "owner": "developer",
+          "doneWhen": "Consecutive pages return distinct issues until the response has no next cursor.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "cursor string No Parameter used in keyset pagination."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "This endpoint supports both offset-based and keyset-based pagination. You should use keyset-based"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "pagination when requesting consecutive pages of results."
+            }
+          ],
+          "appliesWhen": "The first page returns a continuation value.",
+          "id": "read-next-page",
+          "dependsOn": [
+            "read-issue-titles-test"
+          ],
+          "actionIds": [
+            "read-issue-titles"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "/api/v4/projects/:id/issues?cursor=<cursor-from-previous-response>",
+            "example": "curl '--request' 'GET' '--header' 'Authorization: Bearer <OAUTH-TOKEN>' '--url' '<INSTANCE_BASE_URL>/api/v4/projects/<project-id>/issues?cursor=<cursor-from-previous-response>'"
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "Cursor value from the previous response",
+            "Project ID",
+            "OAuth access token",
+            "INSTANCE_BASE_URL: your full HTTPS instance URL, without a trailing slash"
+          ]
+        },
+        {
+          "title": "Inspect the granted token scope",
+          "detail": "Call the token info endpoint with the OAuth token in the Authorization header. Expected response: the granted scope list. Boundary check: confirm the granted scope is read_api and that no write scope is listed.",
+          "owner": "developer",
+          "doneWhen": "The token info response lists read_api and no write scope.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "To verify the details of a token, use the token/info endpoint provided by the"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "As a parameter: GET https://gitlab.example.com/oauth/token/info?access_token=<OAUTH-TOKEN>"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "In the Authorization header:"
+            }
+          ],
+          "appliesWhen": "",
+          "id": "verify-token-scope",
+          "dependsOn": [
+            "authorize-test-account"
+          ],
+          "actionIds": [],
+          "testKind": "boundary",
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "Instance host",
+            "OAuth access token"
+          ]
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "",
+        "assumptions": ""
+      },
+      "unknowns": [
+        "How the next keyset cursor is returned in responses and when pagination stops.",
+        "Whether individual customers' administrators must approve connections.",
+        "Whether production distribution requires provider review or a marketplace listing.",
+        "Whether a self-managed instance URL or GitLab.com applies to each customer; the endpoint path is relative.",
+        "Any rate-limit behavior for repeated issue reads."
+      ],
+      "blockers": [
+        {
+          "title": "Customer administrator approval requirement is not documented",
+          "consequence": "launch",
+          "kind": "missing-evidence",
+          "owner": "developer",
+          "resolution": "Confirm whether individual customers or their administrators must approve access before production rollout, using the provider's official policy.",
+          "stepIds": [
+            "authorize-test-account"
+          ],
+          "resolutionStepIds": [
+            "authorize-test-account"
+          ],
+          "gap": {
+            "actionId": "read-issue-titles",
+            "fact": "permission"
+          },
+          "actionId": "read-issue-titles"
+        },
+        {
+          "title": "Customer-facing review and listing requirements are not documented",
+          "consequence": "launch",
+          "kind": "missing-evidence",
+          "owner": "developer",
+          "resolution": "Verify whether the provider requires review or listing for customer distribution before production launch.",
+          "stepIds": [
+            "authorize-test-account"
+          ],
+          "resolutionStepIds": [
+            "authorize-test-account"
+          ]
+        },
+        {
+          "title": "Read issue titles in accessible projects, including pagination",
+          "kind": "missing-evidence",
+          "gap": {
+            "actionId": "read-issue-titles",
+            "fact": "permission"
+          },
+          "actionId": "read-issue-titles",
+          "consequence": "test",
+          "owner": "Developer",
+          "resolution": "The read_api scope and GET /projects/:id/issues are documented, but the read-next-page step (read-next-page) lacks the source fact for how the next cursor is returned and the end condition, so the pagination handoff is unsupported.",
+          "stepIds": [
+            "read-issue-titles-test",
+            "read-next-page"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "action": "Read issue titles in accessible projects, including pagination",
+          "actionId": "read-issue-titles",
+          "permissions": [
+            "read_api"
+          ],
+          "status": "unresolved",
+          "reason": "The read_api scope and GET /projects/:id/issues are documented, but the read-next-page step (read-next-page) lacks the source fact for how the next cursor is returned and the end condition, so the pagination handoff is unsupported.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "read_api Grants read access to the API, including all groups and projects, the container registry, and the package registry."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "GET /projects/:id/issues GET /projects/:id/issues?assignee_id=5"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Lists all issues for a specified project."
+            }
+          ],
+          "support": "unresolved"
+        }
+      ],
+      "researchNeeded": [
+        "distribution"
+      ],
+      "semanticsVersion": 2,
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": false,
+      "schemaVersion": 1,
+      "id": "lg-e61fb8e2-6119-476a-85c5-8f0f0bcc5978",
+      "previousId": "lg-1ef0d289-47e2-4cf3-adb4-82e1b41bd192",
+      "generatedAt": "2026-11-03T06:10:16.251Z",
+      "input": {
+        "app": "GitLab",
+        "website": "",
+        "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-1ef0d289-47e2-4cf3-adb4-82e1b41bd192"
+      },
+      "provider": {
+        "website": "https://docs.gitlab.com/api/oauth2/",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Generated from retrieved documentation. Citation matching and a separate access review are fallible checks; setup has not been tested.",
+      "warnings": [],
+      "setupTested": false,
+      "decisions": [
+        {
+          "id": "provider-identity",
+          "question": "Continue with docs.gitlab.com?",
+          "answer": "Yes, this is the provider"
+        }
+      ],
+      "engine": {
+        "model": "claude-haiku-5-5",
+        "attempts": 4,
+        "inputTokens": 63205,
+        "outputTokens": 13520,
+        "elapsedMs": 67431,
+        "outcome": "incomplete",
+        "thinking": "adaptive",
+        "effort": "medium",
+        "validationIssues": [
+          "A step destination has no concrete pagination request. Retain the initial request and add a documented continuation request using the returned cursor/page/offset, including how to repeat until complete. Prose alone is insufficient."
+        ],
+        "provider": "anthropic",
+        "promptVersion": "live-guide.17",
+        "thinkingTokens": 6539
+      },
+      "journey": {
+        "modelCalls": 4,
+        "inputTokens": 63205,
+        "outputTokens": 13520,
+        "modelMs": 67431
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://docs.gitlab.com/api/oauth2/",
+          "title": "OAuth 2.0 identity provider API | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.702Z",
+          "hash": "90ba9a1c5fdd180a6c89dd39f5d756006e08db38da81b9a45ec1fdbd99273746",
+          "links": [
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/ja-jp/api/oauth2/",
+            "https://docs.gitlab.com/integration/oauth_provider/",
+            "https://oauth.net/2/",
+            "https://oauth.net/2.1/",
+            "https://www.rfc-editor.org/info/rfc6749/",
+            "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics-13",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/oauth2.md",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/user/profile/account/two_factor_authentication/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+            "https://docs.gitlab.com/user/gitlab_duo_cli/",
+            "https://docs.gitlab.com/cli/",
+            "https://docs.gitlab.com/editor_extensions/",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS",
+            "https://docs.gitlab.com/user/group/saml_sso/",
+            "https://docs.gitlab.com/administration/feature_flags/",
+            "https://docs.gitlab.com/user/packages/container_registry/authenticate_with_container_registry/",
+            "https://docs.gitlab.com/user/packages/package_registry/",
+            "https://docs.gitlab.com/user/packages/virtual_registry/",
+            "https://docs.gitlab.com/api/container_registry/",
+            "https://docs.gitlab.com/api/maven_virtual_registries/",
+            "https://docs.gitlab.com/legal/use_generative_ai/",
+            "https://docs.gitlab.com/legal/licensing_policy/"
+          ]
+        },
+        {
+          "id": "s2",
+          "url": "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "title": "Get started extending GitLab | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.706Z",
+          "hash": "06db9e9eb90ea4bc5cda9ebbbff59eb1a2199e8d983102963f6bf9201bd6adec",
+          "links": [
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/api/graphql/reference/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/ja-jp/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+            "https://docs.gitlab.com/user/gitlab_duo_cli/",
+            "https://docs.gitlab.com/cli/",
+            "https://docs.gitlab.com/editor_extensions/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/legal/use_generative_ai/",
+            "https://docs.gitlab.com/legal/licensing_policy/"
+          ]
+        },
+        {
+          "id": "s3",
+          "url": "https://docs.gitlab.com/integration/oauth_provider/",
+          "title": "Configure GitLab as an OAuth 2.0 authentication identity provider | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.708Z",
+          "hash": "05210ecc5219dc04c9c0858dceae4c07e0ac0ffdc5da6ff0bb4b832f5efe28da",
+          "links": [
+            "https://docs.gitlab.com/integration/oauth_provider/",
+            "https://docs.gitlab.com/ja-jp/integration/oauth_provider/",
+            "https://docs.gitlab.com/administration/auth/test_oidc_oauth/",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/auth/user_permissions/",
+            "https://docs.gitlab.com/user/permissions/",
+            "https://oauth.net/2/",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/integration/oauth_provider.md",
+            "https://docs.gitlab.com/user/get_started/",
+            "https://docs.gitlab.com/auth/user_authentication/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/",
+            "https://docs.gitlab.com/topics/set_up_organization/",
+            "https://docs.gitlab.com/user/project/organize_work_with_projects/",
+            "https://docs.gitlab.com/topics/plan_and_track/",
+            "https://docs.gitlab.com/auth/",
+            "https://docs.gitlab.com/administration/auth/",
+            "https://docs.gitlab.com/tutorials/auth/saml_saas/",
+            "https://docs.gitlab.com/administration/auth/ldap/",
+            "https://docs.gitlab.com/integration/omniauth/",
+            "https://docs.gitlab.com/integration/saml/",
+            "https://docs.gitlab.com/user/group/saml_sso/",
+            "https://docs.gitlab.com/user/group/saml_sso/group_sync/",
+            "https://docs.gitlab.com/administration/settings/scim_setup/",
+            "https://docs.gitlab.com/user/group/saml_sso/scim_setup/",
+            "https://docs.gitlab.com/integration/openid_connect_provider/",
+            "https://docs.gitlab.com/auth/auth_practices/",
+            "https://docs.gitlab.com/auth/auth_glossary/",
+            "https://docs.gitlab.com/topics/git/",
+            "https://docs.gitlab.com/topics/manage_code/",
+            "https://docs.gitlab.com/topics/build_your_application/",
+            "https://docs.gitlab.com/user/application_security/secure_your_application/",
+            "https://docs.gitlab.com/topics/release_your_application/",
+            "https://docs.gitlab.com/user/infrastructure/",
+            "https://docs.gitlab.com/operations/",
+            "https://docs.gitlab.com/user/analytics/",
+            "https://docs.gitlab.com/releases/",
+            "https://docs.gitlab.com/policy/development_stages_support/",
+            "https://docs.gitlab.com/user/version/",
+            "https://docs.gitlab.com/integration/gitlab/",
+            "https://docs.gitlab.com/administration/settings/account_and_limit_settings/",
+            "https://docs.gitlab.com/api/applications/",
+            "https://docs.gitlab.com/legal/use_generative_ai/",
+            "https://docs.gitlab.com/legal/licensing_policy/"
+          ]
+        },
+        {
+          "id": "s4",
+          "url": "https://docs.gitlab.com/api/rest/",
+          "title": "REST API | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.715Z",
+          "hash": "b74b758a5ada7d619e2b710f306019e1d8ee059c6790ae67b9f9b5db1120cc47",
+          "links": [
+            "https://docs.gitlab.com/api/issues/",
+            "https://docs.gitlab.com/api/milestones/",
+            "https://docs.gitlab.com/api/projects/",
+            "https://docs.gitlab.com/api/openapi/",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/ja-jp/api/rest/",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/api/rest/authentication/",
+            "https://docs.gitlab.com/api/rest/third_party_clients/",
+            "https://docs.gitlab.com/api/rest/deprecations/",
+            "https://docs.gitlab.com/user/storage_management_automation/",
+            "https://docs.gitlab.com/api/rest/troubleshooting/",
+            "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+            "https://docs.gitlab.com/user/gitlab_duo_cli/",
+            "https://docs.gitlab.com/cli/",
+            "https://docs.gitlab.com/editor_extensions/",
+            "https://docs.gitlab.com/rate_limits/",
+            "https://docs.gitlab.com/user/gitlab_com/rate_limits/",
+            "https://docs.gitlab.com/api/merge_requests/",
+            "https://docs.gitlab.com/user/project/repository/",
+            "https://docs.gitlab.com/api/namespaces/",
+            "https://docs.gitlab.com/administration/instance_limits/",
+            "https://docs.gitlab.com/api/notes/",
+            "https://docs.gitlab.com/api/groups/",
+            "https://docs.gitlab.com/api/audit_events/",
+            "https://docs.gitlab.com/api/packages/",
+            "https://docs.gitlab.com/api/jobs/",
+            "https://docs.gitlab.com/api/users/",
+            "https://docs.gitlab.com/api/container_registry/",
+            "https://docs.gitlab.com/api/repositories/",
+            "https://docs.gitlab.com/api/runners/",
+            "https://docs.gitlab.com/policy/development_stages_support/",
+            "https://docs.gitlab.com/update/convert_to_ee/revert/",
+            "https://docs.gitlab.com/legal/use_generative_ai/",
+            "https://docs.gitlab.com/legal/licensing_policy/"
+          ]
+        },
+        {
+          "id": "s5",
+          "url": "https://docs.gitlab.com/api/issues/",
+          "title": "Issues API | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.719Z",
+          "hash": "0b0be3437c46206bcc1253cf10449d656e9428b63dd730ca6063f628a71ae3d9",
+          "links": [
+            "https://docs.gitlab.com/api/issues/",
+            "https://docs.gitlab.com/ja-jp/api/issues/",
+            "https://docs.gitlab.com/api/access_requests/",
+            "https://docs.gitlab.com/api/epic_issues/",
+            "https://docs.gitlab.com/api/issues_statistics/",
+            "https://docs.gitlab.com/api/issue_links/",
+            "https://docs.gitlab.com/api/projects/",
+            "https://docs.gitlab.com/api/openapi/",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/issues.md",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/api/merge_request_approval_settings/",
+            "https://docs.gitlab.com/api/merge_request_approvals/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/usage_data/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/api/cluster_agents/",
+            "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/api/templates/gitignores/",
+            "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+            "https://docs.gitlab.com/api/alert_management_alerts/",
+            "https://docs.gitlab.com/api/appearance/",
+            "https://docs.gitlab.com/api/settings/",
+            "https://docs.gitlab.com/api/statistics/",
+            "https://docs.gitlab.com/api/applications/",
+            "https://docs.gitlab.com/api/attestations/",
+            "https://docs.gitlab.com/api/audit_events/",
+            "https://docs.gitlab.com/api/avatar/",
+            "https://docs.gitlab.com/api/branches/",
+            "https://docs.gitlab.com/api/broadcast_messages/",
+            "https://docs.gitlab.com/api/cluster_discovery/",
+            "https://docs.gitlab.com/api/code_suggestions/",
+            "https://docs.gitlab.com/api/commits/",
+            "https://docs.gitlab.com/api/compliance_policy_settings/",
+            "https://docs.gitlab.com/api/container_registry/",
+            "https://docs.gitlab.com/api/container_virtual_registries/",
+            "https://docs.gitlab.com/api/custom_attributes/",
+            "https://docs.gitlab.com/api/dependencies/",
+            "https://docs.gitlab.com/api/dependency_firewall/",
+            "https://docs.gitlab.com/api/dependency_list_export/",
+            "https://docs.gitlab.com/api/deploy_keys/",
+            "https://docs.gitlab.com/api/deploy_tokens/",
+            "https://docs.gitlab.com/api/deployments/",
+            "https://docs.gitlab.com/api/discussions/",
+            "https://docs.gitlab.com/api/templates/dockerfiles/",
+            "https://docs.gitlab.com/api/dora/metrics/"
+          ]
+        },
+        {
+          "id": "s6",
+          "url": "https://docs.gitlab.com/api/usage_data/",
+          "title": "Service Ping API | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.731Z",
+          "hash": "625a58e31f5e2aa9089f5977dd9888b218b5a9de57f2a66c85d126981766a763",
+          "links": [
+            "https://docs.gitlab.com/api/access_requests/",
+            "https://docs.gitlab.com/api/issues/",
+            "https://docs.gitlab.com/api/epic_issues/",
+            "https://docs.gitlab.com/api/issues_statistics/",
+            "https://docs.gitlab.com/api/issue_links/",
+            "https://docs.gitlab.com/api/projects/",
+            "https://docs.gitlab.com/api/openapi/",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/user/permissions/",
+            "https://docs.gitlab.com/api/merge_request_approval_settings/",
+            "https://docs.gitlab.com/api/merge_request_approvals/",
+            "https://docs.gitlab.com/api/usage_data/",
+            "https://docs.gitlab.com/ja-jp/api/usage_data/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/usage_data.md",
+            "https://docs.gitlab.com/api/cluster_agents/",
+            "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/api/templates/gitignores/",
+            "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+            "https://docs.gitlab.com/api/alert_management_alerts/",
+            "https://docs.gitlab.com/api/appearance/",
+            "https://docs.gitlab.com/api/settings/",
+            "https://docs.gitlab.com/api/statistics/",
+            "https://docs.gitlab.com/api/applications/",
+            "https://docs.gitlab.com/api/attestations/",
+            "https://docs.gitlab.com/api/audit_events/",
+            "https://docs.gitlab.com/api/avatar/",
+            "https://docs.gitlab.com/api/branches/",
+            "https://docs.gitlab.com/api/broadcast_messages/",
+            "https://docs.gitlab.com/api/cluster_discovery/",
+            "https://docs.gitlab.com/api/code_suggestions/",
+            "https://docs.gitlab.com/api/commits/",
+            "https://docs.gitlab.com/api/compliance_policy_settings/",
+            "https://docs.gitlab.com/api/container_registry/",
+            "https://docs.gitlab.com/api/container_virtual_registries/",
+            "https://docs.gitlab.com/api/custom_attributes/",
+            "https://docs.gitlab.com/api/dependencies/",
+            "https://docs.gitlab.com/api/dependency_firewall/",
+            "https://docs.gitlab.com/api/dependency_list_export/",
+            "https://docs.gitlab.com/api/deploy_keys/",
+            "https://docs.gitlab.com/api/deploy_tokens/",
+            "https://docs.gitlab.com/api/deployments/",
+            "https://docs.gitlab.com/api/discussions/",
+            "https://docs.gitlab.com/api/templates/dockerfiles/"
+          ]
+        },
+        {
+          "id": "s7",
+          "url": "https://docs.gitlab.com/api/milestones/",
+          "title": "Project milestones API | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.743Z",
+          "hash": "ef90ad93fad5936950e35f388552e96c80268347416bd4861cf28711bb197ec1",
+          "links": [
+            "https://docs.gitlab.com/api/access_requests/",
+            "https://docs.gitlab.com/api/issues/",
+            "https://docs.gitlab.com/api/epic_issues/",
+            "https://docs.gitlab.com/api/issues_statistics/",
+            "https://docs.gitlab.com/api/issue_links/",
+            "https://docs.gitlab.com/api/projects/",
+            "https://docs.gitlab.com/api/project_aliases/",
+            "https://docs.gitlab.com/api/project_badges/",
+            "https://docs.gitlab.com/api/project_level_variables/",
+            "https://docs.gitlab.com/api/project_forks/",
+            "https://docs.gitlab.com/api/project_import_export/",
+            "https://docs.gitlab.com/api/project_integrations/",
+            "https://docs.gitlab.com/api/boards/",
+            "https://docs.gitlab.com/api/project_members/",
+            "https://docs.gitlab.com/api/project_markdown_uploads/",
+            "https://docs.gitlab.com/api/project_starring/",
+            "https://docs.gitlab.com/api/project_packages_protection_rules/",
+            "https://docs.gitlab.com/api/project_pull_mirroring/",
+            "https://docs.gitlab.com/api/project_push_rules/",
+            "https://docs.gitlab.com/api/project_relations_export/",
+            "https://docs.gitlab.com/api/project_repository_storage_moves/",
+            "https://docs.gitlab.com/api/project_security_settings/",
+            "https://docs.gitlab.com/api/project_snippets/",
+            "https://docs.gitlab.com/api/project_statistics/",
+            "https://docs.gitlab.com/api/project_templates/",
+            "https://docs.gitlab.com/api/project_vulnerabilities/",
+            "https://docs.gitlab.com/api/openapi/",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/api/merge_request_approval_settings/",
+            "https://docs.gitlab.com/api/merge_request_approvals/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/usage_data/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/api/cluster_agents/",
+            "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/api/milestones/",
+            "https://docs.gitlab.com/ja-jp/api/milestones/",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/api/templates/gitignores/",
+            "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+            "https://docs.gitlab.com/api/alert_management_alerts/",
+            "https://docs.gitlab.com/api/appearance/",
+            "https://docs.gitlab.com/api/settings/",
+            "https://docs.gitlab.com/api/statistics/",
+            "https://docs.gitlab.com/api/applications/",
+            "https://docs.gitlab.com/api/attestations/"
+          ]
+        },
+        {
+          "id": "s8",
+          "url": "https://docs.gitlab.com/api/projects/",
+          "title": "Projects API | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:09:08.759Z",
+          "hash": "c4dd3ab58e8be1c6606bb4ac8b99df39247a6e4e5e0478c5e9404ca3da4349ee",
+          "links": [
+            "https://docs.gitlab.com/api/projects/",
+            "https://docs.gitlab.com/ja-jp/api/projects/",
+            "https://docs.gitlab.com/api/access_requests/",
+            "https://docs.gitlab.com/api/events/",
+            "https://docs.gitlab.com/api/issues/",
+            "https://docs.gitlab.com/api/epic_issues/",
+            "https://docs.gitlab.com/api/issues_statistics/",
+            "https://docs.gitlab.com/api/issue_links/",
+            "https://docs.gitlab.com/api/project_aliases/",
+            "https://docs.gitlab.com/api/project_badges/",
+            "https://docs.gitlab.com/api/project_level_variables/",
+            "https://docs.gitlab.com/api/project_forks/",
+            "https://docs.gitlab.com/api/project_import_export/",
+            "https://docs.gitlab.com/api/project_integrations/",
+            "https://docs.gitlab.com/api/boards/",
+            "https://docs.gitlab.com/api/project_members/",
+            "https://docs.gitlab.com/api/project_markdown_uploads/",
+            "https://docs.gitlab.com/api/project_starring/",
+            "https://docs.gitlab.com/api/project_packages_protection_rules/",
+            "https://docs.gitlab.com/api/project_pull_mirroring/",
+            "https://docs.gitlab.com/api/project_push_rules/",
+            "https://docs.gitlab.com/api/project_relations_export/",
+            "https://docs.gitlab.com/api/project_repository_storage_moves/",
+            "https://docs.gitlab.com/api/project_security_settings/",
+            "https://docs.gitlab.com/api/project_snippets/",
+            "https://docs.gitlab.com/api/project_statistics/",
+            "https://docs.gitlab.com/api/project_templates/",
+            "https://docs.gitlab.com/api/project_vulnerabilities/",
+            "https://docs.gitlab.com/api/openapi/",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/projects.md",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/user/permissions/",
+            "https://docs.gitlab.com/api/merge_request_approval_settings/",
+            "https://docs.gitlab.com/api/merge_request_approvals/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/usage_data/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/api/cluster_agents/",
+            "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+            "https://docs.gitlab.com/user/duo_agent_platform/flows/",
+            "https://docs.gitlab.com/user/duo_agent_platform/flows/foundational_flows/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/api/templates/gitignores/",
+            "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+            "https://docs.gitlab.com/api/alert_management_alerts/",
+            "https://docs.gitlab.com/api/appearance/"
+          ]
+        },
+        {
+          "id": "s9",
+          "url": "https://docs.gitlab.com/api/projects/",
+          "title": "Projects API | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:10:00.916Z",
+          "hash": "c4dd3ab58e8be1c6606bb4ac8b99df39247a6e4e5e0478c5e9404ca3da4349ee",
+          "links": [
+            "https://docs.gitlab.com/api/projects/",
+            "https://docs.gitlab.com/ja-jp/api/projects/",
+            "https://docs.gitlab.com/api/events/",
+            "https://docs.gitlab.com/api/issues/",
+            "https://docs.gitlab.com/api/epic_issues/",
+            "https://docs.gitlab.com/api/issues_statistics/",
+            "https://docs.gitlab.com/api/issue_links/",
+            "https://docs.gitlab.com/api/project_aliases/",
+            "https://docs.gitlab.com/api/project_badges/",
+            "https://docs.gitlab.com/api/project_level_variables/",
+            "https://docs.gitlab.com/api/project_forks/",
+            "https://docs.gitlab.com/api/project_import_export/",
+            "https://docs.gitlab.com/api/project_integrations/",
+            "https://docs.gitlab.com/api/boards/",
+            "https://docs.gitlab.com/api/project_members/",
+            "https://docs.gitlab.com/api/project_markdown_uploads/",
+            "https://docs.gitlab.com/api/project_starring/",
+            "https://docs.gitlab.com/api/project_packages_protection_rules/",
+            "https://docs.gitlab.com/api/project_pull_mirroring/",
+            "https://docs.gitlab.com/api/project_push_rules/",
+            "https://docs.gitlab.com/api/project_relations_export/",
+            "https://docs.gitlab.com/api/project_repository_storage_moves/",
+            "https://docs.gitlab.com/api/project_security_settings/",
+            "https://docs.gitlab.com/api/project_snippets/",
+            "https://docs.gitlab.com/api/project_statistics/",
+            "https://docs.gitlab.com/api/project_templates/",
+            "https://docs.gitlab.com/api/project_vulnerabilities/",
+            "https://docs.gitlab.com/api/openapi/",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/projects.md",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/user/permissions/",
+            "https://docs.gitlab.com/api/merge_request_approval_settings/",
+            "https://docs.gitlab.com/api/merge_request_approvals/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/usage_data/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/api/cluster_agents/",
+            "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+            "https://docs.gitlab.com/user/duo_agent_platform/flows/",
+            "https://docs.gitlab.com/user/duo_agent_platform/flows/foundational_flows/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/api/templates/gitignores/",
+            "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+            "https://docs.gitlab.com/api/access_requests/",
+            "https://docs.gitlab.com/api/alert_management_alerts/",
+            "https://docs.gitlab.com/api/appearance/"
+          ]
+        },
+        {
+          "id": "s10",
+          "url": "https://docs.gitlab.com/auth/user_permissions/",
+          "title": "User permissions | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:10:00.955Z",
+          "hash": "329d23db1aac5b5fc64cd463d5a1547fda6f7fac7d7e6770ae530ccc1002cf38",
+          "links": [
+            "https://docs.gitlab.com/auth/user_permissions/",
+            "https://docs.gitlab.com/ja-jp/auth/user_permissions/",
+            "https://docs.gitlab.com/administration/external_users/",
+            "https://docs.gitlab.com/administration/guest_users/",
+            "https://docs.gitlab.com/user/permissions/",
+            "https://docs.gitlab.com/user/custom_roles/",
+            "https://docs.gitlab.com/user/custom_roles/abilities/",
+            "https://docs.gitlab.com/user/enterprise_user/",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/auth/user_permissions.md",
+            "https://docs.gitlab.com/user/get_started/",
+            "https://docs.gitlab.com/auth/user_authentication/",
+            "https://docs.gitlab.com/administration/internal_users/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/",
+            "https://docs.gitlab.com/topics/set_up_organization/",
+            "https://docs.gitlab.com/user/project/organize_work_with_projects/",
+            "https://docs.gitlab.com/topics/plan_and_track/",
+            "https://docs.gitlab.com/auth/",
+            "https://docs.gitlab.com/administration/auth/",
+            "https://docs.gitlab.com/administration/auditor_users/",
+            "https://docs.gitlab.com/user/participants/",
+            "https://docs.gitlab.com/user/profile/service_accounts/",
+            "https://docs.gitlab.com/auth/auth_practices/",
+            "https://docs.gitlab.com/auth/auth_glossary/",
+            "https://docs.gitlab.com/topics/git/",
+            "https://docs.gitlab.com/topics/manage_code/",
+            "https://docs.gitlab.com/topics/build_your_application/",
+            "https://docs.gitlab.com/user/application_security/secure_your_application/",
+            "https://docs.gitlab.com/topics/release_your_application/",
+            "https://docs.gitlab.com/user/infrastructure/",
+            "https://docs.gitlab.com/operations/",
+            "https://docs.gitlab.com/user/analytics/",
+            "https://docs.gitlab.com/releases/",
+            "https://docs.gitlab.com/policy/development_stages_support/",
+            "https://docs.gitlab.com/user/version/",
+            "https://docs.gitlab.com/legal/use_generative_ai/",
+            "https://docs.gitlab.com/legal/licensing_policy/"
+          ]
+        },
+        {
+          "id": "s11",
+          "url": "https://docs.gitlab.com/api/epic_issues/",
+          "title": "Epic Issues API (deprecated) | GitLab Docs",
+          "retrievedAt": "2026-11-03T06:10:00.959Z",
+          "hash": "5c6f983f5f6d1adf64c454bb6836038fc4c9d6725d365bd6167722729b5726f6",
+          "links": [
+            "https://docs.gitlab.com/api/epic_issues/",
+            "https://docs.gitlab.com/ja-jp/api/epic_issues/",
+            "https://docs.gitlab.com/api/issues/",
+            "https://docs.gitlab.com/api/issues_statistics/",
+            "https://docs.gitlab.com/api/issue_links/",
+            "https://docs.gitlab.com/api/projects/",
+            "https://docs.gitlab.com/api/openapi/",
+            "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/epic_issues.md",
+            "https://docs.gitlab.com/api/oauth2/",
+            "https://docs.gitlab.com/api/merge_request_approval_settings/",
+            "https://docs.gitlab.com/api/merge_request_approvals/",
+            "https://docs.gitlab.com/api/get_started/get_started_extending/",
+            "https://docs.gitlab.com/api/usage_data/",
+            "https://docs.gitlab.com/api/graphql/",
+            "https://docs.gitlab.com/api/cluster_agents/",
+            "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+            "https://docs.gitlab.com/manifests/manifest.webmanifest",
+            "https://docs.gitlab.com/",
+            "https://docs.gitlab.com/user/",
+            "https://docs.gitlab.com/user/gitlab_duo/",
+            "https://docs.gitlab.com/orbit/",
+            "https://docs.gitlab.com/api/",
+            "https://docs.gitlab.com/install/",
+            "https://docs.gitlab.com/administration/",
+            "https://docs.gitlab.com/subscriptions/",
+            "https://docs.gitlab.com/development/",
+            "https://docs.gitlab.com/solutions/",
+            "https://docs.gitlab.com/tutorials/develop/",
+            "https://docs.gitlab.com/integration/",
+            "https://docs.gitlab.com/api/rest/",
+            "https://docs.gitlab.com/api/api_resources/",
+            "https://docs.gitlab.com/api/templates/gitignores/",
+            "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+            "https://docs.gitlab.com/api/access_requests/",
+            "https://docs.gitlab.com/api/alert_management_alerts/",
+            "https://docs.gitlab.com/api/appearance/",
+            "https://docs.gitlab.com/api/settings/",
+            "https://docs.gitlab.com/api/statistics/",
+            "https://docs.gitlab.com/api/applications/",
+            "https://docs.gitlab.com/api/attestations/",
+            "https://docs.gitlab.com/api/audit_events/",
+            "https://docs.gitlab.com/api/avatar/",
+            "https://docs.gitlab.com/api/branches/",
+            "https://docs.gitlab.com/api/broadcast_messages/",
+            "https://docs.gitlab.com/api/cluster_discovery/",
+            "https://docs.gitlab.com/api/code_suggestions/",
+            "https://docs.gitlab.com/api/commits/",
+            "https://docs.gitlab.com/api/compliance_policy_settings/",
+            "https://docs.gitlab.com/api/container_registry/",
+            "https://docs.gitlab.com/api/container_virtual_registries/",
+            "https://docs.gitlab.com/api/custom_attributes/",
+            "https://docs.gitlab.com/api/dependencies/",
+            "https://docs.gitlab.com/api/dependency_firewall/",
+            "https://docs.gitlab.com/api/dependency_list_export/",
+            "https://docs.gitlab.com/api/deploy_keys/",
+            "https://docs.gitlab.com/api/deploy_tokens/",
+            "https://docs.gitlab.com/api/deployments/",
+            "https://docs.gitlab.com/api/discussions/",
+            "https://docs.gitlab.com/api/templates/dockerfiles/",
+            "https://docs.gitlab.com/api/dora/metrics/"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "GitLab",
+        "docsUrl": "https://docs.composio.dev/toolkits/gitlab",
+        "message": "GitLab appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "observations": [],
+      "resultState": "research-failure",
+      "researchMetrics": {
+        "navigationCalls": 1
+      }
+    },
+    "error": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation.",
+    "failure": {
+      "category": "planning",
+      "message": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation."
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://docs.gitlab.com/api/oauth2/",
+        "title": "OAuth 2.0 identity provider API | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.702Z",
+        "hash": "90ba9a1c5fdd180a6c89dd39f5d756006e08db38da81b9a45ec1fdbd99273746",
+        "links": [
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/ja-jp/api/oauth2/",
+          "https://docs.gitlab.com/integration/oauth_provider/",
+          "https://oauth.net/2/",
+          "https://oauth.net/2.1/",
+          "https://www.rfc-editor.org/info/rfc6749/",
+          "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics-13",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/oauth2.md",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/user/profile/account/two_factor_authentication/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+          "https://docs.gitlab.com/user/gitlab_duo_cli/",
+          "https://docs.gitlab.com/cli/",
+          "https://docs.gitlab.com/editor_extensions/",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS",
+          "https://docs.gitlab.com/user/group/saml_sso/",
+          "https://docs.gitlab.com/administration/feature_flags/",
+          "https://docs.gitlab.com/user/packages/container_registry/authenticate_with_container_registry/",
+          "https://docs.gitlab.com/user/packages/package_registry/",
+          "https://docs.gitlab.com/user/packages/virtual_registry/",
+          "https://docs.gitlab.com/api/container_registry/",
+          "https://docs.gitlab.com/api/maven_virtual_registries/",
+          "https://docs.gitlab.com/legal/use_generative_ai/",
+          "https://docs.gitlab.com/legal/licensing_policy/"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://docs.gitlab.com/api/get_started/get_started_extending/",
+        "title": "Get started extending GitLab | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.706Z",
+        "hash": "06db9e9eb90ea4bc5cda9ebbbff59eb1a2199e8d983102963f6bf9201bd6adec",
+        "links": [
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/api/graphql/reference/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/ja-jp/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+          "https://docs.gitlab.com/user/gitlab_duo_cli/",
+          "https://docs.gitlab.com/cli/",
+          "https://docs.gitlab.com/editor_extensions/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/legal/use_generative_ai/",
+          "https://docs.gitlab.com/legal/licensing_policy/"
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://docs.gitlab.com/integration/oauth_provider/",
+        "title": "Configure GitLab as an OAuth 2.0 authentication identity provider | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.708Z",
+        "hash": "05210ecc5219dc04c9c0858dceae4c07e0ac0ffdc5da6ff0bb4b832f5efe28da",
+        "links": [
+          "https://docs.gitlab.com/integration/oauth_provider/",
+          "https://docs.gitlab.com/ja-jp/integration/oauth_provider/",
+          "https://docs.gitlab.com/administration/auth/test_oidc_oauth/",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/auth/user_permissions/",
+          "https://docs.gitlab.com/user/permissions/",
+          "https://oauth.net/2/",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/integration/oauth_provider.md",
+          "https://docs.gitlab.com/user/get_started/",
+          "https://docs.gitlab.com/auth/user_authentication/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/",
+          "https://docs.gitlab.com/topics/set_up_organization/",
+          "https://docs.gitlab.com/user/project/organize_work_with_projects/",
+          "https://docs.gitlab.com/topics/plan_and_track/",
+          "https://docs.gitlab.com/auth/",
+          "https://docs.gitlab.com/administration/auth/",
+          "https://docs.gitlab.com/tutorials/auth/saml_saas/",
+          "https://docs.gitlab.com/administration/auth/ldap/",
+          "https://docs.gitlab.com/integration/omniauth/",
+          "https://docs.gitlab.com/integration/saml/",
+          "https://docs.gitlab.com/user/group/saml_sso/",
+          "https://docs.gitlab.com/user/group/saml_sso/group_sync/",
+          "https://docs.gitlab.com/administration/settings/scim_setup/",
+          "https://docs.gitlab.com/user/group/saml_sso/scim_setup/",
+          "https://docs.gitlab.com/integration/openid_connect_provider/",
+          "https://docs.gitlab.com/auth/auth_practices/",
+          "https://docs.gitlab.com/auth/auth_glossary/",
+          "https://docs.gitlab.com/topics/git/",
+          "https://docs.gitlab.com/topics/manage_code/",
+          "https://docs.gitlab.com/topics/build_your_application/",
+          "https://docs.gitlab.com/user/application_security/secure_your_application/",
+          "https://docs.gitlab.com/topics/release_your_application/",
+          "https://docs.gitlab.com/user/infrastructure/",
+          "https://docs.gitlab.com/operations/",
+          "https://docs.gitlab.com/user/analytics/",
+          "https://docs.gitlab.com/releases/",
+          "https://docs.gitlab.com/policy/development_stages_support/",
+          "https://docs.gitlab.com/user/version/",
+          "https://docs.gitlab.com/integration/gitlab/",
+          "https://docs.gitlab.com/administration/settings/account_and_limit_settings/",
+          "https://docs.gitlab.com/api/applications/",
+          "https://docs.gitlab.com/legal/use_generative_ai/",
+          "https://docs.gitlab.com/legal/licensing_policy/"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://docs.gitlab.com/api/rest/",
+        "title": "REST API | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.715Z",
+        "hash": "b74b758a5ada7d619e2b710f306019e1d8ee059c6790ae67b9f9b5db1120cc47",
+        "links": [
+          "https://docs.gitlab.com/api/issues/",
+          "https://docs.gitlab.com/api/milestones/",
+          "https://docs.gitlab.com/api/projects/",
+          "https://docs.gitlab.com/api/openapi/",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/ja-jp/api/rest/",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/api/rest/authentication/",
+          "https://docs.gitlab.com/api/rest/third_party_clients/",
+          "https://docs.gitlab.com/api/rest/deprecations/",
+          "https://docs.gitlab.com/user/storage_management_automation/",
+          "https://docs.gitlab.com/api/rest/troubleshooting/",
+          "https://docs.gitlab.com/user/model_context_protocol/mcp_server/",
+          "https://docs.gitlab.com/user/gitlab_duo_cli/",
+          "https://docs.gitlab.com/cli/",
+          "https://docs.gitlab.com/editor_extensions/",
+          "https://docs.gitlab.com/rate_limits/",
+          "https://docs.gitlab.com/user/gitlab_com/rate_limits/",
+          "https://docs.gitlab.com/api/merge_requests/",
+          "https://docs.gitlab.com/user/project/repository/",
+          "https://docs.gitlab.com/api/namespaces/",
+          "https://docs.gitlab.com/administration/instance_limits/",
+          "https://docs.gitlab.com/api/notes/",
+          "https://docs.gitlab.com/api/groups/",
+          "https://docs.gitlab.com/api/audit_events/",
+          "https://docs.gitlab.com/api/packages/",
+          "https://docs.gitlab.com/api/jobs/",
+          "https://docs.gitlab.com/api/users/",
+          "https://docs.gitlab.com/api/container_registry/",
+          "https://docs.gitlab.com/api/repositories/",
+          "https://docs.gitlab.com/api/runners/",
+          "https://docs.gitlab.com/policy/development_stages_support/",
+          "https://docs.gitlab.com/update/convert_to_ee/revert/",
+          "https://docs.gitlab.com/legal/use_generative_ai/",
+          "https://docs.gitlab.com/legal/licensing_policy/"
+        ]
+      },
+      {
+        "id": "s5",
+        "url": "https://docs.gitlab.com/api/issues/",
+        "title": "Issues API | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.719Z",
+        "hash": "0b0be3437c46206bcc1253cf10449d656e9428b63dd730ca6063f628a71ae3d9",
+        "links": [
+          "https://docs.gitlab.com/api/issues/",
+          "https://docs.gitlab.com/ja-jp/api/issues/",
+          "https://docs.gitlab.com/api/access_requests/",
+          "https://docs.gitlab.com/api/epic_issues/",
+          "https://docs.gitlab.com/api/issues_statistics/",
+          "https://docs.gitlab.com/api/issue_links/",
+          "https://docs.gitlab.com/api/projects/",
+          "https://docs.gitlab.com/api/openapi/",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/issues.md",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/api/merge_request_approval_settings/",
+          "https://docs.gitlab.com/api/merge_request_approvals/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/usage_data/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/api/cluster_agents/",
+          "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/api/templates/gitignores/",
+          "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+          "https://docs.gitlab.com/api/alert_management_alerts/",
+          "https://docs.gitlab.com/api/appearance/",
+          "https://docs.gitlab.com/api/settings/",
+          "https://docs.gitlab.com/api/statistics/",
+          "https://docs.gitlab.com/api/applications/",
+          "https://docs.gitlab.com/api/attestations/",
+          "https://docs.gitlab.com/api/audit_events/",
+          "https://docs.gitlab.com/api/avatar/",
+          "https://docs.gitlab.com/api/branches/",
+          "https://docs.gitlab.com/api/broadcast_messages/",
+          "https://docs.gitlab.com/api/cluster_discovery/",
+          "https://docs.gitlab.com/api/code_suggestions/",
+          "https://docs.gitlab.com/api/commits/",
+          "https://docs.gitlab.com/api/compliance_policy_settings/",
+          "https://docs.gitlab.com/api/container_registry/",
+          "https://docs.gitlab.com/api/container_virtual_registries/",
+          "https://docs.gitlab.com/api/custom_attributes/",
+          "https://docs.gitlab.com/api/dependencies/",
+          "https://docs.gitlab.com/api/dependency_firewall/",
+          "https://docs.gitlab.com/api/dependency_list_export/",
+          "https://docs.gitlab.com/api/deploy_keys/",
+          "https://docs.gitlab.com/api/deploy_tokens/",
+          "https://docs.gitlab.com/api/deployments/",
+          "https://docs.gitlab.com/api/discussions/",
+          "https://docs.gitlab.com/api/templates/dockerfiles/",
+          "https://docs.gitlab.com/api/dora/metrics/"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://docs.gitlab.com/api/usage_data/",
+        "title": "Service Ping API | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.731Z",
+        "hash": "625a58e31f5e2aa9089f5977dd9888b218b5a9de57f2a66c85d126981766a763",
+        "links": [
+          "https://docs.gitlab.com/api/access_requests/",
+          "https://docs.gitlab.com/api/issues/",
+          "https://docs.gitlab.com/api/epic_issues/",
+          "https://docs.gitlab.com/api/issues_statistics/",
+          "https://docs.gitlab.com/api/issue_links/",
+          "https://docs.gitlab.com/api/projects/",
+          "https://docs.gitlab.com/api/openapi/",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/user/permissions/",
+          "https://docs.gitlab.com/api/merge_request_approval_settings/",
+          "https://docs.gitlab.com/api/merge_request_approvals/",
+          "https://docs.gitlab.com/api/usage_data/",
+          "https://docs.gitlab.com/ja-jp/api/usage_data/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/usage_data.md",
+          "https://docs.gitlab.com/api/cluster_agents/",
+          "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/api/templates/gitignores/",
+          "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+          "https://docs.gitlab.com/api/alert_management_alerts/",
+          "https://docs.gitlab.com/api/appearance/",
+          "https://docs.gitlab.com/api/settings/",
+          "https://docs.gitlab.com/api/statistics/",
+          "https://docs.gitlab.com/api/applications/",
+          "https://docs.gitlab.com/api/attestations/",
+          "https://docs.gitlab.com/api/audit_events/",
+          "https://docs.gitlab.com/api/avatar/",
+          "https://docs.gitlab.com/api/branches/",
+          "https://docs.gitlab.com/api/broadcast_messages/",
+          "https://docs.gitlab.com/api/cluster_discovery/",
+          "https://docs.gitlab.com/api/code_suggestions/",
+          "https://docs.gitlab.com/api/commits/",
+          "https://docs.gitlab.com/api/compliance_policy_settings/",
+          "https://docs.gitlab.com/api/container_registry/",
+          "https://docs.gitlab.com/api/container_virtual_registries/",
+          "https://docs.gitlab.com/api/custom_attributes/",
+          "https://docs.gitlab.com/api/dependencies/",
+          "https://docs.gitlab.com/api/dependency_firewall/",
+          "https://docs.gitlab.com/api/dependency_list_export/",
+          "https://docs.gitlab.com/api/deploy_keys/",
+          "https://docs.gitlab.com/api/deploy_tokens/",
+          "https://docs.gitlab.com/api/deployments/",
+          "https://docs.gitlab.com/api/discussions/",
+          "https://docs.gitlab.com/api/templates/dockerfiles/"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://docs.gitlab.com/api/milestones/",
+        "title": "Project milestones API | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.743Z",
+        "hash": "ef90ad93fad5936950e35f388552e96c80268347416bd4861cf28711bb197ec1",
+        "links": [
+          "https://docs.gitlab.com/api/access_requests/",
+          "https://docs.gitlab.com/api/issues/",
+          "https://docs.gitlab.com/api/epic_issues/",
+          "https://docs.gitlab.com/api/issues_statistics/",
+          "https://docs.gitlab.com/api/issue_links/",
+          "https://docs.gitlab.com/api/projects/",
+          "https://docs.gitlab.com/api/project_aliases/",
+          "https://docs.gitlab.com/api/project_badges/",
+          "https://docs.gitlab.com/api/project_level_variables/",
+          "https://docs.gitlab.com/api/project_forks/",
+          "https://docs.gitlab.com/api/project_import_export/",
+          "https://docs.gitlab.com/api/project_integrations/",
+          "https://docs.gitlab.com/api/boards/",
+          "https://docs.gitlab.com/api/project_members/",
+          "https://docs.gitlab.com/api/project_markdown_uploads/",
+          "https://docs.gitlab.com/api/project_starring/",
+          "https://docs.gitlab.com/api/project_packages_protection_rules/",
+          "https://docs.gitlab.com/api/project_pull_mirroring/",
+          "https://docs.gitlab.com/api/project_push_rules/",
+          "https://docs.gitlab.com/api/project_relations_export/",
+          "https://docs.gitlab.com/api/project_repository_storage_moves/",
+          "https://docs.gitlab.com/api/project_security_settings/",
+          "https://docs.gitlab.com/api/project_snippets/",
+          "https://docs.gitlab.com/api/project_statistics/",
+          "https://docs.gitlab.com/api/project_templates/",
+          "https://docs.gitlab.com/api/project_vulnerabilities/",
+          "https://docs.gitlab.com/api/openapi/",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/api/merge_request_approval_settings/",
+          "https://docs.gitlab.com/api/merge_request_approvals/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/usage_data/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/api/cluster_agents/",
+          "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/api/milestones/",
+          "https://docs.gitlab.com/ja-jp/api/milestones/",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/api/templates/gitignores/",
+          "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+          "https://docs.gitlab.com/api/alert_management_alerts/",
+          "https://docs.gitlab.com/api/appearance/",
+          "https://docs.gitlab.com/api/settings/",
+          "https://docs.gitlab.com/api/statistics/",
+          "https://docs.gitlab.com/api/applications/",
+          "https://docs.gitlab.com/api/attestations/"
+        ]
+      },
+      {
+        "id": "s8",
+        "url": "https://docs.gitlab.com/api/projects/",
+        "title": "Projects API | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:09:08.759Z",
+        "hash": "c4dd3ab58e8be1c6606bb4ac8b99df39247a6e4e5e0478c5e9404ca3da4349ee",
+        "links": [
+          "https://docs.gitlab.com/api/projects/",
+          "https://docs.gitlab.com/ja-jp/api/projects/",
+          "https://docs.gitlab.com/api/access_requests/",
+          "https://docs.gitlab.com/api/events/",
+          "https://docs.gitlab.com/api/issues/",
+          "https://docs.gitlab.com/api/epic_issues/",
+          "https://docs.gitlab.com/api/issues_statistics/",
+          "https://docs.gitlab.com/api/issue_links/",
+          "https://docs.gitlab.com/api/project_aliases/",
+          "https://docs.gitlab.com/api/project_badges/",
+          "https://docs.gitlab.com/api/project_level_variables/",
+          "https://docs.gitlab.com/api/project_forks/",
+          "https://docs.gitlab.com/api/project_import_export/",
+          "https://docs.gitlab.com/api/project_integrations/",
+          "https://docs.gitlab.com/api/boards/",
+          "https://docs.gitlab.com/api/project_members/",
+          "https://docs.gitlab.com/api/project_markdown_uploads/",
+          "https://docs.gitlab.com/api/project_starring/",
+          "https://docs.gitlab.com/api/project_packages_protection_rules/",
+          "https://docs.gitlab.com/api/project_pull_mirroring/",
+          "https://docs.gitlab.com/api/project_push_rules/",
+          "https://docs.gitlab.com/api/project_relations_export/",
+          "https://docs.gitlab.com/api/project_repository_storage_moves/",
+          "https://docs.gitlab.com/api/project_security_settings/",
+          "https://docs.gitlab.com/api/project_snippets/",
+          "https://docs.gitlab.com/api/project_statistics/",
+          "https://docs.gitlab.com/api/project_templates/",
+          "https://docs.gitlab.com/api/project_vulnerabilities/",
+          "https://docs.gitlab.com/api/openapi/",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/projects.md",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/user/permissions/",
+          "https://docs.gitlab.com/api/merge_request_approval_settings/",
+          "https://docs.gitlab.com/api/merge_request_approvals/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/usage_data/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/api/cluster_agents/",
+          "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+          "https://docs.gitlab.com/user/duo_agent_platform/flows/",
+          "https://docs.gitlab.com/user/duo_agent_platform/flows/foundational_flows/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/api/templates/gitignores/",
+          "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+          "https://docs.gitlab.com/api/alert_management_alerts/",
+          "https://docs.gitlab.com/api/appearance/"
+        ]
+      },
+      {
+        "id": "s9",
+        "url": "https://docs.gitlab.com/api/projects/",
+        "title": "Projects API | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:10:00.916Z",
+        "hash": "c4dd3ab58e8be1c6606bb4ac8b99df39247a6e4e5e0478c5e9404ca3da4349ee",
+        "links": [
+          "https://docs.gitlab.com/api/projects/",
+          "https://docs.gitlab.com/ja-jp/api/projects/",
+          "https://docs.gitlab.com/api/events/",
+          "https://docs.gitlab.com/api/issues/",
+          "https://docs.gitlab.com/api/epic_issues/",
+          "https://docs.gitlab.com/api/issues_statistics/",
+          "https://docs.gitlab.com/api/issue_links/",
+          "https://docs.gitlab.com/api/project_aliases/",
+          "https://docs.gitlab.com/api/project_badges/",
+          "https://docs.gitlab.com/api/project_level_variables/",
+          "https://docs.gitlab.com/api/project_forks/",
+          "https://docs.gitlab.com/api/project_import_export/",
+          "https://docs.gitlab.com/api/project_integrations/",
+          "https://docs.gitlab.com/api/boards/",
+          "https://docs.gitlab.com/api/project_members/",
+          "https://docs.gitlab.com/api/project_markdown_uploads/",
+          "https://docs.gitlab.com/api/project_starring/",
+          "https://docs.gitlab.com/api/project_packages_protection_rules/",
+          "https://docs.gitlab.com/api/project_pull_mirroring/",
+          "https://docs.gitlab.com/api/project_push_rules/",
+          "https://docs.gitlab.com/api/project_relations_export/",
+          "https://docs.gitlab.com/api/project_repository_storage_moves/",
+          "https://docs.gitlab.com/api/project_security_settings/",
+          "https://docs.gitlab.com/api/project_snippets/",
+          "https://docs.gitlab.com/api/project_statistics/",
+          "https://docs.gitlab.com/api/project_templates/",
+          "https://docs.gitlab.com/api/project_vulnerabilities/",
+          "https://docs.gitlab.com/api/openapi/",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/projects.md",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/user/permissions/",
+          "https://docs.gitlab.com/api/merge_request_approval_settings/",
+          "https://docs.gitlab.com/api/merge_request_approvals/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/usage_data/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/api/cluster_agents/",
+          "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+          "https://docs.gitlab.com/user/duo_agent_platform/flows/",
+          "https://docs.gitlab.com/user/duo_agent_platform/flows/foundational_flows/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/api/templates/gitignores/",
+          "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+          "https://docs.gitlab.com/api/access_requests/",
+          "https://docs.gitlab.com/api/alert_management_alerts/",
+          "https://docs.gitlab.com/api/appearance/"
+        ]
+      },
+      {
+        "id": "s10",
+        "url": "https://docs.gitlab.com/auth/user_permissions/",
+        "title": "User permissions | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:10:00.955Z",
+        "hash": "329d23db1aac5b5fc64cd463d5a1547fda6f7fac7d7e6770ae530ccc1002cf38",
+        "links": [
+          "https://docs.gitlab.com/auth/user_permissions/",
+          "https://docs.gitlab.com/ja-jp/auth/user_permissions/",
+          "https://docs.gitlab.com/administration/external_users/",
+          "https://docs.gitlab.com/administration/guest_users/",
+          "https://docs.gitlab.com/user/permissions/",
+          "https://docs.gitlab.com/user/custom_roles/",
+          "https://docs.gitlab.com/user/custom_roles/abilities/",
+          "https://docs.gitlab.com/user/enterprise_user/",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/auth/user_permissions.md",
+          "https://docs.gitlab.com/user/get_started/",
+          "https://docs.gitlab.com/auth/user_authentication/",
+          "https://docs.gitlab.com/administration/internal_users/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/",
+          "https://docs.gitlab.com/topics/set_up_organization/",
+          "https://docs.gitlab.com/user/project/organize_work_with_projects/",
+          "https://docs.gitlab.com/topics/plan_and_track/",
+          "https://docs.gitlab.com/auth/",
+          "https://docs.gitlab.com/administration/auth/",
+          "https://docs.gitlab.com/administration/auditor_users/",
+          "https://docs.gitlab.com/user/participants/",
+          "https://docs.gitlab.com/user/profile/service_accounts/",
+          "https://docs.gitlab.com/auth/auth_practices/",
+          "https://docs.gitlab.com/auth/auth_glossary/",
+          "https://docs.gitlab.com/topics/git/",
+          "https://docs.gitlab.com/topics/manage_code/",
+          "https://docs.gitlab.com/topics/build_your_application/",
+          "https://docs.gitlab.com/user/application_security/secure_your_application/",
+          "https://docs.gitlab.com/topics/release_your_application/",
+          "https://docs.gitlab.com/user/infrastructure/",
+          "https://docs.gitlab.com/operations/",
+          "https://docs.gitlab.com/user/analytics/",
+          "https://docs.gitlab.com/releases/",
+          "https://docs.gitlab.com/policy/development_stages_support/",
+          "https://docs.gitlab.com/user/version/",
+          "https://docs.gitlab.com/legal/use_generative_ai/",
+          "https://docs.gitlab.com/legal/licensing_policy/"
+        ]
+      },
+      {
+        "id": "s11",
+        "url": "https://docs.gitlab.com/api/epic_issues/",
+        "title": "Epic Issues API (deprecated) | GitLab Docs",
+        "retrievedAt": "2026-11-03T06:10:00.959Z",
+        "hash": "5c6f983f5f6d1adf64c454bb6836038fc4c9d6725d365bd6167722729b5726f6",
+        "links": [
+          "https://docs.gitlab.com/api/epic_issues/",
+          "https://docs.gitlab.com/ja-jp/api/epic_issues/",
+          "https://docs.gitlab.com/api/issues/",
+          "https://docs.gitlab.com/api/issues_statistics/",
+          "https://docs.gitlab.com/api/issue_links/",
+          "https://docs.gitlab.com/api/projects/",
+          "https://docs.gitlab.com/api/openapi/",
+          "https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/epic_issues.md",
+          "https://docs.gitlab.com/api/oauth2/",
+          "https://docs.gitlab.com/api/merge_request_approval_settings/",
+          "https://docs.gitlab.com/api/merge_request_approvals/",
+          "https://docs.gitlab.com/api/get_started/get_started_extending/",
+          "https://docs.gitlab.com/api/usage_data/",
+          "https://docs.gitlab.com/api/graphql/",
+          "https://docs.gitlab.com/api/cluster_agents/",
+          "https://docs.gitlab.com/api/duo_agent_platform_flows/",
+          "https://docs.gitlab.com/manifests/manifest.webmanifest",
+          "https://docs.gitlab.com/",
+          "https://docs.gitlab.com/user/",
+          "https://docs.gitlab.com/user/gitlab_duo/",
+          "https://docs.gitlab.com/orbit/",
+          "https://docs.gitlab.com/api/",
+          "https://docs.gitlab.com/install/",
+          "https://docs.gitlab.com/administration/",
+          "https://docs.gitlab.com/subscriptions/",
+          "https://docs.gitlab.com/development/",
+          "https://docs.gitlab.com/solutions/",
+          "https://docs.gitlab.com/tutorials/develop/",
+          "https://docs.gitlab.com/integration/",
+          "https://docs.gitlab.com/api/rest/",
+          "https://docs.gitlab.com/api/api_resources/",
+          "https://docs.gitlab.com/api/templates/gitignores/",
+          "https://docs.gitlab.com/api/templates/gitlab_ci_ymls/",
+          "https://docs.gitlab.com/api/access_requests/",
+          "https://docs.gitlab.com/api/alert_management_alerts/",
+          "https://docs.gitlab.com/api/appearance/",
+          "https://docs.gitlab.com/api/settings/",
+          "https://docs.gitlab.com/api/statistics/",
+          "https://docs.gitlab.com/api/applications/",
+          "https://docs.gitlab.com/api/attestations/",
+          "https://docs.gitlab.com/api/audit_events/",
+          "https://docs.gitlab.com/api/avatar/",
+          "https://docs.gitlab.com/api/branches/",
+          "https://docs.gitlab.com/api/broadcast_messages/",
+          "https://docs.gitlab.com/api/cluster_discovery/",
+          "https://docs.gitlab.com/api/code_suggestions/",
+          "https://docs.gitlab.com/api/commits/",
+          "https://docs.gitlab.com/api/compliance_policy_settings/",
+          "https://docs.gitlab.com/api/container_registry/",
+          "https://docs.gitlab.com/api/container_virtual_registries/",
+          "https://docs.gitlab.com/api/custom_attributes/",
+          "https://docs.gitlab.com/api/dependencies/",
+          "https://docs.gitlab.com/api/dependency_firewall/",
+          "https://docs.gitlab.com/api/dependency_list_export/",
+          "https://docs.gitlab.com/api/deploy_keys/",
+          "https://docs.gitlab.com/api/deploy_tokens/",
+          "https://docs.gitlab.com/api/deployments/",
+          "https://docs.gitlab.com/api/discussions/",
+          "https://docs.gitlab.com/api/templates/dockerfiles/",
+          "https://docs.gitlab.com/api/dora/metrics/"
+        ]
+      }
+    ]
+  },
+  "readiness": "research-failure",
+  "requests": [
+    {
+      "stepId": "read-issue-titles-test",
+      "stub": {
+        "method": "GET",
+        "url": "https://instance.example/api/v4/projects/test-resource-id/issues",
+        "headers": {
+          "authorization": "Bearer test-access-token"
+        },
+        "body": []
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    },
+    {
+      "stepId": "read-next-page",
+      "stub": {
+        "method": "GET",
+        "url": "https://instance.example/api/v4/projects/test-resource-id/issues?cursor=test-next-cursor",
+        "headers": {
+          "authorization": "Bearer test-access-token"
+        },
+        "body": []
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    }
+  ],
+  "planStatus": 404,
+  "share": "http://127.0.0.1:5187/plan/lg-e61fb8e2-6119-476a-85c5-8f0f0bcc5978",
+  "errors": [
+    "No usable guide for the declared task",
+    "No shareable plan"
+  ],
+  "speed": {
+    "kind": "automatic-recovery",
+    "budgetMs": 180000
+  },
+  "pass": false,
+  "elapsedMs": 83160
+}

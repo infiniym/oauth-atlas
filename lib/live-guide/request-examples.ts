@@ -26,7 +26,7 @@ export function shellSafeCurl(example:string):string{
 export function requestExampleParts(example:string){
  const args=curlArguments(example),values=(...flags:string[])=>args.flatMap((a,i)=>flags.includes(a)&&args[i+1]?[args[i+1]]:[]);
  const bodies=values('-d','--data','--data-raw','--data-binary','--json'),headers=Object.fromEntries(values('-H','--header').map(h=>{const at=h.indexOf(':');return [h.slice(0,at).toLowerCase(),h.slice(at+1).trim()];}));
- return {method:(values('-X','--request')[0]||(bodies.length?'POST':'GET')).toUpperCase(),url:values('--url')[0]||args.find(a=>/^https:\/\//.test(a)||a.startsWith('<INSTANCE_BASE_URL>'))||'',headers,bodies};
+ return {method:(values('-X','--request')[0]||(bodies.length?'POST':'GET')).toUpperCase(),url:values('--url')[0]||args.find(a=>/^https:\/\//.test(a)||a.startsWith('<INSTANCE_BASE_URL>')||/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(a))||'',headers,bodies};
 }
 export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,documents:Document[]):T{
  const result=structuredClone(raw);
@@ -34,8 +34,9 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
  const source=documents.map(d=>d.text).join('\n');
  for(const step of result.steps){
   if(!step?.request?.example)continue;
-  let example=String(step.request.example);
+  let example=String(step.request.example).replace(/\$\{([A-Z][A-Z0-9_]*)\}|\$([A-Z][A-Z0-9_]*)/g,(_whole,a,b)=>'<'+(a||b)+'>');
   let instanceInput=false;
+  example=example.replace(/(^|[\s'"])(?:<([^>]+)>|\[([^\]]+)\]|\{([^}]+)\}|([A-Z][A-Z0-9_]*))(?=\/)/g,(whole,prefix,...groups)=>{const key=groups.slice(0,4).find(Boolean)||'';if(!/instance|base.*url|url.*base|(?:^|_)host(?:$|_)/i.test(key))return whole;instanceInput=true;return prefix+'<INSTANCE_BASE_URL>';});
   example=example.replace(/https:\/\/((?:<[^>]+>|\[[^\]]+\]|\{[^}]+\}|[^/\s'"])+)/g,(whole,authority)=>{
    if(!/[<\[{]/.test(authority)&&!(/^[A-Z][A-Z0-9_.-]+$/.test(authority)&&/[A-Z]{3}/.test(authority)))return whole;
    instanceInput=true;return '<INSTANCE_BASE_URL>';
@@ -45,6 +46,7 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
    const at=(step.fields||[]).findIndex((f:string)=>/instance|\bhost\b|_HOST|base.?url/i.test(f));
    step.fields=step.fields||[];if(at>=0)step.fields[at]=caption;else if(step.fields.length<8)step.fields.push(caption);
   }
+  if(/<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/.test(example)){step.fields=step.fields||[];if(step.fields.length<8&&!step.fields.some((f:string)=>/next.+(?:url|link)|(?:url|link).+next/i.test(f)))step.fields.push('Next-page URL: full next link from the prior response; keep the original HTTPS host');}
   // Documentation-derived version headers are facts, not developer inputs.
   example=example.replace(/([\w-]+-Version):\s*(<[^>]+>|[A-Z][A-Z_]+|\d{4}-\d{2}-\d{2})/gi,(whole,header,current)=>{
    const literal=[...source.matchAll(new RegExp(header+':?\\s*["\'`]?\\s*(\\d{4}-\\d{2}-\\d{2})','gi'))].map(m=>m[1]).sort().at(-1);

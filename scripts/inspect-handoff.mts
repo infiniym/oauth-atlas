@@ -2,9 +2,10 @@
 // calls a provider. Dummy values exercise user inputs, headers and JSON bodies.
 import {spawnSync} from 'node:child_process';
 export function inspectHandoff(guide:any){
- const substitute=(s:string)=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}|\[([A-Z][A-Z_-]+)\]/g,(whole,...groups)=>{
+ const substitute=(s:string,endpoint='')=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}|\[([A-Z][A-Z_-]+)\]/g,(whole,...groups)=>{
   const key=groups.slice(0,6).find(Boolean)||'';
   if(/version/i.test(key))return whole;
+  if(/^(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)$/.test(key))return new URL(endpoint.replace(/\{[^}]+\}|:[a-zA-Z_]+/g,'test-resource-id'),'https://instance.example').href+'?page=2';
   if(/(?:base|instance).*(?:url|host)|(?:url|host).*(?:base|instance)/i.test(key))return /url/i.test(key)?'https://instance.example':'instance.example';
   if(/token/i.test(key))return 'test-access-token';
   if(/cursor/i.test(key))return 'test-next-cursor';
@@ -12,7 +13,7 @@ export function inspectHandoff(guide:any){
  });
  return guide.steps.filter((s:any)=>s.testKind==='action').map((step:any)=>{
   const example=step.request?.example||'',syntax=spawnSync('/bin/bash',['-n'],{input:example,encoding:'utf8'});
-  const split=spawnSync('python3',['-c','import shlex,json,sys;print(json.dumps(shlex.split(sys.stdin.read())))'],{input:substitute(example),encoding:'utf8'});
+  const split=spawnSync('python3',['-c','import shlex,json,sys;print(json.dumps(shlex.split(sys.stdin.read())))'],{input:substitute(example,step.request?.endpoint||''),encoding:'utf8'});
   let args:string[]=[];try{args=JSON.parse(split.stdout);}catch{}
   const values=(...flags:string[])=>args.flatMap((a,i)=>flags.includes(a)&&args[i+1]?[args[i+1]]:[]);
   const body=values('-d','--data','--data-raw','--data-binary','--json'),headerLines=values('-H','--header');
@@ -38,6 +39,6 @@ export function inspectHandoff(guide:any){
 }
 export function paginationHandoff(guide:any,requests:ReturnType<typeof inspectHandoff>){
  const instructions=guide.steps.filter((s:any)=>s.testKind==='action').map((s:any)=>s.detail+' '+s.doneWhen).join(' ');
- const continuation=requests.some((r:{stub:unknown})=>/[?&][\w.\[\]-]*(?:cursor|page|offset|after|before|skip)[\w.\[\]-]*=|"[\w.-]*(?:cursor|after|offset|page|next_token)[\w.-]*"\s*:|\bafter\s*:/i.test(JSON.stringify(r.stub)));
+ const continuation=requests.some((r:{stub:unknown})=>/[?&][\w.\[\]-]*(?:cursor|page|offset|after|before|skip)[\w.\[\]-]*=|"[\w.-]*(?:cursor|after|offset|page|next_token)[\w.-]*"\s*:|\bafter\s*:|<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/i.test(JSON.stringify(r.stub)));
  return continuation&&/repeat|continu|follow|iterat|next request/i.test(instructions)&&/until|while|has_more|hasNextPage|next_cursor|endCursor|no.{0,30}next|empty|last page|all (?:entries|results|pages)/i.test(instructions);
 }

@@ -75,7 +75,7 @@ export function parsePage(url: string, body: string,useCase=''): Page {
   const title = decode(body.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || body.match(/^#\s+(.+)$/m)?.[1] || new URL(url).hostname).replace(/<[^>]*>/g,'').slice(0,160);
   const links: string[] = [];
   const labels:Record<string,string>={};
-  const add = (href: string) => { try { links.push(publicUrl(new URL(decode(href),url).href).href); } catch { /* Skip unsafe/non-web links. */ } };
+  const add = (href: string) => { try { const cleaned=decode(href);if(/[\\"<>]/.test(cleaned))return;links.push(publicUrl(new URL(cleaned,url).href).href); } catch { /* Skip unsafe/non-web links. */ } };
   for (const m of body.matchAll(/\bhref\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s"'`=<>]+))/gi)) add(m[1]||m[2]||m[3]);
   if(/swagger-ui|SwaggerUIBundle/i.test(body))for(const m of body.matchAll(/(?:data-source\s*=|\burl\s*:)\s*["']([^"']+)["']/gi))add(m[1]);
   for (const m of body.matchAll(/\[[^\]]*\]\(([^\s)]+)\)/g)) add(m[1]);

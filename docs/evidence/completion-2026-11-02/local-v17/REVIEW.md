@@ -1,0 +1,9 @@
+# Candidate v17: failed strict handoff matrix
+
+Source `48a87e68fae6e88fd87ef4fe624632a290003fca`, local production preview, 3 November 2026. **0/7 fresh cases passed** the complete matrix. All original attempts are retained; this candidate is not ready.
+
+The stricter review exposed unsupported or missing pagination, resource-boundary and request details that earlier syntax checks had missed. Notion additionally hit an actual-example grounding defect: `$PAGE_ID` was treated as a literal route segment. Full unstructured plan responses had malformed JSON, excess citations and misplaced keys, consuming bounded repairs. Dropbox reached the 180-second budget. Targeted repairs could not fully recover the selected cases, and Forgejo's repair was rejected for an overlength input field.
+
+The following candidate fixes these generic classes: a compact schema-constrained guide transport decoded into the same strict local contract; normalization of shell and instance URL inputs before grounding; a documented returned-next-link request with inspected dummy substitution; feature-specific access-boundary context before generic OAuth plumbing; bounded display-field correction in targeted repairs; and malformed escaped-markup links excluded from navigation. No validation, source, action or access requirement is removed.
+
+A saved-source Dropbox diagnostic of the compact transport produced syntactically valid output in one planning call (32.0 seconds); its independent review rejected the missing App Folder boundary. After retaining the boundary context, a second diagnostic needed one citation correction, then completed planning in 33.5 seconds and its independent review in 8.4 seconds. Those diagnostics reused saved public sources and are not fresh-generation passes. Both diagnostic summaries are retained locally in the ignored outputs logs. Final readiness requires a fresh matrix, recovery and source review on the next compiled candidate.
