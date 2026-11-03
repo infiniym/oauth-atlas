@@ -43,3 +43,20 @@ export function decodeWirePlan(raw:Record<string,unknown>):Record<string,unknown
   blockers:rows('blockers').map(b=>({title:b.title,kind:b.kind,consequence:b.consequence,owner:b.owner,resolution:b.resolution,...(b.actionId?{actionId:b.actionId}:{}),...(b.kind==='missing-evidence'&&b.actionId&&b.missingFact?{gap:{actionId:b.actionId,fact:b.missingFact}}:{}),stepIds:ids(b.stepIds),resolutionStepIds:ids(b.resolutionStepIds)})),
  };
 }
+
+export type WireRowRepair={section:string;index:number;columns:string[];values:string[]};
+// Correct transport shape only. Provider facts and citations cannot be changed
+// by this operation: every nonempty value must survive byte-for-byte.
+export async function repairWireShape(raw:Record<string,any>,repair:(rows:WireRowRepair[])=>Promise<{section:string;index:number;values:string[]}[]>,report:()=>void){
+ if(raw.meta?.tableVersion!=='launch-guide-table.v4')return raw;
+ const value=structuredClone(raw),missing:WireRowRepair[]=[],targets=new Map<string,{values:string[]}>();
+ const collect=(section:string,items:any[],columns:string[],quoted=false)=>{for(const [index,item] of (items||[]).entries()){const row=quoted?item:item&&{values:item};if(!Array.isArray(row?.values))throw new Error('Guide transport has a missing row.');targets.set(section+':'+index,row);const values=row.values;if(values.length>columns.length&&values.slice(columns.length).every((s:string)=>s==='')){row.values=values.slice(0,columns.length);if(!quoted)items[index]=row.values;report();}else if(values.length!==columns.length)missing.push({section,index,columns,values});}};
+ collect('actions',value.intent.actions,wireColumns.actions);collect('blockers',value.facts.blockers,wireColumns.blockers);
+ for(const section of ['findings','coverage'])collect(section,value.facts[section],wireColumns[section as 'findings'|'coverage'].slice(0,-1),true);
+ collect('steps',value.steps,wireColumns.steps.slice(0,-1),true);collect('continuations',value.continuations,wireColumns.steps.slice(0,-1),true);
+ if(!missing.length)return value;
+ const corrections=await repair(missing);if(corrections.length!==missing.length||new Set(corrections.map(r=>r.section+':'+r.index)).size!==missing.length)throw new Error('Guide transport format repair missed a row.');
+ const facts=(values:string[])=>JSON.stringify(values.filter(Boolean).sort());
+ for(const source of missing){const row=corrections.find(r=>r.section===source.section&&r.index===source.index);if(!row||row.values.length!==source.columns.length||row.values.some(v=>typeof v!=='string')||facts(row.values)!==facts(source.values))throw new Error('Guide transport format repair changed a nonempty value.');const target=targets.get(source.section+':'+source.index)!;target.values=row.values;if(source.section==='actions')value.intent.actions[source.index]=row.values;if(source.section==='blockers')value.facts.blockers[source.index]=row.values;}
+ report();return value;
+}

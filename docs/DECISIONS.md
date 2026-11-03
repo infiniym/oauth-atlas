@@ -1,10 +1,10 @@
 # OAuth Launch Advisor — Decision log
 
-Updated 2026-11-02.
+Updated 2026-11-03.
 
 Help developers choose an authentication architecture for their use case, follow a source-backed launch plan and inspect the decisions behind the product.
 
-The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback. The 31 October revision unifies reviewed and researched results; D18–D20 include the current common-plan, snapshot and live-evaluation decisions. Current status was reconciled on 2 November. Historical decisions retain their original context; see the final evaluation for current results and remaining gaps. Hosted publication and verification under the current account are recorded in HOSTED-2026-11-02.md.
+The log preserves the original guide-library decisions and records the move to a guided advisor. D14 corrects the earlier marketing-directory reference; D16–D20 explain the assessment, rules, catalog, sharing and evaluation. Documentation checks and automated cases are not completed OAuth setup, provider approval or a user study. D21–D23 record the shorter confirmation flow, scoped timing guidance and navigation/readability changes after developer feedback. The 31 October revision unifies reviewed and researched results; D18–D20 include the current common-plan, snapshot and live-evaluation decisions. The current work is a local desktop release. On 3 November the candidate deferred publication to Sites and GitHub; the existing public demo is an earlier candidate. See LOCAL-2026-11-03.md for the selected local source, exact validation outcomes and verification boundaries. Historical decisions retain their dated context.
 
 ## Product objectives
 
@@ -25,7 +25,7 @@ The log preserves the original guide-library decisions and records the move to a
 | R5 | Use agents practically and show the human handoff | Demonstrated | Research agents checked sources and reachable setup flows. Each guide distinguishes agent preparation from account ownership, consent, credentials and submission. Research can be automated; an approval, legal attestation or customer access grant cannot be assumed from it. | D08, D09 |
 | R6 | Generate a shareable guide live for an unfamiliar app | Partial | Live documentation research generates action-specific setup and test instructions, preserving sources and recoverable gaps. Model-powered interpretation requires server-side Anthropic configuration. Public source collection and reviewed-provider rules work without model credentials; these are different capabilities. | D10, D11, D12 |
 | R7 | Check guidance against real sources or setup attempts | Demonstrated | Cite official sources beside curated steps; retain attempted actions, corrections and untested boundaries in the evidence notebook. A linked document, a form inspected and a successful OAuth round trip prove different things. | D08, D09, D22 |
-| R8 | Provide a working link, source repository and setup instructions | Demonstrated | Publish the app and repository; document local setup, tests, architecture, sample results and limitations in the README and validation notes. The new current-account host and source are published together; real anonymous hosted checks and incomplete live cases are recorded in the hosted evaluation. | D11, D12 |
+| R8 | Provide a working link, source repository and setup instructions | Partial | Prepare a reproducible local build, matching source, concise README and inspectable evidence. Public release updates are deferred by the candidate. The existing demo and repository main are earlier candidates; local validation does not establish a matching public deployment. | D11, D12 |
 | R9 | Explain each decision, objective and requirement mapping | Demonstrated | This decision log is available in the app and as Markdown, using one structured source of truth. The reasoning should be reviewable alongside the experience, including the partial requirements. | D15, D23 |
 | R10 | Mirror Composio's UI/UX and OAuth descriptions | Demonstrated | Use Composio’s documentation UI as the primary reading reference: persistent provider navigation, a focused content column, section links, restrained headings and readable body text. Keep search, comparison and progress controls in the catalog. Developers need to read and perform setup work. A promotional website layout creates unnecessary navigation and reading friction. | D01, D14, D23 |
 | R11 | Turn integration intent into an editable contextual assessment | Demonstrated | Natural-language intake and provider selection converge on one action/context confirmation screen. Path-changing choices are required; irrelevant questions are omitted. Inputs and personal checklist progress persist locally. Developers should not need to know which OAuth questions matter before starting. Editable interpretation prevents assumptions becoming invisible. | D16, D19, D21, D23 |
@@ -107,10 +107,10 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Acceptance criterion.** Each sample should add a materially different developer decision, rather than only changing logos.
 
-- [GitHub example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=github)
-- [Notion example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=notion)
-- [Slack example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=slack)
-- [Gmail example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=gmail)
+- [GitHub example](http://127.0.0.1:5187/?guide=github)
+- [Notion example](http://127.0.0.1:5187/?guide=notion)
+- [Slack example](http://127.0.0.1:5187/?guide=slack)
+- [Gmail example](http://127.0.0.1:5187/?guide=gmail)
 
 ## D04 — Describe the launch gate instead of inventing a universal difficulty score
 
@@ -182,8 +182,8 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Acceptance criterion.** Testing instructions cannot be mistaken for confirmation that a public product is approved.
 
-- [Gmail scenario and scopes](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=gmail)
-- [Slack distribution example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=slack)
+- [Gmail scenario and scopes](http://127.0.0.1:5187/?guide=gmail)
+- [Slack distribution example](http://127.0.0.1:5187/?guide=slack)
 
 ## D07 — Turn guidance into next actions, completion criteria and blocker remedies
 
@@ -305,7 +305,7 @@ Demonstrated means the behavior exists in the focused slice; it does not mean pr
 
 **Acceptance criterion.** A share URL opens in a fresh session, and the shared guide does not include personal checkmarks.
 
-- [Live-generated example](https://oauth-launch-advisor.gharkagpt1.chatgpt.site/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9)
+- [Live-generated example](http://127.0.0.1:5187/?guide=draft-f9ad563b-6fd1-4644-9fdf-22237134d1f9)
 
 ## D12 — Use a Worker, D1 and streamed progress for a small working slice
 

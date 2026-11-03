@@ -55,7 +55,7 @@ test('completion: distinct pagination requests survive action reconciliation',()
 });
 test('completion: overlength presentation repair retains request, grants and evidence',async()=>{
  const p=value();p.coverage[0].reason='Repeated display text. '.repeat(30);const before=structuredClone(p);
- const out=await repairLongFields(p as unknown as Record<string,unknown>,bindings,new AbortController().signal,async()=>aiResponse({values:['The documented scope permits reading issues.']}));
+ const out=await repairLongFields(p as unknown as Record<string,unknown>,bindings,new AbortController().signal,async(_u,init)=>{assert.equal(JSON.parse(String(init?.body)).output_config.format.schema.properties.values.type,'array');return aiResponse({values:['The documented scope permits reading issues.']});});
  assert.deepEqual(out.steps,before.steps);assert.deepEqual(out.findings,before.findings);assert.deepEqual((out.coverage as typeof p.coverage)[0].evidence,before.coverage[0].evidence);assert.ok((out.coverage as typeof p.coverage)[0].reason.length<400);
 });
 test('completion: long reference extraction retains requested read route and exact read-only grant',()=>{
@@ -447,4 +447,32 @@ test('completion: repeated transport rows merge only identical facts and keep di
  const {decodeWirePlan}=await import('../lib/live-guide/wire.ts');const row=['read-test','Read issues','Read issues.','developer','Response has titles.','test','action','','read','GET','/issues',"curl 'https://api.acme.com/issues'",'', '', 's1-p1'];const partial=[...row];partial[3]='';partial[4]='';const raw:any={tableVersion:'launch-guide-table.v1',summary:'Test',accessModel:'oauth',oauthSupport:'documented',actions:[['read','Read issues','read']],prohibitions:[],findings:[],steps:[row,partial],coverage:[],blockers:[],unknowns:[],researchNeeded:[]};
  const decoded=decodeWirePlan(raw);assert.equal((decoded.steps as any[]).length,1);assert.equal((decoded.steps as any[])[0].owner,'developer');assert.equal((decoded.steps as any[])[0].doneWhen,'Response has titles.');
  const conflict=[...row];conflict[10]='/other';assert.throws(()=>decodeWirePlan({...raw,steps:[row,conflict]}),/conflicting duplicate/);const next=[...row];next[0]='next';next[11]="curl 'https://api.acme.com/issues?page=2'";assert.equal((decodeWirePlan({...raw,steps:[row,next]}).steps as any[]).length,2);
+});
+
+
+test('completion: malformed transport rows repair only column shape and retain every nonempty value',async()=>{
+ const {repairWireShape}=await import('../lib/live-guide/wire.ts');const raw:any={meta:{tableVersion:'launch-guide-table.v4'},intent:{actions:[]},facts:{findings:[],coverage:[],blockers:[]},steps:[{values:['step','Title','Detail','developer','Done','prepare','prepare','','','','','',''],citations:{primary:'s1-p1',secondary:'',tertiary:''}}],continuations:[]};const before=structuredClone(raw);let calls=0;
+ const fixed=await repairWireShape(raw,async rows=>{calls++;return rows.map(r=>({section:r.section,index:r.index,values:[...r.values,'']}));},()=>{});assert.equal(calls,1);assert.equal(fixed.steps[0].values.length,14);assert.deepEqual(fixed.steps[0].values.filter(Boolean),raw.steps[0].values.filter(Boolean));assert.deepEqual(fixed.steps[0].citations,raw.steps[0].citations);assert.deepEqual(raw,before);
+ await assert.rejects(()=>repairWireShape(raw,async rows=>rows.map(r=>({section:r.section,index:r.index,values:[...r.values.slice(0,2),'Rewritten fact',...r.values.slice(3),'']})),()=>{}),/changed a nonempty value/);
+ const extra=structuredClone(fixed);extra.steps[0].values.push('');const trimmed=await repairWireShape(extra,async()=>{throw new Error('No call needed for an extra empty column');},()=>{});assert.equal(trimmed.steps[0].values.length,14);
+});
+
+
+test('completion: explicit retry repeats a failed planning stage and reuses its saved sources',async()=>{
+ const old=run();old.guide.clarificationUsed=true;let checkpoint:any;const failed=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async()=>new Response('',{status:503}),old,{save:async value=>{checkpoint=structuredClone(value);}});
+ assert.equal(failed.guide.mode,'evidence-only');assert.equal(checkpoint.draftAccepted,false);assert.equal(checkpoint.draft,undefined);const before=structuredClone(checkpoint.research.documents);let calls=0;
+ const retried=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(u,init)=>{assert.equal(String(u),'https://api.anthropic.com/v1/messages');calls++;const body=JSON.parse(String(init?.body));return aiResponse(body.system.startsWith('Independently')?{requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]}:wire(value()));},old,{checkpoint});
+ assert.ok(calls>=2);assert.equal(guideReadiness(retried.guide),'usable-guide');assert.deepEqual(retried.documents,before);assert.deepEqual(retried.guide.input.answers,old.guide.input.answers);
+});
+
+
+test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
+ const old=run();old.guide.clarificationUsed=true;const draft={...value(),engine:{outcome:'accepted',attempts:99,promptVersion:'obsolete'}} as any;let calls=0;
+ const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft,draftAccepted:true}});
+ assert.equal(calls,1);assert.equal(result.guide.engine!.attempts,1);assert.equal(result.guide.engine!.promptVersion,'live-guide.20');assert.equal(guideReadiness(result.guide),'usable-guide');
+});
+
+
+test('completion: independent review distinguishes named broad default scopes from unscoped OAuth',async()=>{
+ const p=value();p.coverage[0].permissions=[];let audited=false;const result=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));assert.match(body.system,/named default or broad scope must be listed verbatim/);assert.match(body.system,/Do not approve an empty list merely because the named scope is broad/);const context=JSON.parse(body.messages[0].content);assert.ok(context.mappings[0].conditions.length);audited=true;return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'unresolved',reason:'Map the documented named grant; broad does not mean unscoped.'}]});},docs);assert.ok(audited);assert.equal(result.value.coverage[0].status,'unresolved');
 });

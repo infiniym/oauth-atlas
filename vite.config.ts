@@ -1,5 +1,6 @@
 import vinext from "vinext";
 import { defineConfig } from "vite";
+import {guideCodeFingerprint} from './scripts/guide-fingerprint.mjs';
 import {execFileSync} from 'node:child_process';
 import hostingConfig from "./.openai/hosting.json";
 import { readExecutionProfile } from "./scripts/execution-profile.mjs";
@@ -45,7 +46,7 @@ export default defineConfig(async ({ command }) => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    define:{__SOURCE_COMMIT__:JSON.stringify(execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()),__BUILD_TIME__:JSON.stringify(new Date().toISOString())},
+    define:{__GUIDE_CODE_SHA256__:JSON.stringify(guideCodeFingerprint()),__SOURCE_COMMIT__:JSON.stringify(execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()),__BUILD_TIME__:JSON.stringify(new Date().toISOString())},
     server: {
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }

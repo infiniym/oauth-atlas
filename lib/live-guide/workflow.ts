@@ -1,7 +1,7 @@
 import {isResource,concreteRequest} from './semantics.ts';
 import {resolveGuide} from './resolution.ts';
 import catalog from '../../data/catalog.json' with { type:'json' };
-import { normalizeInput } from './contracts.ts';
+import { normalizeInput,interpretationSchema } from './contracts.ts';
 import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun,WorkflowCheckpoint,Interpretation } from './contracts.ts';
 import { retrieve,discoverProvider } from './retrieval.ts';
 import { interpretEvidence, reviewMappings,evidenceOnly, PROMPT_VERSION } from './interpretation.ts';
@@ -23,6 +23,7 @@ export function continuation(input: GuideInput, previous: StoredRun): void {
     if (!allowed.get(id)?.options.includes(answer)) throw new Error('Choose an answer from the guide’s current questions.');
   }
 }
+const draftFields=(value:Interpretation)=>Object.fromEntries(Object.keys(interpretationSchema.shape).map(key=>[key,value[key as keyof Interpretation]])) as Interpretation;
 export async function generate(raw: unknown, bindings: Bindings, emit: (event: Progress)=>void, signal: AbortSignal, fetcher: typeof fetch = fetch, previous?: StoredRun,options:{checkpoint?:WorkflowCheckpoint;save?:(checkpoint:WorkflowCheckpoint)=>Promise<void>}={}): Promise<StoredRun> {
   const input = normalizeInput(raw);
   if (input.previousId && !previous) throw new Error('The previous guide could not be found. Start fresh research.');
@@ -55,7 +56,9 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     }
     if(!research?.documents.length){research=await retrieve({...input,website:research?.website||input.website},bindings,emit,signal,fetcher);research.inferred=false;await options.save?.({research,clarificationUsed,followupDone,intent});}
     emit({stage:clarificationUsed?'Building your guide':'Checking setup choices',detail:'Using '+research.documents.length+' saved source snapshots. Your request and previous answers are retained.',status:'working'});
-    interpreted=options.checkpoint?.draft?{value:options.checkpoint.draft,mode:'interpreted',notice:'Continuing the saved plan checkpoint. No completed planning call was repeated.'}:await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:clarificationUsed,intent});
+    const savedDraft=options.checkpoint?.draft;
+    const acceptedDraft=savedDraft&&(options.checkpoint?.draftAccepted===true||savedDraft.oauthSupport!=='unknown'&&savedDraft.requestedActions?.length&&savedDraft.steps.some(s=>s.testKind==='action'))?draftFields(savedDraft):undefined;
+    interpreted=acceptedDraft?{value:acceptedDraft,mode:'interpreted',notice:'Continuing the saved plan checkpoint. No completed planning call was repeated.'}:await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:clarificationUsed,intent});
     if('decisionOnly' in interpreted&&interpreted.decisionOnly&&!interpreted.value.questions.length){
       const decisionTelemetry=interpreted.telemetry;
       const confirmedIntent={requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions};
@@ -71,11 +74,11 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     const materialTopics=interpreted.value.researchNeeded.filter(t=>t!=='distribution');
     if(!interpreted.value.questions.length&&(materialTopics.length||interpreted.mode==='evidence-only')&&!followupDone){
       if(!materialTopics.length)materialTopics.push(interpreted.telemetry?.validationIssues?.some(s=>s.startsWith('Unestablished OAuth'))?'registration':'permissions');
-      followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});
+      followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
       emit({stage:'Checking a missing requirement',detail:'Looking only for missing '+materialTopics.join(', ')+' evidence.',status:'working'});
       const expanded=await retrieve(input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics});
       if(expanded.documents.length>research.documents.length){
-        research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});
+        research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
         const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions}});
         const original=interpreted.telemetry;
         if(refined.mode==='interpreted')interpreted=refined;else research.warnings.push('Additional evidence was saved, but the follow-up interpretation failed. Earlier findings remain provisional.');
@@ -83,7 +86,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       }
 
     }
-    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});const review=await reviewMappings(interpreted.value,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;if(interpreted.telemetry){interpreted.telemetry.reviewOutcome=review.telemetry.outcome;for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(review.telemetry[k]||0);}await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value});}
+    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});const review=await reviewMappings(interpreted.value,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;if(!interpreted.telemetry)interpreted.telemetry={...review.telemetry,attempts:0,inputTokens:0,outputTokens:0,elapsedMs:0,thinkingTokens:0};if(interpreted.telemetry){interpreted.telemetry.reviewOutcome=review.telemetry.outcome;for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(review.telemetry[k]||0);}await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});}
   }
   research=research!;signal.throwIfAborted();
   const value=interpreted.value;
@@ -108,12 +111,12 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     for(const action of gaps){
       emit({stage:'Repairing an incomplete action',detail:'Checking the missing request or access evidence for '+action.title+'. Completed setup and your answers are retained.',status:'working'});
       const before=completed.guide.engine;
-      const repaired=await resolveGuide({...input,previousId:completed.guide.id,resolution:{kind:'find-request',actionId:action.id,requestId:crypto.randomUUID()}},completed,bindings,emit,signal,fetcher,{save:async checkpoint=>options.save?.({...checkpoint,clarificationUsed,followupDone:true,intent:{requestedActions:guide.requestedActions,prohibitions:guide.prohibitions},draft:completed.guide})});
+      const repaired=await resolveGuide({...input,previousId:completed.guide.id,resolution:{kind:'find-request',actionId:action.id,requestId:crypto.randomUUID()}},completed,bindings,emit,signal,fetcher,{save:async checkpoint=>options.save?.({...checkpoint,clarificationUsed,followupDone:true,intent:{requestedActions:guide.requestedActions,prohibitions:guide.prohibitions},draft:draftFields(completed.guide),draftAccepted:true})});
       if(before&&repaired.guide.engine)for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)repaired.guide.engine[k]=(before[k]||0)+(repaired.guide.engine[k]||0);
       // Internal drafts are checkpoints, not dangling public snapshot links.
       repaired.guide.id=guide.id;repaired.guide.input=input;repaired.guide.previousId=guide.previousId;
       completed=repaired;
-      await options.save?.({research:{...research,documents:completed.documents},clarificationUsed,followupDone:true,intent:{requestedActions:guide.requestedActions,prohibitions:guide.prohibitions},draft:completed.guide});
+      await options.save?.({research:{...research,documents:completed.documents},clarificationUsed,followupDone:true,intent:{requestedActions:guide.requestedActions,prohibitions:guide.prohibitions},draft:draftFields(completed.guide),draftAccepted:true});
     }
   }
   completed.guide.resultState=guideReadiness(completed.guide);
