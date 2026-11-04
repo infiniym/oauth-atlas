@@ -41,6 +41,16 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
    if(!/[<\[{]/.test(authority)&&!(/^[A-Z][A-Z0-9_.-]+$/.test(authority)&&/[A-Z]{3}/.test(authority)))return whole;
    instanceInput=true;return '<INSTANCE_BASE_URL>';
   });
+  const reservedHost=(host:string)=>/(?:^|\.)(?:example\.(?:com|net|org)|example|invalid|test)$/.test(host);
+  const target=requestExampleParts(example).url;
+  if(target.startsWith('https://')){
+   const url=new URL(target);
+   if(reservedHost(url.hostname)&&source.includes(url.origin)){example=example.replace(target,'<INSTANCE_BASE_URL>'+url.pathname+url.search);instanceInput=true;}
+  }
+  if(String(step.request.endpoint||'').startsWith('https://')){
+   const url=new URL(step.request.endpoint);
+   if(reservedHost(url.hostname)&&source.includes(url.origin))step.request.endpoint=url.pathname+url.search;
+  }
   if(instanceInput){
    const caption='INSTANCE_BASE_URL: your full HTTPS instance URL, without a trailing slash';
    const at=(step.fields||[]).findIndex((f:string)=>/instance|\bhost\b|_HOST|base.?url/i.test(f));

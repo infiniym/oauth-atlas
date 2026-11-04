@@ -50,6 +50,7 @@ export function endpointEvidence(endpoint:string,documents:Document[]):{supporte
   return paths.some(p=>{try{return routeKey(p)===path||bases.some(base=>routeKey(base+p)===path);}catch{return false;}});
  });
  if(!matching.length)return {supported:false,reason:'The route template is absent from retrieved source text.',sourceIds:[]};
+ if(host&&/(?:^|\.)(?:example\.(?:com|net|org)|example|invalid|test)$/.test(new URL(host).hostname))return {supported:false,reason:'The API host is not documented as a deployed origin; replace the reserved example host with a user instance URL.',sourceIds:matching.map(d=>d.id)};
  if(host&&!documents.some(d=>d.text.includes(host)||[d.url,...d.links||[]].some(l=>{try{return new URL(l).origin===host&&!/docs|developers|reference/i.test(new URL(l).hostname);}catch{return false;}})))return {supported:false,reason:'The API host is not documented; retain an instance URL as user input when appropriate.',sourceIds:matching.map(d=>d.id)};
  const context=matching.map(d=>d.text).join('\n');
  const sourceIds=new Set(matching.map(d=>d.id));

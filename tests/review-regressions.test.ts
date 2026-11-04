@@ -57,6 +57,22 @@ test('completion: localized aliases and assets cannot consume the documentation 
  assert.equal(sourceKey('https://acme.com/fr_CA/developers'),sourceKey('https://acme.com/developers'));
  assert.ok(linkScore('https://docs.acme.com/oauth/favicon.ico')<0);
 });
+test('completion: JSON OAuth metadata has exact citable fields without losing the original document',()=>{
+ const body=JSON.stringify({issuer:'https://login.acme.com',authorization_endpoint:'https://login.acme.com/authorize',token_endpoint:'https://login.acme.com/token'});
+ const page=parsePage('https://login.acme.com/.well-known/oauth-authorization-server',body);
+ const passages=sourcePassages([{...docs[0],text:page.text}]);
+ assert.ok(passages.some(p=>p.citable&&p.text.includes('JSON field token_endpoint has value "https://login.acme.com/token".')));
+ assert.match(page.text,/"authorization_endpoint": "https:\/\/login.acme.com\/authorize"/);
+});
+test('completion: a documented example hostname becomes an instance input while unlisted hosts stay rejected',()=>{
+ const p=value(),sources=[{...docs[0],text:docs[0].text+'\nExample request: https://api.example.com/issues'}];
+ p.steps[1].request={method:'GET',endpoint:'https://api.example.com/issues',example:"curl 'https://api.example.com/issues' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};
+ const fixed=validateInterpretation(p,sources);
+ assert.equal(fixed.steps[1].request?.endpoint,'/issues');
+ assert.match(fixed.steps[1].request!.example,/<INSTANCE_BASE_URL>\/issues/);
+ assert.ok(fixed.steps[1].fields?.some(field=>field.includes('full HTTPS instance URL')));
+ assert.ok(!endpointEvidence('https://api.example.com/issues',sources).supported);
+});
 test('completion: an OAuth registration guide survives ranking beside endpoint object references',()=>{
  const registration={...docs[0],url:'https://acmetasks.example.com/docs/system-admin/authentication/oauth-applications/'};
  const endpoint={...docs[0],id:'s2',url:'https://acmetasks.example.com/docs/api/endpoints/oauth-2/'};
@@ -85,6 +101,14 @@ test('completion: response paths retain the correct object and operation through
  assert.deepEqual(responseExamples('GET /projects/{id}/issues\nExample response:\n[{"title":'),[]);
  const compressed=selectSourceText(('Unrelated manual.\n').repeat(3000)+sample,'Read project issue titles.',4000);
  assert.match(compressed,/Response JSON paths for GET \/projects\/\{id\}\/issues: \$\[\]\.title/);
+});
+test('completion: operation parameters and response wrappers survive competing schema metadata',()=>{
+ const main='## GET /api/v1/records/search | Search for records\nParameter private in query (boolean, optional): include private records accessible to the user\nParameter page in query (integer, optional): page number\nSuccessful response 200: Search results\nResponse JSON paths for GET /api/v1/records/search: $.data[].name (string)\n';
+ const metadata=Array.from({length:600},(_,i)=>'Response JSON paths for GET /api/v1/records/{id}/metadata/extra: $.record.metadata_'+i+'.name (string)').join('\n');
+ const selected=selectSourceText(main+'\n## GET /api/v1/records/metadata | Metadata for records\n'+metadata,'List record names visible to the connected person, including pagination.',4000);
+ assert.match(selected,/include private records accessible to the user/);
+ assert.match(selected,/Parameter page in query/);
+ assert.match(selected,/records\/search: \$\.data\[\]\.name/);
 });
 test('completion: overlength presentation repair retains request, grants and evidence',async()=>{
  const p=value();p.coverage[0].reason='Repeated display text. '.repeat(60);const before=structuredClone(p);

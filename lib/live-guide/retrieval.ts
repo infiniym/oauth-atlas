@@ -77,6 +77,22 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal) {
 const decode = (s: string) => s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(Math.min(parseInt(n,16),0x10ffff))).replace(/&#(\d+);/g,(_,n) => String.fromCodePoint(Math.min(Number(n),0x10ffff)));
 export function parsePage(url: string, body: string,useCase=''): Page {
   const api=openApiText(body,useCase);if(api)return {url,title:api.title,text:api.text,links:[],labels:{}};
+  // Metadata discovery documents are often minified JSON. Preserve the fields
+  // as complete, bounded passages instead of one uncitable token.
+  try{
+   const json=JSON.parse(body);
+   if(json&&typeof json==='object'){
+    const fields:string[]=[];
+    for(const [key,value] of Object.entries(json)){
+     const values=Array.isArray(value)?value.map((value,index)=>({key:key+'['+index+']',value})):[{key,value}];
+     for(const field of values){
+      const literal=JSON.stringify(field.value);
+      if((field.value===null||typeof field.value!=='object')&&literal.length<180)fields.push('JSON field '+field.key+' has value '+literal+'.');
+     }
+    }
+    body=fields.join('\n')+'\n'+JSON.stringify(json,null,2);
+   }
+  }catch{}
   const html = /<(?:html|title|main|body)\b/i.test(body);
   const title = decode(body.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || body.match(/^#\s+(.+)$/m)?.[1] || new URL(url).hostname).replace(/<[^>]*>/g,'').slice(0,160);
   const links: string[] = [];
@@ -143,7 +159,19 @@ export function selectSourceText(text:string,useCase:string,limit=48000,app=''):
  const responseContext=responseExamples(text).join('\n');
  const lines=(responseContext+'\n'+text).split('\n'),ranked=lines.map((s,i)=>({i,score:(/oauth|scope|permission|capabilit|authorization|redirect|client.secret/i.test(s)?3:0)+terms.filter(t=>s.toLowerCase().includes(t)).length*4+(/^(?:GET|POST|PATCH|DELETE) |--data|api\.[^ ]+\/|^query /.test(s)?4:0)})).sort((a,b)=>b.score-a.score);
  const selected=new Set<number>();let size=0;const add=(i:number)=>{if(i>=0&&i<lines.length&&!selected.has(i)&&size+lines[i].length<limit){selected.add(i);size+=lines[i].length+1;}};
- for(const {i} of ranked.filter(({i})=>lines[i].startsWith('Response JSON paths for ')&&terms.some(term=>lines[i].toLowerCase().includes(term))).slice(0,6))add(i);
+ // Rendered OpenAPI parameters precede potentially large response schemas.
+ // Preserve the complete selected operation header and its parameter contract.
+ const operations=lines.flatMap((line,i)=>/^## (?:GET|POST|PUT|PATCH|DELETE|HEAD) \//.test(line)?[{line,i}]:[]);
+ for(const operation of operations.filter(({line})=>terms.some(term=>line.toLowerCase().includes(term))).slice(0,3)){
+  const end=operations.find(next=>next.i>operation.i)?.i??lines.length;
+  for(let i=operation.i;i<end;i++)if(i<operation.i+5||/^Parameter |^Operation security:|^Successful response /.test(lines[i]))add(i);
+ }
+ const responseRank=(line:string)=>{
+  const operation=line.split(': $')[0].toLowerCase();
+  return terms.filter(term=>operation.includes(term)).length*100-(operation.match(/\//g)||[]).length+(/\.(?:title|name|content|subject|markdown) \(/.test(line)?30:0);
+ };
+ const responseFields=lines.map((line,i)=>({line,i})).filter(({line})=>line.startsWith('Response JSON paths for '));
+ for(const {i} of responseFields.sort((a,b)=>responseRank(b.line)-responseRank(a.line)).slice(0,12))add(i);
  for(const {i} of ranked.filter(({i})=>/"(?:subject|title|name|content|results|_embedded)"\s*:/.test(lines[i])).slice(0,10))for(let n=i;n<Math.min(lines.length,i+5);n++)add(n);
  // Allocate space to actual requested routes before a large reference's
  // navigation, sync examples and unrelated schema mentions consume the budget.
