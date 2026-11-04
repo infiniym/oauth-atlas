@@ -7,6 +7,7 @@ import {load} from '../live-guide/http.ts';
 import type {Store} from '../live-guide/http.ts';
 import type {LiveGuide} from '../live-guide/contracts.ts';
 import type {ManagedMetadata} from '../advisor/types.ts';
+import {guideReadiness} from '../live-guide/readiness.ts';
 export async function saveReviewedPlan(input:unknown,db:Store,metadata?:ManagedMetadata):Promise<LaunchPlan>{
   const assessment=validateAssessment(input);if(!assessment.capabilities.length||missingCriticalQuestions(assessment).length)throw new Error('Confirm the setup choices before sharing a plan.');
   const plan=reviewedPlan(assessment,recommend(assessment,metadata));plan.id='lp-'+crypto.randomUUID();plan.metadata=metadata;
@@ -16,5 +17,5 @@ export async function freezeResearchPlan(guide:LiveGuide,db:Store):Promise<Launc
 export async function readPlan(id:string,db:Store):Promise<LaunchPlan|null>{
   if(!/^(?:lp|lg)-[a-f0-9-]{36}$/.test(id))return null;
   const row=await db.prepare('SELECT payload FROM launch_plans WHERE id = ?').bind(id).first<{payload:string}>();if(row)return JSON.parse(row.payload);
-  if(id.startsWith('lg-')){const run=await load(db,id);return run&&!run.guide.questions.length&&run.guide.mode==='interpreted'&&(!run.guide.engine||run.guide.engine.outcome==='accepted')?freezeResearchPlan(run.guide,db):null;}return null;
+  if(id.startsWith('lg-')){const run=await load(db,id);return run&&guideReadiness(run.guide)==='usable-guide'?freezeResearchPlan(run.guide,db):null;}return null;
 }

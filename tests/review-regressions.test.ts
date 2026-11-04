@@ -77,6 +77,23 @@ test('completion: OAuth error examples cannot define a resource success response
  const text='curl https://api.acme.com/graphql\n--data query\nPOST https://api.acme.com/oauth/token HTTP/1.1\nError response:\n{"error":"invalid_grant","error_description":"A different grant is required."}\nPOST https://api.acme.com/oauth/token HTTP/1.1\nResponse:\n{"access_token":"example","token_type":"Bearer"}';
  const paths=responseExamples(text).join('\n');assert.doesNotMatch(paths,/error_description|graphql/);assert.match(paths,/POST https:\/\/api.acme.com\/oauth\/token: \$\.access_token/);
 });
+test('completion: text segments and nested content cannot be reduced to a first element or one layer',()=>{
+ const p=value();p.steps[1].detail+=' Read $.title[0].text.content.';
+ assert.throws(()=>validateInterpretation(p,docs,'Read titles and content.'),/first text segment/);
+ p.steps[1].detail+=' Join all text segments.';
+ assert.doesNotThrow(()=>validateInterpretation(p,docs,'Read titles and content.'));
+ const tree={...docs[0],text:docs[0].text+'\nGET /nodes/{id}/children\nReturns only the first level of children; nested children require further requests.\nResponse JSON paths for GET /nodes/{id}/children: $.results (array)'};
+ p.steps[1].request={method:'GET',endpoint:'/nodes/{id}/children',example:"curl 'https://api.acme.com/nodes/<NODE_ID>/children' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};
+ assert.throws(()=>validateInterpretation(p,[tree],'Read titles and content.'),/one level of a hierarchical response/);
+ p.steps[1].detail+=' Recursively fetch each child ID with this request, paginating every parent independently.';
+ assert.doesNotThrow(()=>validateInterpretation(p,[tree],'Read titles and content.'));
+});
+test('completion: instance input normalization preserves strict route validation for authorization metadata',()=>{
+ const p=value();p.steps[0].request={method:'GET',endpoint:'<INSTANCE_BASE_URL>/oauth/authorize?client_id=<CLIENT_ID>',example:"curl '<INSTANCE_BASE_URL>/oauth/authorize?client_id=<CLIENT_ID>'"};
+ const source={...docs[0],text:docs[0].text+'\nGET /oauth/authorize accepts client_id for the registered application.'};
+ const normalized=validateInterpretation(p,[source]);assert.equal(normalized.steps[0].request?.endpoint,'/oauth/authorize?client_id=<CLIENT_ID>');
+ p.steps[0].request!.endpoint='<INSTANCE_BASE_URL>/undocumented';assert.throws(()=>validateInterpretation(p,[source]),/not documented/);
+});
 test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
  const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[
   'Pagination','Offset-based pagination. The default method.','Offset-based pagination','Parameter Description','page Page number.','Keyset-based pagination','Parameter Required Description','pagination yes keyset (enables keyset pagination).','per_page no Number of items per page.','The response mentions arbitrary and has a link to the next page.',
@@ -760,6 +777,11 @@ test('completion: setup-field recovery changes only named prerequisites and repe
  assert.equal(body.thinking.type,'disabled');assert.equal(context.steps.length,1);const ps=context.documents.flatMap((d:any)=>d.passages),citation=ps.find((p:any)=>p.citable&&p.text.includes('Use client_id'));
  return aiResponse({steps:[{stepId:'exchange-token',detail:'After consent, exchange the code on the backend using the registered client credentials and callback URI.',doneWhen:'The response contains access_token; store it securely for the authorizing person.',fields:['Client credentials: OAuth registration','Code and redirect URI: authorization callback'],request:{method:'POST',endpoint:'/oauth/token',example:"curl 'https://api.acme.com/oauth/token' -X POST -H 'Content-Type: application/json' -d '{\"client_id\":\"<CLIENT_ID>\",\"client_secret\":\"<CLIENT_SECRET>\",\"code\":\"<CODE>\",\"redirect_uri\":\"<REDIRECT_URI>\",\"grant_type\":\"authorization_code\"}'"},citations:{primary:citation.id,secondary:'',tertiary:''}}]});});
  assert.equal(calls,2);assert.equal(result!.value.coverage[0].support,'reviewed');assert.deepEqual(result!.value.steps[1],original.steps[1]);assert.deepEqual(result!.value.findings,original.findings);assert.deepEqual(before,original);
+});
+test('completion: a three-step OAuth correction retains every affected prerequisite',async()=>{
+ const {repairReviewedSetup}=await import('../lib/live-guide/interpretation.ts');const before=value();before.steps.push({...before.steps[0],id:'consent',testKind:'authorization'},{...before.steps[0],id:'exchange',testKind:'authorization'});const reviewed=structuredClone(before);reviewed.coverage[0].status='unresolved';reviewed.coverage[0].reason='Use one client type across register, consent and exchange.';const original=structuredClone(before);let targets:string[]=[];
+ const result=await repairReviewedSetup(before,reviewed,run().guide.input,docs,bindings,new AbortController().signal,async(_u,init)=>{targets=JSON.parse(JSON.parse(String(init?.body)).messages[0].content).steps.map((step:any)=>step.id);return aiResponse({steps:[]});});
+ assert.deepEqual(targets,['register','consent','exchange']);assert.deepEqual(before,original);assert.equal(result!.telemetry.outcome,'incomplete');
 });
 
 test('completion: dotted grant identifiers inside a negated clause do not become positive writes',async()=>{

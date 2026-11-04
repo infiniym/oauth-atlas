@@ -62,8 +62,12 @@ test('reviewed sharing saves immutable computed output and each edit saves a new
 test('incomplete or invalid inputs cannot be saved as firm reviewed plans',async()=>{
  const {db}=memory();await assert.rejects(()=>saveReviewedPlan(emptyAssessment('gmail'),db));await assert.rejects(()=>saveReviewedPlan({...assessments[0],capabilities:['invented']},db));assert.equal(await readPlan('arbitrary-id',db),null);
 });
-test('existing live guide IDs open through the common plan store',async()=>{
- const {db,rows}=memory(),g=researched();rows.set(g.id,JSON.stringify({guide:g,documents:[]}));const p=await readPlan(g.id,db);assert.equal(p!.provider,'Tasks');assert.equal(p!.basis,'Live research');assert.equal(await readPlan('lg-'+crypto.randomUUID(),db),null);
+test('only usable live guides become common plans and already frozen links remain immutable',async()=>{
+ const {db,rows}=memory(),g=researched();rows.set(g.id,JSON.stringify({guide:g,documents:[]}));assert.equal(await readPlan(g.id,db),null);
+ g.requestedActions=[{id:'read',title:'Read tasks',operation:'read',category:'resource'}];g.coverage[0]={...g.coverage[0],actionId:'read',support:'reviewed'};g.steps[1]={...g.steps[1],id:'read-test',testKind:'action',actionIds:['read'],request:{method:'GET',endpoint:'/tasks',example:"curl 'https://api.acme.com/tasks' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}};
+ rows.set(g.id,JSON.stringify({guide:g,documents:[]}));const p=await readPlan(g.id,db);assert.equal(p!.provider,'Tasks');assert.equal(p!.basis,'Live research');
+ const before=JSON.stringify(p);g.coverage[0].status='unresolved';rows.set(g.id,JSON.stringify({guide:g,documents:[]}));assert.equal(JSON.stringify(await readPlan(g.id,db)),before);
+ const incomplete={...g,id:'lg-'+crypto.randomUUID(),engine:{model:'fixture',attempts:1,elapsedMs:1,outcome:'accepted',thinking:'disabled',effort:'low'}};rows.set(incomplete.id,JSON.stringify({guide:incomplete,documents:[]}));assert.equal(await readPlan(incomplete.id,db),null);assert.equal(await readPlan('lg-'+crypto.randomUUID(),db),null);
 });
 test('provider routing recognises reviewed providers without capturing unfamiliar names or lookalike domains',()=>{
  assert.equal(reviewedProvider('Google Mail'),'gmail');assert.equal(reviewedProvider('https://github.com/apps'),'github');for(const app of ['Notion','Linear','Acme','https://github.com.attacker.net'])assert.equal(reviewedProvider(app),null);

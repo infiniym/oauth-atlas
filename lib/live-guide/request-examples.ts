@@ -33,6 +33,11 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
  if(!Array.isArray(result.steps))return result;
  const source=documents.map(d=>d.text).join('\n');
  for(const step of result.steps){
+  if(step?.request?.endpoint){
+   // Metadata is a route template; the executable curl retains the instance
+   // input. Normalizing that representation does not establish the route.
+   step.request.endpoint=String(step.request.endpoint).replace(/^<INSTANCE_BASE_URL>(?=\/)/,'');
+  }
   if(!step?.request?.example)continue;
   let example=String(step.request.example).replace(/\$\{([A-Z][A-Z0-9_]*)\}|\$([A-Z][A-Z0-9_]*)/g,(_whole,a,b)=>'<'+(a||b)+'>');
   let instanceInput=false;
