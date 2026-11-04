@@ -102,6 +102,23 @@ test('completion: response paths retain the correct object and operation through
  const compressed=selectSourceText(('Unrelated manual.\n').repeat(3000)+sample,'Read project issue titles.',4000);
  assert.match(compressed,/Response JSON paths for GET \/projects\/\{id\}\/issues: \$\[\]\.title/);
 });
+test('completion: a response claim cannot borrow properties from a different operation',()=>{
+ const sources=[{...docs[0],text:docs[0].text+'\nGET /issues/text returns text.\nResponse JSON paths for GET /issues: $.properties.title (string)\nResponse JSON paths for GET /issues/text: $.markdown (string)'}];
+ const p=value();p.steps[1].detail='Read properties.title from the returned object. Boundary check: inspect the granted access and outgoing request log.';
+ p.steps[1].request={method:'GET',endpoint:'/issues/text',example:"curl 'https://api.acme.com/issues/text' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};
+ assert.throws(()=>validateInterpretation(p,sources),/response field is not documented for this operation/);
+ p.steps[1].request={method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};
+ assert.doesNotThrow(()=>validateInterpretation(p,sources));
+});
+test('completion: grant definitions and late response samples survive large unrelated sections',async()=>{
+ const {responseExamples}=await import('../lib/live-guide/response-shapes.ts');
+ const unrelated=Array.from({length:30},()=> 'POST /admin/token\nExample response:\n{"token":"sample"}\n').join('');
+ const sample='curl --request GET --url https://api.acme.com/issues/text\n200\n400\n404\n{"markdown":"Body"}';
+ assert.match(responseExamples(unrelated+sample,['issues']).join('\n'),/issues\/text: \$\.markdown/);
+ const text=('OAuth permission scope metadata reference.\n').repeat(2000)+'\nitems:read\nGrants read-only access to items and projects.\n';
+ const selected=selectSourceText(text,'Read item names.',2000);
+ assert.match(selected,/items:read\nGrants read-only access to items and projects/);
+});
 test('completion: operation parameters and response wrappers survive competing schema metadata',()=>{
  const main='## GET /api/v1/records/search | Search for records\nParameter private in query (boolean, optional): include private records accessible to the user\nParameter page in query (integer, optional): page number\nSuccessful response 200: Search results\nResponse JSON paths for GET /api/v1/records/search: $.data[].name (string)\n';
  const metadata=Array.from({length:600},(_,i)=>'Response JSON paths for GET /api/v1/records/{id}/metadata/extra: $.record.metadata_'+i+'.name (string)').join('\n');

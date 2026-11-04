@@ -110,7 +110,9 @@ export function parsePage(url: string, body: string,useCase=''): Page {
   const examples:string[]=[];
   if(html)for(const match of decode(body).matchAll(/"(?:code|codeSnippet)"\s*:\s*(?:\[\s*0\s*,\s*)?("(?:\\.|[^"\\])*")/g)){try{const code=JSON.parse(match[1]);if(typeof code==='string'&&/https:\/\/|\b(?:GET|POST|PUT|PATCH|DELETE)\s+\//.test(code)&&code.length<=6000&&!examples.includes(code))examples.push(code);}catch{}if(examples.length>=3)break;}
   const content=text+(examples.length?'\n[Separate source excerpt]\n'+examples.join('\n[Separate source excerpt]\n'):'');
-  return { url, title, text: content.replace(/[\t ]+/g,' ').replace(/\n\s*\n/g,'\n').trim(), links: [...new Set(links)],labels };
+  const cleaned=content.replace(/[\t ]+/g,' ').replace(/\n\s*\n/g,'\n').trim();
+  const responses=responseExamples(cleaned,requestTerms(useCase)).join('\n');
+  return { url, title, text:(responses?responses+'\n':'')+cleaned, links: [...new Set(links)],labels };
 }
 export const topicPatterns={registration:/oauth|authoriz|\/guides\/?$|getting.started|register.{0,20}app|creat.{0,20}(?:app|integration|connection)|app.{0,12}setup/i,permissions:/scopes?|permissions?|capabilities|access.types/i,identity:/actor|app.authentication|bot|agents?|user.authentication/i,distribution:/app.{0,15}review|oauth.{0,15}review|approval|verification|distribution|marketplace|integration.directory|publish|public.connection/i};
 export function sourceKey(value:string):string{const url=new URL(value);url.pathname=url.pathname.replace(/^\/(?:[a-z]{2}(?:[-_][A-Za-z]{2})?)\/(?=docs\/|developers(?:\/|$)|developer\/|api\/|user\/|auth\/|integration\/|administration\/)/,'/').replace(/\.md$/,'').replace(/\/$/,'')||'/';url.searchParams.delete('noRedirect');return url.href;}
@@ -156,9 +158,12 @@ export function requestTerms(value:string,app=''):string[]{
 export function selectSourceText(text:string,useCase:string,limit=48000,app=''):string{
  if(text.length<=limit)return text;
  const terms=requestTerms(useCase,app);
- const responseContext=responseExamples(text).join('\n');
+ const responseContext=text.includes('Response JSON paths for ')?'':responseExamples(text,terms).join('\n');
  const lines=(responseContext+'\n'+text).split('\n'),ranked=lines.map((s,i)=>({i,score:(/oauth|scope|permission|capabilit|authorization|redirect|client.secret/i.test(s)?3:0)+terms.filter(t=>s.toLowerCase().includes(t)).length*4+(/^(?:GET|POST|PATCH|DELETE) |--data|api\.[^ ]+\/|^query /.test(s)?4:0)})).sort((a,b)=>b.score-a.score);
  const selected=new Set<number>();let size=0;const add=(i:number)=>{if(i>=0&&i<lines.length&&!selected.has(i)&&size+lines[i].length<limit){selected.add(i);size+=lines[i].length+1;}};
+ // A grant label without its adjacent definition cannot support a permission
+ // decision. Keep the complete declaration before unrelated SDK examples.
+ for(let i=0;i<lines.length-1;i++)if(/^\s*[\w:.*\/-]+\s*$/.test(lines[i])&&/^\s*(?:Grants?|Allows?|Read[- ]only access|Write access)\b/i.test(lines[i+1])){add(i);add(i+1);add(i+2);}
  // Rendered OpenAPI parameters precede potentially large response schemas.
  // Preserve the complete selected operation header and its parameter contract.
  const operations=lines.flatMap((line,i)=>/^## (?:GET|POST|PUT|PATCH|DELETE|HEAD) \//.test(line)?[{line,i}]:[]);

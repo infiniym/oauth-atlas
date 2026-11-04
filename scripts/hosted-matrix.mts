@@ -42,7 +42,7 @@ async function run(c){const started=Date.now(),record={name:c.name,round,release
  if(job.guide){const read=await fetch(origin+'/api/plans/'+job.guide.id);record.planStatus=read.status;if(read.ok)record.plan=(await read.json()).plan;record.share=origin+'/plan/'+job.guide.id;}
  record.errors=[];if(record.readiness!=='usable-guide')record.errors.push('No usable guide for the declared task');if(record.planStatus!==200)record.errors.push('No shareable plan');if(record.requests.some(r=>r.errors.length)||!record.requests.length)record.errors.push('Request contract check failed');
  if(/paginat|continuation/.test(c.input.useCase)&&(!job.guide||!paginationHandoff(job.guide,record.requests)))record.errors.push('Required concrete pagination handoff absent');
- const recovered=record.events.some(e=>/missing requirement|Repairing|Updating action|Action instructions/i.test(e.stage))||job.guide?.engine?.validationIssues?.length;record.speed={kind:recovered?'automatic-recovery':'normal',budgetMs:recovered?180000:90000};if(Date.now()-started>record.speed.budgetMs)record.errors.push('Generation exceeded '+record.speed.kind+' budget');
+ const recovered=record.events.some(e=>/missing requirement|Repairing|Updating action|Action instructions/i.test(e.stage))||job.guide?.engine?.validationIssues?.some(reason=>!/^Generic access-boundary check completed|^Unsupported documentation destination corrected/.test(reason));record.speed={kind:recovered?'automatic-recovery':'normal',budgetMs:recovered?180000:90000};if(Date.now()-started>record.speed.budgetMs)record.errors.push('Generation exceeded '+record.speed.kind+' budget');
  record.pass=!record.errors.length;
  }catch(e){
    record.pass=false;record.error=e.message;
