@@ -8,11 +8,7 @@ const citation=obj({primary:{type:'string',pattern:'^s[0-9]+-p[0-9]+$'},secondar
 export const factsSchema=obj({accessModel:enumeration('oauth','public','unknown'),oauthSupport:enumeration('documented','unsupported','unknown'),summary:str,findings:arr(obj({kind:enumeration('oauth','permission','provider-review','customer-approval','prerequisite','provider-wait'),title:str,detail:str,scope:str,appliesWhen:str,stage:enumeration('prepare','test','launch'),evidence:citation})),coverage:arr(obj({actionId:str,permissions:arr(str),status:enumeration('mapped','unresolved','unsupported'),reason:str,evidence:citation})),unknowns:arr(str),researchNeeded:arr(str)});
 const namedStep=obj({id:str,title:str,detail:str,owner:enumeration('developer','agent','customer admin','provider'),doneWhen:str,stage:enumeration('prepare','test','launch'),testKind:enumeration('prepare','authorization','action','boundary','lifecycle','launch'),dependsOn:arr(str),actionIds:arr(str),request:obj({method:str,endpoint:str,example:str}),destination:str,fields:arr(str),evidence:citation});
 export const stepsSchema={...obj({steps:arr({$ref:'#/$defs/step'}),continuations:arr({$ref:'#/$defs/step'}),blockers:arr(obj({title:str,kind:str,consequence:str,owner:str,resolution:str,stepIds:arr(str),resolutionStepIds:arr(str)}))}),$defs:{step:namedStep}};
-export const stepsSchemaForRequest=(paginated:boolean)=>({
- ...stepsSchema,
- properties:{...stepsSchema.properties,continuations:{type:'array',items:{$ref:'#/$defs/continuation'},...(paginated?{minItems:1}:{})}},
- $defs:{...stepsSchema.$defs,continuation:{...namedStep,properties:{...namedStep.properties,testKind:enumeration('action'),stage:enumeration('test'),request:obj({method:enumeration('GET','POST','PUT','PATCH','DELETE','HEAD'),endpoint:{type:'string',minLength:1},example:{type:'string',pattern:'^curl\\s'}})}}},
-});
+export const stepsSchemaForRequest=(paginated:boolean)=>paginated?{...stepsSchema,properties:{...stepsSchema.properties,continuations:{...(stepsSchema.properties.continuations as object),minItems:1}}}:stepsSchema;
 export function assembleStepParts(raw:Record<string,any>){
  const out=structuredClone(raw);
  const continuations=out.continuations||[];

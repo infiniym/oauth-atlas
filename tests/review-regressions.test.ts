@@ -74,8 +74,7 @@ test('completion: declared continuations remain resource actions with their init
  assert.equal(result.steps[1].testKind,'action');
  assert.deepEqual(result.steps[1].dependsOn,[initial.id]);
  assert.equal(result.steps[1].request.example,continuation.request.example);
- assert.equal(stepsSchemaForRequest(true).properties.continuations.minItems,1);
- assert.deepEqual(stepsSchemaForRequest(true).$defs.continuation.properties.testKind.enum,['action']);
+ assert.equal((stepsSchemaForRequest(true).properties.continuations as {minItems?:number}).minItems,1);
 });
 test('completion: response paths retain the correct object and operation through source compression',async()=>{
  const {responseExamples}=await import('../lib/live-guide/response-shapes.ts');
@@ -519,6 +518,17 @@ test('completion: explicit retry repeats a failed planning stage and reuses its 
  assert.equal(failed.guide.mode,'evidence-only');assert.equal(checkpoint.draftAccepted,false);assert.equal(checkpoint.draft,undefined);const before=structuredClone(checkpoint.research.documents);let calls=0;
  const retried=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(u,init)=>{assert.equal(String(u),'https://api.anthropic.com/v1/messages');calls++;const body=JSON.parse(String(init?.body));return aiResponse(body.system.startsWith('Independently')?{requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Documented.'}]}:wire(value()));},old,{checkpoint});
  assert.ok(calls>=2);assert.equal(guideReadiness(retried.guide),'usable-guide');assert.deepEqual(retried.documents,before);assert.deepEqual(retried.guide.input.answers,old.guide.input.answers);
+});
+test('completion: a permanent model request failure preserves evidence without repeating paid work or researching another source',async()=>{
+ const old=run();old.guide.clarificationUsed=true;let calls=0,checkpoint:any;
+ const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(url)=>{
+  assert.equal(String(url),'https://api.anthropic.com/v1/messages');calls++;
+  return Response.json({error:{type:'invalid_request_error',message:'Schema is too complex.'}},{status:400});
+ },old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,facts:value()},save:async saved=>{checkpoint=structuredClone(saved);}});
+ assert.equal(calls,1);assert.equal(result.guide.engine?.outcome,'upstream-error');
+ assert.match(result.guide.engine?.validationIssues?.join(' ')||'',/HTTP 400/);
+ assert.equal(checkpoint.draftAccepted,false);assert.deepEqual(checkpoint.research.documents,docs);
+ assert.deepEqual(checkpoint.facts,value());
 });
 
 

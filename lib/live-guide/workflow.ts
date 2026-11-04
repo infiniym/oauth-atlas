@@ -73,8 +73,9 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       for(const q of interpreted.value.questions)interpreted.value.blockers.push({title:q.prompt,consequence:'test',owner:'Developer',resolution:q.why});
       interpreted.value.questions=[];interpreted.value.steps=interpreted.value.steps.filter(s=>s.stage==='prepare');
     }
+    if(interpreted.mode==='evidence-only'&&interpreted.telemetry?.outcome==='upstream-error')await options.save?.({research,clarificationUsed,followupDone,intent,draftAccepted:false});
     const materialTopics=interpreted.value.researchNeeded.filter(t=>t!=='distribution');
-    if(!interpreted.value.questions.length&&(materialTopics.length||interpreted.mode==='evidence-only')&&!followupDone){
+    if(!interpreted.value.questions.length&&(materialTopics.length||interpreted.mode==='evidence-only')&&interpreted.telemetry?.outcome!=='upstream-error'&&!followupDone){
       if(!materialTopics.length)materialTopics.push(interpreted.telemetry?.validationIssues?.some(s=>s.startsWith('Unestablished OAuth'))?'registration':'permissions');
       followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
       emit({stage:'Checking a missing requirement',detail:'Looking only for missing '+materialTopics.join(', ')+' evidence.',status:'working'});
