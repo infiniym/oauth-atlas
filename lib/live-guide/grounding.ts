@@ -3,6 +3,26 @@ import {sourceKey} from './retrieval.ts';
 
 const routeKey=(s:string)=>decodeURIComponent(s).replace(/\{\?[^}]+\}/g,'').replace(/\{[^}]+\}|<[^>]+>|:[a-zA-Z_][\w-]*/g,'{input}').replace(/\/$/,'');
 
+// A parameter marked optional can still change the requested collection when
+// omitted. Read the actual operation's table, never another route on the page.
+export function unfilteredQueryRequirements(endpoint:string,documents:Document[]):{sourceId:string;parameter:string;value:string;quote:string}[]{
+ let path:string;try{path=routeKey(new URL(endpoint,'https://instance.invalid').pathname);}catch{return [];}
+ return documents.flatMap(document=>{
+  const lines=document.text.split('\n').map(line=>line.trim());
+  const operations=lines.flatMap((line,index)=>{const match=line.match(/^(?:#+\s*)?(GET|POST|PUT|PATCH|DELETE)\s+(\/[^\s]+)(?=\s|$)/i);if(!match)return [];try{return [{index,method:match[1].toUpperCase(),path:routeKey(new URL(match[2],'https://instance.invalid').pathname)}];}catch{return [];}});
+  return operations.flatMap((operation,index)=>{
+   if(operation.path!==path||operation.method!=='GET')return [];
+   const section=lines.slice(operation.index+1,operations[index+1]?.index??lines.length);
+   return section.flatMap((line,i)=>{
+    if(!/If no filters?\b.{0,120}(?:send|pass|provide)\b.{0,60}empty array\s*\(?\s*\[\s*\]/i.test(line))return [];
+    const preceding=section.slice(Math.max(0,i-4),i).filter(Boolean).join(' ');
+    const field=preceding.match(/\b([a-zA-Z_][\w.-]*)\s+(?:string|array)\s+(?:optional|required)\s+query\s*$/i)?.[1];
+    return field?[{sourceId:document.id,parameter:field,value:'[]',quote:line}]:[];
+   });
+  });
+ });
+}
+
 export function responseFields(endpoint:string,documents:Document[]):{sourceId:string;path:string;type:string}[]{
  let path:string;try{path=routeKey(new URL(endpoint,'https://instance.invalid').pathname);}catch{return [];}
  return documents.flatMap(document=>document.text.split('\n').flatMap(line=>{

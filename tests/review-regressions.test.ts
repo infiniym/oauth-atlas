@@ -17,7 +17,7 @@ import {exportPlan} from '../lib/plan/export.ts';
 import {interpret} from '../lib/advisor/intent-parser.ts';
 import {researchRoute} from '../lib/plan/routing.ts';
 import type {Store} from '../lib/live-guide/http.ts';
-import {endpointEvidence} from '../lib/live-guide/grounding.ts';
+import {endpointEvidence,unfilteredQueryRequirements} from '../lib/live-guide/grounding.ts';
 import {sourceKey,linkScore,selectSourceText,parsePage} from '../lib/live-guide/retrieval.ts';
 import {repairLongFields,planningDocuments,completeTestInstructions} from '../lib/live-guide/interpretation.ts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
@@ -38,6 +38,22 @@ test('completion: endpoint templates, API hosts and query names are grounded ind
  assert.ok(!endpointEvidence('/v1/pages/{page_id}/delete',sources).supported);
  assert.ok(!endpointEvidence('/v1/pages/{page_id}?invented=true',sources).supported);
  assert.ok(!endpointEvidence(url,sources).supported);
+});
+test('completion: an optional default filter cannot silently restrict the requested collection',()=>{
+ const source={...docs[0],text:docs[0].text+'\nGET /other\nfilters\nstring\noptional query\nIf no filter is to be applied, the client should send an empty array ([]).\nGET /issues\nfilters\nstring\noptional query\nJSON specifying filter conditions. If no filter is to be applied, the client should send an empty array ( [] ), otherwise a default filter is applied.\nGET /issues/archived\nNo query parameters are supported.'};
+ assert.equal(unfilteredQueryRequirements('/issues',[source]).length,1);
+ assert.deepEqual(unfilteredQueryRequirements('/issues/archived',[source]),[]);
+ const candidate=value();
+ assert.throws(()=>validateInterpretation(candidate,[source],'Read issue titles including pagination.'),/silently applies a default collection filter/);
+ candidate.steps[1].request!.example="curl 'https://api.acme.com/issues?filters=%5B%5D' -H 'Authorization: Bearer <ACCESS_TOKEN>'";
+ assert.doesNotThrow(()=>validateInterpretation(candidate,[source],'Read issue titles.'));
+ candidate.steps[1].request!.example="curl 'https://api.acme.com/issues' -H 'Authorization: Bearer <ACCESS_TOKEN>'";
+ assert.doesNotThrow(()=>validateInterpretation(candidate,[source],'Read active issue titles.'));
+});
+test('completion: a supported permission verdict cannot override an unresolved response extraction check',async()=>{
+ const result=await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async()=>aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',missingFact:'none',reason:'The grant supports reading, but the scalar extraction is absent.',checks:{setup:true,grant:true,request:true,response:false,pagination:true,boundary:true}}]}),docs);
+ assert.equal(result.value.coverage[0].status,'unresolved');
+ assert.equal(result.value.coverage[0].missingFact,'response');
 });
 test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
  const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[
@@ -226,7 +242,7 @@ test('completion: a large schema index cannot displace search access conditions 
  const d={...docs[0],text:'Schema version: 1\nSecurity definitions: {}\n## GET /v1/items/search | Search for items\nParameter private in query (boolean, optional): include private items this user has access to.\nParameter page in query (integer, optional): page number.\nSuccessful response 200: Matching items with names.\nOperation index:\n'+Array.from({length:100},(_,i)=>'GET /v1/items/{id}/related/'+i+' | List related items').join('\n')};
  const selected=contextPassages(sourcePassages([d]),d.id,'List item names visible to the connected person.',1000).map(p=>p.text).join(' ');assert.match(selected,/include private items/);assert.match(selected,/Parameter page/);assert.doesNotMatch(selected,/related\/99/);
 });
-function aiResponse(data:unknown){return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(data)}],usage:{input_tokens:100,output_tokens:100,output_tokens_details:{thinking_tokens:30}}});}
+function aiResponse(data:any){if(Array.isArray(data?.reviews))data={...data,reviews:data.reviews.map((r:any)=>({...r,checks:r.checks||{setup:true,grant:r.status==='supported',request:true,response:true,pagination:true,boundary:true}}))};return Response.json({type:'message',stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify(data)}],usage:{input_tokens:100,output_tokens:100,output_tokens_details:{thinking_tokens:30}}});}
 function wire(v:Interpretation){const all=sourcePassages(docs);const copy=structuredClone(v);for(const item of [...copy.findings,...copy.steps,...copy.coverage])if(item.evidence)(item as unknown as {evidence:unknown[]}).evidence=item.evidence.map(e=>({passageId:all.find(p=>p.text.includes(e.quote))!.id}));return copy;}
 
 test('review: confirming an older identity exposes saved material questions with zero network calls',async()=>{
