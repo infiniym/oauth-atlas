@@ -40,19 +40,28 @@ function publicAddress(ip: string): boolean {
     (a === 192 && (b === 0 || b === 168 || b === 2 || (b === 88 && c === 99))) ||
     (a === 198 && (b === 18 || b === 19 || (b === 51 && c === 100))) || (a === 203 && b === 0 && c === 113));
 }
-export function publicReader(fetcher: Fetcher, signal: AbortSignal) {
+export function publicReader(fetcher: Fetcher, signal: AbortSignal, onRetry?:(url:string)=>void) {
   const checked = new Set<string>();
+  async function transientRetry<T>(url:string,work:()=>Promise<T>):Promise<T>{
+    for(let attempt=0;;attempt++)try{return await work();}catch(error){
+      signal.throwIfAborted();
+      const message=error instanceof Error?error.message:'';
+      const transient=error instanceof TypeError||error instanceof DOMException&&error.name==='TimeoutError'||/HTTP (?:408|425|429|5\d\d)\b|fetch failed|network connection|connection (?:lost|reset)|internal error; reference/i.test(message);
+      if(attempt||!transient)throw error;
+      onRetry?.(url);
+    }
+  }
   async function check(host: string) {
     if (checked.has(host)) return;
-    const answers = await Promise.all(['A','AAAA'].map(async type => {
+    const answers = await Promise.all(['A','AAAA'].map(async type => transientRetry('https://'+host,async()=>{
       const deadline=AbortSignal.any([signal,AbortSignal.timeout(4500)]);
       const res = await fetcher(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(host)}&type=${type}`, {
         headers: { accept: 'application/dns-json' }, signal: deadline, redirect: 'manual',
       });
-      if (!res.ok) throw new Error('Could not check the public website address.');
+      if (!res.ok) {await res.body?.cancel();throw new Error('Could not check the public website address. HTTP '+res.status+'.');}
       const data = JSON.parse(await boundedText(res, deadline)) as { Answer?: { type: number; data: string }[] };
       return (data.Answer || []).filter(a => a.type === 1 || a.type === 28);
-    }));
+    })));
     if (!answers.flat().length || answers.flat().some(a => !publicAddress(a.data))) throw new Error('Website has no verifiable public address.');
     checked.add(host);
   }
@@ -61,15 +70,19 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal) {
     for (let hop = 0; hop < 4; hop++) {
       if (allowed && !(Array.isArray(allowed)?allowed.some(seed=>onProvider(url.href,seed)):onProvider(url.href,allowed))) throw new ResearchFailure({category:'source-moved',url:value,destination:url.href,message:'This documentation redirects outside the selected provider to '+url.hostname+'. Confirm that documentation address to continue.'});
       await check(url.hostname);
+      const result=await transientRetry(url.href,async()=>{
       const deadline=AbortSignal.any([signal,AbortSignal.timeout(8000)]);
       const res = await fetcher(url.href, { redirect: 'manual', signal: deadline, headers: { accept: 'text/html,text/markdown,text/plain', 'user-agent': 'OAuthLaunchGuide/1.0 public documentation reader' } });
       if ([301,302,303,307,308].includes(res.status)) {
         const location = res.headers.get('location'); await res.body?.cancel();
-        if (!location) throw new Error('Incomplete source redirect.'); url = publicUrl(new URL(location, url).href); continue;
+        if (!location) throw new Error('Incomplete source redirect.');return {redirect:location};
       }
       if (!res.ok) { await res.body?.cancel(); throw new Error(`Source returned HTTP ${res.status}.`); }
       if (!/text\/(?:html|plain|markdown)|application\/(?:json|xhtml\+xml)/i.test(res.headers.get('content-type') || 'text/plain')) { await res.body?.cancel(); throw new Error('Use a public HTML or Markdown documentation page.'); }
       try{return {url:url.href,body:await boundedText(res,deadline,8_000_000)};}catch(error){if(error instanceof Error&&error.message==='Source response is too large.')throw new ResearchFailure({category:'page-too-large',url:url.href,message:'This documentation exceeds the 8 MB reading limit. Add a smaller official API-reference or Markdown page; retrying this page will not make it smaller.'});throw error;}
+      });
+      if('redirect' in result){url=publicUrl(new URL(result.redirect!,url).href);continue;}
+      return result;
     }
     throw new Error('Too many source redirects.');
   } };
@@ -289,7 +302,7 @@ function requestReferenceScore(url:string,label:string,input:GuideInput):number{
 }
 export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[];urls?:string[];query?:string;refresh?:boolean;emptyField?:string;readOne?:boolean}={}): Promise<Research> {
   const signal = AbortSignal.any([outer, AbortSignal.timeout(options.previous?18000:38000)]);
-  const reader = publicReader(fetcher, signal); const warnings: string[] = [];const failures:Failure[]=[];
+  const reader = publicReader(fetcher, signal,url=>emit({stage:'Retrying source',detail:'A temporary network failure interrupted '+new URL(url).hostname+'. Retrying that same address once.',status:'working'})); const warnings: string[] = [];const failures:Failure[]=[];
   let seed = input.documentationUrl||options.previous?.website||input.website;
   const firecrawl = async (path: string, body: object) => {
     const res = await fetcher('https://api.firecrawl.dev/v2/' + path, { method:'POST', redirect:'manual', signal: AbortSignal.any([signal,AbortSignal.timeout(12000)]), headers:{'Content-Type':'application/json',Authorization:'Bearer '+bindings.LIVE_GUIDE_FIRECRAWL_KEY},body:JSON.stringify(body) });

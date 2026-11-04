@@ -37,12 +37,15 @@ export function jsonExampleAt(text:string,at:number):unknown{
 export function responseSamples(text:string,terms:string[]=[]):{operation:string;value:unknown}[]{
  const examples:{operation:string;value:unknown}[]=[];
  for(const heading of text.matchAll(/(?:Example response|Response samples|Response:|(?:^|\n)\s*200(?:\s*\n\s*[45]\d{2}){0,20}\s*\n(?=\s*[{\[]))\s*/gi)){
-  const operation=[...text.slice(0,heading.index).matchAll(/\b(?:GET|POST|PUT|PATCH|DELETE)\s+\/[^\s"'<>]+|(?:--url|curl)\s+["']?https:\/\/[^\s"']+/gi)].at(-1)?.[0];
+  const prefix=text.slice(0,heading.index);
+  if(/\b(?:error|failed|failure)\s*$/i.test(prefix.slice(prefix.lastIndexOf('\n')+1)))continue;
+  const operation=[...prefix.matchAll(/\b(?:GET|POST|PUT|PATCH|DELETE)\s+(?:https:\/\/[^\s"']+|\/[^\s"'<>]+)|(?:--url|curl)\s+["']?https:\/\/[^\s"']+/gi)].at(-1)?.[0];
   if(!operation||terms.length&&!terms.some(term=>operation.toLowerCase().includes(term)))continue;
   const start=text.indexOf('{',heading.index!+heading[0].length),array=text.indexOf('[',heading.index!+heading[0].length);
   const at=array>=0&&(start<0||array<start)?array:start;
   if(at<0||at-heading.index!>350)continue;
   const value=jsonExampleAt(text,at);if(value===undefined)continue;
+  if(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).some(key=>['error','errors','error_description'].includes(key))&&!Object.keys(value).some(key=>!['error','errors','error_description','message','status','code'].includes(key)))continue;
   examples.push({operation,value});
   if(examples.length>=24)break;
  }

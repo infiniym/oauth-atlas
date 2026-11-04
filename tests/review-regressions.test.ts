@@ -18,7 +18,7 @@ import {interpret} from '../lib/advisor/intent-parser.ts';
 import {researchRoute} from '../lib/plan/routing.ts';
 import type {Store} from '../lib/live-guide/http.ts';
 import {endpointEvidence,unfilteredQueryRequirements,responseFields} from '../lib/live-guide/grounding.ts';
-import {sourceKey,linkScore,selectSourceText,parsePage} from '../lib/live-guide/retrieval.ts';
+import {sourceKey,linkScore,selectSourceText,parsePage,publicReader} from '../lib/live-guide/retrieval.ts';
 import {repairLongFields,planningDocuments,completeTestInstructions} from '../lib/live-guide/interpretation.ts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
@@ -64,6 +64,18 @@ test('completion: a linked matching object reference completes a partial operati
  assert.ok(!responseFields('/documents/{id}',[operation,{...reference,text:reference.text.replace('"document"','"unrelated"')}]).some(field=>field.path.startsWith('$.properties')));
  const many={...operation,text:operation.text+'\nGET /other\nResponse:\n{"object":"unrelated"}'};
  assert.ok(!responseFields('/documents/{id}',[many,{...reference,text:reference.text.replace('"document"','"unrelated"')}]).some(field=>field.path.startsWith('$.properties')));
+});
+test('completion: a temporary source connection failure retries the same validated URL once',async()=>{
+ let reads=0;const retries:string[]=[];
+ const reader=publicReader(async input=>{const address=String(input);if(address.includes('dns-query'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});reads++;if(reads===1)throw new TypeError('fetch failed');assert.equal(address,url);return new Response('Public OAuth documentation.',{headers:{'Content-Type':'text/plain'}});},new AbortController().signal,address=>retries.push(address));
+ assert.equal((await reader.read(url)).body,'Public OAuth documentation.');assert.equal(reads,2);assert.deepEqual(retries,[url]);
+ let missing=0;const unavailable=publicReader(async input=>{if(String(input).includes('dns-query'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});missing++;return new Response('Missing',{status:404});},new AbortController().signal);
+ await assert.rejects(()=>unavailable.read(url),/HTTP 404/);assert.equal(missing,1);
+});
+test('completion: OAuth error examples cannot define a resource success response',async()=>{
+ const {responseExamples}=await import('../lib/live-guide/response-shapes.ts');
+ const text='curl https://api.acme.com/graphql\n--data query\nPOST https://api.acme.com/oauth/token HTTP/1.1\nError response:\n{"error":"invalid_grant","error_description":"A different grant is required."}\nPOST https://api.acme.com/oauth/token HTTP/1.1\nResponse:\n{"access_token":"example","token_type":"Bearer"}';
+ const paths=responseExamples(text).join('\n');assert.doesNotMatch(paths,/error_description|graphql/);assert.match(paths,/POST https:\/\/api.acme.com\/oauth\/token: \$\.access_token/);
 });
 test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
  const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[
@@ -737,8 +749,8 @@ test('completion: next-link syntax may attach an already retrieved exact paginat
 });
 
 test('completion: a remaining overlength input is corrected without repeating completed field edits',async()=>{
- const p=value();p.steps[1].fields=['NEXT_PAGE_URL: '+ 'a'.repeat(110),'TOKEN: '+ 'b'.repeat(110)];let calls=0;
- const result=await repairLongFields(p as unknown as Record<string,unknown>,bindings,new AbortController().signal,async(_u,init)=>{calls++;const body=JSON.parse(String(init?.body)),fields=JSON.parse(body.messages[0].content);assert.equal(body.thinking.type,'disabled');if(calls===1){assert.equal(fields.length,2);return aiResponse({values:['NEXT_PAGE_URL: '+ 'a'.repeat(90),'TOKEN: backend OAuth token.']});}assert.equal(fields.length,1);assert.deepEqual(fields[0].path,['steps',1,'fields',0]);return aiResponse({values:['NEXT_PAGE_URL: prior response next link on the same HTTPS host.']});});
+ const p=value();p.steps[1].fields=['NEXT_PAGE_URL: '+ 'a'.repeat(220),'TOKEN: '+ 'b'.repeat(220)];let calls=0;
+ const result=await repairLongFields(p as unknown as Record<string,unknown>,bindings,new AbortController().signal,async(_u,init)=>{calls++;const body=JSON.parse(String(init?.body)),fields=JSON.parse(body.messages[0].content);assert.equal(body.thinking.type,'disabled');if(calls===1){assert.equal(fields.length,2);return aiResponse({values:['NEXT_PAGE_URL: '+ 'a'.repeat(190),'TOKEN: backend OAuth token.']});}assert.equal(fields.length,1);assert.deepEqual(fields[0].path,['steps',1,'fields',0]);return aiResponse({values:['NEXT_PAGE_URL: prior response next link on the same HTTPS host.']});});
  assert.equal(calls,2);assert.deepEqual((result.steps as typeof p.steps)[1].fields,['NEXT_PAGE_URL: prior response next link on the same HTTPS host.','TOKEN: backend OAuth token.']);assert.deepEqual((result.steps as typeof p.steps)[1].request,p.steps[1].request);
 });
 

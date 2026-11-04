@@ -29,7 +29,7 @@ const stepSchema = z.object({
   id:text(60).optional(),dependsOn:z.array(text(60)).max(10).optional(),actionIds:z.array(text(60)).max(10).optional(),
   testKind:z.enum(['prepare','authorization','action','boundary','lifecycle','launch']).optional(),
   request:z.object({method:z.string().max(20),endpoint:z.string().max(1500),example:z.string().max(800)}).strict().optional(),
-  stage:z.enum(['prepare','test','launch']).default('test'),destination:z.string().max(1500).default(''),fields:z.array(text(100)).max(8).default([]),
+  stage:z.enum(['prepare','test','launch']).default('test'),destination:z.string().max(1500).default(''),fields:z.array(text(200)).max(8).default([]),
 }).strict();
 export const questionSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]{0,59}$/), prompt: text(200), why: text(300),
