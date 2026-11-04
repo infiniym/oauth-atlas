@@ -66,8 +66,29 @@ test('completion: distinct pagination requests survive action reconciliation',()
  const p=value();p.steps.push({...p.steps[1],id:'continue',request:{method:'GET',endpoint:'/issues?cursor=NEXT',example:"curl 'https://api.acme.com/issues?cursor=NEXT'"},dependsOn:['read-test']});
  const out=reconcile(p);assert.equal(out.steps.filter(s=>s.testKind==='action').length,2);assert.deepEqual(out.steps.at(-1)!.dependsOn,['read-test']);
 });
+test('completion: declared continuations remain resource actions with their initial request dependency',async()=>{
+ const {assembleStepParts,stepsSchemaForRequest}=await import('../lib/live-guide/plan-parts.ts');
+ const initial=value().steps[1];
+ const continuation={...initial,id:'next-page',testKind:'lifecycle',dependsOn:[],request:{...initial.request,example:"curl 'https://api.acme.com/issues?cursor=<CURSOR>' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}};
+ const result=assembleStepParts({steps:[initial],continuations:[continuation]});
+ assert.equal(result.steps[1].testKind,'action');
+ assert.deepEqual(result.steps[1].dependsOn,[initial.id]);
+ assert.equal(result.steps[1].request.example,continuation.request.example);
+ assert.equal(stepsSchemaForRequest(true).properties.continuations.minItems,1);
+ assert.deepEqual(stepsSchemaForRequest(true).$defs.continuation.properties.testKind.enum,['action']);
+});
+test('completion: response paths retain the correct object and operation through source compression',async()=>{
+ const {responseExamples}=await import('../lib/live-guide/response-shapes.ts');
+ const sample='GET /projects/{id}/issues\nExample response:\n'+JSON.stringify([{milestone:{title:'Release'},title:'Issue subject'}]);
+ const summaries=responseExamples(sample);
+ assert.match(summaries.join('\n'),/GET \/projects\/\{id\}\/issues: \$\[\]\.title \(string\)/);
+ assert.match(summaries.join('\n'),/\$\[\]\.milestone\.title \(string\)/);
+ assert.deepEqual(responseExamples('GET /projects/{id}/issues\nExample response:\n[{"title":'),[]);
+ const compressed=selectSourceText(('Unrelated manual.\n').repeat(3000)+sample,'Read project issue titles.',4000);
+ assert.match(compressed,/Response JSON paths for GET \/projects\/\{id\}\/issues: \$\[\]\.title/);
+});
 test('completion: overlength presentation repair retains request, grants and evidence',async()=>{
- const p=value();p.coverage[0].reason='Repeated display text. '.repeat(30);const before=structuredClone(p);
+ const p=value();p.coverage[0].reason='Repeated display text. '.repeat(60);const before=structuredClone(p);
  const out=await repairLongFields(p as unknown as Record<string,unknown>,bindings,new AbortController().signal,async(_u,init)=>{assert.equal(JSON.parse(String(init?.body)).output_config.format.schema.properties.values.type,'array');return aiResponse({values:['The documented scope permits reading issues.']});});
  assert.deepEqual(out.steps,before.steps);assert.deepEqual(out.findings,before.findings);assert.deepEqual((out.coverage as typeof p.coverage)[0].evidence,before.coverage[0].evidence);assert.ok((out.coverage as typeof p.coverage)[0].reason.length<400);
 });
@@ -343,6 +364,8 @@ test('final: independent access review receives source identity alongside exact 
 
 test('completion: a paginated request needs both a concrete continuation and an end condition',()=>{
  const p=value();p.steps[1].request={method:'GET',endpoint:'/issues',example:"curl 'https://api.acme.com/issues?page=1' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};p.steps[1].detail='Read the first page. Boundary check: inspect the outgoing request log.';p.steps[1].doneWhen='Two pages returned issue titles.';
+ assert.throws(()=>validateInterpretation(p,docs,'Read all project issues, including pagination.'),/both the initial/);
+ p.steps.push({...p.steps[1],id:'next-page',dependsOn:['read-test'],request:{...p.steps[1].request,example:"curl 'https://api.acme.com/issues?page=2' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}});
  assert.throws(()=>validateInterpretation(p,docs,'Read all project issues, including pagination.'),/stopping condition/);
  p.steps[1].detail+=' Repeat with increasing page until the documented empty collection.';
  assert.doesNotThrow(()=>validateInterpretation(p,docs,'Read all project issues, including pagination.'));
@@ -355,7 +378,8 @@ test('completion: source-backed instruction correction retains requests, permiss
   assert.equal(context.paginationRequired,true);assert.ok(passage);
   return aiResponse({items:[{index:1,detail:'Read project issue titles. Repeat with the next page number until the issues array is empty. Boundary check: inspect the grant and outgoing request log; never write.',doneWhen:'Every returned issue title is collected and the final response has an empty issues array.',citations:{primary:context.documents.flatMap((d:any)=>d.passages).find((x:any)=>x.citable&&x.text.includes('issues:read permission'))!.id,secondary:passage.id,tertiary:''}}]});
  },()=>{});
- assert.equal(calls,1);assert.deepEqual(p,before);assert.deepEqual(corrected.findings,before.findings);assert.deepEqual(corrected.coverage,before.coverage);assert.deepEqual(corrected.steps[0],before.steps[0]);assert.deepEqual(corrected.steps[1].request,before.steps[1].request);assert.equal(corrected.steps[1].evidence.length,before.steps[1].evidence.length+1);assert.doesNotThrow(()=>validateInterpretation(corrected,sources,'Read issues including pagination.'));
+ assert.equal(calls,1);assert.deepEqual(p,before);assert.deepEqual(corrected.findings,before.findings);assert.deepEqual(corrected.coverage,before.coverage);assert.deepEqual(corrected.steps[0],before.steps[0]);assert.deepEqual(corrected.steps[1].request,before.steps[1].request);assert.equal(corrected.steps[1].evidence.length,before.steps[1].evidence.length+1);assert.throws(()=>validateInterpretation(corrected,sources,'Read issues including pagination.'),/both the initial/);
+ const paginated=structuredClone(corrected);paginated.steps.push({...corrected.steps[1],id:'next-page',dependsOn:['read-test'],request:{...corrected.steps[1].request!,example:"curl 'https://api.acme.com/issues?page=2' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}});assert.doesNotThrow(()=>validateInterpretation(paginated,sources,'Read issues including pagination.'));
 });
 test('completion: instance URL inputs have one HTTPS scheme and retain their documented route',async()=>{
  const {completeRequestExamples}=await import('../lib/live-guide/request-examples.ts');
@@ -428,7 +452,7 @@ test('completion: shell variable inputs are normalized before actual request gro
 });
 test('completion: returned next-link requests retain grounding and input provenance',async()=>{
  const p=value();p.steps[1].request={method:'GET',endpoint:'/issues',example:"curl '<NEXT_PAGE_URL>' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};p.steps[1].detail='Follow the next Link URL unchanged until no next link is returned. Boundary check: inspect the actual grant and outgoing GET requests.';p.steps[1].evidence=[...ev,{sourceId:'s1',quote:'Follow the Link header next URL until it is absent.'}];const source=[{...docs[0],text:docs[0].text+'\nFollow the Link header next URL until it is absent.'}];
- const fixed=validateInterpretation(p,source,'Read issues including pagination.');const {inspectHandoff,paginationHandoff}=await import('../scripts/inspect-handoff.mts');const requests=inspectHandoff(fixed);assert.deepEqual(requests[0].errors,[]);assert.equal(requests[0].stub.url,'https://instance.example/issues?page=2');assert.ok(paginationHandoff(fixed,requests));assert.ok(fixed.steps[1].fields!.some(f=>/Next-page URL/.test(f)));
+ p.steps.splice(1,0,{...value().steps[1],id:'first-page'});p.steps[2].dependsOn=['first-page'];const fixed=validateInterpretation(p,source,'Read issues including pagination.');const {inspectHandoff,paginationHandoff}=await import('../scripts/inspect-handoff.mts');const requests=inspectHandoff(fixed);assert.deepEqual(requests[0].errors,[]);assert.equal(requests[1].stub.url,'https://instance.example/issues?page=2');assert.ok(paginationHandoff(fixed,requests));assert.ok(fixed.steps[2].fields!.some(f=>/Next-page URL/.test(f)));
  assert.throws(()=>validateInterpretation({...p,steps:p.steps.map(s=>({...s,evidence:ev}))},docs,'Read issues including pagination.'),/without documented next-link/);
 });
 test('completion: escaped markup links cannot become malformed public documentation paths',()=>{
@@ -511,9 +535,9 @@ test('completion: independent review distinguishes named broad default scopes fr
 
 
 test('completion: named fact and step contracts retain all actions and reuse accepted facts for a request correction',async()=>{
- const {factsSchema,stepsSchema}=await import('../lib/live-guide/plan-parts.ts');const template=wire(value()),slots=(e:any[])=>({primary:e[0].passageId,secondary:e[1]?.passageId||'',tertiary:e[2]?.passageId||''});
+ const {factsSchema,stepsSchemaForRequest}=await import('../lib/live-guide/plan-parts.ts');const template=wire(value()),slots=(e:any[])=>({primary:e[0].passageId,secondary:e[1]?.passageId||'',tertiary:e[2]?.passageId||''});
  const facts={accessModel:'oauth',oauthSupport:'documented',summary:'Read project issues with the documented grant.',findings:template.findings.map(f=>({...f,evidence:slots(f.evidence as any[])})),coverage:template.coverage.map(c=>({...c,evidence:slots(c.evidence as any[])})),unknowns:[],researchNeeded:[]};
- let factCalls=0,stepCalls=0;const result=await interpretEvidence(run().guide.input,docs,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));if(body.system.includes('FACTS STAGE')){factCalls++;assert.deepEqual(body.output_config.format.schema,factsSchema);return aiResponse(facts);}assert.ok(body.system.includes('STEPS STAGE'));assert.deepEqual(body.output_config.format.schema,stepsSchema);const context=JSON.parse(body.messages[0].content);assert.equal(context.verifiedFacts.findings[1].scope,'issues:read');stepCalls++;const steps=template.steps.map(s=>({...s,evidence:slots(s.evidence as any[])}));if(stepCalls===1)steps[1].request={...steps[1].request!,endpoint:'/undocumented',example:"curl 'https://api.acme.com/undocumented' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};else assert.match(context.repairFeedback.join(' '),/route template is absent/);return aiResponse({steps,blockers:[]});},[],{final:true,intent:{requestedActions:value().requestedActions,prohibitions:value().prohibitions}});
+ let factCalls=0,stepCalls=0;const result=await interpretEvidence(run().guide.input,docs,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body));if(body.system.includes('FACTS STAGE')){factCalls++;assert.deepEqual(body.output_config.format.schema,factsSchema);return aiResponse(facts);}assert.ok(body.system.includes('STEPS STAGE'));assert.deepEqual(body.output_config.format.schema,stepsSchemaForRequest(false));const context=JSON.parse(body.messages[0].content);assert.equal(context.verifiedFacts.findings[1].scope,'issues:read');stepCalls++;const steps=template.steps.map(s=>({...s,evidence:slots(s.evidence as any[])}));if(stepCalls===1)steps[1].request={...steps[1].request!,endpoint:'/undocumented',example:"curl 'https://api.acme.com/undocumented' -H 'Authorization: Bearer <ACCESS_TOKEN>'"};else assert.match(context.repairFeedback.join(' '),/route template is absent/);return aiResponse({steps,blockers:[]});},[],{final:true,intent:{requestedActions:value().requestedActions,prohibitions:value().prohibitions}});
  assert.equal(result.mode,'interpreted');assert.equal(factCalls,1);assert.equal(stepCalls,2);assert.equal(result.telemetry.attempts,3);assert.deepEqual(result.value.requestedActions,value().requestedActions.map(a=>({...a,category:'resource'})));assert.deepEqual(result.value.coverage[0].permissions,['issues:read']);assert.deepEqual(result.value.findings[1].evidence,ev);assert.equal(result.value.steps[1].request!.endpoint,'/issues');
 });
 
@@ -668,7 +692,7 @@ test('completion: long combined references retain actual response fields within 
 });
 
 test('completion: long independent-review text is corrected without changing its rejection',async()=>{
- const p=value();let calls=0;const result=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{calls++;const body=JSON.parse(String(init?.body));if(body.system.startsWith('Independently'))return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'unresolved',reason:'The requested field is not documented. '.repeat(18)}]});return aiResponse({values:JSON.parse(body.messages[0].content).map(()=> 'The requested response field is not documented; retain the access gap.')});},docs);
+ const p=value();let calls=0;const result=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{calls++;const body=JSON.parse(String(init?.body));if(body.system.startsWith('Independently'))return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'unresolved',reason:'The requested field is not documented. '.repeat(36)}]});return aiResponse({values:JSON.parse(body.messages[0].content).map(()=> 'The requested response field is not documented; retain the access gap.')});},docs);
  assert.equal(calls,2);assert.equal(result.value.coverage[0].status,'unresolved');assert.match(result.value.coverage[0].reason,/retain the access gap/);assert.equal(result.telemetry.attempts,2);assert.ok(result.value.coverage[0].reason.length<=400);
 });
 

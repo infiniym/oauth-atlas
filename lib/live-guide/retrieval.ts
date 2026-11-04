@@ -4,6 +4,7 @@ import { normalizeText, onProvider, publicUrl } from './contracts.ts';
 import type { Bindings, Document, GuideInput, Progress, Research } from './contracts.ts';
 import {resolveIntentAiConfig} from '../ai/config.ts';
 import {openApiText} from './openapi.ts';
+import {responseExamples} from './response-shapes.ts';
 
 type Page = { url: string; title: string; text: string; links: string[]; labels:Record<string,string> };
 type Fetcher = typeof fetch;
@@ -139,8 +140,10 @@ export function requestTerms(value:string,app=''):string[]{
 export function selectSourceText(text:string,useCase:string,limit=48000,app=''):string{
  if(text.length<=limit)return text;
  const terms=requestTerms(useCase,app);
- const lines=text.split('\n'),ranked=lines.map((s,i)=>({i,score:(/oauth|scope|permission|capabilit|authorization|redirect|client.secret/i.test(s)?3:0)+terms.filter(t=>s.toLowerCase().includes(t)).length*4+(/^(?:GET|POST|PATCH|DELETE) |--data|api\.[^ ]+\/|^query /.test(s)?4:0)})).sort((a,b)=>b.score-a.score);
+ const responseContext=responseExamples(text).join('\n');
+ const lines=(responseContext+'\n'+text).split('\n'),ranked=lines.map((s,i)=>({i,score:(/oauth|scope|permission|capabilit|authorization|redirect|client.secret/i.test(s)?3:0)+terms.filter(t=>s.toLowerCase().includes(t)).length*4+(/^(?:GET|POST|PATCH|DELETE) |--data|api\.[^ ]+\/|^query /.test(s)?4:0)})).sort((a,b)=>b.score-a.score);
  const selected=new Set<number>();let size=0;const add=(i:number)=>{if(i>=0&&i<lines.length&&!selected.has(i)&&size+lines[i].length<limit){selected.add(i);size+=lines[i].length+1;}};
+ for(const {i} of ranked.filter(({i})=>lines[i].startsWith('Response JSON paths for ')&&terms.some(term=>lines[i].toLowerCase().includes(term))).slice(0,6))add(i);
  for(const {i} of ranked.filter(({i})=>/"(?:subject|title|name|content|results|_embedded)"\s*:/.test(lines[i])).slice(0,10))for(let n=i;n<Math.min(lines.length,i+5);n++)add(n);
  // Allocate space to actual requested routes before a large reference's
  // navigation, sync examples and unrelated schema mentions consume the budget.

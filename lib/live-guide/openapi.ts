@@ -1,3 +1,4 @@
+import {responsePaths} from './response-shapes.ts';
 // Render OpenAPI fields for the source-snapshot/citation pipeline. These are
 // schema values, not inferred provider answers.
 export function openApiText(body:string,useCase=''):{title:string;text:string}|null{
@@ -22,7 +23,7 @@ export function openApiText(body:string,useCase=''):{title:string;text:string}|n
  for(const p of [...item.parameters||[],...op.parameters||[]].map(p=>resolve(p)))lines.push('Parameter '+p.name+' in '+p.in+' ('+(p.type||p.schema?.type||'unspecified type')+', '+(p.required?'required':'optional')+'): '+(p.description||JSON.stringify(p.schema||{})));
  if(op.requestBody)lines.push('Request body: '+JSON.stringify(resolve(op.requestBody)));
  lines.push('Operation security: '+JSON.stringify(op.security||spec.security||[]));
- for(const [status,reference] of Object.entries(op.responses||{}).filter(([status])=>/^2/.test(status)) as [string,any][]){const r=resolve(reference);lines.push('Successful response '+status+': '+(r.description||''),JSON.stringify({headers:r.headers,schema:resolve(r.schema||r.content?.['application/json']?.schema)},null,2));}
+ for(const [status,reference] of Object.entries(op.responses||{}).filter(([status])=>/^2/.test(status)) as [string,any][]){const r=resolve(reference),schema=resolve(r.schema||r.content?.['application/json']?.schema);lines.push('Successful response '+status+': '+(r.description||''),...responsePaths(schema,true).map(field=>'Response JSON paths for '+method.toUpperCase()+' '+base+path+': '+field),JSON.stringify({headers:r.headers,schema},null,2));}
  }
  // The compact index supplements the actual operation definitions. It must not
  // push the requested parameters and response schema beyond extraction limits.
