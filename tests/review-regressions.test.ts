@@ -17,7 +17,7 @@ import {exportPlan} from '../lib/plan/export.ts';
 import {interpret} from '../lib/advisor/intent-parser.ts';
 import {researchRoute} from '../lib/plan/routing.ts';
 import type {Store} from '../lib/live-guide/http.ts';
-import {endpointEvidence,unfilteredQueryRequirements} from '../lib/live-guide/grounding.ts';
+import {endpointEvidence,unfilteredQueryRequirements,responseFields} from '../lib/live-guide/grounding.ts';
 import {sourceKey,linkScore,selectSourceText,parsePage} from '../lib/live-guide/retrieval.ts';
 import {repairLongFields,planningDocuments,completeTestInstructions} from '../lib/live-guide/interpretation.ts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
@@ -54,6 +54,16 @@ test('completion: a supported permission verdict cannot override an unresolved r
  const result=await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async()=>aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',missingFact:'none',reason:'The grant supports reading, but the scalar extraction is absent.',checks:{setup:true,grant:true,request:true,response:false,pagination:true,boundary:true}}]}),docs);
  assert.equal(result.value.coverage[0].status,'unresolved');
  assert.equal(result.value.coverage[0].missingFact,'response');
+});
+test('completion: a linked matching object reference completes a partial operation response sample',()=>{
+ const objectUrl='https://acmetasks.example.com/reference/document';
+ const operation={...docs[0],text:'GET /documents/{id}\nResponse:\n{"object":"document","id":"sample"}',links:[objectUrl]};
+ const reference={...docs[0],id:'s2',url:objectUrl,text:'Document object\n{ "object": "document", "properties": { "Heading": { "type": "title", "title": [{ "plain_text": "Example" }] } } }'};
+ assert.ok(responseFields('/documents/{id}',[operation,reference]).some(field=>field.path==='$.properties.Heading.title[].plain_text'));
+ assert.ok(!responseFields('/documents/{id}',[{...operation,links:[]},reference]).some(field=>field.path.startsWith('$.properties')));
+ assert.ok(!responseFields('/documents/{id}',[operation,{...reference,text:reference.text.replace('"document"','"unrelated"')}]).some(field=>field.path.startsWith('$.properties')));
+ const many={...operation,text:operation.text+'\nGET /other\nResponse:\n{"object":"unrelated"}'};
+ assert.ok(!responseFields('/documents/{id}',[many,{...reference,text:reference.text.replace('"document"','"unrelated"')}]).some(field=>field.path.startsWith('$.properties')));
 });
 test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
  const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[

@@ -1,5 +1,6 @@
 import {onProvider,type Document} from './contracts.ts';
 import {sourceKey} from './retrieval.ts';
+import {jsonExampleAt,responsePaths,responseSamples,responseExamples} from './response-shapes.ts';
 
 const routeKey=(s:string)=>decodeURIComponent(s).replace(/\{\?[^}]+\}/g,'').replace(/\{[^}]+\}|<[^>]+>|:[a-zA-Z_][\w-]*/g,'{input}').replace(/\/$/,'');
 
@@ -25,13 +26,28 @@ export function unfilteredQueryRequirements(endpoint:string,documents:Document[]
 
 export function responseFields(endpoint:string,documents:Document[]):{sourceId:string;path:string;type:string}[]{
  let path:string;try{path=routeKey(new URL(endpoint,'https://instance.invalid').pathname);}catch{return [];}
- return documents.flatMap(document=>document.text.split('\n').flatMap(line=>{
+ const operationDocuments=new Set<string>();
+ const fields=documents.flatMap(document=>(document.text.includes('Response JSON paths for ')?document.text:responseExamples(document.text).join('\n')+'\n'+document.text).split('\n').flatMap(line=>{
   const field=line.match(/^Response JSON paths for (.+): (\$[^ ]*) \(([^)]+)\)$/);
   if(!field)return [];
   const target=field[1].match(/https:\/\/[^\s"']+|\/(?:[\w{}:.-]+\/)*[\w{}:.-]+/)?.[0];
   if(!target)return [];
-  try{return routeKey(new URL(target,'https://instance.invalid').pathname)===path?[{sourceId:document.id,path:field[2],type:field[3]}]:[];}catch{return [];}
+  try{if(routeKey(new URL(target,'https://instance.invalid').pathname)!==path)return [];operationDocuments.add(document.id);return [{sourceId:document.id,path:field[2],type:field[3]}];}catch{return [];}
  }));
+ // Small response samples are not closed schemas. A linked object reference
+ // can supply the rest of that same response when its discriminator matches.
+ // Both the explicit reference link and matching literal type are required.
+ for(const operation of documents.filter(d=>operationDocuments.has(d.id))){
+  const types=responseSamples(operation.text).filter(sample=>{const target=sample.operation.match(/https:\/\/[^\s"']+|\/(?:[\w{}:.-]+\/)*[\w{}:.-]+/)?.[0];try{return !!target&&routeKey(new URL(target,'https://instance.invalid').pathname)===path;}catch{return false;}}).flatMap(({value})=>value&&typeof value==='object'&&!Array.isArray(value)?Object.entries(value).filter(([key,value])=>['object','_type','__typename'].includes(key)&&typeof value==='string').map(([key,value])=>({key,value})):[]);
+  for(const reference of documents.filter(d=>d.id!==operation.id&&operation.links?.some(link=>sourceKey(link.split('#')[0])===sourceKey(d.url))&&onProvider(d.url,operation.url))){
+   for(const start of [...reference.text.matchAll(/(?:^|\n)\s*(\{)/g)].slice(0,8)){
+    const at=start.index!+start[0].lastIndexOf('{'),sample=jsonExampleAt(reference.text,at) as Record<string,unknown>|undefined;
+    if(!sample||Array.isArray(sample)||!types.some(type=>sample[type.key]===type.value))continue;
+    for(const field of responsePaths(sample)){const match=field.match(/^(\$[^ ]*) \(([^)]+)\)$/);if(match)fields.push({sourceId:reference.id,path:match[1],type:match[2]});}
+   }
+  }
+ }
+ return fields;
 }
 
 // General pagination parameters apply only when the operation documents
