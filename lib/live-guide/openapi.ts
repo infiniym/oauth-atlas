@@ -1,8 +1,8 @@
 import {responsePaths} from './response-shapes.ts';
 // Render OpenAPI fields for the source-snapshot/citation pipeline. These are
 // schema values, not inferred provider answers.
-export function openApiText(body:string,useCase=''):{title:string;text:string}|null{
- let spec:any;try{spec=JSON.parse(body);}catch{return null;}
+export function openApiText(body:string|Record<string,unknown>,useCase=''):{title:string;text:string}|null{
+ let spec:any;try{spec=typeof body==='string'?JSON.parse(body):body;}catch{return null;}
  if(!spec?.paths||!spec.openapi&&!spec.swagger)return null;
  const title=spec.info?.title||'OpenAPI reference',base=spec.basePath||'';
  const resolve=(value:any,depth=0,seen=new Set<string>()):any=>{
@@ -20,7 +20,7 @@ export function openApiText(body:string,useCase=''):{title:string;text:string}|n
  operations.sort((a,b)=>rank(b)-rank(a));
  for(const [path,method,op,item] of operations.slice(0,12)){
  lines.push('\n## '+method.toUpperCase()+' '+base+path+' | '+(op.summary||op.operationId||''),op.description||'');
- for(const p of [...item.parameters||[],...op.parameters||[]].map(p=>resolve(p)))lines.push('Parameter '+p.name+' in '+p.in+' ('+(p.type||p.schema?.type||'unspecified type')+', '+(p.required?'required':'optional')+'): '+(p.description||JSON.stringify(p.schema||{})));
+ for(const p of [...item.parameters||[],...op.parameters||[]].map(p=>resolve(p)))lines.push('Parameter '+p.name+' in '+p.in+' ('+(p.type||p.schema?.type||'unspecified type')+', '+(p.required?'required':'optional')+'): '+(p.description||'')+' Schema: '+JSON.stringify(resolve(p.schema||{type:p.type,...(p.enum?{enum:p.enum}:{}),...(p.default!==undefined?{default:p.default}:{})})));
  if(op.requestBody)lines.push('Request body: '+JSON.stringify(resolve(op.requestBody)));
  lines.push('Operation security: '+JSON.stringify(op.security||spec.security||[]));
  for(const [status,reference] of Object.entries(op.responses||{}).filter(([status])=>/^2/.test(status)) as [string,any][]){const r=resolve(reference),schema=resolve(r.schema||r.content?.['application/json']?.schema);lines.push('Successful response '+status+': '+(r.description||''),...responsePaths(schema,true).map(field=>'Response JSON paths for '+method.toUpperCase()+' '+base+path+': '+field),JSON.stringify({headers:r.headers,schema},null,2));}

@@ -5,6 +5,7 @@ import type { Bindings, Document, GuideInput, Progress, Research } from './contr
 import {resolveIntentAiConfig} from '../ai/config.ts';
 import {openApiText} from './openapi.ts';
 import {responseExamples} from './response-shapes.ts';
+import {parseDocument} from 'yaml';
 
 type Page = { url: string; title: string; text: string; links: string[]; labels:Record<string,string>;navigationOnly?:boolean };
 type Fetcher = typeof fetch;
@@ -72,7 +73,7 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal, onRetry?:(ur
       await check(url.hostname);
       const result=await transientRetry(url.href,async()=>{
       const deadline=AbortSignal.any([signal,AbortSignal.timeout(8000)]);
-      const res = await fetcher(url.href, { redirect: 'manual', signal: deadline, headers: { accept: 'text/html,text/markdown,text/plain', 'user-agent': 'OAuthLaunchGuide/1.0 public documentation reader' } });
+      const res = await fetcher(url.href, { redirect: 'manual', signal: deadline, headers: { accept: 'text/markdown,text/html;q=0.9,text/plain;q=0.8', 'user-agent': 'OAuthLaunchGuide/1.0 public documentation reader' } });
       if ([301,302,303,307,308].includes(res.status)) {
         const location = res.headers.get('location'); await res.body?.cancel();
         if (!location) throw new Error('Incomplete source redirect.');return {redirect:location};
@@ -96,6 +97,17 @@ export function parsePage(url: string, body: string,useCase=''): Page {
    return {url,title:'Documentation sitemap',text:'Published documentation navigation links.',links,labels:{},navigationOnly:true};
   }
   const api=openApiText(body,useCase);if(api)return {url,title:api.title,text:api.text,links:[],labels:{}};
+  // Native Markdown often carries the full operation schema that the HTML
+  // view flattens or hides. Preserve the original and add a parsed projection.
+  body=body.replace(/(^|\n)(`{3,}|~{3,})(json|ya?ml)[^\n]*\n([\s\S]*?)\n\2(?=\s*(?:\n|$))/g,(original,prefix,fence,language,source)=>{
+   if(!/(?:^|\n)\s*(?:openapi|swagger):|"(?:openapi|swagger)"\s*:/.test(source))return original;
+   try{
+    const document=parseDocument(source,{schema:'core',customTags:[],uniqueKeys:true,stringKeys:true});
+    if(document.errors.length||document.warnings.some(warning=>warning.code==='TAG_RESOLVE_FAILED'))return original;
+    const value=document.toJS({maxAliasCount:0}),rendered=openApiText(value,useCase);
+    return rendered?prefix+'[Extracted official OpenAPI fields]\n'+rendered.text+'\n[Original schema excerpt]\n'+fence+language+'\n'+source+'\n'+fence:original;
+   }catch{return original;}
+  });
   // Metadata discovery documents are often minified JSON. Preserve the fields
   // as complete, bounded passages instead of one uncitable token.
   try{
@@ -112,12 +124,13 @@ export function parsePage(url: string, body: string,useCase=''): Page {
     body=fields.join('\n')+'\n'+JSON.stringify(json,null,2);
    }
   }catch{}
-  const html = /<(?:html|title|main|body)\b/i.test(body);
-  const title = decode(body.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || body.match(/^#\s+(.+)$/m)?.[1] || new URL(url).hostname).replace(/<[^>]*>/g,'').slice(0,160);
+  const html = /^\s*<(?:!doctype|html|head|title|body|main|article|script|style|div|p|section)(?:\s|>)/i.test(body);
+  const title = decode((html?body.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]:undefined) || body.match(/^#\s+(.+)$/m)?.[1] || new URL(url).hostname).replace(/<[^>]*>/g,'').slice(0,160);
   const links: string[] = [];
   const labels:Record<string,string>={};
   const navigation=html?body.replace(/<(script|style|svg)\b[^>]*>[\s\S]*?<\/\1>/gi,''):body;
   const add = (href: string) => { try { const cleaned=decode(href);if(/[\\"<>]/.test(cleaned))return;links.push(publicUrl(new URL(cleaned,url).href).href); } catch { /* Skip unsafe/non-web links. */ } };
+  for(const match of body.matchAll(/https:\/\/[^\s<>()[\]"'`]+\/llms(?:-full)?\.txt(?:\?[^\s<>()[\]"'`]+)?/g))add(match[0]);
   for (const m of navigation.matchAll(/\bhref\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s"'`=<>]+))/gi)) add(m[1]||m[2]||m[3]);
   if(/swagger-ui|SwaggerUIBundle/i.test(body))for(const m of body.matchAll(/(?:data-source\s*=|\burl\s*:)\s*["']([^"']+)["']/gi))add(m[1]);
   for (const m of body.matchAll(/\[[^\]]*\]\(([^\s)]+)\)/g)) add(m[1]);
@@ -431,7 +444,8 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const priority=[...missing.filter(m=>m.topic==='registration').flatMap(m=>m.url?[m.url]:[]),...(exactResource&&resourceRead.length<2?[exactResource[0]]:[]),...[...selectedRequests].filter(l=>!attempted.has(sourceKey(l))),...(schema?[schema[0]]:[]),...(pagination?[pagination[0]]:[]),...[...selectedSetup].filter(l=>!attempted.has(sourceKey(l))),...missing.filter(m=>m.topic==='permissions').flatMap(m=>m.url?[m.url]:[]),...(version?[version[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...(overview?[overview[0]]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration'&&m.topic!=='permissions').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
       const indexChildren=page.navigationOnly?page.links.filter(link=>allowed(link)&&/\.xml(?:\?|$)/i.test(link)).slice(0,2):[];
-      const promoted=[...new Set([...indexChildren,...priority])];
+      const publishedIndices=page.links.filter(link=>allowed(link)&&/\/llms(?:-full)?\.txt(?:\?|$)/.test(link)&&!attempted.has(sourceKey(link)));
+      const promoted=[...new Set([...publishedIndices,...indexChildren,...priority])];
       for(const link of promoted){const at=queue.indexOf(link);if(at>=0)queue.splice(at,1);}
       const originIndices=queue.filter(link=>/^\/(?:llms\.txt|sitemap\.xml)$/.test(new URL(link).pathname)&&new URL(seed).pathname==='/');
       queue.unshift(...promoted);for(const indexUrl of originIndices.reverse()){queue.splice(queue.indexOf(indexUrl),1);queue.unshift(indexUrl);}

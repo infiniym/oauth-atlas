@@ -1,4 +1,7 @@
 import type {ProviderId} from '../advisor/types.ts';
+import type {LiveGuide} from '../live-guide/contracts.ts';
+import {guideReadiness} from '../live-guide/readiness.ts';
+export function researchSharePath(guide:LiveGuide,hasFrozenPlan=false):string{return hasFrozenPlan||guideReadiness(guide)==='usable-guide'?'/plan/'+guide.id:'/live-guide?id='+guide.id;}
 export function reviewedProvider(value:string):ProviderId|null{
   const normalized=value.trim().toLowerCase().replace(/[\s_-]/g,'');
   if(['gmail','googlemail','slack','github'].includes(normalized))return normalized==='googlemail'?'gmail':normalized as ProviderId;

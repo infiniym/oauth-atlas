@@ -7,7 +7,7 @@ import {emptyAssessment} from '../lib/advisor/providers.ts';
 import {recommend} from '../lib/advisor/rules-engine.ts';
 import {reviewedPlan,researchedPlan,referencePlan} from '../lib/plan/adapters.ts';
 import {exportPlan} from '../lib/plan/export.ts';
-import {reviewedProvider,researchRoute} from '../lib/plan/routing.ts';
+import {reviewedProvider,researchRoute,researchSharePath} from '../lib/plan/routing.ts';
 import {saveReviewedPlan,readPlan} from '../lib/plan/storage.ts';
 import {resolveIntentAiConfig} from '../lib/ai/config.ts';
 import type {Store} from '../lib/live-guide/http.ts';
@@ -64,9 +64,12 @@ test('incomplete or invalid inputs cannot be saved as firm reviewed plans',async
 });
 test('only usable live guides become common plans and already frozen links remain immutable',async()=>{
  const {db,rows}=memory(),g=researched();rows.set(g.id,JSON.stringify({guide:g,documents:[]}));assert.equal(await readPlan(g.id,db),null);
+ assert.equal(researchSharePath(g),'/live-guide?id='+g.id);
  g.requestedActions=[{id:'read',title:'Read tasks',operation:'read',category:'resource'}];g.coverage[0]={...g.coverage[0],actionId:'read',support:'reviewed'};g.steps[1]={...g.steps[1],id:'read-test',testKind:'action',actionIds:['read'],request:{method:'GET',endpoint:'/tasks',example:"curl 'https://api.acme.com/tasks' -H 'Authorization: Bearer <ACCESS_TOKEN>'"}};
  rows.set(g.id,JSON.stringify({guide:g,documents:[]}));const p=await readPlan(g.id,db);assert.equal(p!.provider,'Tasks');assert.equal(p!.basis,'Live research');
+ assert.equal(researchSharePath(g),'/plan/'+g.id);
  const before=JSON.stringify(p);g.coverage[0].status='unresolved';rows.set(g.id,JSON.stringify({guide:g,documents:[]}));assert.equal(JSON.stringify(await readPlan(g.id,db)),before);
+ assert.equal(researchSharePath(g,true),'/plan/'+g.id);
  const incomplete={...g,id:'lg-'+crypto.randomUUID(),engine:{model:'fixture',attempts:1,elapsedMs:1,outcome:'accepted',thinking:'disabled',effort:'low'}};rows.set(incomplete.id,JSON.stringify({guide:incomplete,documents:[]}));assert.equal(await readPlan(incomplete.id,db),null);assert.equal(await readPlan('lg-'+crypto.randomUUID(),db),null);
 });
 test('provider routing recognises reviewed providers without capturing unfamiliar names or lookalike domains',()=>{

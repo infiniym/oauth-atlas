@@ -6,7 +6,7 @@ import type {GuideJob} from '@/lib/live-guide/jobs';
 import type {LaunchPlan} from '@/lib/plan/types';
 import {monitorJob} from '@/lib/live-guide/job-client';
 import {researchedPlan} from '@/lib/plan/adapters';
-import {reviewedProvider} from '@/lib/plan/routing';
+import {reviewedProvider,researchSharePath} from '@/lib/plan/routing';
 import AppFrame from '@/components/app-frame';
 import LaunchPlanView from '@/components/launch-plan';
 const initial={app:'',website:'',useCase:'',audience:'unknown' as GuideInput['audience']};
@@ -77,6 +77,6 @@ export default function ResearchWorkspace(){
   {logs.length>0&&<details className="research-run"><summary>Completed work and current stage<ChevronDown size={14}/></summary><ol>{logs.map((log,i)=><li key={i}><span aria-label={log.status==='warning'?'Needs attention':log.status==='working'?'In progress':'Completed'}>{log.status==='warning'?'!':log.status==='working'?'…':<Check size={15}/>}</span><div><strong>{log.stage}</strong><p>{log.detail}</p></div></li>)}</ol></details>}
   {!loading&&!busy&&!interrupted&&guide&&!confirming&&!editing&&guideFixesAvailable&&<div className="advisor-notice"><p>This saved version has guide updates available. Apply them while keeping its facts and answers.</p><button className="secondary" onClick={()=>void startJob({...guide.input,previousId:guide.id,resolution:{kind:'refresh',requestId:crypto.randomUUID()}})}>Apply guide fixes</button></div>}
   {!loading&&!busy&&!interrupted&&guide&&!confirming&&!editing&&guide.resultState==='research-failure'&&<div className="advisor-notice" role="status"><p>This guide has unresolved actions. The missing evidence or incomplete check is identified beside each affected test.</p></div>}
-  {!loading&&!busy&&!interrupted&&guide&&!confirming&&!editing&&<LaunchPlanView plan={plan||researchedPlan(guide)} onEdit={()=>{setJob(null);setEditing(true);}} onShare={()=>location.origin+'/plan/'+guide.id} onResolve={async resolution=>{await startJob({...guide.input,previousId:guide.id,resolution:{...resolution,requestId:crypto.randomUUID()}});}}/>}
+  {!loading&&!busy&&!interrupted&&guide&&!confirming&&!editing&&<LaunchPlanView plan={plan||researchedPlan(guide)} onEdit={()=>{setJob(null);setEditing(true);}} onShare={()=>location.origin+researchSharePath(guide,!!plan)} onResolve={async resolution=>{await startJob({...guide.input,previousId:guide.id,resolution:{...resolution,requestId:crypto.randomUUID()}});}}/>}
  </div></AppFrame>;
 }
