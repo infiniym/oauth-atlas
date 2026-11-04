@@ -94,6 +94,12 @@ test('completion: instance input normalization preserves strict route validation
  const normalized=validateInterpretation(p,[source]);assert.equal(normalized.steps[0].request?.endpoint,'/oauth/authorize?client_id=<CLIENT_ID>');
  p.steps[0].request!.endpoint='<INSTANCE_BASE_URL>/undocumented';assert.throws(()=>validateInterpretation(p,[source]),/not documented/);
 });
+test('completion: collection protocol evidence stays beside a long paginated operation reference',()=>{
+ const collection={...docs[0],id:'s2',url:'https://acmetasks.example.com/api/collections/',title:'Collections',text:'A collection wraps items in _embedded.elements and supplies total and nextByOffset for complete pagination.'};
+ const others=Array.from({length:10},(_,index)=>({...docs[0],id:'s'+(index+3),url:'https://acmetasks.example.com/api/endpoints/items-'+index,title:'Items reference',text:'GET /items retrieves item titles and content.'}));
+ const selected=planningDocuments([...docs,...others,collection],{app:'Acme',website:url,useCase:'Read item titles including pagination.',audience:'customers',answers:{}},{requestedActions:[{id:'read',title:'Read item titles',operation:'read'}],prohibitions:[]});
+ assert.ok(selected.some(document=>document.id==='s2'));assert.ok(selected.length<=8);
+});
 test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
  const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[
   'Pagination','Offset-based pagination. The default method.','Offset-based pagination','Parameter Description','page Page number.','Keyset-based pagination','Parameter Required Description','pagination yes keyset (enables keyset pagination).','per_page no Number of items per page.','The response mentions arbitrary and has a link to the next page.',
