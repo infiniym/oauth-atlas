@@ -5,9 +5,11 @@ export function responsePaths(value:unknown,schema=false):string[]{
  const walk=(node:any,path:string,depth:number)=>{
   if(depth>10||paths.size>=200)return;
   if(schema){
+   for(const key of ['oneOf','anyOf','allOf'])for(const branch of node?.[key]||[])walk(branch,path,depth+1);
    if(node?.properties)for(const [key,child] of Object.entries(node.properties))walk(child,path+'.'+key,depth+1);
    else if(node?.items)walk(node.items,path+'[]',depth+1);
    else if(node?.type)paths.add(path+' ('+node.type+')');
+   if(node?.additionalProperties&&typeof node.additionalProperties==='object')walk(node.additionalProperties,path+'.*',depth+1);
   }else if(Array.isArray(node)){
    if(path!=='$')paths.add(path+' (array)');
    for(const child of node.slice(0,3))walk(child,path+'[]',depth+1);

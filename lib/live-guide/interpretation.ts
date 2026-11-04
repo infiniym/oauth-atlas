@@ -205,7 +205,7 @@ For instance-specific or self-hosted APIs, use the documented relative API path 
 Length and item limits are mandatory: each evidence array has 1-3 passage references. Finding/step titles at most 120 characters; detail at most 800; appliesWhen and doneWhen at most 400. Each fields entry at most 100 characters, with at most eight inputs per step. Summary and recommendation at most 700; nextAction at most 400. Question id uses lowercase letters, digits and hyphens only (starts with a letter, at most 60 characters); prompt at most 200; why at most 300; each of 2-3 option labels at most 120. Each coverage reason at most 400 characters. Each unknown at most 400 characters. Prefer 1-2 short sentences per detail and 1-2 references per item. Avoid duplicating the same uncertainty in unknowns and blockers. Do not repeat the same facts in every step.
 A deadline to apply or submit is not provider waiting time. Provider-wait findings must cite a passage with a published applicable duration. If none exists, record the unknown rather than assuming zero wait. activeEffort is an explicitly labeled planning estimate: provide a broad range ONLY with assumptions grounded in documented steps; otherwise return empty strings. Do not estimate a calendar launch date. Unknown provider policy must remain in unknowns with a concrete verification action.
 Summary, recommendation and nextAction must follow from the cited findings. Never claim Composio supports this app; integration availability is checked separately. Output the required JSON only.`;
-export const PROMPT_VERSION = 'live-guide.44';
+export const PROMPT_VERSION = 'live-guide.45';
 
 function durations(text:string):string[] {
   const numbers:Record<string,number>={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
@@ -363,6 +363,10 @@ export function planningDocuments(documents:Document[],input:GuideInput,intent?:
  add(ranked.find(d=>requestTerms(input.useCase,input.app).some(t=>d.text.toLowerCase().includes(t))&&/empty (?:path|string)|root of (?:our|the|your|an?)|(?:subject|content).{0,60}(?:title|name)|(?:title|name).{0,60}(?:subject|content)/i.test(d.text)));
  if(/paginat|continuation|cursor/i.test(input.useCase))add(documents.find(d=>/paginat|\/collections(?:\/|$)/i.test(d.url))||documents.find(d=>/general.concepts|api\/(?:usage|rest)\/?$/i.test(d.url)));
  for(const action of (intent?.requestedActions||[]).filter(a=>a.operation!=='authorize'&&a.category!=='authorization'))for(const d of [...ranked].sort((a,b)=>resourceDocumentScore(b,action.title,input.app)-resourceDocumentScore(a,action.title,input.app)).slice(0,2))if(resourceDocumentScore(d,action.title,input.app)>20)add(d);
+ // A typed value can be defined on a linked object/property reference. Retain
+ // that dependency before unrelated operations and broad schema exports.
+ const operationLinks=new Set(chosen.flatMap(document=>document.links||[]));
+ for(const document of ranked.filter(d=>operationLinks.has(d.url)&&/propert|schema|objects?/i.test(new URL(d.url).pathname)&&requestTerms(input.useCase,input.app).some(term=>(d.url+' '+d.title).toLowerCase().includes(term))).slice(0,2))add(document);
  // Several operations can share a resource name. Retain retrieved operation
  // references before filling with object schemas or generic setup pages; a
  // per-action top-two cut can otherwise hide a distinct content/continuation API.
