@@ -6,7 +6,7 @@ import {resolveIntentAiConfig} from '../ai/config.ts';
 import {openApiText} from './openapi.ts';
 import {responseExamples} from './response-shapes.ts';
 
-type Page = { url: string; title: string; text: string; links: string[]; labels:Record<string,string> };
+type Page = { url: string; title: string; text: string; links: string[]; labels:Record<string,string>;navigationOnly?:boolean };
 type Fetcher = typeof fetch;
 async function chooseNavigation(input:GuideInput,links:[string,string][],bindings:Bindings,signal:AbortSignal,fetcher:Fetcher,alreadyRead:{url:string;title:string}[]=[]):Promise<{requests:string[];setup:string[];context:string[]}>{
  const empty={requests:[],setup:[],context:[]};const config=resolveIntentAiConfig(bindings);if(!config.key||config.provider!=='anthropic'||links.length<20)return empty;
@@ -78,7 +78,7 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal, onRetry?:(ur
         if (!location) throw new Error('Incomplete source redirect.');return {redirect:location};
       }
       if (!res.ok) { await res.body?.cancel(); throw new Error(`Source returned HTTP ${res.status}.`); }
-      if (!/text\/(?:html|plain|markdown)|application\/(?:json|xhtml\+xml)/i.test(res.headers.get('content-type') || 'text/plain')) { await res.body?.cancel(); throw new Error('Use a public HTML or Markdown documentation page.'); }
+      if (!/text\/(?:html|plain|markdown|xml)|application\/(?:json|xml|xhtml\+xml)/i.test(res.headers.get('content-type') || 'text/plain')) { await res.body?.cancel(); throw new Error('Use a public HTML or Markdown documentation page.'); }
       try{return {url:url.href,body:await boundedText(res,deadline,8_000_000)};}catch(error){if(error instanceof Error&&error.message==='Source response is too large.')throw new ResearchFailure({category:'page-too-large',url:url.href,message:'This documentation exceeds the 8 MB reading limit. Add a smaller official API-reference or Markdown page; retrying this page will not make it smaller.'});throw error;}
       });
       if('redirect' in result){url=publicUrl(new URL(result.redirect!,url).href);continue;}
@@ -89,6 +89,12 @@ export function publicReader(fetcher: Fetcher, signal: AbortSignal, onRetry?:(ur
 }
 const decode = (s: string) => s.replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(Math.min(parseInt(n,16),0x10ffff))).replace(/&#(\d+);/g,(_,n) => String.fromCodePoint(Math.min(Number(n),0x10ffff)));
 export function parsePage(url: string, body: string,useCase=''): Page {
+  if(/<(?:urlset|sitemapindex)\b/i.test(body)){
+   const links=[...new Set([...body.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)].flatMap(match=>{try{return [publicUrl(decode(match[1])).href];}catch{return [];}}))];
+   // Sitemaps supply navigation only. Their URLs never establish an OAuth
+   // fact, and XML entities are not expanded or executed.
+   return {url,title:'Documentation sitemap',text:'Published documentation navigation links.',links,labels:{},navigationOnly:true};
+  }
   const api=openApiText(body,useCase);if(api)return {url,title:api.title,text:api.text,links:[],labels:{}};
   // Metadata discovery documents are often minified JSON. Preserve the fields
   // as complete, bounded passages instead of one uncitable token.
@@ -301,7 +307,7 @@ function requestReferenceScore(url:string,label:string,input:GuideInput):number{
  return actionScore+(direct?45:0);
 }
 export async function retrieve(input: GuideInput, bindings: Bindings, emit: (event: Progress) => void, outer: AbortSignal, fetcher: Fetcher = fetch, options:{previous?:Research;topics?:ResearchTopic[];urls?:string[];query?:string;refresh?:boolean;emptyField?:string;readOne?:boolean}={}): Promise<Research> {
-  const signal = AbortSignal.any([outer, AbortSignal.timeout(options.previous?18000:38000)]);
+  const signal = AbortSignal.any([outer, AbortSignal.timeout(options.previous?.documents.length?18000:38000)]);
   const reader = publicReader(fetcher, signal,url=>emit({stage:'Retrying source',detail:'A temporary network failure interrupted '+new URL(url).hostname+'. Retrying that same address once.',status:'working'})); const warnings: string[] = [];const failures:Failure[]=[];
   let seed = input.documentationUrl||options.previous?.website||input.website;
   const firecrawl = async (path: string, body: object) => {
@@ -380,8 +386,11 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       if(documentationScore(page.url,page.title,input)<-60)throw new Error('This source is outside the requested product area or is a sign-in page.');
       if(!allowed(page.url))throw new Error('This source redirects outside the selected documentation product.');
       rememberArea(page.url);
-      const index = /\/llms(?:-full)?\.txt(?:\?|$)/.test(page.url);
+      const index = !!page.navigationOnly||/\/llms(?:-full)?\.txt(?:\?|$)/.test(page.url);
       if ((page.text.length < 80 && !page.links.length) || (index && !page.links.length) || /just a moment|verify.*human|access denied|checking your browser/i.test(page.title)) throw new Error('Page requires browser verification or contains no readable documentation.');
+      // At a documentation origin, consult the standard published link index
+      // before a broad site's navigation consumes the source budget.
+      if(!previous.length&&new URL(page.url).pathname==='/')for(const filename of ['sitemap.xml','llms.txt']){const indexUrl=new URL('/'+filename,page.url).href;if(!attempted.has(sourceKey(indexUrl))&&!queue.includes(indexUrl))queue.unshift(indexUrl);}
       const shortIndex=page.text.length<600&&page.links.length>=20&&!/client[_ -]?(?:id|secret)|redirect[_ -]?uri|required scope|scope.{0,20}allows|(?:GET|POST) \/|access token/i.test(page.text);
       const substantive=!index&&!shortIndex&&page.text.length>=80;
       if(!substantive&&!index&&!previous.length){for(const indexUrl of [new URL('/llms.txt',seed).href,new URL(new URL(seed).pathname.replace(/\/$/,'')+'/llms.txt',seed).href])if(!attempted.has(sourceKey(indexUrl))&&!queue.includes(indexUrl))queue.push(indexUrl);}
@@ -416,9 +425,11 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const exactResource=ranked.filter(([url,label])=>requestReferenceScore(url,label,input)>0).sort((a,b)=>requestReferenceScore(...b,input)-requestReferenceScore(...a,input))[0];
       const priority=[...missing.filter(m=>m.topic==='registration').flatMap(m=>m.url?[m.url]:[]),...(exactResource&&resourceRead.length<2?[exactResource[0]]:[]),...[...selectedRequests].filter(l=>!attempted.has(sourceKey(l))),...(schema?[schema[0]]:[]),...(pagination?[pagination[0]]:[]),...[...selectedSetup].filter(l=>!attempted.has(sourceKey(l))),...missing.filter(m=>m.topic==='permissions').flatMap(m=>m.url?[m.url]:[]),...(version?[version[0]]:[]),...[...selectedTargets].filter(l=>!attempted.has(sourceKey(l))),...(overview?[overview[0]]:[]),...(resource?[resource[0]]:[]),...missing.filter(m=>m.topic!=='registration'&&m.topic!=='permissions').flatMap(m=>m.url?[m.url]:[]),...(reference?[reference[0]]:[])];
       // Re-rank after each source so a missing permissions/distribution topic wins over generic docs.
-      const promoted=[...new Set(priority)];
+      const indexChildren=page.navigationOnly?page.links.filter(link=>allowed(link)&&/\.xml(?:\?|$)/i.test(link)).slice(0,2):[];
+      const promoted=[...new Set([...indexChildren,...priority])];
       for(const link of promoted){const at=queue.indexOf(link);if(at>=0)queue.splice(at,1);}
-      queue.unshift(...promoted);
+      const originIndices=queue.filter(link=>/^\/(?:llms\.txt|sitemap\.xml)$/.test(new URL(link).pathname)&&new URL(seed).pathname==='/');
+      queue.unshift(...promoted);for(const indexUrl of originIndices.reverse()){queue.splice(queue.indexOf(indexUrl),1);queue.unshift(indexUrl);}
       for(const [link] of ranked.slice(0,8))if(!queue.includes(link))queue.push(link);
       emit({stage:'Source read',detail:page.title+(index?' · documentation index':''),status:'done'});
       if(substantive&&input.documentationUrl&&options.urls?.includes(input.documentationUrl))break;
