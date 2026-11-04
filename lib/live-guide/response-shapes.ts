@@ -8,8 +8,13 @@ export function responsePaths(value:unknown,schema=false):string[]{
    if(node?.properties)for(const [key,child] of Object.entries(node.properties))walk(child,path+'.'+key,depth+1);
    else if(node?.items)walk(node.items,path+'[]',depth+1);
    else if(node?.type)paths.add(path+' ('+node.type+')');
-  }else if(Array.isArray(node))for(const child of node.slice(0,3))walk(child,path+'[]',depth+1);
-  else if(node&&typeof node==='object')for(const [key,child] of Object.entries(node))walk(child,path+'.'+key,depth+1);
+  }else if(Array.isArray(node)){
+   if(path!=='$')paths.add(path+' (array)');
+   for(const child of node.slice(0,3))walk(child,path+'[]',depth+1);
+  }else if(node&&typeof node==='object'){
+   if(path!=='$')paths.add(path+' (object)');
+   for(const [key,child] of Object.entries(node))walk(child,path+'.'+key,depth+1);
+  }
   else paths.add(path+' ('+(node===null?'null':typeof node)+')');
  };
  walk(value,'$',0);

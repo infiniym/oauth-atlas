@@ -78,6 +78,17 @@ test('completion: an OAuth registration guide survives ranking beside endpoint o
  const endpoint={...docs[0],id:'s2',url:'https://acmetasks.example.com/docs/api/endpoints/oauth-2/'};
  assert.ok(planningDocuments([endpoint,registration],run().guide.input).includes(registration));
 });
+test('completion: a property reference retains its late field definitions in planning and review context',async()=>{
+ const {planningContext}=await import('../lib/live-guide/interpretation.ts');
+ const source={...docs[0],url:'https://docs.acme.com/reference/item-property-values',text:('General read access and unrelated metadata.\n').repeat(600)+'\nTitle fields have a type discriminator and an array of rich text values. Read each plain_text value from that array.'};
+ const context=planningContext(sourcePassages([source]),source,run().guide.input,8);
+ assert.ok(context.some(p=>p.text.includes('Read each plain_text value')));
+});
+test('completion: response evidence gaps retain their classification for targeted recovery',async()=>{
+ const result=await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async()=>aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'unresolved',missingFact:'response',reason:'The response property needs its type definition.'}]}),docs);
+ assert.equal(result.value.coverage[0].missingFact,'response');
+ assert.equal(result.value.blockers.find(b=>b.actionId==='read')?.gap?.fact,'request');
+});
 test('completion: distinct pagination requests survive action reconciliation',()=>{
  const p=value();p.steps.push({...p.steps[1],id:'continue',request:{method:'GET',endpoint:'/issues?cursor=NEXT',example:"curl 'https://api.acme.com/issues?cursor=NEXT'"},dependsOn:['read-test']});
  const out=reconcile(p);assert.equal(out.steps.filter(s=>s.testKind==='action').length,2);assert.deepEqual(out.steps.at(-1)!.dependsOn,['read-test']);

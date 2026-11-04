@@ -3,14 +3,14 @@ import {sourceKey} from './retrieval.ts';
 
 const routeKey=(s:string)=>decodeURIComponent(s).replace(/\{\?[^}]+\}/g,'').replace(/\{[^}]+\}|<[^>]+>|:[a-zA-Z_][\w-]*/g,'{input}').replace(/\/$/,'');
 
-export function responseFields(endpoint:string,documents:Document[]):{sourceId:string;path:string}[]{
+export function responseFields(endpoint:string,documents:Document[]):{sourceId:string;path:string;type:string}[]{
  let path:string;try{path=routeKey(new URL(endpoint,'https://instance.invalid').pathname);}catch{return [];}
  return documents.flatMap(document=>document.text.split('\n').flatMap(line=>{
-  const field=line.match(/^Response JSON paths for (.+): (\$[^ ]*) \([^)]+\)$/);
+  const field=line.match(/^Response JSON paths for (.+): (\$[^ ]*) \(([^)]+)\)$/);
   if(!field)return [];
   const target=field[1].match(/https:\/\/[^\s"']+|\/(?:[\w{}:.-]+\/)*[\w{}:.-]+/)?.[0];
   if(!target)return [];
-  try{return routeKey(new URL(target,'https://instance.invalid').pathname)===path?[{sourceId:document.id,path:field[2]}]:[];}catch{return [];}
+  try{return routeKey(new URL(target,'https://instance.invalid').pathname)===path?[{sourceId:document.id,path:field[2],type:field[3]}]:[];}catch{return [];}
  }));
 }
 

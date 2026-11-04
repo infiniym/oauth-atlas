@@ -52,9 +52,10 @@ export function reconcile(value:Interpretation):Interpretation{
   }
   for(const c of v.coverage.filter(c=>c.status!=='mapped')){
     const targets=v.steps.filter(s=>s.stage==='test'&&s.testKind==='action'&&(!c.actionId||s.actionIds?.includes(c.actionId))).map(s=>s.id!).filter(Boolean);
+    const fact=c.missingFact==='request'||c.missingFact==='response'?'request':'permission';
     const existing=v.blockers.find(b=>b.title===c.action);
-    if(existing){existing.kind='missing-evidence';existing.gap={actionId:c.actionId!,fact:'permission'};existing.actionId=c.actionId;existing.stepIds=targets;}
-    else v.blockers.push({title:c.action,kind:'missing-evidence',gap:c.actionId?{actionId:c.actionId,fact:'permission'}:undefined,actionId:c.actionId,consequence:'test',owner:'Developer',resolution:c.reason,stepIds:targets});
+    if(existing){existing.kind='missing-evidence';existing.gap={actionId:c.actionId!,fact};existing.actionId=c.actionId;existing.stepIds=targets;}
+    else v.blockers.push({title:c.action,kind:'missing-evidence',gap:c.actionId?{actionId:c.actionId,fact}:undefined,actionId:c.actionId,consequence:'test',owner:'Developer',resolution:c.reason,stepIds:targets});
   }
   if(v.coverage.some(c=>c.status!=='mapped'))v.recommendation='The requested API test is not ready yet. Resolve the access mapping for '+v.coverage.filter(c=>c.status!=='mapped').map(c=>c.action).join('; ')+'. Use “Find missing request” or add official documentation beside that action.';
   if(v.requestedActions.filter(isResource).length&&v.requestedActions.filter(isResource).every(a=>v.coverage.some(c=>c.actionId===a.id&&c.status==='mapped'&&c.support==='reviewed')&&v.steps.some(s=>s.testKind==='action'&&s.actionIds?.includes(a.id)&&s.request?.endpoint&&s.request.example)))v.researchNeeded=v.researchNeeded.filter(topic=>topic!=='permissions');

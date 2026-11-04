@@ -164,6 +164,9 @@ export function selectSourceText(text:string,useCase:string,limit=48000,app=''):
  // A grant label without its adjacent definition cannot support a permission
  // decision. Keep the complete declaration before unrelated SDK examples.
  for(let i=0;i<lines.length-1;i++)if(/^\s*[\w:.*\/-]+\s*$/.test(lines[i])&&/^\s*(?:Grants?|Allows?|Read[- ]only access|Write access)\b/i.test(lines[i+1])){add(i);add(i+1);add(i+2);}
+ const introductions=lines.map((line,i)=>({line,i,score:terms.filter(term=>line.toLowerCase().includes(term)).length})).filter(({line,score})=>score&&/^\s*(?:Get|List|Retrieve|Search)\b/i.test(line));
+ for(const {i} of introductions.sort((a,b)=>b.score-a.score).slice(0,6)){add(i);add(i+1);add(i+2);}
+ for(const {i} of ranked.filter(({i})=>/default.{0,70}(?:filter|open|active|archiv)|(?:filter|open|active|archiv).{0,70}default|If no filter/i.test(lines[i])).slice(0,8))for(let n=i-2;n<=i+2;n++)add(n);
  // Rendered OpenAPI parameters precede potentially large response schemas.
  // Preserve the complete selected operation header and its parameter contract.
  const operations=lines.flatMap((line,i)=>/^## (?:GET|POST|PUT|PATCH|DELETE|HEAD) \//.test(line)?[{line,i}]:[]);
@@ -180,13 +183,13 @@ export function selectSourceText(text:string,useCase:string,limit=48000,app=''):
  for(const {i} of ranked.filter(({i})=>/"(?:subject|title|name|content|results|_embedded)"\s*:/.test(lines[i])).slice(0,10))for(let n=i;n<Math.min(lines.length,i+5);n++)add(n);
  // Allocate space to actual requested routes before a large reference's
  // navigation, sync examples and unrelated schema mentions consume the budget.
- const routes=ranked.filter(({i})=>/\b(?:get|post|put|patch|delete)\s+\/|curl.{0,80}https?:\/\/|https?:\/\/\S+\/\S+/i.test(lines[i])&&terms.some(t=>new RegExp('(?:^|[^a-z])'+t+'(?:s|ies)?(?:[^a-z]|$)','i').test(lines[i]))).sort((a,b)=>{
+ const routes=ranked.filter(({i})=>!lines[i].startsWith('Response JSON paths for ')&&/\b(?:get|post|put|patch|delete)\s+\/|curl.{0,80}https?:\/\/|https?:\/\/\S+\/\S+/i.test(lines[i])&&terms.some(t=>new RegExp('(?:^|[^a-z])'+t+'(?:s|ies)?(?:[^a-z]|$)','i').test(lines[i]))).sort((a,b)=>{
  const rank=(i:number)=>{const l=lines[i],route=l.match(/\/(?:api\/)?(?:v\d+\/)?[\w/{}/.-]+/)?.[0]||l;return (/\bget\s+\//i.test(l)?100:0)-(/\b(?:post|delete|patch|put)\s+\//i.test(l)?100:0)-route.split('/').length*5;};return rank(b.i)-rank(a.i);});
  for(const {i} of routes.slice(0,8)){
   if(size>limit*.5)break;
-  const route=lines[i].match(/\b(?:get|post|put|patch|delete)\s+(\/[^\s]+)/i)?.[1];
+  const route=lines[i].match(/\b(?:get|post|put|patch|delete)\s+(\/[^\s]+)/i)?.[1].split('?')[0];
   let end=lines.length;
-  for(let n=i+1;n<end;n++){const next=lines[n].match(/^\s*(?:get|post|put|patch|delete)\s+(\/[^\s]+)/i)?.[1];if(next&&next!==route){end=n;break;}}
+  for(let n=i+1;n<end;n++){const next=lines[n].match(/^\s*(?:#+\s*)?(?:get|post|put|patch|delete)\s+(\/[^\s]+)/i)?.[1].split('?')[0];if(next&&next!==route){end=n;break;}}
   // Response schemas can follow long parameter/SDK sections. Select actual
   // response fields inside this operation before filling its prose window.
   for(let n=i;n<end;n++)if(/"(?:subject|title|name|content|results|_embedded)"\s*:/.test(lines[n]))for(let j=Math.max(i,n-2);j<Math.min(end,n+6);j++)add(j);

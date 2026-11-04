@@ -47,7 +47,7 @@ export const interpretationSchema = z.object({
   activeEffort: z.object({ range: z.string().max(100), assumptions: z.string().max(500) }).strict(),
   unknowns: z.array(text(400)).max(10),
   blockers:z.array(z.object({title:text(250),consequence:z.enum(['test','launch','follow-up']),kind:z.enum(['prerequisite','instruction','verification','missing-evidence']).optional(),owner:text(80),resolution:text(500),stepIds:z.array(text(60)).max(10).optional(),resolutionStepIds:z.array(text(60)).max(10).optional(),actionId:text(60).optional(),gap:z.object({actionId:text(60),fact:z.enum(['request','permission'])}).strict().optional()}).strict()).max(10).default([]),
-  coverage:z.array(z.object({action:text(180),actionId:text(60).optional(),permissions:z.array(text(100)).max(8),status:z.enum(['mapped','unresolved','unsupported']),reason:text(800),evidence:z.array(z.object({sourceId:text(20),quote:text(260)})).max(6).optional(),support:z.enum(['reviewed','unresolved']).optional()}).strict()).max(10).default([]),
+  coverage:z.array(z.object({action:text(180),actionId:text(60).optional(),permissions:z.array(text(100)).max(8),status:z.enum(['mapped','unresolved','unsupported']),reason:text(800),missingFact:z.enum(['registration','permission','request','response']).optional(),evidence:z.array(z.object({sourceId:text(20),quote:text(260)})).max(6).optional(),support:z.enum(['reviewed','unresolved']).optional()}).strict()).max(10).default([]),
   researchNeeded:z.array(z.enum(['registration','permissions','identity','distribution'])).max(3).default([]),
 }).strict();
 export type Interpretation = z.infer<typeof interpretationSchema>;
