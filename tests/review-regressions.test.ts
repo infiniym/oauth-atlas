@@ -100,6 +100,20 @@ test('completion: collection protocol evidence stays beside a long paginated ope
  const selected=planningDocuments([...docs,...others,collection],{app:'Acme',website:url,useCase:'Read item titles including pagination.',audience:'customers',answers:{}},{requestedActions:[{id:'read',title:'Read item titles',operation:'read'}],prohibitions:[]});
  assert.ok(selected.some(document=>document.id==='s2'));assert.ok(selected.length<=8);
 });
+test('completion: independent response review sees an explicitly linked matching object definition',async()=>{
+ const reference={...docs[0],id:'s2',url:'https://acmetasks.example.com/reference/issue',title:'Issue object',text:'Issue object\n{"object":"issue","properties":{"Heading":{"type":"title","title":[{"plain_text":"Sample"}]}}}'};
+ const operation={...docs[0],links:[reference.url],text:docs[0].text+'\nGET /issues\nResponse:\n{"object":"issue","id":"example"}'};let visible=false;
+ await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{const input=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);visible=input.mappings[0].referenceContext.some((source:any)=>source.sourceId==='s2'&&source.passages.some((passage:string)=>passage.includes('plain_text')));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'unresolved',missingFact:'response',reason:'The response path still needs correction.'}]});},[operation,reference]);assert.ok(visible);
+});
+test('completion: cursor aliases merge duplicate continuation instructions without merging resource IDs',async()=>{
+ const {coalesceRequestSteps}=await import('../lib/live-guide/step-shape.ts');const p=value();const next={...p.steps[1],id:'next-first',request:{method:'POST',endpoint:'/issues/continue',example:"curl 'https://api.acme.com/issues/continue' -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer <ACCESS_TOKEN>' -d '{\"cursor\":\"<CURSOR_FROM_PREVIOUS_RESPONSE>\"}'"}};const duplicate={...next,id:'next-second',detail:'Repeat until the response contains has_more false.',request:{...next.request,example:next.request.example.replace('<CURSOR_FROM_PREVIOUS_RESPONSE>','<NEXT_CURSOR>')}};p.steps.push(next,duplicate);
+ const out=coalesceRequestSteps(p);assert.equal(out.steps.filter(s=>s.testKind==='action').length,2);assert.match(out.steps.find(s=>s.id==='next-first')!.detail,/has_more false/);
+ p.steps[3].request!.example=next.request.example.replace('<CURSOR_FROM_PREVIOUS_RESPONSE>','<DIFFERENT_RESOURCE_ID>');assert.equal(coalesceRequestSteps(p).steps.filter(s=>s.testKind==='action').length,3);
+});
+test('completion: next-link lifecycle requests are checked as continuations of their declared collection',async()=>{
+ const {assembleStepParts}=await import('../lib/live-guide/plan-parts.ts');const original={steps:[{id:'first',testKind:'action',actionIds:['read'],request:{endpoint:'/projects/{id}/issues',example:"curl 'https://api.acme.com/projects/<ID>/issues'"}},{id:'next',testKind:'lifecycle',actionIds:['read'],dependsOn:['first'],request:{endpoint:'/issues',example:"curl '<NEXT_PAGE_URL>'"}}],continuations:[]};
+ const normalized=assembleStepParts(original);assert.equal(normalized.steps[1].testKind,'action');assert.equal(normalized.steps[1].request.endpoint,'/projects/{id}/issues');assert.equal(normalized.steps[1].request.example,original.steps[1].request.example);assert.equal(original.steps[1].request.endpoint,'/issues');
+});
 test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
  const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[
   'Pagination','Offset-based pagination. The default method.','Offset-based pagination','Parameter Description','page Page number.','Keyset-based pagination','Parameter Required Description','pagination yes keyset (enables keyset pagination).','per_page no Number of items per page.','The response mentions arbitrary and has a link to the next page.',

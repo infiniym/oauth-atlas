@@ -12,12 +12,19 @@ export const stepsSchemaForRequest=(paginated:boolean)=>paginated?{...stepsSchem
 export function assembleStepParts(raw:Record<string,any>){
  const out=structuredClone(raw);
  const continuations=out.continuations||[];
+ // A returned next URL is a continuation of its declared parent collection,
+ // even when the model labels the step lifecycle. Keep the actual URL intact.
+ for(const step of out.steps||[])if(step.testKind==='lifecycle'&&step.actionIds?.length&&/<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/.test(step.request?.example||'')){step.testKind='action';step.stage='test';}
  for(const continuation of continuations){
   continuation.testKind='action';continuation.stage='test';
   const parent=(out.steps||[]).find((step:any)=>step.testKind==='action'&&step.actionIds?.some((id:string)=>continuation.actionIds?.includes(id)));
   if(parent)continuation.dependsOn=[...new Set([...(continuation.dependsOn||[]),parent.id])].filter(id=>id!==continuation.id);
  }
  out.steps=[...out.steps||[],...continuations];delete out.continuations;
+ for(const step of out.steps)if(step.testKind==='action'&&/<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/.test(step.request?.example||'')){
+  const parents=out.steps.filter((parent:any)=>parent.testKind==='action'&&parent.id!==step.id&&step.dependsOn?.includes(parent.id)&&parent.actionIds?.some((id:string)=>step.actionIds?.includes(id))&&parent.request?.endpoint&&!/<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/.test(parent.request?.example||''));
+  if(parents.length===1)step.request.endpoint=parents[0].request.endpoint;
+ }
  return out;
 }
 export function expandPartEvidence(raw:Record<string,any>){
