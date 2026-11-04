@@ -114,6 +114,11 @@ test('completion: next-link lifecycle requests are checked as continuations of t
  const {assembleStepParts}=await import('../lib/live-guide/plan-parts.ts');const original={steps:[{id:'first',testKind:'action',actionIds:['read'],request:{endpoint:'/projects/{id}/issues',example:"curl 'https://api.acme.com/projects/<ID>/issues'"}},{id:'next',testKind:'lifecycle',actionIds:['read'],dependsOn:['first'],request:{endpoint:'/issues',example:"curl '<NEXT_PAGE_URL>'"}}],continuations:[]};
  const normalized=assembleStepParts(original);assert.equal(normalized.steps[1].testKind,'action');assert.equal(normalized.steps[1].request.endpoint,'/projects/{id}/issues');assert.equal(normalized.steps[1].request.example,original.steps[1].request.example);assert.equal(original.steps[1].request.endpoint,'/issues');
 });
+test('completion: the handoff recorder recognizes a cited response condition but not an unrelated flag',async()=>{
+ const {inspectHandoff}=await import('../scripts/inspect-handoff.mts');const p=value();p.steps[1].detail='Continue while has_more is true. Boundary check: inspect the actual grant and outgoing request log.';p.steps[1].doneWhen='has_more is false on the last page.';p.steps[1].fields=['ACCESS_TOKEN: from the OAuth exchange.'];p.steps[1].evidence=[{sourceId:'s1',quote:'Response properties has_more boolean indicates further pages.'}];
+ assert.ok(!inspectHandoff(p)[0].errors.includes('Expected successful response absent'));
+ p.steps[1].detail='Wait for completion. Boundary check: inspect the actual grant and outgoing request log.';p.steps[1].doneWhen='unrelated_flag is false.';assert.ok(inspectHandoff(p)[0].errors.includes('Expected successful response absent'));
+});
 test('completion: shared pagination fields require a linked parameter declaration for the applicable mode',()=>{
  const reference={...docs[0],id:'s2',title:'REST API',url:'https://docs.acmetasks.example.com/api/rest/',text:[
   'Pagination','Offset-based pagination. The default method.','Offset-based pagination','Parameter Description','page Page number.','Keyset-based pagination','Parameter Required Description','pagination yes keyset (enables keyset pagination).','per_page no Number of items per page.','The response mentions arbitrary and has a link to the next page.',

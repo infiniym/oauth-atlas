@@ -31,7 +31,12 @@ export function inspectHandoff(guide:any){
   const boundary=step.detail+' '+step.doneWhen+' '+guide.steps.filter((s:any)=>s.testKind==='boundary').map((s:any)=>s.detail).join(' ');
   if(!/boundary check:\s*(?!none\b|not (?:needed|required|applicable)\b|n\/a\b)\S[^.;\n]{11}/i.test(step.detail+' '+step.doneWhen))errors.push('No safe boundary check instruction');
   if(!step.fields?.length)errors.push('User input provenance absent');
-  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(step.doneWhen+' '+step.detail))errors.push('Expected successful response absent');
+  const outcome=step.doneWhen+' '+step.detail;
+  // A documented Boolean response condition is observable output even if the
+  // prose omits the literal word "response". Request-body flags do not qualify.
+  const requestKeys=new Set(parsedBody.flatMap(value=>value&&typeof value==='object'?Object.keys(value):[]));
+  const responseCondition=(step.evidence||[]).some((e:{quote:string})=>[...String(e.quote).matchAll(/([a-zA-Z_][\w.]*)\s+\(?boolean\)?\b/gi)].some(match=>{const field=match[1].replace(/^\./,'');return !requestKeys.has(field)&&new RegExp('\\b'+field.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b\\s*(?:is|=|:)?\\s*(?:true|false)\\b','i').test(outcome);}));
+  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(outcome)&&!responseCondition)errors.push('Expected successful response absent');
   // This is the request received by the stub, not a canned HTTP success.
   const stub={method,url:url?.href,headers,body:parsedBody};
   return {stepId:step.id,stub,syntaxChecked:true,userInputsSubstituted:true,executed:false,errors};
