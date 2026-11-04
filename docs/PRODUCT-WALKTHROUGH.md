@@ -1,6 +1,6 @@
 # OAuth Launch Advisor: current product journey
 
-Updated 31 October 2026. This describes the combined local implementation, not the older hosted deployment.
+Updated 3 November 2026. This describes the local desktop implementation. Public release updates are deferred by the user.
 
 ## One starting point
 
@@ -14,7 +14,7 @@ Reviewed providers use a constrained capability map and relevant setup questions
 
 Research collects audience and optionally a direct documentation URL, reads public evidence, then asks at most three intent questions at a time. Questions must change app model, permissions or distribution. Provider policy gaps become research tasks/blockers rather than questions asking the developer to know the policy. Inferred provider identity is confirmed without discarding other pending questions.
 
-The same shared Anthropic configuration powers intake and evidence interpretation, with adaptive thinking at medium effort. Keys and reasoning text stay server-side. The keyless reviewed workflow remains available. Unsupported configuration or failed interpretation preserves source findings rather than inventing a complete plan.
+The same Anthropic configuration powers intake and live research. Provider facts and independent access review use adaptive thinking. Request assembly uses the saved facts and a smaller structured contract. Keys and reasoning text stay server-side. The keyless reviewed workflow remains available. Unsupported configuration or failed interpretation preserves source findings rather than inventing a complete plan.
 
 ## One plan layout
 
@@ -46,7 +46,7 @@ The reader prioritizes registration, permissions/capabilities, actor identity an
 
 The model selects numbered source passages. Local validation checks exact quotations, selected permission identifiers, known destinations and published-duration consistency. This is evidence correspondence, not semantic proof. Missing facts, access failures and unresolved policy applicability remain visible. A limitation for one provider product does not establish a blanket OAuth denial for every product.
 
-Real checks cover a small varied set: Linear app actors, Notion read-only content, Asana task reads/creation and a public API with no OAuth requirement. They have exposed failures, redundant questions, context loss and unresolved review details. They do not establish reliable results for every possible app. No provider app registration or token exchange has been completed.
+Real checks cover the exact cases recorded in the current evaluation, including the original failures and automatic repairs. Earlier experiments are dated historical evidence. They have exposed failures, redundant questions, context loss and unresolved review details. They do not establish reliable results for every possible app. No provider app registration or token exchange has been completed.
 
 ## Developer evaluation
 
@@ -58,4 +58,4 @@ Real checks cover a small varied set: Linear app actors, Notion read-only conten
 6. Try unreadable/ambiguous documentation or a public API. The product should expose the limitation without fabricating OAuth steps.
 7. Share and reopen a dated plan. Another developer should understand its inputs, next action and unresolved gates without a verbal walkthrough.
 
-Automated/API checks establish behavior and source correspondence. Developer comprehension, time-to-first-working-connection and actual provider acceptance still need observed user tasks and real grants. See [validation](VALIDATION.md) and [the current evaluation](evaluations/FINAL-2026-11-02.md).
+Automated/API checks establish behavior and source correspondence. Developer comprehension, time-to-first-working-connection and actual provider acceptance still need observed user tasks and real grants. See [validation](VALIDATION.md) and [the current local evaluation](evaluations/LOCAL-2026-11-03.md).

@@ -17,7 +17,7 @@ def inline(text):
     text = escape(text).replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'").replace("\u2014", "-").replace("\u2013", "-")
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
     return re.sub(
-        r"\[([^\]]+)\]\((https://[^\s)]+)\)",
+        r"\[([^\]]+)\]\((https?://[^\s)]+)\)",
         r'<link href="\2" color="#245D4C"><u>\1</u></link>',
         text,
     )
@@ -51,7 +51,7 @@ for paragraph in SOURCE.read_text().strip().split("\n\n"):
         for line in paragraph.splitlines():
             story.append(Paragraph(inline(line), styles["step"]))
     else:
-        kind = "links" if paragraph.startswith("[Demo]") else "deck" if len(story) == 1 else "body"
+        kind = "links" if paragraph.startswith("[Project repository]") else "deck" if len(story) == 1 else "body"
         story.append(Paragraph(inline(paragraph.replace("\n", " ")), styles[kind]))
 
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)

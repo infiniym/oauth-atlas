@@ -1,3 +1,5 @@
+> Historical validation notebook. For the selected local release and publication status, see [LOCAL-2026-11-03](evaluations/LOCAL-2026-11-03.md). Older hosts, counts and model settings below describe their original dated runs.
+
 # Validation notebook — 29 October 2026
 
 **Current results:** [Final evaluation - 2 November 2026](evaluations/FINAL-2026-11-02.md). The dated sections below are historical records and do not describe the current hosted release.

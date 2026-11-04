@@ -1,0 +1,40 @@
+{
+  "sourceCommit": "e105a1d12fa7612ee7b8ecacf6b3a414ffcdc17a",
+  "checkedAt": "2026-11-04T07:45:55.355Z",
+  "cleanCheckout": true,
+  "node": "v26.8.1",
+  "credentialsCopied": false,
+  "commands": [
+    "npm ci",
+    "npm test",
+    "npm run typecheck",
+    "npm run build"
+  ],
+  "checks": {
+    "install": true,
+    "tests": {
+      "total": 299,
+      "passed": 299
+    },
+    "typecheck": true,
+    "productionBuild": true,
+    "emptyDatabaseMigrations": [
+      {
+        "migration": "0000_orange_wallop.sql",
+        "exitCode": 0
+      },
+      {
+        "migration": "0001_groovy_mister_fear.sql",
+        "exitCode": 0
+      },
+      {
+        "migration": "0002_romantic_lockheed.sql",
+        "exitCode": 0
+      },
+      {
+        "migration": "0003_simple_vulcan.sql",
+        "exitCode": 0
+      }
+    ]
+  }
+}

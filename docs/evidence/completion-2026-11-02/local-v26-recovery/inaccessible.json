@@ -1,0 +1,72 @@
+{
+  "input": {
+    "app": "Unavailable documentation",
+    "website": "https://unavailable-20261102.example.com/docs/",
+    "useCase": "Read items with OAuth. Never write.",
+    "audience": "customers"
+  },
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "unavailable-20261102.example.com/docs/",
+      "status": "working",
+      "at": "2026-11-03T16:10:21.583Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read unavailable-20261102.example.com/docs/.",
+      "status": "warning",
+      "at": "2026-11-03T16:10:21.950Z"
+    }
+  ],
+  "job": {
+    "id": "job-25d80a97-4f53-4534-b3f6-50a83ce665d7",
+    "input": {
+      "app": "Unavailable documentation",
+      "website": "https://unavailable-20261102.example.com/docs/",
+      "useCase": "Read items with OAuth. Never write.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "unavailable-20261102.example.com/docs/",
+        "status": "working",
+        "at": "2026-11-03T16:10:21.583Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read unavailable-20261102.example.com/docs/.",
+        "status": "warning",
+        "at": "2026-11-03T16:10:21.950Z"
+      }
+    ],
+    "createdAt": "2026-11-03T16:10:21.494Z",
+    "updatedAt": "2026-11-03T16:10:21.953Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-03T16:10:21.579Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+      "url": "https://unavailable-20261102.example.com/docs/"
+    },
+    "error": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+    "savedSources": []
+  },
+  "pass": true,
+  "elapsedMs": 481,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "80377b687ec665c073501088d8445a11f5f9ce68",
+    "guideCodeFingerprint": "9e3c93e4b6098493be5a0b392d885965ec34ea3985bbc2fc884877770f8e7ce9",
+    "builtAt": "2026-11-03T13:55:44.117Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.26"
+  },
+  "origin": "http://127.0.0.1:5187",
+  "checkedAt": "2026-11-03T16:10:21.960Z"
+}

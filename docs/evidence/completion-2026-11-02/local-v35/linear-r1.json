@@ -1,0 +1,99 @@
+{
+  "name": "linear",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "b7b7613154d36429601b5d65d68188c864d34e23",
+    "guideCodeFingerprint": "c057596ded7750368aa30318325cbf33e961a7e445a8b7fee16151e5234e4dc7",
+    "builtAt": "2026-11-04T09:25:01.840Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.35"
+  },
+  "input": {
+    "app": "Linear",
+    "website": "https://linear.app/developers",
+    "useCase": "Read issue titles in the connected person's workspace, including pagination. Never create, update or delete issues. Use OAuth for each individual customer account.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-04T09:28:03.487Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-0d716904-28cd-4576-a3f4-0c8f102dcac2",
+      "key": "7ab39575-c1c5-474e-9231-d0d7e69bd0d5",
+      "input": {
+        "app": "Linear",
+        "website": "https://linear.app/developers",
+        "useCase": "Read issue titles in the connected person's workspace, including pagination. Never create, update or delete issues. Use OAuth for each individual customer account.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "linear.app/developers",
+      "status": "working",
+      "at": "2026-11-04T09:28:03.526Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read linear.app/developers.",
+      "status": "warning",
+      "at": "2026-11-04T09:28:03.528Z"
+    }
+  ],
+  "job": {
+    "id": "job-0d716904-28cd-4576-a3f4-0c8f102dcac2",
+    "input": {
+      "app": "Linear",
+      "website": "https://linear.app/developers",
+      "useCase": "Read issue titles in the connected person's workspace, including pagination. Never create, update or delete issues. Use OAuth for each individual customer account.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "linear.app/developers",
+        "status": "working",
+        "at": "2026-11-04T09:28:03.526Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read linear.app/developers.",
+        "status": "warning",
+        "at": "2026-11-04T09:28:03.528Z"
+      }
+    ],
+    "createdAt": "2026-11-04T09:28:03.494Z",
+    "updatedAt": "2026-11-04T09:28:03.528Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-04T09:28:03.525Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+      "url": "https://linear.app/developers"
+    },
+    "error": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+    "savedSources": []
+  },
+  "readiness": "research-failure",
+  "requests": [],
+  "errors": [
+    "No usable guide for the declared task",
+    "No shareable plan",
+    "Request contract check failed",
+    "Required concrete pagination handoff absent"
+  ],
+  "speed": {
+    "kind": "normal",
+    "budgetMs": 90000
+  },
+  "pass": false,
+  "elapsedMs": 43
+}

@@ -58,3 +58,7 @@ The Dropbox controlled comparison used its original OAuth-doc entry point. The f
 The current Sites connector was rechecked and returned `Sites project not found` for the canonical project. The user then explicitly deferred all Sites publishing, requested local completion, and proposed Vercel deployment later. Further deployment and GitHub pushes are on hold. The hosted `3a8059d` is a dated candidate, not the final local release. Desktop is the requested UI scope; mobile/narrow layout is no longer an acceptance gate.
 
 Linear and Forgejo now serve as required regression cases because their failures informed fixes. Asana and ClickUp are declared in `cases.json` for subsequent blind validation, before their documentation is researched. They will not replace any failing original case.
+
+## 3 November readback
+
+The anonymous Sites release endpoint returned `3a8059ddaf14516efe5556c6c43e941999195a21` and prompt `live-guide.11`, matching the public candidate branch. GitHub main remained `38160c99693abd216676f26eaf8134835781e0b4`. The recorded Sites deployment is version 5, `appgdep_6ae8a54fbd448191a479b0221a2f5118`. The local preview has advanced beyond both public refs. The [local evaluation](LOCAL-2026-11-03.md) identifies the running build, acceptance outcomes, and remaining gates.

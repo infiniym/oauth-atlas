@@ -1,0 +1,432 @@
+{
+  "sourceCommit": "c42dfc7e0c60286330232fb77c822b55407d395d",
+  "purpose": "Reproduce the failed planning stage using its saved checkpoint. This is separate from fresh HTTP acceptance.",
+  "mode": "evidence-only",
+  "telemetry": {
+    "model": "claude-haiku-5-5",
+    "attempts": 2,
+    "elapsedMs": 20393,
+    "inputTokens": 30760,
+    "outputTokens": 4862,
+    "thinkingTokens": 0,
+    "thinking": "mixed",
+    "effort": "low",
+    "outcome": "validation-rejected",
+    "validationIssues": [
+      "A citation references an unknown or non-citable passage.",
+      "A citation references an unknown or non-citable passage."
+    ]
+  },
+  "modelOutputs": [
+    {
+      "stage": "STEPS STAGE: Create setup an",
+      "status": 200,
+      "output": {
+        "steps": [
+          {
+            "id": "prepare-register-app",
+            "title": "Register the Todoist OAuth application and configure its redirect URI",
+            "detail": "A developer registers a Todoist OAuth app to obtain a client_id and client_secret. The supplied documentation confirms the client_id concept and token exchange, but the registration UI steps are not in the supplied citable text, so this is a prerequisite to confirm.",
+            "owner": "developer",
+            "doneWhen": "The developer has a registered client_id, client_secret and a redirect URI that matches the app callback.",
+            "stage": "prepare",
+            "testKind": "prepare",
+            "dependsOn": [],
+            "actionIds": [],
+            "request": {
+              "method": "",
+              "endpoint": "",
+              "example": ""
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "client_id: issued after app registration",
+              "client_secret: issued after app registration",
+              "redirect_uri: developer-chosen callback URL"
+            ],
+            "evidence": {
+              "primary": "s1-p487",
+              "secondary": "s1-p488",
+              "tertiary": ""
+            }
+          },
+          {
+            "id": "prepare-consent-redirect",
+            "title": "Redirect the test account to the Todoist authorization URL and verify the callback",
+            "detail": "Send the test user to the authorization endpoint with the registered client_id, a scope, a state value and response_type=code. Confirm the callback returns the same state and a code. The data:read scope is named but its exact boundary is not confirmed in citable text, so verify the grant shown on the consent screen before proceeding.",
+            "owner": "customer admin",
+            "doneWhen": "The callback contains a code and the matching state, and the consent screen shows the expected scope.",
+            "stage": "test",
+            "testKind": "authorization",
+            "dependsOn": [
+              "prepare-register-app"
+            ],
+            "actionIds": [
+              "list-active-task-titles"
+            ],
+            "request": {
+              "method": "GET",
+              "endpoint": "https://todoist.com/oauth/authorize",
+              "example": "curl --include 'https://todoist.com/oauth/authorize?client_id=<CLIENT_ID>&scope=data:read&state=<RANDOM_STATE>&response_type=code'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "client_id: from prepare-register-app",
+              "scope: data:read pending verification",
+              "state: developer-generated random value"
+            ],
+            "evidence": {
+              "primary": "s1-p453",
+              "secondary": "s1-p454",
+              "tertiary": ""
+            }
+          },
+          {
+            "id": "test-exchange-code",
+            "title": "Exchange the authorization code for an access token",
+            "detail": "Exchange the returned code at the documented token endpoint using the registered client credentials and redirect_uri. This is the unexecuted authorization step that yields the access token used for resource reads.",
+            "owner": "developer",
+            "doneWhen": "The token response contains an access_token and token_type.",
+            "stage": "test",
+            "testKind": "authorization",
+            "dependsOn": [
+              "test-consent-redirect-placeholder"
+            ],
+            "actionIds": [],
+            "request": {
+              "method": "POST",
+              "endpoint": "https://todoist.com/oauth/access_token",
+              "example": "curl --request POST 'https://todoist.com/oauth/access_token' --data 'client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>&code=<AUTH_CODE>&redirect_uri=<REDIRECT_URI>'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "client_id: from prepare-register-app",
+              "client_secret: from prepare-register-app",
+              "code: returned on the callback",
+              "redirect_uri: must match the registered URI"
+            ],
+            "evidence": {
+              "primary": "s2-p1",
+              "secondary": "s1-p487",
+              "tertiary": ""
+            }
+          },
+          {
+            "id": "test-list-active-tasks",
+            "title": "List active task titles from the first page using the Get Tasks endpoint",
+            "detail": "Call the Get Tasks endpoint with the access token to read active tasks. Extract each task's content field as the title, which the documented example shows as content. Do not create, update, complete or delete tasks.",
+            "owner": "developer",
+            "doneWhen": "The response returns task objects, and each content value is available as a title. Recording next_cursor for the continuation is required.",
+            "stage": "test",
+            "testKind": "action",
+            "dependsOn": [
+              "test-exchange-code"
+            ],
+            "actionIds": [
+              "list-active-task-titles"
+            ],
+            "request": {
+              "method": "GET",
+              "endpoint": "https://api.todoist.com/api/v1/tasks",
+              "example": "curl --include --request GET 'https://api.todoist.com/api/v1/tasks' --header 'Authorization: Bearer <ACCESS_TOKEN>'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "Authorization: Bearer token from test-exchange-code",
+              "content: task title field in the response"
+            ],
+            "evidence": {
+              "primary": "s1-p562",
+              "secondary": "s1-p439",
+              "tertiary": "s1-p633"
+            }
+          },
+          {
+            "id": "test-boundary-check",
+            "title": "Confirm the read-only boundary with a nonmutating check",
+            "detail": "Verify the connection cannot create or modify tasks by inspecting the granted scope on the consent screen and the outgoing request log, rather than attempting a write. Do not execute any create, update, complete or delete request.",
+            "owner": "developer",
+            "doneWhen": "The granted scope is recorded and no write request appears in the outgoing request log.",
+            "stage": "test",
+            "testKind": "boundary",
+            "dependsOn": [
+              "test-list-active-tasks"
+            ],
+            "actionIds": [
+              "list-active-task-titles"
+            ],
+            "request": {
+              "method": "",
+              "endpoint": "",
+              "example": ""
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "Granted scope from consent screen",
+              "Outgoing request log entries"
+            ],
+            "evidence": {
+              "primary": "s1-p464",
+              "secondary": "s1-p465",
+              "tertiary": ""
+            }
+          }
+        ],
+        "continuations": [
+          {
+            "id": "test-list-active-tasks-next",
+            "title": "Fetch the next page of active tasks using next_cursor until it is null",
+            "detail": "Repeat the Get Tasks request with the cursor returned by the previous response. Continue until next_cursor is null, which the documentation states means the end of results. Page and offset parameters are not supported on this version.",
+            "owner": "developer",
+            "doneWhen": "next_cursor is null on the final page and all pages have been collected.",
+            "stage": "test",
+            "testKind": "action",
+            "dependsOn": [
+              "test-list-active-tasks"
+            ],
+            "actionIds": [
+              "list-active-task-titles"
+            ],
+            "request": {
+              "method": "GET",
+              "endpoint": "https://api.todoist.com/api/v1/tasks",
+              "example": "curl --include --request GET 'https://api.todoist.com/api/v1/tasks?cursor=<NEXT_CURSOR>' --header 'Authorization: Bearer <ACCESS_TOKEN>'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "cursor: next_cursor from the prior response",
+              "Authorization: Bearer token from test-exchange-code"
+            ],
+            "evidence": {
+              "primary": "s1-p633",
+              "secondary": "s1-p655",
+              "tertiary": "s1-p634"
+            }
+          }
+        ],
+        "blockers": [
+          {
+            "title": "Confirm the least-privilege scope for reading active tasks",
+            "kind": "missing-evidence",
+            "consequence": "test",
+            "owner": "developer",
+            "resolution": "Confirm which documented scope grants read access to the Get Tasks endpoint without write access, since data:read is named but not defined in citable text.",
+            "stepIds": [
+              "prepare-consent-redirect"
+            ],
+            "resolutionStepIds": [
+              "prepare-consent-redirect"
+            ]
+          },
+          {
+            "title": "Confirm client registration and redirect configuration",
+            "kind": "prerequisite",
+            "consequence": "test",
+            "owner": "developer",
+            "resolution": "Register the app and record client_id, client_secret and redirect URI before any consent or token exchange test.",
+            "stepIds": [
+              "prepare-register-app"
+            ],
+            "resolutionStepIds": [
+              "prepare-register-app"
+            ]
+          },
+          {
+            "title": "Confirm whether other customer workspaces need separate distribution",
+            "kind": "missing-evidence",
+            "consequence": "follow-up",
+            "owner": "developer",
+            "resolution": "Check the distribution policy for connecting other customer organizations; this does not block the first test.",
+            "stepIds": [],
+            "resolutionStepIds": []
+          }
+        ]
+      }
+    },
+    {
+      "stage": "STEPS STAGE: Create setup an",
+      "status": 200,
+      "output": {
+        "steps": [
+          {
+            "id": "register-oauth-client",
+            "title": "Register the Todoist OAuth client for customer connections",
+            "detail": "Developer prepares the OAuth client using the documented dynamic registration endpoint, with redirect_uris, scope and token_endpoint_auth_method metadata. Registration is not executed here.",
+            "owner": "developer",
+            "doneWhen": "A client_id and any required client secret are issued and the redirect URI matches the application's callback.",
+            "stage": "prepare",
+            "testKind": "prepare",
+            "dependsOn": [],
+            "actionIds": [],
+            "request": {
+              "method": "",
+              "endpoint": "",
+              "example": ""
+            },
+            "destination": "https://todoist.com/.well-known/oauth-authorization-server",
+            "fields": [
+              "registration_endpoint from discovery metadata",
+              "client_id from registration response",
+              "redirect_uris must match the callback exactly"
+            ],
+            "evidence": {
+              "primary": "s2-p1",
+              "secondary": "s1-p497",
+              "tertiary": ""
+            }
+          },
+          {
+            "id": "authorize-user-consent",
+            "title": "Redirect the test user to Todoist authorization and verify the callback",
+            "detail": "Redirect the test account to the documented authorization URL with client_id, scope, state and response_type=code. The user approves access and the callback returns code and the matching state. The scope value for reading active tasks is unresolved and must be confirmed before use.",
+            "owner": "customer admin",
+            "doneWhen": "The callback returns a code and an identical state value, with no error parameter.",
+            "stage": "test",
+            "testKind": "authorization",
+            "dependsOn": [
+              "register-oauth-client"
+            ],
+            "actionIds": [],
+            "request": {
+              "method": "GET",
+              "endpoint": "https://app.todoist.com/oauth/authorize",
+              "example": "curl -i 'https://app.todoist.com/oauth/authorize?client_id=<CLIENT_ID>&scope=<SCOPE_UNRESOLVED>&state=<STATE_RANDOM>&response_type=code'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "client_id from registration step",
+              "scope: unresolved, data:read not confirmed as least-privilege",
+              "state: random value the app compares on callback"
+            ],
+            "evidence": {
+              "primary": "s1-p453",
+              "secondary": "s1-p454",
+              "tertiary": ""
+            }
+          },
+          {
+            "id": "exchange-authorization-code",
+            "title": "Exchange the authorization code for an access token",
+            "detail": "Exchange the returned code at the documented token endpoint using the authorization_code grant with client credentials, the code and the redirect_uri. This is an unexecuted authorization step.",
+            "owner": "developer",
+            "doneWhen": "The token response contains access_token, token_type and expires_in.",
+            "stage": "test",
+            "testKind": "authorization",
+            "dependsOn": [
+              "authorize-user-consent"
+            ],
+            "actionIds": [],
+            "request": {
+              "method": "POST",
+              "endpoint": "https://todoist.com/oauth/access_token",
+              "example": "curl -X POST 'https://todoist.com/oauth/access_token' -d 'client_id=<CLIENT_ID>' -d 'client_secret=<CLIENT_SECRET>' -d 'code=<AUTH_CODE>' -d 'redirect_uri=<REDIRECT_URI>' -d 'grant_type=authorization_code'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "client_id from registration",
+              "client_secret from registration",
+              "code from callback",
+              "redirect_uri matching registration"
+            ],
+            "evidence": {
+              "primary": "s2-p1",
+              "secondary": "s1-p487",
+              "tertiary": ""
+            }
+          },
+          {
+            "id": "list-active-tasks-first-page",
+            "title": "List active task titles, first page",
+            "detail": "Call the documented Get Tasks endpoint with the access token to retrieve active tasks for the connected user. Read the title field from each task object in the response. Safe read-only boundary check: confirm the response contains no write-only fields and make no write request.",
+            "owner": "developer",
+            "doneWhen": "The response is a successful task list containing next_cursor, from which the first set of task titles is read.",
+            "stage": "test",
+            "testKind": "action",
+            "dependsOn": [
+              "exchange-authorization-code"
+            ],
+            "actionIds": [
+              "list-active-task-titles"
+            ],
+            "request": {
+              "method": "GET",
+              "endpoint": "https://api.todoist.com/api/v1/tasks",
+              "example": "curl -i -H 'Authorization: Bearer <ACCESS_TOKEN>' 'https://api.todoist.com/api/v1/tasks'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "access_token from exchange step",
+              "title read from each task object in results",
+              "next_cursor from response body"
+            ],
+            "evidence": {
+              "primary": "s1-p562",
+              "secondary": "s1-p633",
+              "tertiary": ""
+            }
+          }
+        ],
+        "continuations": [
+          {
+            "id": "list-active-tasks-next-page",
+            "title": "Fetch next task page until next_cursor is null",
+            "detail": "Repeat the Get Tasks request with the cursor returned by the prior response, preserving all original parameters. Stop when next_cursor is null, which is the documented end of results.",
+            "owner": "developer",
+            "doneWhen": "next_cursor is null in a response, at which point all active task titles have been collected.",
+            "stage": "test",
+            "testKind": "action",
+            "dependsOn": [
+              "list-active-tasks-first-page"
+            ],
+            "actionIds": [
+              "list-active-task-titles"
+            ],
+            "request": {
+              "method": "GET",
+              "endpoint": "https://api.todoist.com/api/v1/tasks",
+              "example": "curl -i -H 'Authorization: Bearer <ACCESS_TOKEN>' 'https://api.todoist.com/api/v1/tasks?cursor=<NEXT_CURSOR>'"
+            },
+            "destination": "https://developer.todoist.com/api/v1/",
+            "fields": [
+              "cursor from next_cursor of prior response",
+              "page and offset are not supported on this API version"
+            ],
+            "evidence": {
+              "primary": "s1-p633",
+              "secondary": "s1-p655",
+              "tertiary": ""
+            }
+          }
+        ],
+        "blockers": [
+          {
+            "title": "data:read grant boundary not confirmed",
+            "kind": "missing-evidence",
+            "consequence": "test",
+            "owner": "developer",
+            "resolution": "Confirm from citable Todoist documentation which scope grants read access to active tasks without write access, then set the scope in the authorization step.",
+            "stepIds": [
+              "authorize-user-consent"
+            ],
+            "resolutionStepIds": [
+              "authorize-user-consent"
+            ]
+          },
+          {
+            "title": "Client registration details for customer connections not confirmed",
+            "kind": "prerequisite",
+            "consequence": "test",
+            "owner": "developer",
+            "resolution": "Complete dynamic registration and record client_id, client_secret and redirect URI before testing consent.",
+            "stepIds": [
+              "register-oauth-client"
+            ],
+            "resolutionStepIds": [
+              "register-oauth-client"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

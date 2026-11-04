@@ -1,0 +1,98 @@
+{
+  "name": "gitlab",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "b7b7613154d36429601b5d65d68188c864d34e23",
+    "guideCodeFingerprint": "c057596ded7750368aa30318325cbf33e961a7e445a8b7fee16151e5234e4dc7",
+    "builtAt": "2026-11-04T09:25:01.840Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.35"
+  },
+  "input": {
+    "app": "GitLab",
+    "website": "",
+    "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-04T09:28:03.437Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-f5f872fe-1101-4427-b6ca-01b89d89a976",
+      "key": "9e4ed800-acb2-4300-8465-49f2637da622",
+      "input": {
+        "app": "GitLab",
+        "website": "",
+        "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Finding the provider",
+      "detail": "Searching for GitLab OAuth documentation.",
+      "status": "working",
+      "at": "2026-11-04T09:28:03.475Z"
+    },
+    {
+      "stage": "Checking a suggested provider website",
+      "detail": "Public search returned no usable result. Checking the official documentation or product homepage before confirmation.",
+      "status": "working",
+      "at": "2026-11-04T09:28:03.478Z"
+    }
+  ],
+  "job": {
+    "id": "job-f5f872fe-1101-4427-b6ca-01b89d89a976",
+    "input": {
+      "app": "GitLab",
+      "website": "",
+      "useCase": "Read issue titles in a project the connected person can access, including pagination. Never create, update or delete issues. Use OAuth for individual customer accounts.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Finding the provider",
+        "detail": "Searching for GitLab OAuth documentation.",
+        "status": "working",
+        "at": "2026-11-04T09:28:03.475Z"
+      },
+      {
+        "stage": "Checking a suggested provider website",
+        "detail": "Public search returned no usable result. Checking the official documentation or product homepage before confirmation.",
+        "status": "working",
+        "at": "2026-11-04T09:28:03.478Z"
+      }
+    ],
+    "createdAt": "2026-11-04T09:28:03.449Z",
+    "updatedAt": "2026-11-04T09:28:03.480Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-04T09:28:03.472Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "Could not identify this app confidently from public search or a verified homepage. Add its official website or direct OAuth documentation URL."
+    },
+    "error": "Could not identify this app confidently from public search or a verified homepage. Add its official website or direct OAuth documentation URL.",
+    "savedSources": []
+  },
+  "readiness": "research-failure",
+  "requests": [],
+  "errors": [
+    "No usable guide for the declared task",
+    "No shareable plan",
+    "Request contract check failed",
+    "Required concrete pagination handoff absent"
+  ],
+  "speed": {
+    "kind": "normal",
+    "budgetMs": 90000
+  },
+  "pass": false,
+  "elapsedMs": 48
+}

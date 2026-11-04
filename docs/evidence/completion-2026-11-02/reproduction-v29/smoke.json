@@ -1,0 +1,458 @@
+{
+  "checkedAt": "2026-11-03T16:27:19.978Z",
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "837d8e9ba1c61ae4bc6da920048a348c1a0415a3",
+    "guideCodeFingerprint": "046bc08af69535245f590e4d7a550ebc9a9cf0e12762162f9f885c7fd618924e",
+    "builtAt": "2026-11-03T16:26:50.050Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.29"
+  },
+  "configuredPreviewMatchesSourceAndFingerprint": true,
+  "credentialsConfigured": false,
+  "postStatus": 200,
+  "getStatus": 200,
+  "immutablePlanRoundTrip": true,
+  "selectedRepositoriesInstructions": true,
+  "plan": {
+    "schemaVersion": 1,
+    "id": "lp-97087ca8-3632-4a87-aab3-83d76d4deed9",
+    "provider": "GitHub",
+    "request": "Read repository contents",
+    "createdAt": "2026-11-03T16:27:19.944Z",
+    "basis": "Reviewed rules",
+    "status": "Ready to start setup",
+    "summary": "Use your own GitHub App for the selected automation, configure it in Composio, and install it separately on customer repositories.",
+    "route": "GitHub App",
+    "next": {
+      "id": "register",
+      "title": "Register your GitHub App",
+      "detail": "Choose ownership, callback configuration and installation visibility. Keep credentials in your server’s secret store.",
+      "owner": "Developer",
+      "stage": "prepare",
+      "doneWhen": "The test app exists, its identity and callback configuration are recorded, and its credentials are stored server-side.",
+      "sourceIds": [
+        "github-register"
+      ],
+      "destination": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app",
+      "fields": [
+        "App name",
+        "App owner",
+        "Test account / workspace",
+        "Provider redirect URI"
+      ]
+    },
+    "steps": [
+      {
+        "id": "register",
+        "title": "Register your GitHub App",
+        "detail": "Choose ownership, callback configuration and installation visibility. Keep credentials in your server’s secret store.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The test app exists, its identity and callback configuration are recorded, and its credentials are stored server-side.",
+        "sourceIds": [
+          "github-register"
+        ],
+        "destination": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app",
+        "fields": [
+          "App name",
+          "App owner",
+          "Test account / workspace",
+          "Provider redirect URI"
+        ]
+      },
+      {
+        "id": "permissions",
+        "title": "Configure the permissions listed above",
+        "detail": "Set repository permissions in GitHub App settings and subscribe only to required events. Permissions come from app settings and installation grants.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The configured grant matches the permission list and contains no unnecessary access.",
+        "sourceIds": [
+          "github-toolkit"
+        ],
+        "destination": "https://docs.composio.dev/toolkits/github",
+        "fields": [
+          "Contents: read"
+        ]
+      },
+      {
+        "id": "redirect",
+        "title": "Copy the exact provider redirect URI from Composio",
+        "detail": "Begin a custom Auth Config for the correct toolkit and OAuth2 method. Copy its displayed redirect URI into the provider settings; this differs from your product’s Connect Link return URL.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "The exact redirect URI displayed by the Auth Config is saved in the provider app.",
+        "sourceIds": [
+          "custom",
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+        "fields": []
+      },
+      {
+        "id": "auth-config",
+        "title": "Finish the custom Auth Config",
+        "detail": "Store provider credentials only in Composio/server-side secret configuration. Record the auth config ID; never paste credentials into this advisor.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+        "sourceIds": [
+          "custom"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+        "fields": [
+          "Toolkit",
+          "Authentication method",
+          "Auth config ID"
+        ]
+      },
+      {
+        "id": "install-link",
+        "title": "Provide the separate GitHub App installation link",
+        "detail": "Install the app on a representative account and selected test repositories, then complete the Composio connection. Record the installation link for later customer onboarding.",
+        "owner": "Developer + admin",
+        "stage": "prepare",
+        "doneWhen": "The app is installed on the intended test account and repositories; its installation URL is recorded.",
+        "sourceIds": [
+          "github-toolkit",
+          "github-install"
+        ],
+        "destination": "https://docs.composio.dev/toolkits/github",
+        "fields": []
+      },
+      {
+        "id": "session",
+        "title": "Create a session scoped to the selected toolkit",
+        "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+        "owner": "Developer",
+        "stage": "prepare",
+        "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+        "sourceIds": [
+          "sessions"
+        ],
+        "destination": "https://docs.composio.dev/docs/configuring-sessions",
+        "fields": []
+      },
+      {
+        "id": "check-admin",
+        "title": "Check the target organization’s installation policy",
+        "detail": "Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.",
+        "owner": "Developer + admin",
+        "stage": "test",
+        "doneWhen": "The described configuration is saved and ready for the next step.",
+        "sourceIds": [
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication",
+        "fields": []
+      },
+      {
+        "id": "connect",
+        "title": "Authorize a representative account",
+        "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+        "owner": "Developer",
+        "stage": "test",
+        "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+        "sourceIds": [
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication",
+        "fields": []
+      },
+      {
+        "id": "request-contents",
+        "title": "Test: Read repository contents",
+        "stage": "test",
+        "testKind": "action",
+        "actionIds": [
+          "contents"
+        ],
+        "owner": "Developer",
+        "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Read an excluded private test repository: expect 403/404 without content. Never use a public repository to prove installation isolation.",
+        "doneWhen": "HTTP 200 with repository entries. Record the actual response; this example has not been executed.",
+        "fields": [
+          "TEST_OWNER and TEST_REPO: an allowed test repository from the GitHub App installation"
+        ],
+        "sourceIds": [
+          "github-request-contents",
+          "proxy-execute"
+        ],
+        "destination": "https://docs.github.com/en/rest/repos/contents",
+        "request": {
+          "method": "GET",
+          "endpoint": "https://api.github.com/repos/TEST_OWNER/TEST_REPO/contents",
+          "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"github\",\n  \"method\": \"GET\",\n  \"endpoint\": \"https://api.github.com/repos/TEST_OWNER/TEST_REPO/contents\"\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+          "language": "javascript"
+        }
+      },
+      {
+        "id": "gate-GITHUB-COMPOSIO",
+        "title": "Bring your own GitHub App, then install it",
+        "detail": "Composio documents custom GitHub App client ID/secret support. Supply the installation link separately; users must install the app and grant repository access before connecting. Auth-config scopes do not set GitHub App permissions.",
+        "owner": "Developer",
+        "stage": "launch",
+        "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+        "sourceIds": [
+          "github-toolkit"
+        ],
+        "destination": "https://docs.composio.dev/toolkits/github",
+        "fields": []
+      },
+      {
+        "id": "gate-GITHUB-INSTALL",
+        "title": "Installation and authorization are separate",
+        "detail": "Use a representative account to install on the intended repositories. Organization policy or owner approval can block access even after user authorization.",
+        "owner": "Developer + admin",
+        "stage": "launch",
+        "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+        "sourceIds": [
+          "github-install"
+        ],
+        "destination": "https://docs.github.com/en/apps/using-github-apps/installing-your-own-github-app",
+        "fields": []
+      },
+      {
+        "id": "review",
+        "title": "Review launch evidence and unresolved questions",
+        "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+        "owner": "Developer",
+        "stage": "launch",
+        "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+        "sourceIds": [
+          "auth"
+        ],
+        "destination": "https://docs.composio.dev/docs/authentication",
+        "fields": []
+      }
+    ],
+    "permissions": [
+      {
+        "id": "permission-0",
+        "identifier": "Contents: read",
+        "classification": "Repository permission",
+        "title": "Contents: read",
+        "detail": "Inspect repository code.",
+        "sourceIds": [
+          "github-contents"
+        ]
+      }
+    ],
+    "requirements": [
+      {
+        "id": "GITHUB-COMPOSIO",
+        "title": "Bring your own GitHub App, then install it",
+        "detail": "Composio documents custom GitHub App client ID/secret support. Supply the installation link separately; users must install the app and grant repository access before connecting. Auth-config scopes do not set GitHub App permissions.",
+        "label": "Verified requirement",
+        "sourceIds": [
+          "github-toolkit"
+        ],
+        "stepIds": [
+          "gate-GITHUB-COMPOSIO"
+        ],
+        "stage": "launch"
+      },
+      {
+        "id": "GITHUB-INSTALL",
+        "title": "Installation and authorization are separate",
+        "detail": "Use a representative account to install on the intended repositories. Organization policy or owner approval can block access even after user authorization.",
+        "label": "Conditional requirement",
+        "sourceIds": [
+          "github-install"
+        ],
+        "stepIds": [
+          "gate-GITHUB-INSTALL"
+        ],
+        "stage": "launch"
+      }
+    ],
+    "blockers": [
+      {
+        "id": "unknown-0",
+        "title": "Confirm the selected Composio tools use the intended GitHub App grant and work for the required background execution. No installation-token or tool-execution test was performed.",
+        "consequence": "follow-up",
+        "owner": "Developer",
+        "resolution": "Confirm the selected Composio tools use the intended GitHub App grant and work for the required background execution. No installation-token or tool-execution test was performed."
+      }
+    ],
+    "sources": [
+      {
+        "id": "toolkit-api",
+        "title": "Toolkit metadata API and managed auth methods",
+        "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "managed",
+        "title": "Managed OAuth directory",
+        "url": "https://docs.composio.dev/toolkits/managed-auth",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "custom",
+        "title": "Managed vs custom auth",
+        "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "sessions",
+        "title": "Configuring sessions",
+        "url": "https://docs.composio.dev/docs/configuring-sessions",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "auth",
+        "title": "Authentication and connected accounts",
+        "url": "https://docs.composio.dev/docs/authentication",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "github-toolkit",
+        "title": "GitHub toolkit authentication",
+        "url": "https://docs.composio.dev/toolkits/github",
+        "publisher": "Composio",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "github-model",
+        "title": "Choosing a GitHub App",
+        "url": "https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/deciding-when-to-build-a-github-app",
+        "publisher": "GitHub",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "github-contents",
+        "title": "Repository contents API permissions",
+        "url": "https://docs.github.com/en/rest/repos/contents",
+        "publisher": "GitHub",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "github-install",
+        "title": "Install on selected repositories",
+        "url": "https://docs.github.com/en/apps/using-github-apps/installing-your-own-github-app",
+        "publisher": "GitHub",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "github-register",
+        "title": "Register a GitHub App",
+        "url": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app",
+        "publisher": "GitHub",
+        "checkedAt": "2026-10-30"
+      },
+      {
+        "id": "github-request-contents",
+        "title": "Test: Read repository contents API reference",
+        "url": "https://docs.github.com/en/rest/repos/contents",
+        "checkedAt": "2026-11-02"
+      },
+      {
+        "id": "proxy-execute",
+        "title": "Run provider requests through an authorized Composio session",
+        "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+        "checkedAt": "2026-11-02"
+      }
+    ],
+    "timing": {
+      "work": "1–3 hours",
+      "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+      "wait": "The documented registration/install path does not identify a general provider review queue. This does not remove customer organization approval or any separate Marketplace requirements.",
+      "waitSourceIds": [
+        "github-register"
+      ],
+      "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+    },
+    "integration": "Managed OAuth2 availability does not supply your repository-scoped GitHub App. Use your own app and installation flow with Composio’s documented custom configuration.",
+    "details": [
+      {
+        "id": "AUTH-METHOD",
+        "title": "Check the method, then check the fit",
+        "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+        "label": "Verified requirement",
+        "sourceIds": [
+          "managed",
+          "toolkit-api",
+          "github-toolkit"
+        ]
+      },
+      {
+        "id": "GITHUB-MODEL",
+        "title": "Use installation-based repository access",
+        "detail": "Background operation, selected repositories or PR writing/review makes a GitHub App the recommended model. It supports fine-grained permissions and repository installation grants.",
+        "label": "Recommendation",
+        "sourceIds": [
+          "github-model",
+          "github-install"
+        ]
+      }
+    ],
+    "preparation": [
+      {
+        "title": "Permissions rationale",
+        "text": "Contents: read: Inspect repository code."
+      },
+      {
+        "title": "Registration worksheet",
+        "text": "Provider app: GitHub App\nCallback: copy the exact provider redirect URI from the auth configuration.\nKeep client secrets in your backend or secret manager.\nToolkit: github\nPermissions: Contents: read\nRecord the verified auth config ID."
+      },
+      {
+        "title": "First connection test",
+        "text": "Check the target organization’s installation policy: Test a representative account. If installation is restricted, ask its administrator to allow the app and requested access. No administrator turnaround is assumed.\nDone when: The described configuration is saved and ready for the next step.\nAuthorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Read repository contents: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Read an excluded private test repository: expect 403/404 without content. Never use a public repository to prove installation isolation.\nDone when: HTTP 200 with repository entries. Record the actual response; this example has not been executed."
+      }
+    ],
+    "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+    "context": [
+      {
+        "label": "Actions",
+        "value": "Read repository contents"
+      },
+      {
+        "label": "Which repositories should it access?",
+        "value": "Repositories each customer selects"
+      }
+    ],
+    "assessment": {
+      "version": 1,
+      "provider": "github",
+      "description": "",
+      "capabilities": [
+        "contents"
+      ],
+      "audience": "unknown",
+      "stage": "unknown",
+      "branding": "unknown",
+      "background": "unknown",
+      "dataHandling": "unknown",
+      "workspaceOnly": "unknown",
+      "slackIdentity": "unknown",
+      "repoAccess": "selected",
+      "orgPolicy": "unknown",
+      "managedScopes": "unknown",
+      "customScopes": "unknown",
+      "dedicatedQuota": "no",
+      "customInstance": "no",
+      "special": ""
+    },
+    "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"github\"],\n  authConfigs: { github: \"ac_your_config_id\" },\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+    "metadata": {
+      "provider": "github",
+      "authMethods": [
+        "OAUTH2"
+      ],
+      "managedMethods": [
+        "OAUTH2"
+      ],
+      "origin": "Documentation snapshot",
+      "checkedAt": "2026-10-30",
+      "scopeCoverage": "unknown",
+      "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+      "toolkitSlug": "github"
+    }
+  }
+}

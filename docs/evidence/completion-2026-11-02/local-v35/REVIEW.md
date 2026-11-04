@@ -1,0 +1,7 @@
+# Local v35 first round
+
+Source `b7b7613154d36429601b5d65d68188c864d34e23`, prompt `live-guide.35`. [All seven original attempts](round-1.json) are retained; none passed. Notion and Dropbox each ended after 161.5 seconds. The five remaining jobs failed source discovery in 33–48 milliseconds while the local worker logged internal errors. These are failed attempts, not evidence that those providers lack OAuth. The host subsequently slept and the worker was restarted; no corrected outcome replaces these records.
+
+Notion exposed a validator defect before the worker errors: the endpoint's small sample contains only `object` and `id`, while its linked official object reference documents `properties` and the title representation. Treating the small sample as a closed schema rejected a documented response field. The next build resolves linked response references only when the explicit source link and literal response-type discriminator match, retaining source validation.
+
+Dropbox's independent review correctly rejected an unsupported out-of-folder error expectation in a separate boundary step. Recovery retained the original guide but failed to complete; it did not count as a usable guide. The next build records affected step IDs explicitly so a setup/boundary correction can target the actual step, and gives action recovery the same complete reference context used by planning. The six audit criteria remain required.

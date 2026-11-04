@@ -10,7 +10,7 @@
 
 ## Optional configuration
 
-Both local and hosted evaluations record real Haiku calls. The current host uses server-side model secrets; see the hosted evaluation for successful and incomplete runs. Authenticated Composio metadata and credentialed Firecrawl retrieval remain unverified. No API key is required for reviewed rules or basic source collection.
+Local and historical hosted evaluations record real Haiku calls. Publication is deferred by the user as of 3 November 2026; the existing public host is an earlier candidate. See the current local evaluation for the selected source and outcomes. Authenticated Composio metadata and credentialed Firecrawl retrieval remain unverified. No API key is required for reviewed rules or basic source collection.
 
 | Server-side binding | Behavior |
 | --- | --- |
@@ -29,11 +29,11 @@ ANTHROPIC_MODEL=claude-haiku-5-5
 
 The adapter calls Anthropic directly with a fixed capability schema via `output_config.format` and API version `2026-10-21`. It accepts complete message responses only, then checks the known provider/capability mapping locally. Intake has a 25-second deadline and 4,096-token bound, with adaptive thinking at medium effort. Live research has separate task budgets using the same model: see [the bounded workflow](LIVE-GUIDE.md). Refusal, truncation, unsupported output, timeout or an API error returns local suggestions. It never silently sends the description to another vendor. See [Anthropic structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and [Messages API version migration](https://platform.claude.com/docs/en/api/migration-2026-10-21).
 
-For Vite/Cloudflare development, copy [.dev.vars.example](../.dev.vars.example) to an ignored `.dev.vars` and provide server-side values using Cloudflare's local bindings facility. Configure equivalent Worker runtime secrets for hosting. Never put these values in client bundles or `NEXT_PUBLIC_` variables. Missing/failed metadata retains the dated docs snapshot instead of declaring managed OAuth unavailable. Restart the local server after changing bindings. Optional AI has an anonymous limit of 20 requests per connection/hour; live research has a limit of 12.
+For Vite/Cloudflare development, copy [.dev.vars.example](../.dev.vars.example) to an ignored `.dev.vars` and provide server-side values using Cloudflare's local bindings facility. Configure equivalent Worker runtime secrets for hosting. Never put these values in client bundles or `NEXT_PUBLIC_` variables. Missing/failed metadata retains the dated docs snapshot instead of declaring managed OAuth unavailable. Restart the local server after changing bindings. Optional AI has an anonymous limit of 20 requests per connection/hour; live research has a limit of 40 fresh operations per connection/hour. Duplicate operations reuse their job and do not consume another generation.
 
 ## Architecture
 
-React + TypeScript on the existing Vinext/Vite stack, hosted as a Cloudflare Worker through Sites. No framework replacement or new account system.
+React + TypeScript on the existing Vinext/Vite stack, built for the Cloudflare Worker runtime with a D1 store. The current release runs locally; Sites publication is paused and a future Vercel deployment has not been prepared. No framework replacement or new account system.
 
 | Module | Responsibility |
 | --- | --- |

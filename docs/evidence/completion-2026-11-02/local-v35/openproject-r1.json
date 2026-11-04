@@ -1,0 +1,99 @@
+{
+  "name": "openproject",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "b7b7613154d36429601b5d65d68188c864d34e23",
+    "guideCodeFingerprint": "c057596ded7750368aa30318325cbf33e961a7e445a8b7fee16151e5234e4dc7",
+    "builtAt": "2026-11-04T09:25:01.840Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.35"
+  },
+  "input": {
+    "app": "OpenProject",
+    "website": "https://www.openproject.org/docs/api/",
+    "useCase": "Read titles of work packages the connected person can access, including pagination. Never modify or delete work packages. Use developer-owned OAuth for customer accounts on their own instances; retain the instance base URL as a user input.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-04T09:28:03.485Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-68ca5b02-06e0-4022-816d-f5c1a85f0b9c",
+      "key": "3ceffffe-7b50-44f0-887e-1808467bc703",
+      "input": {
+        "app": "OpenProject",
+        "website": "https://www.openproject.org/docs/api/",
+        "useCase": "Read titles of work packages the connected person can access, including pagination. Never modify or delete work packages. Use developer-owned OAuth for customer accounts on their own instances; retain the instance base URL as a user input.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "www.openproject.org/docs/api/",
+      "status": "working",
+      "at": "2026-11-04T09:28:03.517Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read www.openproject.org/docs/api/.",
+      "status": "warning",
+      "at": "2026-11-04T09:28:03.520Z"
+    }
+  ],
+  "job": {
+    "id": "job-68ca5b02-06e0-4022-816d-f5c1a85f0b9c",
+    "input": {
+      "app": "OpenProject",
+      "website": "https://www.openproject.org/docs/api/",
+      "useCase": "Read titles of work packages the connected person can access, including pagination. Never modify or delete work packages. Use developer-owned OAuth for customer accounts on their own instances; retain the instance base URL as a user input.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "www.openproject.org/docs/api/",
+        "status": "working",
+        "at": "2026-11-04T09:28:03.517Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read www.openproject.org/docs/api/.",
+        "status": "warning",
+        "at": "2026-11-04T09:28:03.520Z"
+      }
+    ],
+    "createdAt": "2026-11-04T09:28:03.490Z",
+    "updatedAt": "2026-11-04T09:28:03.522Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-04T09:28:03.517Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+      "url": "https://www.openproject.org/docs/api/"
+    },
+    "error": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+    "savedSources": []
+  },
+  "readiness": "research-failure",
+  "requests": [],
+  "errors": [
+    "No usable guide for the declared task",
+    "No shareable plan",
+    "Request contract check failed",
+    "Required concrete pagination handoff absent"
+  ],
+  "speed": {
+    "kind": "normal",
+    "budgetMs": 90000
+  },
+  "pass": false,
+  "elapsedMs": 39
+}
