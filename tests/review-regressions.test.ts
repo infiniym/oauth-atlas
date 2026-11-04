@@ -767,6 +767,12 @@ test('completion: a broader-scope comparison does not turn a read grant into a m
  assert.equal(contradictsGrant('The read_items scope grants write access to items.',evidence,'read_items'),true);
  assert.equal(contradictsGrant('Delete an item',evidence),true);
 });
+test('completion: excluded mutation capabilities do not contradict a documented read capability',async()=>{
+ const {contradictsGrant}=await import('../lib/live-guide/consistency.ts');const evidence=[{sourceId:'s1',quote:'Read content gives a connection access to read existing content.'}];
+ assert.equal(contradictsGrant('Read existing content. Insert and update capabilities are not requested.',evidence,'Read content'),false);
+ assert.equal(contradictsGrant('The write capability is not required. Read content only.',evidence,'Read content'),false);
+ assert.equal(contradictsGrant('Read content permits update and delete operations.',evidence,'Read content'),true);
+});
 
 test('completion: instruction repair accepts a useful boundary check in the completion criterion',async()=>{
  const v=value();v.steps[1].detail='Read project issues and inspect their titles.';v.steps[1].doneWhen='The titles are returned.';const passages=sourcePassages(docs);const result=await completeTestInstructions(v,docs,'Read issue titles.',bindings,new AbortController().signal,async()=>aiResponse({items:[{index:1,detail:'Read the project issues and expect the returned issue titles.',doneWhen:'Boundary check: inspect the actual granted scope and outgoing request log; confirm only read requests were sent.',citations:{primary:passages.find(p=>p.citable)!.id,secondary:'',tertiary:''}}]}),()=>{});
@@ -886,6 +892,10 @@ test('completion: OpenAPI response alternatives retain referenced dynamic proper
  const {openApiText}=await import('../lib/live-guide/openapi.ts');const ref=(name:string)=>({$ref:'#/components/schemas/'+name});
  const projected=openApiText({openapi:'3.1.0',info:{title:'Item API'},paths:{'/items/{id}':{get:{responses:{200:{content:{'application/json':{schema:{oneOf:[ref('Partial'),ref('Item')]}}}}}}},'/items/{id}/properties/{key}':{get:{responses:{200:{content:{'application/json':{schema:{anyOf:[ref('Property'),ref('List')]}}}}}}}},components:{schemas:{Partial:{type:'object',properties:{id:{type:'string'}}},Item:{type:'object',properties:{properties:{type:'object',additionalProperties:ref('Property')}}},Property:{allOf:[{type:'object',properties:{type:{type:'string',const:'title'}}},{type:'object',properties:{title:{type:'array',items:ref('Text')}}}]},Text:{type:'object',properties:{plain_text:{type:'string'}}},List:{type:'object',properties:{results:{type:'array',items:ref('Property')},has_more:{type:'boolean'},next_cursor:{type:['string','null']}}}}}},'Read item titles.');
  assert.match(projected!.text,/\$\.properties\.\*\.title\[\]\.plain_text \(string\)/);assert.match(projected!.text,/\$\.results\[\]\.title\[\]\.plain_text \(string\)/);assert.match(projected!.text,/\$\.has_more \(boolean\)/);assert.match(projected!.text,/"const": "title"/);
+});
+test('completion: unrelated schema alternatives cannot consume the requested field projection',async()=>{
+ const {openApiText}=await import('../lib/live-guide/openapi.ts');const unrelated=Array.from({length:30},(_,i)=>({type:'object',properties:Object.fromEntries(Array.from({length:12},(_,j)=>['metadata_'+i+'_'+j,{type:'string'}]))}));
+ const result=openApiText({openapi:'3.1.0',paths:{'/items':{get:{responses:{200:{content:{'application/json':{schema:{type:'object',properties:{results:{type:'array',items:{anyOf:[...unrelated,{type:'object',properties:{title:{type:'object',properties:{plain_text:{type:'string'}}}}}]}}}}}}}}}}}},'Read item titles.');assert.match(result!.text,/\$\.results\[\]\.title\.plain_text \(string\)/);
 });
 
 test('completion: a collection reference wins before adjacent API utilities and the reader skips linked execution URLs',async()=>{
