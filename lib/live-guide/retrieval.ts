@@ -159,20 +159,25 @@ export function actionLinkScore(url:string,label:string,useCase:string,app=''):n
 
 export function documentationScore(url:string,label:string,input:Pick<GuideInput,'useCase'|'website'>&{app?:string}):number{
  const parsed=new URL(url),text=(parsed.origin+parsed.pathname+' '+label).toLowerCase(),request=input.useCase.toLowerCase();
- if(/\/-\/ide\/|\/commits\/(?:branch|commit)\/|\/src\/(?:commit|branch)\//.test(parsed.pathname)||/^edit (?:this page|in |page source)/i.test(label))return -1000;
+ if(/\/-\/ide\/|\/commits\/(?:branch|commit)\/|\/src\/(?:commit|branch)\//.test(parsed.pathname)||/\/-\/(?:blob|tree)\/.*\.(?:rb|go|py|rs|java|c|cpp|h|sh)(?:$|\?)/.test(parsed.pathname)||/^edit (?:this page|in |page source)/i.test(label))return -1000;
  if(/\/(?:auth\/login|login|signup|sign-in|trial_registrations)(?:\/|$)/.test(parsed.pathname))return -1000;
  if(/\/(?:customers|features|replay|careers|pricing)(?:\/|$)/.test(parsed.pathname))return -100;
   const irrelevant=['workers','agent-administration','object-storage','business-api','business-endpoints','team-admin','team/','longpoll','webhooks','realtime','marketplace','diffs','merge_requests_approvals','migration','oauth-1','legacy'];
  if(!/\b(?:manage|create|rotate|revoke|administer).{0,25}(?:tokens?|credentials?)\b/i.test(request)&&/\/(?:personal_access_tokens|project_access_tokens|group_access_tokens|project_job_token_scopes|job_token_scope)(?:\/|$)/.test(parsed.pathname))return -80;
  const agentArea=/\/(?:admin|workers|(?:[a-z0-9]+-)?agent-apis|agent-filesystem)(?:\/|-)|get-agent-permissions|query-agents/.test(parsed.pathname)&&!/(?:manage|list|query|configure|administer).{0,25}(?:agents|workers)/.test(request)?100:0;
- const penalty=agentArea+irrelevant.filter(t=>text.includes(t)&&!request.includes(t.replace(/-/g,' '))).length*65;
+ const internalArea=/\/(?:development|contributing|architecture)\//.test(parsed.pathname)&&!/\b(?:contribute|implement|extend)\b.{0,50}\b(?:server|provider|sdk|database)\b/i.test(request)?70:0;
+ const penalty=internalArea+agentArea+irrelevant.filter(t=>text.includes(t)&&!request.includes(t.replace(/-/g,' '))).length*65;
  const seedPath=input.website?new URL(input.website).pathname.split('/').filter(Boolean)[0]:'';
  const otherProduct=seedPath&&seedPath.endsWith('-api')&&!new URL(url).pathname.startsWith('/'+seedPath)?45:0;
  return linkScore(parsed.origin+parsed.pathname,label)+actionLinkScore(url,label,input.useCase,input.app)-penalty-otherProduct-(/forum\.|new-topic|trial_registrations|\/-\/work_items/.test(text)?100:0);
 }
 export function requestTerms(value:string,app=''):string[]{
  const stop=new Set(('read only list retrieve fetch person backend with from their when they that this then them will into have other customer customers request requests should connect connected connection never without internal user users account accounts workspace workspaces shared explicitly public individual each application integration agent title titles names including pagination oauth developer owned instance instances retain input inputs explain whether base '+app.toLowerCase()).split(/\W+/));
- return [...new Set(value.replace(/\b(?:never|not|no|without|don't|do not)\b[^.!?;\n]*/gi,'').toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).flatMap(t=>{const stem=t.replace(/ies$/,'y').replace(/s$/,'');return stem.length>6?[stem,stem.slice(0,5)]:[stem];}))];
+ const terms=[...new Set(value.replace(/\b(?:never|not|no|without|don't|do not)\b[^.!?;\n]*/gi,'').toLowerCase().split(/\W+/).filter(t=>t.length>3&&!stop.has(t)).flatMap(t=>{const stem=t.replace(/ies$/,'y').replace(/s$/,'');return stem.length>6?[stem,stem.slice(0,5)]:[stem];}))];
+ // Content references may name their representation instead of repeating the
+ // feature word. These are search terms, never inferred provider facts.
+ if(terms.includes('content'))terms.push('body','markdown','block');
+ return [...new Set(terms)];
 }
 export function selectSourceText(text:string,useCase:string,limit=48000,app=''):string{
  if(text.length<=limit)return text;
@@ -403,7 +408,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
         if(!onProvider(link,seed)&&providerBranded&&onProvider(page.url,seed)&&/docs|developers?|readme\.io|gitbook|readthedocs|mintlify/i.test(link)&&linkScore(link,page.labels[link])+actionLinkScore(link,page.labels[link]||'',input.useCase,input.app)>0)allowedExternal.add(linked.hostname);
         if(allowed(link)&&!executable(link)&&!attempted.has(sourceKey(link))&&score(link,page.labels[link])>0)candidates.set(link,page.labels[link]||'');
       }
-      if(substantive)for(const topic of topics)if(topicPatterns[topic].test(page.url+' '+page.title)&&(topic!=='registration'||/register.{0,80}(?:app|client)|creat.{0,80}(?:OAuth application|OAuth app|integration|connection)|OAuth applications/i.test(page.text)||!/\/endpoints\//.test(page.url)&&/authorization|oauth.app|public.connection/i.test(page.url)))covered.add(topic);
+      if(substantive)for(const topic of topics)if(topicPatterns[topic].test(page.url+' '+page.title)&&(topic!=='registration'||/(?:register|creat|add|new).{0,80}(?:app|client|integration|connection)/i.test(page.text)))covered.add(topic);
       if(substantive&&/Required scopes?\s*:|\bscopes?\b.{0,35}\b(?:read|permission)|\bcapabilities\b/i.test(page.text))covered.add('permissions');
       if(options.readOne){emit({stage:'Source read',detail:page.title,status:'done'});break;}
       const ranked=[...candidates].filter(([l])=>!attempted.has(sourceKey(l))).sort((a,b)=>score(b[0],b[1])-score(a[0],a[1]));
@@ -418,7 +423,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
       const reference=ranked.find(([l])=>/\/(?:api-reference|reference)\/?$|\/guides\/?$/.test(new URL(l).pathname));
       const overview=!covered.has('registration')?ranked.find(([l])=>/\/docs\/(?:overview|introduction|getting-started)\/?$/.test(new URL(l).pathname)):undefined;
       const version=[...pages,...previous].some(p=>/[\w-]+-Version/.test(p.text))&&!pages.some(p=>/\/versioning(?:\/|$)/.test(p.url))?ranked.find(([l])=>/\/versioning(?:\/|$)/.test(new URL(l).pathname)):undefined;
-      const registrationRank=(l:string,label:string)=>score(l,label)+(/\/(?:oauth|authorization|authentication|oauth-applications)(?:\/|$)|oauth.{0,16}(?:guide|authentication|applications)|register|public.connection/i.test(l+' '+label)?100:0)-(/\/(?:api-reference|endpoints)\/|from.oauth.?1|console\/|oauth.*(?:actor|manifest)/i.test(l)?150:0);
+      const registrationRank=(l:string,label:string)=>score(l,label)+(/\/(?:oauth[^/]*|authorization|authentication|oauth-applications)(?:\/|$)|oauth.{0,16}(?:guide|authentication|applications)|register|public.connection/i.test(l+' '+label)?100:0)-(/\/(?:api-reference|endpoints)\/|from.oauth.?1|console\/|oauth.*(?:actor|manifest)/i.test(l)?150:0);
       const missing=topics.filter(t=>!covered.has(t)).map(t=>{const topicRanked=t==='registration'?[...ranked].sort((a,b)=>registrationRank(b[0],b[1])-registrationRank(a[0],a[1])):ranked;const candidate=topicRanked.find(([l,label])=>topicPatterns[t].test(l+' '+label))||(t==='permissions'?ranked.find(([l,label])=>actionLinkScore(l,label,input.useCase,input.app)>0):undefined);return {topic:t,url:candidate?.[0]};});
       const schema=ranked.find(([l])=>/swagger.*\.json|openapi.*\.(?:json|ya?ml)/i.test(l));
       const pagination=/paginat|continuation|cursor/i.test(input.useCase)?ranked.find(([l,label])=>/paginat/i.test(l+' '+label))||(![...previous,...pages].some(p=>/paginat|general.concepts|\/api\/(?:usage|rest)\/?$/i.test(p.url))?ranked.find(([l,label])=>/general.concepts|\/api\/(?:usage|rest)\/?$|pagination|collections/i.test(l)||/^REST API(?:\s|$)/i.test(label)):undefined):undefined;
