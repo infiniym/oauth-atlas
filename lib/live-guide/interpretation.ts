@@ -10,6 +10,7 @@ import {factsSchema,stepsSchemaForRequest,expandPartEvidence,assembleStepParts,f
 import {coalesceRequestSteps} from './step-shape.ts';
 import {endpointEvidence,responseFields,unfilteredQueryRequirements} from './grounding.ts';
 import {ModelServiceFailure} from './failures.ts';
+import {responseFieldPriority} from './response-shapes.ts';
 
 // A small JSON schema is separate from local length and evidence checks.
 const string = { type:'string' };
@@ -49,8 +50,11 @@ export function contextPassages(passages:Passage[],sourceId:string,useCase:strin
   const selected=new Set<number>();let size=0;
   const add=(i:number)=>{if(i<0||i>=all.length||selected.has(i)||size+all[i].text.length>budget)return;selected.add(i);size+=all[i].text.length;};
   const responseFields=[...all.entries()].filter(([,p])=>/^Response JSON paths for /i.test(p.text));
-  const responseScore=(text:string)=>terms.filter(term=>text.split(': $')[0].toLowerCase().includes(term)).length*10+terms.filter(term=>text.split(': $')[1]?.toLowerCase().includes('.'+term)).length*100+(/\.(?:title|name|content|subject|markdown|plain_text)(?:\[\])? \(/.test(text)?2:0);
+  const responseScore=(text:string)=>terms.filter(term=>text.split(': $')[0].toLowerCase().includes(term)).length*10+responseFieldPriority(text,useCase);
   for(const [i] of responseFields.sort((a,b)=>responseScore(b[1].text)-responseScore(a[1].text)).slice(0,20)){add(i);}
+  // Object references can define the requested representation late in a page,
+  // without repeating the collection name used in the feature description.
+  for(const [i] of [...all.entries()].filter(([,p])=>/\b(?:discriminator|plain_text|rich_text|response (?:fields?|properties|shape)|property (?:types?|values?))\b/i.test(p.text)).slice(0,8)){add(i-1);add(i);add(i+1);}
   for(const [i] of [...all.entries()].filter(([,p])=>/default.{0,70}(?:filter|open|active|archiv)|(?:filter|open|active|archiv).{0,70}default|If no filter/i.test(p.text)).slice(0,4)){add(i-1);add(i);add(i+1);}
   // Preserve feature-specific grant boundaries before generic OAuth plumbing.
   // A scope can be correct while its configured resource boundary is wrong.
@@ -206,7 +210,7 @@ For instance-specific or self-hosted APIs, use the documented relative API path 
 Length and item limits are mandatory: each evidence array has 1-3 passage references. Finding/step titles at most 120 characters; detail at most 800; appliesWhen and doneWhen at most 400. Each fields entry at most 100 characters, with at most eight inputs per step. Summary and recommendation at most 700; nextAction at most 400. Question id uses lowercase letters, digits and hyphens only (starts with a letter, at most 60 characters); prompt at most 200; why at most 300; each of 2-3 option labels at most 120. Each coverage reason at most 400 characters. Each unknown at most 400 characters. Prefer 1-2 short sentences per detail and 1-2 references per item. Avoid duplicating the same uncertainty in unknowns and blockers. Do not repeat the same facts in every step.
 A deadline to apply or submit is not provider waiting time. Provider-wait findings must cite a passage with a published applicable duration. If none exists, record the unknown rather than assuming zero wait. activeEffort is an explicitly labeled planning estimate: provide a broad range ONLY with assumptions grounded in documented steps; otherwise return empty strings. Do not estimate a calendar launch date. Unknown provider policy must remain in unknowns with a concrete verification action.
 Summary, recommendation and nextAction must follow from the cited findings. Never claim Composio supports this app; integration availability is checked separately. Output the required JSON only.`;
-export const PROMPT_VERSION = 'live-guide.47';
+export const PROMPT_VERSION = 'live-guide.48';
 
 function durations(text:string):string[] {
   const numbers:Record<string,number>={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
@@ -391,7 +395,7 @@ export function planningContext(passages:Passage[],document:Document,input:Guide
  const setup=/oauth|authoriz|authentication|public.connection/i.test(document.url);
  const objectReference=/property|(?:^|[\/-])objects?(?:[\/-]|$)|schemas?/i.test(new URL(document.url).pathname)||document.text.includes('Security definitions:');
  const operationReference=/\/(?:api-reference|reference|endpoints|collections|pagination)(?:\/|$)|\/api\/(?:rest|usage)(?:\/|$)/i.test(document.url);
- const budget=documentCount<=2||objectReference||operationReference?48000:setup?24000:/versioning/i.test(document.url)?2000:/scopes?|capabilit/i.test(document.url)?6000:7000;
+ const budget=documentCount<=2?48000:objectReference||operationReference?16000:setup?24000:/versioning/i.test(document.url)?2000:/scopes?|capabilit/i.test(document.url)?6000:7000;
  return contextPassages(passages,document.id,input.useCase,budget,input.app);
 }
 

@@ -1,17 +1,23 @@
 // Keep the containing response object beside its fields when a long official
 // example or schema is compressed. Paths and types are derived, never inferred.
+export function responseFieldPriority(path:string,request=''):number{
+ const leaf=path.match(/\.([\w]+)(?:\[\])? \(/)?.[1]||'',text=request.toLowerCase();
+ const words=text.split(/\W+/).filter(word=>word.length>3).map(word=>word.replace(/ies$/,'y').replace(/s$/,''));
+ const value=/\btitles?\b/.test(text)&&/^(?:title|subject|plain_text)$/.test(leaf)||/\bnames?\b/.test(text)&&leaf==='name'||/\b(?:content|text|markdown)\b/.test(text)&&/^(?:content|body|markdown|plain_text)$/.test(leaf);
+ return (/^(?:has_more|next_cursor|hasNextPage|endCursor|pageInfo|nextLink|nextByOffset|truncated|unknown_block_ids)$/.test(leaf)?2000:0)+(value?1000:0)+(words.some(word=>leaf.toLowerCase()===word)?100:0)+(words.some(word=>path.toLowerCase().includes('.'+word))?10:0)+(/\.(?:results|items|nodes|edges)\[\]/.test(path)?25:0)+(/^(?:title|name|content|subject|markdown|plain_text|value|results|data|items|nodes|edges|properties|total|count)$/.test(leaf)?20:0);
+}
 export function schemaPriority(node:any,request='',depth=0):number{
  if(!node||typeof node!=='object'||depth>3)return 0;
- const words=request.toLowerCase().split(/\W+/).filter(word=>word.length>3).map(word=>word.replace(/ies$/,'y').replace(/s$/,''));
- const keyRank=(key:string)=>words.some(word=>key.toLowerCase().includes(word))?100:/^(?:plain_text|results|data|items|nodes|edges|properties|pageInfo|next_cursor|has_more)$/.test(key)?20:0;
- return Math.max(0,...Object.keys(node.properties||{}).map(keyRank),...['oneOf','anyOf','allOf'].flatMap(key=>(Array.isArray(node[key])?node[key]:[]).map((branch:any)=>schemaPriority(branch,request,depth+1))),...Object.values(node.properties||{}).map(child=>schemaPriority(child,request,depth+1)))+(typeof node.$ref==='string'?keyRank(node.$ref):0);
+ const keyRank=(key:string)=>responseFieldPriority('$.'+key+' (field)',request);
+ return Math.max(0,...Object.keys(node.properties||{}).map(keyRank),...['oneOf','anyOf','allOf'].flatMap(key=>(Array.isArray(node[key])?node[key]:[]).map((branch:any)=>schemaPriority(branch,request,depth+1))),...Object.values(node.properties||{}).map(child=>schemaPriority(child,request,depth+1)))+(typeof node.$ref==='string'?keyRank(node.$ref):0)+(Object.keys(node.properties||{}).some(key=>/^(?:results|data|items|nodes|edges)$/.test(key))?25:0);
 }
 export function responsePaths(value:unknown,schema=false,request=''):string[]{
  const paths=new Set<string>();
  const walk=(node:any,path:string,depth:number)=>{
   if(depth>14||paths.size>=200)return;
   if(schema){
-   for(const key of ['oneOf','anyOf','allOf'])for(const branch of [...Array.isArray(node?.[key])?node[key]:[]].sort((a,b)=>schemaPriority(b,request)-schemaPriority(a,request)))walk(branch,path,depth+1);
+   // Schema alternatives do not introduce another level in the JSON value.
+   for(const key of ['oneOf','anyOf','allOf'])for(const branch of [...Array.isArray(node?.[key])?node[key]:[]].sort((a,b)=>schemaPriority(b,request)-schemaPriority(a,request)))walk(branch,path,depth);
    if(node?.properties)for(const [key,child] of Object.entries(node.properties).sort((a,b)=>schemaPriority({properties:{[b[0]]:b[1]}},request)-schemaPriority({properties:{[a[0]]:a[1]}},request)))walk(child,path+'.'+key,depth+1);
    else if(node?.items)walk(node.items,path+'[]',depth+1);
    else if(node?.type)paths.add(path+' ('+node.type+')');
@@ -26,9 +32,7 @@ export function responsePaths(value:unknown,schema=false,request=''):string[]{
   else paths.add(path+' ('+(node===null?'null':typeof node)+')');
  };
  walk(value,'$',0);
- const requested=request.toLowerCase().split(/\W+/).filter(word=>word.length>3).map(word=>word.replace(/ies$/,'y').replace(/s$/,''));
- const preferred=(path:string)=>(requested.some(word=>path.toLowerCase().includes('.'+word))?100:0)+(/\.(?:title|name|content|subject|markdown|plain_text|value|results|total|count|has_more|next_cursor|hasNextPage|endCursor)(?:\[\])? \(/.test(path)?1:0);
- return [...paths].sort((a,b)=>preferred(b)-preferred(a)||a.length-b.length).slice(0,40);
+ return [...paths].sort((a,b)=>responseFieldPriority(b,request)-responseFieldPriority(a,request)||a.length-b.length).slice(0,40);
 }
 
 export function jsonExampleAt(text:string,at:number):unknown{

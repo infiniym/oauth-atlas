@@ -4,7 +4,7 @@ import { normalizeText, onProvider, publicUrl } from './contracts.ts';
 import type { Bindings, Document, GuideInput, Progress, Research } from './contracts.ts';
 import {resolveIntentAiConfig} from '../ai/config.ts';
 import {openApiText} from './openapi.ts';
-import {responseExamples} from './response-shapes.ts';
+import {responseExamples,responseFieldPriority} from './response-shapes.ts';
 import {parseDocument} from 'yaml';
 
 type Page = { url: string; title: string; text: string; links: string[]; labels:Record<string,string>;navigationOnly?:boolean };
@@ -213,7 +213,7 @@ export function selectSourceText(text:string,useCase:string,limit=48000,app=''):
  }
  const responseRank=(line:string)=>{
   const operation=line.split(': $')[0].toLowerCase();
-  return terms.filter(term=>operation.includes(term)).length*100-(operation.match(/\//g)||[]).length+(/\.(?:title|name|content|subject|markdown) \(/.test(line)?30:0);
+  return terms.filter(term=>operation.includes(term)).length*100-(operation.match(/\//g)||[]).length+responseFieldPriority(line,useCase);
  };
  const responseFields=lines.map((line,i)=>({line,i})).filter(({line})=>line.startsWith('Response JSON paths for '));
  for(const {i} of responseFields.sort((a,b)=>responseRank(b.line)-responseRank(a.line)).slice(0,12))add(i);

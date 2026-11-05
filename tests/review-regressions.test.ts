@@ -925,6 +925,10 @@ test('completion: requested nested titles outrank shorter unrelated scalar names
  const {responsePaths}=await import('../lib/live-guide/response-shapes.ts');const properties=Object.fromEntries([...Array.from({length:60},(_,i)=>['metadata_'+i,{type:'object',properties:{name:{type:'string'}}}]),['properties',{type:'object',additionalProperties:{type:'object',properties:{title:{type:'array',items:{type:'object',properties:{plain_text:{type:'string'}}}}}}}]]);
  const paths=responsePaths({type:'object',properties},true,'Read item titles.');assert.ok(paths.includes('$.properties.*.title[].plain_text (string)'));assert.ok(paths.length<=40);
 });
+test('completion: schema composition is distinct from JSON depth and collection controls survive verbose text variants',async()=>{
+ const {openApiText}=await import('../lib/live-guide/openapi.ts');const ref=(name:string)=>({$ref:'#/components/schemas/'+name});const schemas:any={};for(let i=0;i<18;i++)schemas['Layer'+i]={anyOf:[ref(i===17?'Text':'Layer'+(i+1))]};schemas.Text={type:'object',properties:{plain_text:{type:'string'},...Object.fromEntries(Array.from({length:60},(_,i)=>['annotation_'+i,{type:'object',properties:{name:{type:'string'}}}]))}};schemas.Property={type:'object',properties:{title:ref('Layer0')}};schemas.List={type:'object',properties:{results:{type:'array',items:ref('Property')},has_more:{type:'boolean'},next_cursor:{type:['string','null']}}};
+ const result=openApiText({openapi:'3.1.0',paths:{'/items/{id}/properties/{key}':{get:{responses:{200:{content:{'application/json':{schema:{anyOf:[ref('Property'),ref('List')]}}}}}}}},components:{schemas}},'Read item titles.');assert.match(result!.text,/\$\.results\[\]\.title\.plain_text \(string\)/);assert.match(result!.text,/\$\.has_more \(boolean\)/);assert.match(result!.text,/\$\.next_cursor \(string,null\)/);
+});
 
 test('completion: a collection reference wins before adjacent API utilities and the reader skips linked execution URLs',async()=>{
  const {retrieve}=await import('../lib/live-guide/retrieval.ts');
