@@ -2,7 +2,8 @@
 // calls a provider. Dummy values exercise user inputs, headers and JSON bodies.
 import {spawnSync} from 'node:child_process';
 import {hasContinuationRequest} from '../lib/live-guide/request-examples.ts';
-export function inspectHandoff(guide:any){
+export type InspectedRequest={stepId:string;stub:{method:string;url?:string;headers:Record<string,string>;body:unknown[]};syntaxChecked:true;userInputsSubstituted:true;executed:false;errors:string[]};
+export function inspectHandoff(guide:any):InspectedRequest[]{
  const substitute=(s:string,endpoint='')=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}|\[([A-Z][A-Z_-]+)\]/g,(whole,...groups)=>{
   const key=groups.slice(0,6).find(Boolean)||'';
   if(/version/i.test(key))return whole;
