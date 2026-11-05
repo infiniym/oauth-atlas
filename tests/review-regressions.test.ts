@@ -698,6 +698,30 @@ test('completion: a permanent model request failure preserves evidence without r
  assert.equal(checkpoint.draftAccepted,false);assert.deepEqual(checkpoint.research.documents,docs);
  assert.deepEqual(checkpoint.facts,value());
 });
+test('completion: exhausted service credits retain the completed draft and retry only its review after access returns',async()=>{
+ const {ModelServiceFailure}=await import('../lib/live-guide/failures.ts');const old=run();old.guide.clarificationUsed=true;const research={website:url,documents:docs,inferred:false,warnings:[]};let calls=0,checkpoint:any={research,clarificationUsed:true,draft:value(),draftAccepted:true};
+ await assert.rejects(()=>generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async()=>{calls++;return Response.json({error:{type:'invalid_request_error',message:'Your credit balance is too low to access the API. secret-fixture'}},{status:400});},old,{checkpoint,save:async saved=>{checkpoint=structuredClone(saved);}}),error=>{assert.ok(error instanceof ModelServiceFailure);assert.equal(error.failure.serviceCode,'credits');assert.equal(error.failure.modelRequests,1);assert.doesNotMatch(error.message,/secret-fixture/);return true;});
+ assert.equal(calls,1);assert.deepEqual(checkpoint.research,research);assert.deepEqual(JSON.parse(JSON.stringify(checkpoint.draft)),value());
+ let resumedCalls=0;const resumed=await generate({...old.guide.input,previousId:old.guide.id},bindings,()=>{},new AbortController().signal,async(_u,init)=>{resumedCalls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'The saved request is documented.'}]});},old,{checkpoint});assert.equal(resumedCalls,1);assert.equal(guideReadiness(resumed.guide),'usable-guide');
+});
+test('completion: an unfinished independent review retries the same draft without new source or generation calls',async()=>{
+ const old=run();old.guide.clarificationUsed=true;let calls=0;const events:any[]=[];
+ const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,event=>events.push(event),new AbortController().signal,async(_u,init)=>{calls++;assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));if(calls===1)return Response.json({type:'message',stop_reason:'max_tokens',content:[{type:'text',text:'{}'}]});return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'The saved request and its conditions are documented.'}]});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft:value(),draftAccepted:true}});
+ assert.equal(calls,2);assert.equal(guideReadiness(result.guide),'usable-guide');assert.ok(events.some(event=>event.stage==='Retrying guide check'));assert.ok(result.guide.engine?.validationIssues?.some(issue=>/max_tokens/.test(issue)));assert.deepEqual(result.documents,docs);
+});
+test('completion: a job-scoped account failure does not call the provider twice or reinterpret an unrelated HTTP error',async()=>{
+ const {modelServiceFetcher}=await import('../lib/live-guide/model-service.ts');let calls=0;const wrapped=modelServiceFetcher(async()=>{calls++;return Response.json({error:{message:'Your credit balance is too low to access the API.'}},{status:400});});
+ await assert.rejects(()=>wrapped('https://api.anthropic.com/v1/messages'));await assert.rejects(()=>wrapped('https://api.anthropic.com/v1/messages'));assert.equal(calls,1);
+ const ordinary=modelServiceFetcher(async()=>Response.json({error:{message:'The response schema is invalid.'}},{status:400}));const response=await ordinary('https://api.anthropic.com/v1/messages');assert.equal(response.status,400);const errorBody=await response.json() as {error:{message:string}};assert.match(errorBody.error.message,/schema/);
+});
+test('completion: a failed guide check cannot trigger source research or an action rewrite',async()=>{
+ for(const [status,expected] of [[400,1],[503,2]]){const old=run();old.guide.clarificationUsed=true;let calls=0;const events:any[]=[];const result=await generate({...old.guide.input,previousId:old.guide.id},bindings,event=>events.push(event),new AbortController().signal,async(u,init)=>{calls++;assert.equal(String(u),'https://api.anthropic.com/v1/messages');assert.ok(JSON.parse(String(init?.body)).system.startsWith('Independently'));return new Response('',{status});},old,{checkpoint:{research:{website:url,documents:docs,inferred:false,warnings:[]},clarificationUsed:true,draft:value(),draftAccepted:true}});assert.equal(calls,expected);assert.equal(guideReadiness(result.guide),'research-failure');assert.ok(!events.some(event=>/Repairing an incomplete action|Finding missing evidence/.test(event.stage)));assert.ok(result.guide.engine?.validationIssues?.some(issue=>issue.includes('HTTP '+status)));}
+});
+test('completion: durable jobs expose an account failure while retaining the actual read sources',async()=>{
+ const {db}=database();const job=await createJob(db,{app:'Acme',website:url,useCase:'Read issue titles. Never write.',audience:'customers'},crypto.randomUUID());let modelCalls=0;
+ const result=await runJob(db,job.id,bindings,()=>{},new AbortController().signal,async u=>{if(String(u).includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});if(String(u)==='https://api.anthropic.com/v1/messages'){modelCalls++;return Response.json({error:{message:'Your credit balance is too low to access the API.'}},{status:400});}return new Response('<main>'+docs[0].text+'</main>');});
+ assert.equal(modelCalls,1);assert.equal(result.state,'interrupted');assert.equal(result.failure?.category,'model-service');assert.equal(result.failure?.serviceCode,'credits');const saved=await getJob(db,job.id);assert.ok(saved?.checkpoint?.research.documents.length);assert.equal(saved?.input.useCase,job.input.useCase);assert.match(saved?.error||'',/restore credits/);assert.equal(saved?.guide,undefined);
+});
 
 
 test('completion: resumed completed planning counts only the new access review and strips old engine metadata',async()=>{
@@ -896,6 +920,10 @@ test('completion: OpenAPI response alternatives retain referenced dynamic proper
 test('completion: unrelated schema alternatives cannot consume the requested field projection',async()=>{
  const {openApiText}=await import('../lib/live-guide/openapi.ts');const unrelated=Array.from({length:30},(_,i)=>({type:'object',properties:Object.fromEntries(Array.from({length:12},(_,j)=>['metadata_'+i+'_'+j,{type:'string'}]))}));
  const result=openApiText({openapi:'3.1.0',paths:{'/items':{get:{responses:{200:{content:{'application/json':{schema:{type:'object',properties:{results:{type:'array',items:{anyOf:[...unrelated,{type:'object',properties:{title:{type:'object',properties:{plain_text:{type:'string'}}}}}]}}}}}}}}}}}},'Read item titles.');assert.match(result!.text,/\$\.results\[\]\.title\.plain_text \(string\)/);
+});
+test('completion: requested nested titles outrank shorter unrelated scalar names in the final field limit',async()=>{
+ const {responsePaths}=await import('../lib/live-guide/response-shapes.ts');const properties=Object.fromEntries([...Array.from({length:60},(_,i)=>['metadata_'+i,{type:'object',properties:{name:{type:'string'}}}]),['properties',{type:'object',additionalProperties:{type:'object',properties:{title:{type:'array',items:{type:'object',properties:{plain_text:{type:'string'}}}}}}}]]);
+ const paths=responsePaths({type:'object',properties},true,'Read item titles.');assert.ok(paths.includes('$.properties.*.title[].plain_text (string)'));assert.ok(paths.length<=40);
 });
 
 test('completion: a collection reference wins before adjacent API utilities and the reader skips linked execution URLs',async()=>{

@@ -1,6 +1,7 @@
 import { normalizeInput } from './contracts.ts';
 import type { Bindings, StoredRun } from './contracts.ts';
 import { generate } from './workflow.ts';
+import {ModelServiceFailure} from './failures.ts';
 
 export interface Store {
   prepare(sql: string): { bind(...args: unknown[]): { first<T>(): Promise<T | null>; run(): Promise<unknown> } };
@@ -55,7 +56,7 @@ export async function postGuide(request: Request, env: Environment, fetcher: typ
       } catch(error) {
         if (!request.signal.aborted && !closed) {
           // Never forward upstream response bodies, environment values or database errors.
-          const message = error instanceof Error && /^(?:Could not identify|No readable|The request changed|Choose an answer|Answers must|The previous guide)/.test(error.message) ? error.message : 'Research could not finish. Try a direct public OAuth documentation URL. Your previous guide is unchanged.';
+          const message = error instanceof ModelServiceFailure?error.failure.message:error instanceof Error && /^(?:Could not identify|No readable|The request changed|Choose an answer|Answers must|The previous guide)/.test(error.message) ? error.message : 'Research could not finish. Try a direct public OAuth documentation URL. Your previous guide is unchanged.';
           if (!signal.aborted) send({type:'error',error:message});
           else if(!closed) controller.enqueue(encoder.encode(JSON.stringify({type:'error',error:'Research reached its time limit. Retry with a direct OAuth documentation URL.'})+'\n'));
         }

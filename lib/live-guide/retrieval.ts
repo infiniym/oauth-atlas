@@ -1,4 +1,4 @@
-import {ResearchFailure,sourceFailure} from './failures.ts';
+import {ResearchFailure,ModelServiceFailure,sourceFailure} from './failures.ts';
 import type {Failure} from './failures.ts';
 import { normalizeText, onProvider, publicUrl } from './contracts.ts';
 import type { Bindings, Document, GuideInput, Progress, Research } from './contracts.ts';
@@ -299,7 +299,7 @@ export async function discoverProvider(input:GuideInput,bindings:Bindings,emit:(
             seed=verified.flatMap(result=>result.status==='fulfilled'&&result.value?[result.value]:[])[0]||'';
           }
         }
-      }catch{ /* Keep discovery unresolved when the suggested sites cannot be screened. */ }
+      }catch(error){if(error instanceof ModelServiceFailure)throw error; /* Keep discovery unresolved when the suggested sites cannot be screened. */ }
     }
     if (!seed) throw new ResearchFailure({category:'source-unavailable',message:'Could not identify this app confidently from public search or a verified homepage. Add its official website or direct OAuth documentation URL.'});
   }

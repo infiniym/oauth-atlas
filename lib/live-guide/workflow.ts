@@ -6,6 +6,7 @@ import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun,WorkflowCheck
 import { retrieve,discoverProvider } from './retrieval.ts';
 import { interpretEvidence, reviewMappings,repairReviewedSetup,evidenceOnly, PROMPT_VERSION } from './interpretation.ts';
 import {guideReadiness} from './readiness.ts';
+import {modelServiceFetcher} from './model-service.ts';
 
 export function integrationContext(app: string): LiveGuide['integration'] {
   const normalize = (s:string) => s.toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -25,6 +26,7 @@ export function continuation(input: GuideInput, previous: StoredRun): void {
 }
 const draftFields=(value:Interpretation)=>Object.fromEntries(Object.keys(interpretationSchema.shape).map(key=>[key,value[key as keyof Interpretation]])) as Interpretation;
 export async function generate(raw: unknown, bindings: Bindings, emit: (event: Progress)=>void, signal: AbortSignal, fetcher: typeof fetch = fetch, previous?: StoredRun,options:{checkpoint?:WorkflowCheckpoint;save?:(checkpoint:WorkflowCheckpoint)=>Promise<void>}={}): Promise<StoredRun> {
+  fetcher=modelServiceFetcher(fetcher);
   const input = normalizeInput(raw);
   if (input.previousId && !previous) throw new Error('The previous guide could not be found. Start fresh research.');
   if (!input.previousId && Object.keys(input.answers).length) throw new Error('Answers must refer to an existing guide.');
@@ -94,13 +96,21 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){
       await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value,draftAccepted:true});
       emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});
-      const beforeReview=structuredClone(interpreted.value),review=await reviewMappings(beforeReview,input,bindings,signal,fetcher,research.documents);interpreted.value=review.value;
+      const beforeReview=structuredClone(interpreted.value);let review=await reviewMappings(beforeReview,input,bindings,signal,fetcher,research.documents);
+      if(review.telemetry.outcome==='incomplete'){
+        const failed=review.telemetry;
+        emit({stage:'Retrying guide check',detail:'The check did not finish. Retrying it once with your saved instructions and evidence.',status:'working'});
+        review=await reviewMappings(beforeReview,input,bindings,signal,fetcher,research.documents);
+        for(const key of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)review.telemetry[key]=(review.telemetry[key]||0)+(failed[key]||0);
+        review.telemetry.validationIssues=[...failed.validationIssues||[],'Independent action review retried once using the same instructions and saved evidence.',...review.telemetry.validationIssues||[]];
+      }
+      interpreted.value=review.value;
       if(!interpreted.telemetry)interpreted.telemetry={...review.telemetry,attempts:0,inputTokens:0,outputTokens:0,elapsedMs:0,thinkingTokens:0};
       const add=(telemetry:NonNullable<typeof interpreted.telemetry>)=>{for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry![k]=(interpreted.telemetry![k]||0)+(telemetry[k]||0);if(telemetry.validationIssues?.length)interpreted.telemetry!.validationIssues=[...interpreted.telemetry!.validationIssues||[],...telemetry.validationIssues];};
       interpreted.telemetry.reviewOutcome=review.telemetry.outcome;add(review.telemetry);
       const feedback=review.value.coverage.filter(c=>c.status!=='mapped').map(c=>c.reason).join(' ');
       if(beforeReview.steps.some(s=>s.testKind!=='action'&&s.id&&feedback.includes(s.id)))emit({stage:'Repairing setup instructions',detail:'Correcting only the prerequisite fields identified by the access review, using saved official evidence.',status:'working'});
-      const corrected=await repairReviewedSetup(beforeReview,review.value,input,research.documents,bindings,signal,fetcher);
+      const corrected=review.telemetry.outcome==='accepted'?await repairReviewedSetup(beforeReview,review.value,input,research.documents,bindings,signal,fetcher):null;
       if(corrected){interpreted.value=corrected.value;add(corrected.telemetry);}
       await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value,draftAccepted:true});
     }
@@ -123,7 +133,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     sources:research.documents.map(({text:_text,...source})=>source),integration:integrationContext(input.app),
   };
   let completed:StoredRun={guide,documents:research.documents};
-  if(guide.phase==='ready'&&guide.mode==='interpreted'&&guide.oauthSupport==='documented'){
+  if(guide.phase==='ready'&&guide.mode==='interpreted'&&guide.oauthSupport==='documented'&&(!guide.engine?.reviewOutcome||guide.engine.reviewOutcome==='accepted')){
     const gaps=guide.requestedActions.filter(a=>isResource(a)&&(!guide.coverage.some(c=>c.actionId===a.id&&c.status==='mapped'&&c.support==='reviewed')||!guide.steps.some(s=>s.testKind==='action'&&s.actionIds?.includes(a.id)&&concreteRequest(s)))).slice(0,2);
     for(const action of gaps){
       emit({stage:'Repairing an incomplete action',detail:'Checking the missing request or access evidence for '+action.title+'. Completed setup and your answers are retained.',status:'working'});

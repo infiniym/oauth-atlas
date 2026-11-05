@@ -26,7 +26,8 @@ export function responsePaths(value:unknown,schema=false,request=''):string[]{
   else paths.add(path+' ('+(node===null?'null':typeof node)+')');
  };
  walk(value,'$',0);
- const preferred=(path:string)=>/\.(?:title|name|content|subject|markdown|plain_text|value|results|total|count|has_more|next_cursor|hasNextPage|endCursor)(?:\[\])? \(/.test(path)?1:0;
+ const requested=request.toLowerCase().split(/\W+/).filter(word=>word.length>3).map(word=>word.replace(/ies$/,'y').replace(/s$/,''));
+ const preferred=(path:string)=>(requested.some(word=>path.toLowerCase().includes('.'+word))?100:0)+(/\.(?:title|name|content|subject|markdown|plain_text|value|results|total|count|has_more|next_cursor|hasNextPage|endCursor)(?:\[\])? \(/.test(path)?1:0);
  return [...paths].sort((a,b)=>preferred(b)-preferred(a)||a.length-b.length).slice(0,40);
 }
 
