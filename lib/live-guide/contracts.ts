@@ -28,7 +28,7 @@ const stepSchema = z.object({
   appliesWhen:z.string().max(400).optional(),
   id:text(60).optional(),dependsOn:z.array(text(60)).max(10).optional(),actionIds:z.array(text(60)).max(10).optional(),
   testKind:z.enum(['prepare','authorization','action','boundary','lifecycle','launch']).optional(),
-  request:z.object({method:z.string().max(20),endpoint:z.string().max(1500),example:z.string().max(800)}).strict().optional(),
+  request:z.object({method:z.string().max(20),endpoint:z.string().max(1500),example:z.string().max(800),responsePath:z.string().max(200).optional()}).strict().optional(),
   stage:z.enum(['prepare','test','launch']).default('test'),destination:z.string().max(1500).default(''),fields:z.array(text(200)).max(8).default([]),
 }).strict();
 export const questionSchema = z.object({
@@ -83,7 +83,7 @@ export type Bindings = IntentAiBindings & {
   LIVE_GUIDE_FIRECRAWL_KEY?: string;
 };
 export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[];navigationCalls?:number };
-export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;facts?:Interpretation;draft?:Interpretation;draftAccepted?:boolean};
+export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;facts?:Interpretation;draft?:Interpretation;draftAccepted?:boolean;pendingReviewActionId?:string};
 
 export function normalizeInput(raw: unknown): GuideInput {
   const parsed = inputSchema.safeParse(raw);

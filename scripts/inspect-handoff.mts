@@ -1,9 +1,9 @@
 // Acceptance-only request stub. It parses generated curl; it never runs it or
 // calls a provider. Dummy values exercise user inputs, headers and JSON bodies.
 import {spawnSync} from 'node:child_process';
-import {hasContinuationRequest} from '../lib/live-guide/request-examples.ts';
+import {hasPaginationPair} from '../lib/live-guide/request-examples.ts';
 export type InspectedRequest={stepId:string;stub:{method:string;url?:string;headers:Record<string,string>;body:unknown[]};syntaxChecked:true;userInputsSubstituted:true;executed:false;errors:string[]};
-export function inspectHandoff(guide:any):InspectedRequest[]{
+export function inspectHandoff(guide:any,options:{requireResponsePath?:boolean}={}):InspectedRequest[]{
  const substitute=(s:string,endpoint='')=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}|\[([A-Z][A-Z_-]+)\]/g,(whole,...groups)=>{
   const key=groups.slice(0,6).find(Boolean)||'';
   if(/version/i.test(key))return whole;
@@ -37,12 +37,13 @@ export function inspectHandoff(guide:any):InspectedRequest[]{
   const boundary=step.detail+' '+step.doneWhen+' '+guide.steps.filter((s:any)=>s.testKind==='boundary').map((s:any)=>s.detail).join(' ');
   if(step.testKind==='action'&&!/boundary check:\s*(?!none\b|not (?:needed|required|applicable)\b|n\/a\b)\S[^.;\n]{11}/i.test(step.detail+' '+step.doneWhen))errors.push('No safe boundary check instruction');
   if(!step.fields?.length)errors.push('User input provenance absent');
+  if(options.requireResponsePath&&step.testKind==='action'&&!/^\$(?:(?:\.[A-Za-z_*][\w*:-]*)|(?:\[(?:\*|\d*)\]))+$/.test(step.request?.responsePath||''))errors.push('Explicit expected JSON response path absent');
   const outcome=step.doneWhen+' '+step.detail;
   // A documented Boolean response condition is observable output even if the
   // prose omits the literal word "response". Request-body flags do not qualify.
   const requestKeys=new Set(parsedBody.flatMap(value=>value&&typeof value==='object'?Object.keys(value):[]));
   const responseCondition=(step.evidence||[]).some((e:{quote:string})=>[...String(e.quote).matchAll(/([a-zA-Z_][\w.]*)\s+\(?boolean\)?\b/gi)].some(match=>{const field=match[1].replace(/^\./,'');return !requestKeys.has(field)&&new RegExp('\\b'+field.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b\\s*(?:is|=|:)?\\s*(?:true|false)\\b','i').test(outcome);}));
-  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(outcome)&&!responseCondition&&!(step.testKind==='authorization'&&/callback|authorization code|access_token/i.test(outcome)))errors.push('Expected successful response absent');
+  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(outcome)&&!responseCondition&&!(step.testKind==='authorization'&&(/callback|authorization code|access_token/i.test(outcome)||/redirect/i.test(outcome)&&/\bcode\b/i.test(outcome))))errors.push('Expected successful response absent');
   // This is the request received by the stub, not a canned HTTP success.
   const stub={method,url:url?.href,headers,body:parsedBody};
   return {stepId:step.id,stub,syntaxChecked:true,userInputsSubstituted:true,executed:false,errors};
@@ -51,6 +52,6 @@ export function inspectHandoff(guide:any):InspectedRequest[]{
 export function paginationHandoff(guide:any,requests:ReturnType<typeof inspectHandoff>){
  const instructions=guide.steps.filter((s:any)=>s.testKind==='action').map((s:any)=>s.detail+' '+s.doneWhen).join(' ');
  const actions=guide.steps.filter((s:any)=>s.testKind==='action'),checked=new Set(requests.filter(r=>!r.errors.length).map(r=>r.stepId));
- const continuation=actions.some((step:any)=>checked.has(step.id)&&hasContinuationRequest(step.request?.example||''));
+ const continuation=hasPaginationPair(actions.filter((step:any)=>checked.has(step.id)));
  return actions.filter((step:any)=>checked.has(step.id)).length>=2&&continuation&&/repeat|continu|follow|iterat|next request/i.test(instructions)&&/until|while|has_more|hasNextPage|next_cursor|endCursor|no.{0,30}next|empty|last page|all (?:entries|results|pages)/i.test(instructions);
 }

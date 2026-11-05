@@ -3,8 +3,8 @@
 export function responseFieldPriority(path:string,request=''):number{
  const leaf=path.match(/\.([\w]+)(?:\[\])? \(/)?.[1]||'',text=request.toLowerCase();
  const words=text.split(/\W+/).filter(word=>word.length>3).map(word=>word.replace(/ies$/,'y').replace(/s$/,''));
- const value=/\btitles?\b/.test(text)&&/^(?:title|subject|plain_text)$/.test(leaf)||/\bnames?\b/.test(text)&&leaf==='name'||/\b(?:content|text|markdown)\b/.test(text)&&/^(?:content|body|markdown|plain_text)$/.test(leaf);
- return (/^(?:has_more|next_cursor|hasNextPage|endCursor|pageInfo|nextLink|nextByOffset|truncated|unknown_block_ids)$/.test(leaf)?2000:0)+(value?1000:0)+(words.some(word=>leaf.toLowerCase()===word)?100:0)+(words.some(word=>path.toLowerCase().includes('.'+word))?10:0)+(/\.(?:results|items|nodes|edges)\[\]/.test(path)?25:0)+(/^(?:title|name|content|subject|markdown|plain_text|value|results|data|items|nodes|edges|properties|total|count)$/.test(leaf)?20:0);
+ const value=/\btitles?\b/.test(text)&&/^(?:title|subject|content|plain_text)$/.test(leaf)||/\bnames?\b/.test(text)&&leaf==='name'||/\b(?:content|text|markdown)\b/.test(text)&&/^(?:content|body|markdown|plain_text)$/.test(leaf);
+ return (/^(?:has_more|next_cursor|hasNextPage|endCursor|pageInfo|nextLink|nextByOffset|truncated|unknown_block_ids)$/.test(leaf)?2000:0)+(value?(leaf==='plain_text'?2000:1000):0)+(words.some(word=>leaf.toLowerCase()===word)?100:0)+(words.some(word=>path.toLowerCase().includes('.'+word))?10:0)+(/\.(?:results|items|nodes|edges)\[\]/.test(path)?25:0)+(/^(?:title|name|content|subject|markdown|plain_text|value|results|data|items|nodes|edges|properties|total|count)$/.test(leaf)?20:0);
 }
 export function schemaPriority(node:any,request='',depth=0):number{
  if(!node||typeof node!=='object'||depth>3)return 0;

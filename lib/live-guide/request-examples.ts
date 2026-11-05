@@ -28,20 +28,30 @@ export function requestExampleParts(example:string){
  const bodies=values('-d','--data','--data-raw','--data-binary','--json'),headers=Object.fromEntries(values('-H','--header').map(h=>{const at=h.indexOf(':');return [h.slice(0,at).toLowerCase(),h.slice(at+1).trim()];}));
  return {method:(values('-X','--request')[0]||(bodies.length?'POST':'GET')).toUpperCase(),url:values('--url')[0]||args.find(a=>/^https:\/\//.test(a)||a.startsWith('<INSTANCE_BASE_URL>')||/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(a))||'',headers,bodies};
 }
-export function hasContinuationRequest(example:string):boolean{
+function paginationState(example:string){
  const parts=requestExampleParts(example);
- if(/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(parts.url))return true;
- const continuation=(name:string,value:string)=>{
+ const values=new Map<string,string>();
+ const add=(name:string,value:unknown)=>{
   const key=name.replace(/[^a-z0-9]/gi,'').toLowerCase();
-  if(/^(?:pagesize|perpage|limit|maxresults|maxpagesize)$/.test(key)||!value)return false;
-  if(/^(?:page|pagenumber)$/.test(key))return /^\d+$/.test(value)?Number(value)>1:/next|cursor|continuation|page/i.test(value);
-  if(/^(?:offset|skip|start)$/.test(key))return /^\d+$/.test(value)?Number(value)>0:/next|offset|continuation/i.test(value);
-  return /cursor|^(?:after|before|pagetoken|nexttoken|continuationtoken|marker)$/.test(key);
+  if(/^(?:pagesize|perpage|limit|maxresults|maxpagesize)$/.test(key)||value===null||value===undefined||value==='')return;
+  if(/cursor|^(?:page|pagenumber|offset|skip|start|after|before|pagetoken|nexttoken|continuationtoken|marker)$/.test(key))values.set(key,String(value));
  };
- try{const url=new URL(parts.url.replace(/^<INSTANCE_BASE_URL>/,'https://instance.invalid'));for(const [name,value] of url.searchParams)if(continuation(name,value))return true;}catch{}
- const walk=(body:unknown):boolean=>!!body&&typeof body==='object'&&Object.entries(body).some(([name,value])=>typeof value==='string'&&continuation(name,value)||typeof value==='number'&&continuation(name,String(value))||walk(value));
- for(const body of parts.bodies)try{const parsed=JSON.parse(body);if(walk(parsed))return true;if(typeof parsed.query==='string'&&/\b(?:after|before)\s*:\s*(?!null\b)(?:"[^"\s]+"|\$[a-zA-Z_][\w]*)/.test(parsed.query))return true;}catch{}
- return false;
+ try{const url=new URL(parts.url.replace(/^<INSTANCE_BASE_URL>/,'https://instance.invalid'));for(const [name,value] of url.searchParams)add(name,value);}catch{}
+ const walk=(body:unknown)=>{if(body&&typeof body==='object')for(const [name,value] of Object.entries(body)){if(typeof value==='string'||typeof value==='number')add(name,value);else walk(value);}};
+ let connection='';for(const body of parts.bodies)try{const parsed=JSON.parse(body);walk(parsed);if(typeof parsed.query==='string'){
+  connection=parsed.query.match(/\b(\w+)\s*\([^)]*\b(?:after|before|first|last)\s*:/)?.[1]||parsed.query.match(/\{\s*(\w+)\s*(?:\([^)]*\))?\s*\{/)?.[1]||'';
+  for(const match of parsed.query.matchAll(/\b(after|before)\s*:\s*("[^"\s]+"|\$([a-zA-Z_][\w]*))/g))add(match[1],match[3]?parsed.variables?.[match[3]]:match[2].slice(1,-1));
+ }}catch{}
+ return {values,nextUrl:/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(parts.url),connection};
+}
+export function hasContinuationRequest(example:string):boolean{const state=paginationState(example);return state.nextUrl||state.values.size>0;}
+export function hasPaginationPair(steps:{actionIds?:string[];request?:{endpoint:string;example:string}}[]):boolean{
+ const rows=steps.filter(step=>step.request?.endpoint).map(step=>{const state=paginationState(step.request!.example);let path='';try{path=new URL(step.request!.endpoint,'https://instance.invalid').pathname.replace(/\{[^}]+\}|<[^>]+>|:[a-zA-Z_][\w-]*/g,'{input}').replace(/\/(?:continue|next)\/?$/,'').replace(/\/$/,'');}catch{}return {step,state,key:path+'#'+state.connection};});
+ return rows.some((next,index)=>rows.some((first,prior)=>{
+  if(index===prior||next.key!==first.key||first.state.nextUrl||next.step.actionIds?.length&&first.step.actionIds?.length&&!next.step.actionIds.some(id=>first.step.actionIds!.includes(id)))return false;
+  if(next.state.nextUrl)return true;
+  return [...next.state.values].some(([key,value])=>{const before=first.state.values.get(key);if(before===undefined)return true;return /^(?:page|pagenumber|offset|skip|start)$/.test(key)&&/^\d+$/.test(value)&&/^\d+$/.test(before)&&Number(value)>Number(before);});
+ }));
 }
 export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,documents:Document[]):T{
  const result=structuredClone(raw);
