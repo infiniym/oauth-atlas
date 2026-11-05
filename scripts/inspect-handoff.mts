@@ -1,17 +1,21 @@
 // Acceptance-only request stub. It parses generated curl; it never runs it or
 // calls a provider. Dummy values exercise user inputs, headers and JSON bodies.
 import {spawnSync} from 'node:child_process';
+import {hasContinuationRequest} from '../lib/live-guide/request-examples.ts';
 export function inspectHandoff(guide:any){
  const substitute=(s:string,endpoint='')=>s.replace(/<([^<>]+)>|\$\{([\w]+)\}|\$([A-Z][A-Z0-9_]+)|\b([A-Z][A-Z0-9]*_[A-Z0-9_]+)\b|\{([a-zA-Z_]\w*)\}|\[([A-Z][A-Z_-]+)\]/g,(whole,...groups)=>{
   const key=groups.slice(0,6).find(Boolean)||'';
   if(/version/i.test(key))return whole;
   if(/^(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)$/.test(key))return new URL(endpoint.replace(/\{[^}]+\}|:[a-zA-Z_]+/g,'test-resource-id'),'https://instance.example').href+'?page=2';
   if(/(?:base|instance).*(?:url|host)|(?:url|host).*(?:base|instance)/i.test(key))return /url/i.test(key)?'https://instance.example':'instance.example';
+  if(/redirect|callback/i.test(key)&&/uri|url/i.test(key))return 'https://client.example/callback';
+  if(/client.*secret/i.test(key))return 'test-client-secret';
+  if(/client.*id/i.test(key))return 'test-client-id';
   if(/token/i.test(key))return 'test-access-token';
   if(/cursor/i.test(key))return 'test-next-cursor';
   return 'test-resource-id';
  });
- return guide.steps.filter((s:any)=>s.testKind==='action').map((step:any)=>{
+ return guide.steps.filter((s:any)=>s.testKind==='action'||s.testKind==='authorization'&&s.request?.example).map((step:any)=>{
   const example=step.request?.example||'',syntax=spawnSync('/bin/bash',['-n'],{input:example,encoding:'utf8'});
   const split=spawnSync('python3',['-c','import shlex,json,sys;print(json.dumps(shlex.split(sys.stdin.read())))'],{input:substitute(example,step.request?.endpoint||''),encoding:'utf8'});
   let args:string[]=[];try{args=JSON.parse(split.stdout);}catch{}
@@ -24,19 +28,20 @@ export function inspectHandoff(guide:any){
   if(syntax.status!==0||args[0]!=='curl'||args.some(a=>[';','&&','|','>'].includes(a)))errors.push('Example must be one parseable curl request');
   if(method!==step.request?.method.toUpperCase())errors.push('Method differs from request metadata');
   const headers=Object.fromEntries(headerLines.map(h=>{const i=h.indexOf(':');return [h.slice(0,i).toLowerCase(),h.slice(i+1).trim()];}));
-  if(guide.accessModel==='oauth'&&!/^Bearer test-access-token$/i.test(headers.authorization||''))errors.push('Missing replaceable OAuth bearer token');
+  const basic=values('-u','--user')[0];if(basic)headers.authorization='Basic '+Buffer.from(basic).toString('base64');
+  if(guide.accessModel==='oauth'&&step.testKind==='action'&&!/^Bearer test-access-token$/i.test(headers.authorization||''))errors.push('Missing replaceable OAuth bearer token');
   if(body.length&&!headers['content-type'])errors.push('Missing request content type');
   const parsedBody=body.map(b=>{if(/^\s*[\[{]/.test(b))try{return JSON.parse(b);}catch{errors.push('Malformed JSON body after substitution');}return b;});
   if(/-Version:\s*(?:<|\$|[A-Z_]+(?:'|"|\s|$))/i.test(example))errors.push('Unresolved documentation-derived version header');
   const boundary=step.detail+' '+step.doneWhen+' '+guide.steps.filter((s:any)=>s.testKind==='boundary').map((s:any)=>s.detail).join(' ');
-  if(!/boundary check:\s*(?!none\b|not (?:needed|required|applicable)\b|n\/a\b)\S[^.;\n]{11}/i.test(step.detail+' '+step.doneWhen))errors.push('No safe boundary check instruction');
+  if(step.testKind==='action'&&!/boundary check:\s*(?!none\b|not (?:needed|required|applicable)\b|n\/a\b)\S[^.;\n]{11}/i.test(step.detail+' '+step.doneWhen))errors.push('No safe boundary check instruction');
   if(!step.fields?.length)errors.push('User input provenance absent');
   const outcome=step.doneWhen+' '+step.detail;
   // A documented Boolean response condition is observable output even if the
   // prose omits the literal word "response". Request-body flags do not qualify.
   const requestKeys=new Set(parsedBody.flatMap(value=>value&&typeof value==='object'?Object.keys(value):[]));
   const responseCondition=(step.evidence||[]).some((e:{quote:string})=>[...String(e.quote).matchAll(/([a-zA-Z_][\w.]*)\s+\(?boolean\)?\b/gi)].some(match=>{const field=match[1].replace(/^\./,'');return !requestKeys.has(field)&&new RegExp('\\b'+field.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b\\s*(?:is|=|:)?\\s*(?:true|false)\\b','i').test(outcome);}));
-  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(outcome)&&!responseCondition)errors.push('Expected successful response absent');
+  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(outcome)&&!responseCondition&&!(step.testKind==='authorization'&&/callback|authorization code|access_token/i.test(outcome)))errors.push('Expected successful response absent');
   // This is the request received by the stub, not a canned HTTP success.
   const stub={method,url:url?.href,headers,body:parsedBody};
   return {stepId:step.id,stub,syntaxChecked:true,userInputsSubstituted:true,executed:false,errors};
@@ -44,6 +49,7 @@ export function inspectHandoff(guide:any){
 }
 export function paginationHandoff(guide:any,requests:ReturnType<typeof inspectHandoff>){
  const instructions=guide.steps.filter((s:any)=>s.testKind==='action').map((s:any)=>s.detail+' '+s.doneWhen).join(' ');
- const continuation=requests.some((r:{stub:unknown})=>/[?&][\w.\[\]-]*(?:cursor|page|offset|after|before|skip)[\w.\[\]-]*=|"[\w.-]*(?:cursor|after|offset|page|next_token)[\w.-]*"\s*:|\bafter\s*:|<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/i.test(JSON.stringify(r.stub)));
- return requests.length>=2&&continuation&&/repeat|continu|follow|iterat|next request/i.test(instructions)&&/until|while|has_more|hasNextPage|next_cursor|endCursor|no.{0,30}next|empty|last page|all (?:entries|results|pages)/i.test(instructions);
+ const actions=guide.steps.filter((s:any)=>s.testKind==='action'),checked=new Set(requests.filter(r=>!r.errors.length).map(r=>r.stepId));
+ const continuation=actions.some((step:any)=>checked.has(step.id)&&hasContinuationRequest(step.request?.example||''));
+ return actions.filter((step:any)=>checked.has(step.id)).length>=2&&continuation&&/repeat|continu|follow|iterat|next request/i.test(instructions)&&/until|while|has_more|hasNextPage|next_cursor|endCursor|no.{0,30}next|empty|last page|all (?:entries|results|pages)/i.test(instructions);
 }

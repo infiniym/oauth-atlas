@@ -1,6 +1,6 @@
 import { interpretationSchema, normalizeText,questionSchema,onProvider } from './contracts.ts';
 import { z } from 'zod';
-import {completeRequestExamples,requestExampleParts} from './request-examples.ts';
+import {completeRequestExamples,requestExampleParts,hasContinuationRequest} from './request-examples.ts';
 import type { Bindings, Document, Evidence, GuideInput, Interpretation, InferenceTelemetry, LiveGuide } from './contracts.ts';
 import { boundedText,linkScore,actionLinkScore,documentationScore,requestTerms,emptyValueEvidence } from './retrieval.ts';
 import {resolveIntentAiConfig,isIntentAiConfigured} from '../ai/config.ts';
@@ -210,7 +210,7 @@ For instance-specific or self-hosted APIs, use the documented relative API path 
 Length and item limits are mandatory: each evidence array has 1-3 passage references. Finding/step titles at most 120 characters; detail at most 800; appliesWhen and doneWhen at most 400. Each fields entry at most 100 characters, with at most eight inputs per step. Summary and recommendation at most 700; nextAction at most 400. Question id uses lowercase letters, digits and hyphens only (starts with a letter, at most 60 characters); prompt at most 200; why at most 300; each of 2-3 option labels at most 120. Each coverage reason at most 400 characters. Each unknown at most 400 characters. Prefer 1-2 short sentences per detail and 1-2 references per item. Avoid duplicating the same uncertainty in unknowns and blockers. Do not repeat the same facts in every step.
 A deadline to apply or submit is not provider waiting time. Provider-wait findings must cite a passage with a published applicable duration. If none exists, record the unknown rather than assuming zero wait. activeEffort is an explicitly labeled planning estimate: provide a broad range ONLY with assumptions grounded in documented steps; otherwise return empty strings. Do not estimate a calendar launch date. Unknown provider policy must remain in unknowns with a concrete verification action.
 Summary, recommendation and nextAction must follow from the cited findings. Never claim Composio supports this app; integration availability is checked separately. Output the required JSON only.`;
-export const PROMPT_VERSION = 'live-guide.48';
+export const PROMPT_VERSION = 'live-guide.49';
 
 function durations(text:string):string[] {
   const numbers:Record<string,number>={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
@@ -238,7 +238,7 @@ export function hasPaginationLoop(value:Interpretation):boolean{
 }
 export function validatePaginationHandoff(value:Interpretation,requestContext=''):void{
  const required=paginationNeeded(value,requestContext),concrete=value.steps.filter(s=>s.testKind==='action'&&s.request?.endpoint);
- if(required&&concrete.length&&!concrete.some(s=>/[?&][\w.\[\]-]*(?:cursor|page|offset|after|before|skip)[\w.\[\]-]*=|"[\w.-]*(?:cursor|after|offset|page|next_token)[\w.-]*"\s*:|\bafter\s*:|<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/i.test(s.request?.example||'')))throw new Error('A step destination has no concrete pagination request. Retain the initial request and add a documented continuation request using the returned cursor/page/offset, including how to repeat until complete. Prose alone is insufficient. '+JSON.stringify({requests:concrete.map(s=>({stepId:s.id,example:s.request?.example}))}));
+ if(required&&concrete.length&&!concrete.some(s=>hasContinuationRequest(s.request?.example||'')))throw new Error('A step destination has no concrete pagination request. A batch/page-size parameter is not continuation state. Retain both the initial resource request and a distinct documented continuation request using the returned cursor/page/offset, including how to repeat until complete. Prose alone is insufficient. '+JSON.stringify({requests:concrete.map(s=>({stepId:s.id,example:s.request?.example}))}));
  if(required&&concrete.length===1)throw new Error('A step destination needs both the initial resource request and a distinct continuation resource request. Keep both as action steps with the same action ID.');
  if(required&&concrete.length&&!hasPaginationLoop(value))throw new Error('A step destination lacks the pagination stopping condition. Retain the request and explain how to repeat it until the documented cursor, Link, or collection end. Two pages alone are not a complete listing.');
 }
@@ -263,6 +263,13 @@ export function validateInterpretation(raw: unknown, documents: Document[],reque
   for(const s of value.steps)if(s.destination&&!destinations.has(s.destination)&&!documents.some(d=>d.text.includes(s.destination)))throw new Error('A step destination is not documented in the supplied sources.');
   for(const [index,s] of value.steps.entries())if(s.request?.endpoint){const check=endpointEvidence(s.request.endpoint,documents);if(!check.supported)throw new Error('A step destination for an API request is not documented in the supplied sources. '+JSON.stringify({path:['steps',index,'request','endpoint'],stepId:s.id,endpoint:s.request.endpoint,...check}));}
   for(const s of value.steps)if(value.accessModel==='oauth'&&s.testKind==='action'&&/(?:PRIVATE-TOKEN|JOB-TOKEN|X-API-KEY)\s*:/i.test(s.request?.example||''))throw new Error('A step destination uses a personal/API/CI token header for an OAuth resource request. Use the documented OAuth access-token authentication; retain method, route and user inputs.');
+  for(const s of value.steps.filter(s=>s.testKind==='authorization'&&s.request?.endpoint)){
+    const parts=requestExampleParts(s.request!.example);
+    if(!parts.url)throw new Error('A step destination needs a concrete documented authorization or token URL. '+JSON.stringify({stepId:s.id,endpoint:s.request!.endpoint,repair:'Use the documented authorization/token endpoint and required parameters in the curl. A whole AUTH_URL placeholder cannot replace a known endpoint; keep placeholders for client credentials, callback values, tokens and instance hosts.'}));
+    if(parts.method!==s.request!.method.toUpperCase())throw new Error('A step destination authorization example uses a different method from its request metadata.');
+    const target=parts.url.replace(/^<INSTANCE_BASE_URL>/,'');const grounded=endpointEvidence(target,documents);
+    if(!grounded.supported)throw new Error('A step destination authorization example is not documented. '+JSON.stringify({stepId:s.id,url:parts.url,...grounded}));
+  }
   for(const s of value.steps.filter(s=>s.testKind==='action'&&s.request?.endpoint)){
     const parts=requestExampleParts(s.request!.example);
     if(!parts.url){if(completeHandoff)throw new Error('A step destination needs one executable curl request, including its documented URL and authentication.');else throw new Error('A step destination needs one executable curl request.');}
