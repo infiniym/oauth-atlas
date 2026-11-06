@@ -62,6 +62,11 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
  const source=documents.map(d=>d.text).join('\n');
  for(const step of result.steps){
   if(step?.request?.endpoint){
+   // A consent GET already declares its full URL and parameters. Serializing
+   // that metadata as curl adds no endpoint, parameter or provider fact.
+   if(step.testKind==='authorization'&&step.request.method?.toUpperCase()==='GET'&&!step.request.example?.trim()){
+    const endpoint=String(step.request.endpoint);step.request.example='curl '+JSON.stringify(endpoint.startsWith('/')?'<INSTANCE_BASE_URL>'+endpoint:endpoint);
+   }
    // Metadata is a route template; the executable curl retains the instance
    // input. Normalizing that representation does not establish the route.
    step.request.endpoint=String(step.request.endpoint).replace(/^<INSTANCE_BASE_URL>(?=\/)/,'');

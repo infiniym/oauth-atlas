@@ -55,7 +55,7 @@ export type RequestIntent=Pick<Interpretation,'requestedActions'|'prohibitions'>
 export type InferenceOutcome='accepted' | 'not-configured' | 'upstream-error' | 'incomplete' | 'validation-rejected' | 'timeout';
 export type InferenceTelemetry = {
   model: string; attempts: number; elapsedMs: number; inputTokens: number; outputTokens: number;
-  thinkingTokens?: number; thinking?: 'adaptive'|'mixed'; effort?: 'medium'|'low';
+  thinkingTokens?: number; thinking?: 'adaptive'|'disabled'|'mixed'; effort?: 'medium'|'low';
   validationIssues?:string[];
   outcome:InferenceOutcome;followupOutcome?:InferenceOutcome;
   reviewOutcome?:InferenceOutcome;
