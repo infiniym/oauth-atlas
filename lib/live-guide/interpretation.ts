@@ -132,10 +132,12 @@ function completePlan(raw:Record<string,unknown>):Record<string,unknown>{
 
 // Display/schema failures are repaired as bounded field edits. Successful
 // claims, citations and requests are retained and the full result is revalidated.
-export async function repairLongFields(raw:Record<string,unknown>,bindings:Bindings,signal:AbortSignal,fetcher:typeof fetch,report?:(usage:{inputTokens:number;outputTokens:number;thinkingTokens:number})=>void):Promise<Record<string,unknown>>{
- const parsed=interpretationSchema.safeParse(raw);if(parsed.success)return raw;
- const issues=parsed.error.issues;
- if(!issues.length||issues.some(i=>!(i.code==='too_big'&&i.type==='string')&&i.code!=='invalid_enum_value'))return raw;
+export async function repairLongFields(raw:Record<string,unknown>,bindings:Bindings,signal:AbortSignal,fetcher:typeof fetch,report?:(usage:{inputTokens:number;outputTokens:number;thinkingTokens:number})=>void,limits:Array<{path:(string|number)[];maximum:number}>=[]):Promise<Record<string,unknown>>{
+ const parsed=interpretationSchema.safeParse(raw);
+ const issues: z.ZodIssue[]=parsed.success?[]:[...parsed.error.issues];
+ if(issues.some(i=>!(i.code==='too_big'&&i.type==='string')&&i.code!=='invalid_enum_value'))return raw;
+ for(const limit of limits){let value:any=raw;for(const key of limit.path)value=value?.[key];if(typeof value==='string'&&value.length>limit.maximum&&!issues.some(i=>JSON.stringify(i.path)===JSON.stringify(limit.path)))issues.push({code:'too_big',type:'string',inclusive:true,exact:false,path:limit.path,maximum:limit.maximum,message:'Text exceeds the action output limit.'});}
+ if(!issues.length)return raw;
  const fields=issues.map(i=>{let value:any=raw;for(const key of i.path)value=value?.[key];const max=i.code==='too_big'?i.maximum:120;return {path:i.path,value,max,target:Math.floor(Number(max)*.75),targetWords:Math.max(4,Math.floor(Number(max)/10)),...(i.code==='invalid_enum_value'?{options:i.options}:{})};});
  const config=resolveIntentAiConfig(bindings);
  if(!config.key)return raw;

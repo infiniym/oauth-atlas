@@ -93,8 +93,10 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
    const candidateValue:Interpretation={...base,findings:[...old.findings,...patch.findings.filter(f=>!old.findings.some(p=>p.scope===f.scope))],coverage:old.coverage.filter(c=>c.actionId!==action.id).concat(coverage),steps:retained.concat(added),blockers:old.blockers.filter(b=>!(requestGap(b)&&(b.actionId===action.id||b.stepIds?.length&&b.stepIds.every(id=>relatedIds.has(id))))&&b.title!=='API test specification: '+action.title&&!(b.title===action.title&&(b.kind==='missing-evidence'||!b.kind))),researchNeeded:base.researchNeeded};
    // Ground every updated request. Unrelated actions retain their exact snapshot;
    // the complete retained request set for this action goes to independent review.
-   const focusedRaw=await repairLongFields({...base,requestedActions:[action],findings:candidateValue.findings.filter(f=>f.kind==='oauth'||f.kind==='permission'&&coverage.permissions.includes(f.scope)),coverage:[coverage],steps:candidateValue.steps.filter(s=>changedIds.has(s.id!)).map(s=>({...s,dependsOn:[]})),blockers:[],unknowns:[],researchNeeded:[]} as unknown as Record<string,unknown>,bindings,deadline,fetcher,usage=>{telemetry.attempts++;telemetry.inputTokens+=usage.inputTokens;telemetry.outputTokens+=usage.outputTokens;telemetry.thinkingTokens=(telemetry.thinkingTokens||0)+usage.thinkingTokens;telemetry.validationIssues=[...telemetry.validationIssues||[],'Overlength action display fields corrected; requests retained.'];});
+   const focusedRaw=await repairLongFields({...base,requestedActions:[action],findings:candidateValue.findings.filter(f=>f.kind==='oauth'||f.kind==='permission'&&coverage.permissions.includes(f.scope)),coverage:[coverage],steps:candidateValue.steps.filter(s=>changedIds.has(s.id!)).map(s=>({...s,dependsOn:[]})),blockers:[],unknowns:[],researchNeeded:[]} as unknown as Record<string,unknown>,bindings,deadline,fetcher,usage=>{telemetry.attempts++;telemetry.inputTokens+=usage.inputTokens;telemetry.outputTokens+=usage.outputTokens;telemetry.thinkingTokens=(telemetry.thinkingTokens||0)+usage.thinkingTokens;telemetry.validationIssues=[...telemetry.validationIssues||[],'Overlength action display fields corrected; requests retained.'];},[{path:['coverage',0,'reason'],maximum:400}]);
    const focused=validateInterpretation(focusedRaw,research.documents,old.input.useCase,false);
+   candidateValue.coverage=candidateValue.coverage.map(c=>c.actionId===action.id?focused.coverage[0]:c);
+   candidateValue.findings=candidateValue.findings.map(f=>f.kind==='permission'&&coverage.permissions.includes(f.scope)?focused.findings.find(corrected=>corrected.kind==='permission'&&corrected.scope===f.scope)||f:f);
    candidateValue.steps=candidateValue.steps.map(s=>focused.steps.some(f=>f.id===s.id)?{...focused.steps.find(f=>f.id===s.id)!,dependsOn:s.dependsOn}:s);
    validatePaginationHandoff(candidateValue,input.useCase,research.documents);
     return {value:candidateValue,focused};
@@ -107,14 +109,6 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
     const body=JSON.parse(await boundedText(response,deadline));telemetry.inputTokens+=Number(body.usage?.input_tokens)||0;telemetry.outputTokens+=Number(body.usage?.output_tokens)||0;
     if(body.stop_reason!=='end_turn')throw new Error('Incomplete update. The action correction did not finish its response ('+String(body.stop_reason||'unknown')+').');
     raw=JSON.parse(body.content.filter((c:{type:string})=>c.type==='text').map((c:{text:string})=>c.text).join('').replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));
-    const items=[...(raw.findings||[]),...(Array.isArray(raw.coverage)?raw.coverage:[raw.coverage]),...(raw.step?[raw.step]:raw.steps||[])].filter(Boolean);
-    const limits:Record<string,number>={title:120,detail:800,doneWhen:400,reason:400};
-    const tooLong=items.flatMap(item=>Object.entries(limits).filter(([key,max])=>typeof item[key]==='string'&&item[key].length>max).map(([key,max])=>key+' must be at most '+max+' characters'));
-    if(tooLong.length){
-     if(attempt===1)throw new Error('Incomplete update. The action instructions exceeded the text limits.');
-     telemetry.validationIssues=[...telemetry.validationIssues||[],...tooLong];
-     requestBody.messages.push({role:'assistant',content:body.content},{role:'user',content:'Repair the JSON once: '+tooLong.join('; ')+'. Keep the same action, request, permissions, evidence and boundary check. Use short sentences; do not add explanation.'});continue;
-    }
     try{prepared=await preparePatch(raw);break;}catch(error){
      const feedback=error instanceof z.ZodError?error.issues.map(issue=>issue.path.join('.')+': '+issue.message).join('; ').slice(0,1200):error instanceof Error&&/^(?:A citation|A selected permission|A step|Action coverage|Update exceeded)/.test(error.message)?error.message:'';
      if(attempt===1||!feedback)throw error;
