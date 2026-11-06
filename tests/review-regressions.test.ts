@@ -1101,3 +1101,13 @@ test('completion: common response field names are not discarded by URL-ranking s
 test('completion: isolated completeness notices retain their source heading and adjacent credential context',async()=>{
  const {completenessEvidence}=await import('../lib/live-guide/interpretation.ts');const source={...docs[0],title:'Personal Access Token Scope',url:'https://acmetasks.example.com/docs/personal-token-scopes',text:'# Personal Access Token Scope\nThe following rules govern personal access tokens created by the user.\n(no scope) Not supported. A scope is required even for public repositories.\nOAuth authorization follows the separate OAuth guide.'};const notices=completenessEvidence([source],run().guide.input);assert.ok(notices.length);assert.equal(notices[0].title,source.title);assert.equal(notices[0].url,source.url);assert.match(notices[0].context.join(' '),/personal access tokens/);assert.match(notices[0].context.join(' '),/separate OAuth guide/);
 });
+
+
+test('completion: source-declared returned-ID follow-ups cannot be replaced with prose',async()=>{
+ const {validatePaginationHandoff}=await import('../lib/live-guide/interpretation.ts');const p=value();p.steps[1].request={method:'GET',endpoint:'/items/{id}/content',example:"curl 'https://api.acme.com/items/<ITEM_ID>/content'",responsePath:'$.text'};const source={...docs[0],text:'GET /items/{id}/content returns text content at https://api.acme.com.\nThe endpoint also accepts non-navigable IDs returned in `missing_ids` from a truncated response. Pass these IDs to fetch additional subtrees.'};
+ assert.throws(()=>validatePaginationHandoff(p,'Read item content.',[source]),/source-declared follow-up/);p.steps.push({...p.steps[1],id:'missing-subtree',request:{...p.steps[1].request,example:"curl 'https://api.acme.com/items/<RETURNED_ID>/content'"},fields:['RETURNED_ID: each entry from missing_ids in the previous response'],detail:'Fetch each missing subtree until no returned IDs remain. Boundary check: inspect the grant and outgoing request log.'});assert.doesNotThrow(()=>validatePaginationHandoff(p,'Read item content.',[source]));
+});
+
+test('completion: explicit unscoped OAuth cannot borrow a personal-token permission',()=>{
+ const source={...docs[0],text:docs[0].text+'\nOAuth2 scopes are not yet implemented. Personal tokens use issues:read for reading project issues.'};const p=value();p.findings[0].evidence=[{sourceId:'s1',quote:'OAuth2 scopes are not yet implemented.'}];assert.throws(()=>validateInterpretation(p,[source],'',false),/OAuth grant family/);p.findings=p.findings.filter(f=>f.kind!=='permission');p.coverage[0].permissions=[];assert.doesNotThrow(()=>validateInterpretation(p,[source],'',false));
+});
