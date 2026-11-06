@@ -175,7 +175,7 @@ export function completeBoundaryInstructions(value:Interpretation):{value:Interp
 }
 export async function completeTestInstructions(value:Interpretation,documents:Document[],requestContext:string,bindings:Bindings,signal:AbortSignal,fetcher:typeof fetch,report:(usage:{inputTokens:number;outputTokens:number;thinkingTokens:number})=>void,onCorrection?:(reason:string)=>void):Promise<Interpretation>{
  const boundary=completeBoundaryInstructions(value);value=boundary.value;if(boundary.corrected){onCorrection?.('Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged.');value=await repairLongFields(value as unknown as Record<string,unknown>,bindings,signal,fetcher,report) as unknown as Interpretation;}
- const needsLoop=paginationNeeded(value,requestContext)&&!hasPaginationLoop(value);
+ const needsLoop=paginationNeeded(value,requestContext,documents)&&!hasPaginationLoop(value);
  const missing=value.steps.map((s,index)=>({s,index})).filter(({s})=>s.testKind==='action'&&s.request?.endpoint&&(needsLoop||!hasBoundaryCheck(s.detail+' '+s.doneWhen)));if(!missing.length)return value;
  const config=resolveIntentAiConfig(bindings);if(!config.key)return value;
  const passages=sourcePassages(documents),selected=planningDocuments(documents,{app:'',website:'',useCase:requestContext,audience:'unknown',answers:{}},value);
@@ -212,7 +212,7 @@ For instance-specific or self-hosted APIs, use the documented relative API path 
 Length and item limits are mandatory: each evidence array has 1-3 passage references. Finding/step titles at most 120 characters; detail at most 800; appliesWhen and doneWhen at most 400. Each fields entry at most 100 characters, with at most eight inputs per step. Summary and recommendation at most 700; nextAction at most 400. Question id uses lowercase letters, digits and hyphens only (starts with a letter, at most 60 characters); prompt at most 200; why at most 300; each of 2-3 option labels at most 120. Each coverage reason at most 400 characters. Each unknown at most 400 characters. Prefer 1-2 short sentences per detail and 1-2 references per item. Avoid duplicating the same uncertainty in unknowns and blockers. Do not repeat the same facts in every step.
 A deadline to apply or submit is not provider waiting time. Provider-wait findings must cite a passage with a published applicable duration. If none exists, record the unknown rather than assuming zero wait. activeEffort is an explicitly labeled planning estimate: provide a broad range ONLY with assumptions grounded in documented steps; otherwise return empty strings. Do not estimate a calendar launch date. Unknown provider policy must remain in unknowns with a concrete verification action.
 Summary, recommendation and nextAction must follow from the cited findings. Never claim Composio supports this app; integration availability is checked separately. Output the required JSON only.`;
-export const PROMPT_VERSION = 'live-guide.54';
+export const PROMPT_VERSION = 'live-guide.55';
 
 function durations(text:string):string[] {
   const numbers:Record<string,number>={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
@@ -231,15 +231,24 @@ export function repairDocumentationLinks(raw:Record<string,any>,documents:Docume
  }
  return {value,corrected};
 }
-export function paginationNeeded(value:Interpretation,requestContext=''):boolean{
- return /paginat|continuation/i.test(requestContext.replace(/\b(?:never|no|without|don't|do not)\b[^.;\n]*/gi,''))||value.requestedActions.some(a=>/paginat|continuation/i.test(a.title))||value.steps.some(s=>s.testKind==='action'&&s.evidence.some(e=>/next_cursor|has_more|hasNextPage|start_cursor|rel=["']?next/i.test(e.quote)));
+export function paginationNeeded(value:Interpretation,requestContext='',documents:Document[]=[]):boolean{
+ const terms=requestTerms(requestContext);const sourceRequired=sourcePassages(documents).some(p=>/paginated (?:list|array)|return(?:s)? a paginated/i.test(p.text)&&[...p.text.matchAll(/`([a-zA-Z_][\w]*)`/g)].some(m=>terms.includes(m[1].replace(/s$/,''))));
+ return sourceRequired||/paginat|continuation/i.test(requestContext.replace(/\b(?:never|no|without|don't|do not)\b[^.;\n]*/gi,''))||value.requestedActions.some(a=>/paginat|continuation/i.test(a.title))||value.steps.some(s=>s.testKind==='action'&&s.evidence.some(e=>/next_cursor|has_more|hasNextPage|start_cursor|rel=["']?next/i.test(e.quote)));
 }
 export function hasPaginationLoop(value:Interpretation):boolean{
  const instructions=value.steps.filter(s=>s.testKind==='action').map(s=>s.detail+' '+s.doneWhen).join(' ');
  return /repeat|continu|follow|iterat|next request/i.test(instructions)&&/until|while|has_more|hasNextPage|next_cursor|endCursor|no.{0,30}next|empty|last page|all (?:entries|results|pages)/i.test(instructions);
 }
 export function validatePaginationHandoff(value:Interpretation,requestContext='',documents:Document[]=[]):void{
- const required=paginationNeeded(value,requestContext),concrete=value.steps.filter(s=>s.testKind==='action'&&s.request?.endpoint);
+ const required=paginationNeeded(value,requestContext,documents),concrete=value.steps.filter(s=>s.testKind==='action'&&s.request?.endpoint);
+ const terms=requestTerms(requestContext);
+ for(const notice of sourcePassages(documents).filter(p=>p.citable&&/paginated (?:list|array)|return(?:s)? a paginated/i.test(p.text))){
+  for(const match of notice.text.matchAll(/`([a-zA-Z_][\w]*)`/g)){
+   const field=match[1];if(!terms.includes(field.replace(/s$/,'')))continue;
+   const delivering=concrete.filter(s=>(s.request?.responsePath?.split(/[.\[\]*]+/)||[]).includes(field));
+   if(!hasPaginationPair(delivering))throw new Error('A step destination lacks both requests for a source-declared paginated value. '+JSON.stringify({field,sourceId:notice.sourceId,sourceText:notice.text,repair:'Retain every requested outcome. Include that value\'s own initial and continuation requests with response paths delivering the field; a pair for a different field or collection is insufficient.'}));
+  }
+ }
  for(const step of concrete){
   const pageOffset=documents.some(d=>step.evidence.some(e=>e.sourceId===d.id)&&/^\s*offset\s+(?:The )?page number\b/im.test(d.text));
   if(pageOffset&&/\b(?:count\s*(?:\+|plus|and)\s*offset|offset\s*(?:\+|plus|and)\s*count)\b/i.test(step.detail+' '+step.doneWhen))throw new Error('A step destination mixes pagination units: the cited offset is a page number, while count is an item count. Do not add them to decide completion. Use the documented next-link end condition or a source-supported calculation with matching units. '+JSON.stringify({stepId:step.id}));
@@ -482,8 +491,8 @@ export async function interpretEvidence(input: GuideInput, documents: Document[]
       // retained if only request generation needs a bounded correction.
       if(options.final&&(acceptedFacts||Array.isArray(serialized.findings)&&Array.isArray(serialized.coverage)&&!('steps' in serialized))){
        if(!acceptedFacts){const factData=expandPartEvidence(serialized);factData.coverage=(factData.coverage||[]).map((c:any)=>({...c,action:options.intent?.requestedActions.find(a=>a.id===c.actionId)?.title||c.actionId}));const partial=expandPassageReferences(completePlan({...factData,requestedActions:options.intent?.requestedActions||[],prohibitions:options.intent?.prohibitions||[],steps:[],blockers:[]}),passages) as Record<string,unknown>;const formatted=await repairLongFields(partial,bindings,deadline,fetcher,usage=>{attempts++;inputTokens+=usage.inputTokens;outputTokens+=usage.outputTokens;thinkingTokens+=usage.thinkingTokens;validationIssues.push('Overlength provider-fact display fields corrected; evidence retained.');});acceptedFacts=validateInterpretation(formatted,documents,'',false);await options.onFacts?.(acceptedFacts);}
-       const stepMessages=[{role:'user',content:JSON.stringify({documentedSetup:documentedSetup(documents),completenessEvidence:completenessEvidence(documents,input),...JSON.parse(String(messages[0].content)),verifiedFacts:acceptedFacts,paginationRequired:paginationNeeded(acceptedFacts,input.useCase),repairFeedback:validationIssues.slice(-2)})}];
-       attempts++;const response=await fetcher('https://api.anthropic.com/v1/messages',{method:'POST',redirect:'manual',signal:deadline,headers:{'Content-Type':'application/json','x-api-key':config.key,'anthropic-version':'2026-10-21'},body:JSON.stringify({model:config.model,max_tokens:9000,thinking:{type:'disabled'},output_config:{effort:'low',format:{type:'json_schema',schema:stepsSchemaForRequest(paginationNeeded(acceptedFacts,input.useCase))}},system:stepsPrompt,messages:stepMessages})});
+       const stepMessages=[{role:'user',content:JSON.stringify({documentedSetup:documentedSetup(documents),completenessEvidence:completenessEvidence(documents,input),...JSON.parse(String(messages[0].content)),verifiedFacts:acceptedFacts,paginationRequired:paginationNeeded(acceptedFacts,input.useCase,documents),repairFeedback:validationIssues.slice(-2)})}];
+       attempts++;const response=await fetcher('https://api.anthropic.com/v1/messages',{method:'POST',redirect:'manual',signal:deadline,headers:{'Content-Type':'application/json','x-api-key':config.key,'anthropic-version':'2026-10-21'},body:JSON.stringify({model:config.model,max_tokens:9000,thinking:{type:'disabled'},output_config:{effort:'low',format:{type:'json_schema',schema:stepsSchemaForRequest(paginationNeeded(acceptedFacts,input.useCase,documents))}},system:stepsPrompt,messages:stepMessages})});
        if(!response.ok){await response.body?.cancel();throw new Error('Model unavailable. HTTP '+response.status+'.');}const result=JSON.parse(await boundedText(response,deadline));inputTokens+=result.usage?.input_tokens||0;outputTokens+=result.usage?.output_tokens||0;thinkingTokens+=result.usage?.output_tokens_details?.thinking_tokens||0;if(result.stop_reason!=='end_turn')throw new Error('Incomplete model result.');const named=JSON.parse(result.content.filter((c:{type:string})=>c.type==='text').map((c:{text:string})=>c.text).join(''));const stepData=expandPartEvidence(assembleStepParts(named));
        const expandedSteps=expandPassageReferences(stepData,passages) as Pick<Interpretation,'steps'|'blockers'>;
        let combined=coalesceRequestSteps({...acceptedFacts,steps:expandedSteps.steps,blockers:expandedSteps.blockers});const linked=repairDocumentationLinks(combined,documents);if(linked.corrected)validationIssues.push('Unsupported documentation destination corrected to its cited provider instructions; API requests unchanged.');combined=await repairLongFields(linked.value,bindings,deadline,fetcher,usage=>{attempts++;inputTokens+=usage.inputTokens;outputTokens+=usage.outputTokens;thinkingTokens+=usage.thinkingTokens;validationIssues.push('Overlength request instructions corrected; requests and citations retained.');}) as unknown as Interpretation;
@@ -541,9 +550,12 @@ export async function interpretEvidence(input: GuideInput, documents: Document[]
   }
 }
 
-export async function reviewMappings(value:Interpretation,input:GuideInput,bindings:Bindings,signal:AbortSignal,fetcher:typeof fetch=fetch,documents:Document[]=[],options:{deadline?:AbortSignal;retried?:boolean;compact?:boolean;onRetry?:()=>void}={}):Promise<{value:Interpretation;telemetry:InferenceTelemetry}>{
+type ReviewRejection={actionId?:string;action:string;reason:string;missingFact?:'registration'|'permission'|'request'|'response'};
+export async function reviewMappings(value:Interpretation,input:GuideInput,bindings:Bindings,signal:AbortSignal,fetcher:typeof fetch=fetch,documents:Document[]=[],options:{deadline?:AbortSignal;retried?:boolean;compact?:boolean;onRetry?:()=>void;retainedRejections?:ReviewRejection[]}={}):Promise<{value:Interpretation;telemetry:InferenceTelemetry}>{
   const config=resolveIntentAiConfig(bindings),started=Date.now();let inputTokens=0,outputTokens=0,thinkingTokens=0,formatCalls=0;const validationIssues:string[]=[];
   const reviewDeadline=options.deadline||AbortSignal.any([signal,AbortSignal.timeout(35000)]);
+  const rejections:ReviewRejection[]=[...options.retainedRejections||[]];
+  const retain=(result:Interpretation,items=rejections)=>{for(const rejection of items){const c=result.coverage.find(c=>rejection.actionId?c.actionId===rejection.actionId:c.action===rejection.action);if(c){c.status='unresolved';c.support='unresolved';c.reason=rejection.reason;if(rejection.missingFact)c.missingFact=rejection.missingFact;}}return result;};
   const v=structuredClone(value),mapped=v.coverage.map((c,i)=>({c,i})).filter(({c})=>c.status==='mapped'&&c.support!=='reviewed');
   const telemetry=(outcome:InferenceTelemetry['outcome']):InferenceTelemetry=>({model:config.model||'',attempts:(mapped.length?1:0)+formatCalls,elapsedMs:Date.now()-started,inputTokens,outputTokens,thinkingTokens,outcome,thinking:'disabled',effort:options.compact?'low':'medium',...(validationIssues.length?{validationIssues}:{})});
   if(!mapped.length)return {value:reconcile(v),telemetry:telemetry('accepted')};
@@ -576,9 +588,15 @@ export async function reviewMappings(value:Interpretation,input:GuideInput,bindi
     if(body.stop_reason!=='end_turn')throw new Error('Independent action review did not finish ('+String(body.stop_reason||'unknown')+').');
     const raw=JSON.parse(body.content.filter((c:{type:string})=>c.type==='text').map((c:{text:string})=>c.text).join(''));
     const reviews=z.array(z.object({id:z.string(),status:z.enum(['supported','unresolved','contradicted']),missingFact:z.enum(['none','registration','permission','request','response']).optional(),checks:z.object({setup:z.boolean(),grant:z.boolean(),request:z.boolean(),response:z.boolean(),pagination:z.boolean(),boundary:z.boolean()}),affectedStepIds:z.array(z.string()).optional(),reason:z.string().min(1)})).parse(raw.reviews);
+    for(const review of reviews){const item=mapped.find(({i})=>review.id===String(i));if(item&&(review.status!=='supported'||Object.values(review.checks).some(ok=>!ok)))rejections.push({actionId:item.c.actionId,action:item.c.action,reason:review.reason,missingFact:review.missingFact==='none'?undefined:review.missingFact});}
     if(completeness.length){
       const checks=z.array(z.object({id:z.string(),applies:z.boolean(),covered:z.boolean(),stepIds:z.array(z.string()),reason:z.string()})).parse(raw.completenessChecks);
       if(checks.length!==completeness.length||new Set(checks.map(c=>c.id)).size!==completeness.length||completeness.some(p=>!checks.some(c=>c.id===p.id)))throw new Error('Independent action review omitted or duplicated a source completeness notice.');
+      for(const check of checks.filter(c=>c.applies&&c.covered)){
+        const notice=completeness.find(p=>p.id===check.id),instructions=v.steps.filter(s=>check.stepIds.includes(s.id!)).map(s=>s.detail+' '+s.doneWhen+' '+s.fields.join(' ')).join(' ');
+        if(notice&&/unsupported|not (?:yet )?supported/i.test(notice.text)&&/format|representation/i.test(notice.text)&&!/unsupported|not (?:read|supported|represented)|format limitation/i.test(instructions)){check.covered=false;check.reason='State the documented unsupported formats beside the request and report them as not read; do not claim complete content for those formats.';}
+      }
+      for(const check of checks.filter(c=>c.applies&&!c.covered)){const notice=completeness.find(p=>p.id===check.id),item=notice&&mapped.find(({i})=>String(i)===notice.mappingId);if(notice&&item)rejections.push({actionId:item.c.actionId,action:item.c.action,reason:'Uncovered source requirement '+notice.id+': '+(check.reason||notice.text),missingFact:'request'});}
       const incompleteMappings=new Set<string>();
       for(const check of checks){
         if(check.stepIds.some(id=>!v.steps.some(s=>s.id===id)))throw new Error('A completeness check references an unknown step.');
@@ -605,19 +623,21 @@ export async function reviewMappings(value:Interpretation,input:GuideInput,bindi
       }
       v.blockers=v.blockers.filter((_,i)=>!removedBlockers.has(i));v.unknowns=v.unknowns.filter((_,i)=>!removedUnknowns.has(i));
     }
-    const formatted=await repairLongFields(v as unknown as Record<string,unknown>,bindings,reviewDeadline,fetcher,usage=>{formatCalls++;inputTokens+=usage.inputTokens;outputTokens+=usage.outputTokens;thinkingTokens+=usage.thinkingTokens;validationIssues.push('Overlength review presentation corrected without changing the access decision or citations.');});
+    const formatted=await repairLongFields(retain(v,options.retainedRejections||[]) as unknown as Record<string,unknown>,bindings,reviewDeadline,fetcher,usage=>{formatCalls++;inputTokens+=usage.inputTokens;outputTokens+=usage.outputTokens;thinkingTokens+=usage.thinkingTokens;validationIssues.push('Overlength review presentation corrected without changing the access decision or citations.');});
     return {value:reconcile(formatted as unknown as Interpretation),telemetry:telemetry('accepted')};
   }catch(error){
     if(error instanceof ModelServiceFailure)throw error;signal.throwIfAborted();
     const issue=error instanceof z.ZodError?error.issues.map(i=>i.path.join('.')+': '+i.message).join('; '):error instanceof Error&&error.message?error.message:'Incomplete independent action review';validationIssues.push(issue.slice(0,1200));console.warn('[live-guide] access review failed',issue);
     const permanent=/HTTP (?:400|401|403|404)\./.test(issue);
     if(!permanent&&!options.retried&&!reviewDeadline.aborted&&Date.now()-started<28000){
-      options.onRetry?.();const retry=await reviewMappings(value,input,bindings,signal,fetcher,documents,{...options,deadline:reviewDeadline,retried:true,compact:true});
+      options.onRetry?.();const retry=await reviewMappings(value,input,bindings,signal,fetcher,documents,{...options,deadline:reviewDeadline,retried:true,compact:true,retainedRejections:rejections});
       const first=telemetry('incomplete');for(const key of ['attempts','inputTokens','outputTokens','thinkingTokens'] as const)retry.telemetry[key]=(retry.telemetry[key]||0)+(first[key]||0);
+      if(rejections.length)retry.telemetry.validationIssues=[...retry.telemetry.validationIssues||[],'Retained completed action rejection through format recovery; correcting the guide is required before it can pass.'];
       retry.telemetry.elapsedMs=Date.now()-started;retry.telemetry.thinking='mixed';retry.telemetry.validationIssues=[...validationIssues,'Independent action review retried once using the same instructions and saved evidence within its original deadline.',...retry.telemetry.validationIssues||[]];return retry;
     }
     for(const {c} of mapped){c.status='unresolved';c.support='unresolved';c.reason='The independent action-to-permission check did not complete. Confirm the documented relationship before executing this action.';}
-    return {value:reconcile(v),telemetry:telemetry(permanent?'upstream-error':'incomplete')};
+    if(rejections.length)validationIssues.push('Retained completed action rejection from the unfinished check; correcting the guide is required before it can pass.');
+    return {value:reconcile(retain(v)),telemetry:telemetry(permanent?'upstream-error':'incomplete')};
   }
 }
 

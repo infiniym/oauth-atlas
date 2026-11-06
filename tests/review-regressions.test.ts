@@ -1073,3 +1073,22 @@ test('completion: a page-number offset cannot be added to an item count to termi
  const {validatePaginationHandoff}=await import('../lib/live-guide/interpretation.ts');const p=value();p.steps[1].detail='Read issues until count plus offset covers total. Boundary check: inspect the actual grant and outgoing request log.';const pageSource={...docs[0],text:docs[0].text+'\noffset The page number that is requested from the paginated collection Integer'};
  assert.throws(()=>validatePaginationHandoff(p,'',[pageSource]),/mixes pagination units/);assert.doesNotThrow(()=>validatePaginationHandoff(p,'',docs));p.steps[1].detail='Read issues; use the returned next link. Boundary check: inspect the actual grant and outgoing request log.';assert.doesNotThrow(()=>validatePaginationHandoff(p,'',[pageSource]));
 });
+
+
+test('completion: a format retry retains completed semantic rejections until the instructions change',async()=>{
+ const sources=[{...docs[0],text:docs[0].text+'\nAttachments may be truncated; fetch additional pages for the full value.'}];let calls=0;
+ const result=await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{calls++;const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:calls===1?'unresolved':'supported',missingFact:calls===1?'request':'none',reason:calls===1?'The requested full-value follow-up is missing.':'A later check says supported.'}],completenessChecks:context.completenessEvidence.map((p:any)=>({id:p.id,applies:false,covered:false,stepIds:[],reason:calls===1?'':'Attachments are not requested.'}))});},sources);
+ assert.equal(calls,2);assert.equal(result.telemetry.outcome,'accepted');assert.equal(result.value.coverage[0].status,'unresolved');assert.match(result.value.coverage[0].reason,/full-value follow-up is missing/);assert.ok(result.telemetry.validationIssues?.some(s=>s.startsWith('Retained completed action rejection')));
+});
+
+test('completion: a source-declared paginated value needs its own pair even without a pagination keyword in the request',async()=>{
+ const {paginationNeeded,validatePaginationHandoff}=await import('../lib/live-guide/interpretation.ts');const p=value(),sources=[{...docs[0],text:docs[0].text+'\nPaginated properties `summary` and `contributors` return a paginated list. Continue with the returned cursor until there are no more items.'}];p.steps[1].request!.responsePath='$.properties.*.summary[].text';assert.ok(paginationNeeded(p,'Read the complete issue summary.',sources));assert.throws(()=>validatePaginationHandoff(p,'Read the complete issue summary.',sources),/source-declared paginated value/);
+ const first={...p.steps[1],id:'summary-first',request:{...p.steps[1].request!,endpoint:'/issues/{id}/summary',example:"curl 'https://api.acme.com/issues/<ID>/summary'",responsePath:'$.results[].summary.text'}};const next={...first,id:'summary-next',request:{...first.request,example:"curl 'https://api.acme.com/issues/<ID>/summary?cursor=<NEXT_CURSOR>'"},detail:'Repeat with the returned cursor until no further page remains. Boundary check: inspect the read grant and outgoing request log.'};p.steps.push(first,next);assert.doesNotThrow(()=>validatePaginationHandoff(p,'Read the complete issue summary.',sources));assert.equal(paginationNeeded(value(),'Read issue names.',sources),false);
+});
+
+
+test('completion: a covered format-limitation check must point to an actual instruction reporting that limit',async()=>{
+ const sources=[{...docs[0],text:docs[0].text+'\nUnsupported embedded media types are not supported in the text format.'}];
+ const check=async(p:Interpretation)=>reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Read supported.'}],completenessChecks:context.completenessEvidence.map((p:any)=>({id:p.id,applies:true,covered:true,stepIds:['read-test'],reason:''}))});},sources);
+ const missing=await check(value());assert.equal(missing.value.coverage[0].status,'unresolved');assert.match(missing.value.coverage[0].reason,/unsupported formats/);const p=value();p.steps[1].detail+=' Report unsupported embedded media as not read.';assert.equal((await check(p)).value.coverage[0].support,'reviewed');
+});

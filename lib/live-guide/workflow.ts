@@ -106,7 +106,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       if(beforeReview.steps.some(s=>s.testKind!=='action'&&s.id&&feedback.includes(s.id)))emit({stage:'Repairing setup instructions',detail:'Correcting only the prerequisite fields identified by the access review, using saved official evidence.',status:'working'});
       const corrected=review.telemetry.outcome==='accepted'?await repairReviewedSetup(beforeReview,review.value,input,research.documents,bindings,signal,fetcher):null;
       if(corrected){interpreted.value=corrected.value;add(corrected.telemetry);}
-      await options.save?.({research,clarificationUsed,followupDone,intent,draft:review.telemetry.outcome==='accepted'?interpreted.value:beforeReview,draftAccepted:true});
+      await options.save?.({research,clarificationUsed,followupDone,intent,draft:review.telemetry.outcome==='accepted'||review.telemetry.validationIssues?.some(s=>s.startsWith('Retained completed action rejection'))?interpreted.value:beforeReview,draftAccepted:true});
     }
   }
   research=research!;signal.throwIfAborted();
