@@ -236,8 +236,12 @@ export function hasPaginationLoop(value:Interpretation):boolean{
  const instructions=value.steps.filter(s=>s.testKind==='action').map(s=>s.detail+' '+s.doneWhen).join(' ');
  return /repeat|continu|follow|iterat|next request/i.test(instructions)&&/until|while|has_more|hasNextPage|next_cursor|endCursor|no.{0,30}next|empty|last page|all (?:entries|results|pages)/i.test(instructions);
 }
-export function validatePaginationHandoff(value:Interpretation,requestContext=''):void{
+export function validatePaginationHandoff(value:Interpretation,requestContext='',documents:Document[]=[]):void{
  const required=paginationNeeded(value,requestContext),concrete=value.steps.filter(s=>s.testKind==='action'&&s.request?.endpoint);
+ for(const step of concrete){
+  const pageOffset=documents.some(d=>step.evidence.some(e=>e.sourceId===d.id)&&/^\s*offset\s+(?:The )?page number\b/im.test(d.text));
+  if(pageOffset&&/\b(?:count\s*(?:\+|plus|and)\s*offset|offset\s*(?:\+|plus|and)\s*count)\b/i.test(step.detail+' '+step.doneWhen))throw new Error('A step destination mixes pagination units: the cited offset is a page number, while count is an item count. Do not add them to decide completion. Use the documented next-link end condition or a source-supported calculation with matching units. '+JSON.stringify({stepId:step.id}));
+ }
  if(required&&concrete.length&&!hasPaginationPair(concrete))throw new Error('A step destination has no concrete pagination request paired with its initial collection request. A batch/page-size parameter is not continuation state. Retain both the initial resource request and a distinct documented continuation request using the returned cursor/page/offset, including how to repeat until complete. Prose alone is insufficient. '+JSON.stringify({requests:concrete.map(s=>({stepId:s.id,example:s.request?.example}))}));
  if(required&&concrete.length===1)throw new Error('A step destination needs both the initial resource request and a distinct continuation resource request. Keep both as action steps with the same action ID.');
  if(required&&concrete.length&&!hasPaginationLoop(value))throw new Error('A step destination lacks the pagination stopping condition. Retain the request and explain how to repeat it until the documented cursor, Link, or collection end. Two pages alone are not a complete listing.');
@@ -315,7 +319,7 @@ export function validateInterpretation(raw: unknown, documents: Document[],reque
       }
     }
   }
-  if(completeHandoff){validatePaginationHandoff(value,requestContext);for(const s of value.steps.filter(s=>s.testKind==='action'&&s.request?.endpoint))if(!hasBoundaryCheck(s.detail+' '+s.doneWhen))throw new Error('A step destination needs a safe nonmutating Boundary check. Do not use none or test a prohibited write.');}
+  if(completeHandoff){validatePaginationHandoff(value,requestContext,documents);for(const s of value.steps.filter(s=>s.testKind==='action'&&s.request?.endpoint))if(!hasBoundaryCheck(s.detail+' '+s.doneWhen))throw new Error('A step destination needs a safe nonmutating Boundary check. Do not use none or test a prohibited write.');}
   const permissions=new Set(value.findings.filter(f=>f.kind==='permission').map(f=>f.scope));
   for(const c of value.coverage)if(c.status==='mapped'&&c.permissions.some(p=>!permissions.has(p)))throw new Error('Action coverage references a permission that was not selected. Copy identifiers exactly. Selected: '+[...permissions].join(', ')+'. Invalid mapping: '+c.permissions.join(', '));
   for(const c of value.coverage){if(c.evidence?.length)check(c.evidence);const supporting=c.evidence||value.findings.filter(f=>c.permissions.includes(f.scope)).flatMap(f=>f.evidence);if(c.status==='mapped'&&contradictsGrant(c.action,supporting))throw new Error('Action coverage contradicts its permission evidence.');}

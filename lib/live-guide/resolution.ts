@@ -96,7 +96,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
    const focusedRaw=await repairLongFields({...base,requestedActions:[action],findings:candidateValue.findings.filter(f=>f.kind==='oauth'||f.kind==='permission'&&coverage.permissions.includes(f.scope)),coverage:[coverage],steps:candidateValue.steps.filter(s=>changedIds.has(s.id!)).map(s=>({...s,dependsOn:[]})),blockers:[],unknowns:[],researchNeeded:[]} as unknown as Record<string,unknown>,bindings,deadline,fetcher,usage=>{telemetry.attempts++;telemetry.inputTokens+=usage.inputTokens;telemetry.outputTokens+=usage.outputTokens;telemetry.thinkingTokens=(telemetry.thinkingTokens||0)+usage.thinkingTokens;telemetry.validationIssues=[...telemetry.validationIssues||[],'Overlength action display fields corrected; requests retained.'];});
    const focused=validateInterpretation(focusedRaw,research.documents,old.input.useCase,false);
    candidateValue.steps=candidateValue.steps.map(s=>focused.steps.some(f=>f.id===s.id)?{...focused.steps.find(f=>f.id===s.id)!,dependsOn:s.dependsOn}:s);
-   validatePaginationHandoff(candidateValue,input.useCase);
+   validatePaginationHandoff(candidateValue,input.useCase,research.documents);
     return {value:candidateValue,focused};
    };
    let raw:Record<string,any>={};

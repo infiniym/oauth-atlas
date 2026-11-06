@@ -1050,3 +1050,16 @@ test('completion: a consent GET can serialize declared URL metadata without inve
  const p=value();p.steps[0]={...p.steps[0],testKind:'authorization',request:{method:'GET',endpoint:'https://api.acme.com/oauth/authorize?client_id=<CLIENT_ID>&response_type=code',example:''}};const sources=[{...docs[0],text:docs[0].text+'\nStart consent at https://api.acme.com/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=code and check the callback code.'}];const fixed=validateInterpretation(p,sources,'',false);assert.match(fixed.steps[0].request!.example,/api.acme.com\/oauth\/authorize/);
  const bad=structuredClone(p);bad.steps[0].request!.endpoint='https://attacker.com/oauth/authorize?client_id=<CLIENT_ID>';assert.throws(()=>validateInterpretation(bad,sources,'',false),/not documented/);
 });
+
+
+test('completion: representative example IDs become inputs only at source-declared route variables',async()=>{
+ const {completeRequestExamples}=await import('../lib/live-guide/request-examples.ts');const source={...docs[0],text:'API base path is /api/v4. GET /projects/:id/issues lists project issues. Query per_page controls page size.'};const p=value();p.steps[1].request={method:'GET',endpoint:'https://api.acme.com/api/v4/projects/4/issues',example:"curl 'https://api.acme.com/api/v4/projects/4/issues?per_page=100' -H 'Authorization: Bearer <ACCESS_TOKEN>'",responsePath:'$[].title'};
+ const fixed=completeRequestExamples(p,[source]);assert.equal(fixed.steps[1].request!.endpoint,'https://api.acme.com/api/v4/projects/{id}/issues');assert.match(fixed.steps[1].request!.example,/api\/v4\/projects\/<id>\/issues\?per_page=100/);assert.ok(fixed.steps[1].fields.some(f=>/id.*provider UI/.test(f)));assert.match(p.steps[1].request!.example,/projects\/4\/issues/);
+ const unrelated={...source,text:'GET /projects/:id/milestones lists milestones.'};assert.equal(completeRequestExamples(p,[unrelated]).steps[1].request!.endpoint,p.steps[1].request!.endpoint);
+});
+
+
+test('completion: a page-number offset cannot be added to an item count to terminate pagination',async()=>{
+ const {validatePaginationHandoff}=await import('../lib/live-guide/interpretation.ts');const p=value();p.steps[1].detail='Read issues until count plus offset covers total. Boundary check: inspect the actual grant and outgoing request log.';const pageSource={...docs[0],text:docs[0].text+'\noffset The page number that is requested from the paginated collection Integer'};
+ assert.throws(()=>validatePaginationHandoff(p,'',[pageSource]),/mixes pagination units/);assert.doesNotThrow(()=>validatePaginationHandoff(p,'',docs));p.steps[1].detail='Read issues; use the returned next link. Boundary check: inspect the actual grant and outgoing request log.';assert.doesNotThrow(()=>validatePaginationHandoff(p,'',[pageSource]));
+});

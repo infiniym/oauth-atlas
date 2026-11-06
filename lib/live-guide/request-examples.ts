@@ -70,6 +70,12 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
    // Metadata is a route template; the executable curl retains the instance
    // input. Normalizing that representation does not establish the route.
    step.request.endpoint=String(step.request.endpoint).replace(/^<INSTANCE_BASE_URL>(?=\/)/,'');
+   // Source examples contain representative IDs. Use an actual documented
+   // route template to locate inputs, leaving every constant segment intact.
+   const endpoint=String(step.request.endpoint),path=endpoint.replace(/^https:\/\/[^/]+/,'').split('?')[0],segments=path.split('/').filter(Boolean);
+   const variable=(s:string)=>s.match(/^\{([\w-]+)\}$|^:([\w-]+)$|^<([\w-]+)>$/)?.slice(1).find(Boolean);
+   const templates=[...source.matchAll(/\b(GET|POST|PUT|PATCH|DELETE)\s+(\/[^\s?`"'<>]+)/gi)].filter(m=>m[1].toUpperCase()===step.request.method?.toUpperCase()).map(m=>m[2].replace(/\/$/,'').split('/').filter(Boolean)).filter(parts=>parts.some(variable)&&parts.length<=segments.length&&parts.every((part,i)=>variable(part)||part===segments[i+segments.length-parts.length])).sort((a,b)=>b.length-a.length);
+   if(templates[0]){const template=templates[0],shift=segments.length-template.length;for(const [i,part] of template.entries()){const key=variable(part);if(key)segments[i+shift]='{'+key+'}';}step.request.endpoint=endpoint.replace(path,'/'+segments.join('/'));}
   }
   if(!step?.request?.example)continue;
   let example=String(step.request.example).replace(/\$\{([A-Z][A-Z0-9_]*)\}|\$([A-Z][A-Z0-9_]*)/g,(_whole,a,b)=>'<'+(a||b)+'>');
@@ -113,7 +119,7 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
   step.request.example=shellSafeCurl(example);
   step.fields=step.fields||[];
   if(step.fields.length<8&&/Bearer\s+(?:<[^>]+>|[A-Z][A-Z_]+)/.test(example)&&!step.fields.some((s:string)=>/token/i.test(s)))step.fields.push('Access token: backend OAuth exchange for the test account; keep it out of this guide');
-  for(const match of String(step.request.endpoint||'').matchAll(/\{([\w]{1,45})\}/g))if(step.fields.length<8&&!step.fields.some((s:string)=>s.toLowerCase().includes(match[1].toLowerCase())))step.fields.push(match[1]+': test resource ID from provider UI/list response');
+  for(const match of String(step.request.endpoint||'').matchAll(/\{([\w]{1,45})\}/g))if(step.fields.length<8&&!step.fields.some((s:string)=>new RegExp('(?:^|[^a-zA-Z0-9_])'+match[1]+'(?:[^a-zA-Z0-9_]|$)','i').test(s)))step.fields.push(match[1]+': test resource ID from provider UI/list response');
  }
  return result;
 }
