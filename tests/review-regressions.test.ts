@@ -1092,3 +1092,12 @@ test('completion: a covered format-limitation check must point to an actual inst
  const check=async(p:Interpretation)=>reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Read supported.'}],completenessChecks:context.completenessEvidence.map((p:any)=>({id:p.id,applies:true,covered:true,stepIds:['read-test'],reason:''}))});},sources);
  const missing=await check(value());assert.equal(missing.value.coverage[0].status,'unresolved');assert.match(missing.value.coverage[0].reason,/unsupported formats/);const p=value();p.steps[1].detail+=' Report unsupported embedded media as not read.';assert.equal((await check(p)).value.coverage[0].support,'reviewed');
 });
+
+
+test('completion: common response field names are not discarded by URL-ranking stopwords',async()=>{
+ const {paginationNeeded,validatePaginationHandoff}=await import('../lib/live-guide/interpretation.ts');const sources=[{...docs[0],text:docs[0].text+'\nPaginated properties `title` and `name` return a paginated list. Continue with the cursor until the end.'}];const p=value();p.steps[1].request!.responsePath='$.properties.*.title[].text';assert.ok(paginationNeeded(p,'Read page titles and content.',sources));assert.throws(()=>validatePaginationHandoff(p,'Read page titles and content.',sources),/source-declared paginated value/);assert.ok(paginationNeeded(p,'Read record names.',sources));assert.equal(paginationNeeded(p,'Read summaries. Never read titles or names.',sources),false);
+});
+
+test('completion: isolated completeness notices retain their source heading and adjacent credential context',async()=>{
+ const {completenessEvidence}=await import('../lib/live-guide/interpretation.ts');const source={...docs[0],title:'Personal Access Token Scope',url:'https://acmetasks.example.com/docs/personal-token-scopes',text:'# Personal Access Token Scope\nThe following rules govern personal access tokens created by the user.\n(no scope) Not supported. A scope is required even for public repositories.\nOAuth authorization follows the separate OAuth guide.'};const notices=completenessEvidence([source],run().guide.input);assert.ok(notices.length);assert.equal(notices[0].title,source.title);assert.equal(notices[0].url,source.url);assert.match(notices[0].context.join(' '),/personal access tokens/);assert.match(notices[0].context.join(' '),/separate OAuth guide/);
+});
