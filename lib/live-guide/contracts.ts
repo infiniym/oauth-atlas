@@ -42,7 +42,7 @@ export const interpretationSchema = z.object({
   prohibitions:z.array(text(200)).max(10).default([]),
   oauthSupport: z.enum(['documented', 'unsupported', 'unknown']),
   summary: text(700), recommendation: text(700), nextAction: text(400),
-  findings: z.array(findingSchema).max(16), steps: z.array(stepSchema).max(10),
+  findings: z.array(findingSchema).max(16), steps: z.array(stepSchema).max(24),
   questions: z.array(questionSchema).max(3),
   activeEffort: z.object({ range: z.string().max(100), assumptions: z.string().max(500) }).strict(),
   unknowns: z.array(text(400)).max(10),
@@ -55,7 +55,7 @@ export type RequestIntent=Pick<Interpretation,'requestedActions'|'prohibitions'>
 export type InferenceOutcome='accepted' | 'not-configured' | 'upstream-error' | 'incomplete' | 'validation-rejected' | 'timeout';
 export type InferenceTelemetry = {
   model: string; attempts: number; elapsedMs: number; inputTokens: number; outputTokens: number;
-  thinkingTokens?: number; thinking?: 'adaptive'|'disabled'|'mixed'; effort?: 'medium'|'low';
+  thinkingTokens?: number; thinking?: 'adaptive'|'disabled'|'between_tools'|'mixed'; effort?: 'medium'|'low';
   validationIssues?:string[];
   outcome:InferenceOutcome;followupOutcome?:InferenceOutcome;
   reviewOutcome?:InferenceOutcome;

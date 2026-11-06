@@ -67,6 +67,7 @@ export function completeRequestExamples<T extends {steps?:unknown}>(raw:T,docume
    if(step.testKind==='authorization'&&step.request.method?.toUpperCase()==='GET'&&!step.request.example?.trim()){
     const endpoint=String(step.request.endpoint);step.request.example='curl '+JSON.stringify(endpoint.startsWith('/')?'<INSTANCE_BASE_URL>'+endpoint:endpoint);
    }
+   if(step.testKind==='authorization'&&step.request.method?.toUpperCase()==='GET'&&/^(?:https:\/\/|<INSTANCE_BASE_URL>\/)[^\s]+$/.test(step.request.example?.trim()||''))step.request.example='curl '+JSON.stringify(step.request.example.trim());
    // Metadata is a route template; the executable curl retains the instance
    // input. Normalizing that representation does not establish the route.
    step.request.endpoint=String(step.request.endpoint).replace(/^<INSTANCE_BASE_URL>(?=\/)/,'');

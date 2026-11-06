@@ -1111,3 +1111,17 @@ test('completion: source-declared returned-ID follow-ups cannot be replaced with
 test('completion: explicit unscoped OAuth cannot borrow a personal-token permission',()=>{
  const source={...docs[0],text:docs[0].text+'\nOAuth2 scopes are not yet implemented. Personal tokens use issues:read for reading project issues.'};const p=value();p.findings[0].evidence=[{sourceId:'s1',quote:'OAuth2 scopes are not yet implemented.'}];assert.throws(()=>validateInterpretation(p,[source],'',false),/OAuth grant family/);p.findings=p.findings.filter(f=>f.kind!=='permission');p.coverage[0].permissions=[];assert.doesNotThrow(()=>validateInterpretation(p,[source],'',false));
 });
+
+
+test('completion: a consent URL example is serialized as a request without changing its source-derived parameters',()=>{
+ const p=value();p.steps[0]={...p.steps[0],testKind:'authorization',request:{method:'GET',endpoint:'https://api.acme.com/oauth/authorize',example:'https://api.acme.com/oauth/authorize?client_id=<CLIENT_ID>&response_type=code'}};const sources=[{...docs[0],text:docs[0].text+'\nStart consent at https://api.acme.com/oauth/authorize?client_id=CLIENT_ID&response_type=code and check the callback code.'}];const fixed=validateInterpretation(p,sources,'',false);assert.match(fixed.steps[0].request!.example,/^curl /);assert.match(fixed.steps[0].request!.example,/client_id=<CLIENT_ID>&response_type=code/);assert.equal(p.steps[0].request!.example.startsWith('https://'),true);
+});
+
+test('completion: Sonnet 5.5 uses its documented no-up-front-thinking transport without changing the guide contract',async()=>{
+ const fixture=wire(value());let calls=0;const result=await interpretEvidence(run().guide.input,docs,{...bindings,ANTHROPIC_MODEL:'claude-sonnet-5-5'},new AbortController().signal,async(_u,init)=>{calls++;const body=JSON.parse(String(init?.body));assert.equal(body.model,'claude-sonnet-5-5');assert.equal(body.thinking.type,'between_tools');assert.equal(body.max_tokens,9000);return aiResponse({steps:fixture.steps,continuations:[],blockers:[]});},[],{final:true,facts:value(),intent:{requestedActions:value().requestedActions,prohibitions:value().prohibitions}});assert.equal(calls,1);assert.equal(result.telemetry.outcome,'accepted');assert.equal(result.value.coverage[0].permissions[0],'issues:read');
+});
+
+
+test('completion: a value-returning conditional follow-up retains its resource action classification',async()=>{
+ const {assembleStepParts}=await import('../lib/live-guide/plan-parts.ts');const action={...value().steps[1],testKind:'boundary',request:{...value().steps[1].request,responsePath:'$.text'}};const negative={...action,id:'denied-read',request:{...action.request,responsePath:''}};const result=assembleStepParts({steps:[action,negative],continuations:[]});assert.equal(result.steps[0].testKind,'action');assert.equal(result.steps[1].testKind,'boundary');assert.deepEqual(result.steps[0].actionIds,action.actionIds);assert.deepEqual(result.steps[0].request,action.request);
+});

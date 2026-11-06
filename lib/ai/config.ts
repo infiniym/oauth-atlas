@@ -1,4 +1,8 @@
 export type IntentAiProvider = 'anthropic' | 'openai';
+// Sonnet 5.5 names its no-up-front-thinking mode differently. This changes
+// transport syntax only; it never selects a model or falls back to a vendor.
+// https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide
+export function noInitialThinking(model:string|undefined):{type:'disabled'|'between_tools'}{return {type:/^claude-sonnet-5-5(?:-|$)/.test(model||'')?'between_tools':'disabled'};}
 export type IntentAiConfig = {
   provider?: IntentAiProvider;
   key?: string;
