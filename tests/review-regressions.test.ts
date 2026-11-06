@@ -1134,3 +1134,14 @@ test('completion: a source-backed instruction rejection is corrected without res
  },old);
  assert.equal(calls,2);assert.equal(result.guide.coverage[0].support,'reviewed');assert.deepEqual(result.documents,old.documents);assert.deepEqual(old,before);
 });
+
+
+test('completion: independent review uses current instructions without the planner conclusion and keeps a stable ID grammar',async()=>{
+ const schemas:any[]=[];for(const id of ['s1','s9']){const p=value();p.coverage[0].reason='This stale planner conclusion must not decide the review.';const sources=[{...docs[0],id,text:docs[0].text+'\nAttachments may be truncated and are retrieved through the separate attachment API.'}];p.findings=p.findings.map(f=>({...f,evidence:f.evidence.map(e=>({...e,sourceId:id}))}));p.coverage[0].evidence=p.coverage[0].evidence!.map(e=>({...e,sourceId:id}));p.steps=p.steps.map(s=>({...s,evidence:s.evidence.map(e=>({...e,sourceId:id}))}));
+ await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async(_u,init)=>{const body=JSON.parse(String(init?.body)),context=JSON.parse(body.messages[0].content);schemas.push(body.output_config.format.schema);assert.equal(context.mappings[0].reason,undefined);assert.equal(context.allResourceRequests[0].detail,p.steps[1].detail);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'The actual request and source support the read.'}],completenessChecks:context.completenessEvidence.map((p:any)=>({id:p.id,applies:false,covered:false,stepIds:[],reason:'Attachments are not requested.'}))});},sources);}
+ assert.deepEqual(schemas[0],schemas[1]);
+});
+
+test('completion: a source notice outside the exact supplied ID set cannot pass the review',async()=>{
+ const sources=[{...docs[0],text:docs[0].text+'\nAttachments may be truncated.'}];let calls=0;const result=await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async()=>{calls++;return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Read supported.'}],completenessChecks:[{id:'0:invented-p999',applies:false,covered:false,stepIds:[],reason:'Unrelated.'}]});},sources);assert.equal(calls,2);assert.equal(result.telemetry.outcome,'incomplete');assert.equal(result.value.coverage[0].status,'unresolved');
+});
