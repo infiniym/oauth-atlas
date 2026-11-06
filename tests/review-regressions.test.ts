@@ -1122,10 +1122,10 @@ test('completion: Sonnet 5.5 uses its documented no-up-front-thinking transport 
 });
 
 
-test('completion: a value-returning conditional follow-up retains its resource action classification',async()=>{
- const {assembleStepParts}=await import('../lib/live-guide/plan-parts.ts');const action={...value().steps[1],testKind:'boundary',request:{...value().steps[1].request,responsePath:'$.text'}};const negative={...action,id:'denied-read',request:{...action.request,responsePath:''}};const result=assembleStepParts({steps:[action,negative],continuations:[]});assert.equal(result.steps[0].testKind,'action');assert.equal(result.steps[1].testKind,'boundary');assert.deepEqual(result.steps[0].actionIds,action.actionIds);assert.deepEqual(result.steps[0].request,action.request);
+test('completion: conditional resource follow-ups retain their operation while token refresh stays lifecycle',async()=>{
+ const {assembleStepParts}=await import('../lib/live-guide/plan-parts.ts');const initial={...value().steps[1],request:{...value().steps[1].request,responsePath:'$.text'}};const followup={...initial,id:'subtree',testKind:'boundary'};const negative={...followup,id:'denied-read',request:{...followup.request,responsePath:''}};const refresh={...initial,id:'refresh',testKind:'lifecycle',request:{method:'POST',endpoint:'/oauth/token',example:"curl 'https://api.acme.com/oauth/token' -d 'grant_type=refresh_token'",responsePath:'$.access_token'}};
+ const result=assembleStepParts({steps:[initial,followup,negative,refresh],continuations:[]});assert.equal(result.steps[1].testKind,'action');assert.equal(result.steps[2].testKind,'boundary');assert.equal(result.steps[3].testKind,'lifecycle');assert.deepEqual(result.steps[1].actionIds,followup.actionIds);assert.deepEqual(result.steps[1].request,followup.request);
 });
-
 
 test('completion: a source-backed instruction rejection is corrected without researching the same fact again',async()=>{
  const old=run(),patch=wire(value());old.guide.coverage[0]={...old.guide.coverage[0],status:'unresolved',support:'unresolved',missingFact:'request',reason:'Uncovered source requirement 0:s1-p3: Supply the documented resource request.'};let calls=0;const before=structuredClone(old);

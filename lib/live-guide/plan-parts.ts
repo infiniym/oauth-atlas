@@ -30,10 +30,12 @@ export function assembleStepParts(raw:Record<string,any>){
  }
  out.steps=[...out.steps||[],...continuations];delete out.continuations;
  for(const step of out.steps)if(step.request)step.request.responsePath=step.request.responsePath??'';
- // A request delivering a source-derived value for an existing action remains
- // a resource step when its conditional follow-up was labelled lifecycle or
- // boundary. Negative checks without a value path retain their original kind.
- for(const step of out.steps)if(['boundary','lifecycle'].includes(step.testKind)&&step.actionIds?.length&&step.request?.endpoint&&step.request?.responsePath?.startsWith('$')){step.testKind='action';step.stage='test';}
+ // A conditional follow-up of an existing resource operation stays a resource
+ // action. A token refresh also returns a value, but is a separate lifecycle
+ // operation and must not be subjected to resource bearer-token validation.
+ const operation=(step:any)=>{try{return step.request?.method+' '+new URL(step.request?.endpoint,'https://instance.invalid').pathname.replace(/\{[^}]+\}|<[^>]+>|:[a-zA-Z_][\w-]*/g,'{}')+' '+step.request?.responsePath;}catch{return '';}};
+ const resources=out.steps.filter((step:any)=>step.testKind==='action'&&step.request?.endpoint&&step.request?.responsePath?.startsWith('$'));
+ for(const step of out.steps)if(['boundary','lifecycle'].includes(step.testKind)&&step.actionIds?.length&&step.request?.endpoint&&step.request?.responsePath?.startsWith('$')&&resources.some((resource:any)=>operation(resource)===operation(step)&&resource.actionIds?.some((id:string)=>step.actionIds.includes(id)))){step.testKind='action';step.stage='test';}
  for(const step of out.steps)if(step.testKind==='action'&&/<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/.test(step.request?.example||'')){
   const parents=out.steps.filter((parent:any)=>parent.testKind==='action'&&parent.id!==step.id&&step.dependsOn?.includes(parent.id)&&parent.actionIds?.some((id:string)=>step.actionIds?.includes(id))&&parent.request?.endpoint&&!/<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>/.test(parent.request?.example||''));
   if(parents.length===1)step.request.endpoint=parents[0].request.endpoint;
