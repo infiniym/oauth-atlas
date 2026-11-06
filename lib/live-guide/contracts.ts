@@ -56,7 +56,7 @@ export type InferenceOutcome='accepted' | 'not-configured' | 'upstream-error' | 
 export type InferenceTelemetry = {
   model: string; attempts: number; elapsedMs: number; inputTokens: number; outputTokens: number;
   thinkingTokens?: number; thinking?: 'adaptive'|'disabled'|'between_tools'|'mixed'; effort?: 'medium'|'low';
-  validationIssues?:string[];
+  validationIssues?:string[];retainedExplanation?:boolean;
   outcome:InferenceOutcome;followupOutcome?:InferenceOutcome;
   reviewOutcome?:InferenceOutcome;
 };

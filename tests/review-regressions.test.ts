@@ -1148,5 +1148,11 @@ test('completion: a source notice outside the exact supplied ID set cannot pass 
 
 
 test('completion: an empty explanation cannot erase an already completed negative check',async()=>{
- let calls=0;const result=await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async()=>{calls++;return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:calls===1?'unresolved':'supported',missingFact:'request',checks:{setup:true,grant:true,request:calls!==1,response:true,pagination:true,boundary:true},reason:calls===1?'':'The later response approves it.'}]});},docs);assert.equal(calls,2);assert.equal(result.value.coverage[0].status,'unresolved');assert.match(result.value.coverage[0].reason,/request unresolved without an explanation/);
+ let calls=0;const result=await reviewMappings(value(),run().guide.input,bindings,new AbortController().signal,async()=>{calls++;return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:calls===1?'unresolved':'supported',missingFact:'request',checks:{setup:true,grant:true,request:calls!==1,response:true,pagination:true,boundary:true},reason:calls===1?'':'The later response approves it.'}]});},docs);assert.equal(calls,1);assert.equal(result.value.coverage[0].status,'unresolved');assert.match(result.value.coverage[0].reason,/did not establish request/);
+});
+
+
+test('completion: a complete independent check may retain the existing source-validated explanation without changing its decision',async()=>{
+ const p=value(),original=p.coverage[0].reason;const result=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async()=>aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:''}]}),docs);assert.equal(result.value.coverage[0].support,'reviewed');assert.equal(result.value.coverage[0].reason,original);assert.equal(result.telemetry.retainedExplanation,true);assert.equal(result.telemetry.attempts,1);assert.equal(result.telemetry.validationIssues,undefined);
+ const rejected=await reviewMappings(p,run().guide.input,bindings,new AbortController().signal,async()=>aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'',checks:{setup:true,grant:true,request:false,response:true,pagination:true,boundary:true}}]}),docs);assert.equal(rejected.value.coverage[0].status,'unresolved');assert.match(rejected.value.coverage[0].reason,/did not establish request/);assert.notEqual(rejected.value.coverage[0].reason,original);
 });

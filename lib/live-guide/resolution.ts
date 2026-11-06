@@ -127,7 +127,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
    const reviewed=await reviewMappings({...prepared.focused,steps:value.steps},{...input,useCase:action.title+'. Restrictions: '+old.prohibitions.join('; ')},bindings,signal,fetcher,research.documents,{onRetry:()=>emit({stage:'Retrying guide check',detail:'The check did not finish. Retrying it once with the corrected action and saved evidence.',status:'working'})});
    value.coverage=value.coverage.filter(c=>c.actionId!==action.id).concat(reviewed.value.coverage.filter(c=>c.actionId===action.id));
    for(const key of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)telemetry[key]=(telemetry[key]||0)+(reviewed.telemetry[key]||0);
-   telemetry.reviewOutcome=reviewed.telemetry.outcome;telemetry.validationIssues=[...telemetry.validationIssues||[],...reviewed.telemetry.validationIssues||[]];
+   telemetry.reviewOutcome=reviewed.telemetry.outcome;if(reviewed.telemetry.retainedExplanation)telemetry.retainedExplanation=true;telemetry.validationIssues=[...telemetry.validationIssues||[],...reviewed.telemetry.validationIssues||[]];
    value=reconcile(value);
    if(reviewed.telemetry.outcome==='accepted')await options.save?.({research,draft:value,draftAccepted:true});
    value.recommendation=value.coverage.every(c=>c.status==='mapped')?'The requested access is documented. Follow the saved setup steps and run each representative API test; execution has not been verified.':value.recommendation;
