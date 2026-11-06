@@ -52,7 +52,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
     emit({stage:'Resuming guide check',detail:'The corrected action is saved. Checking it without repeating research or request generation.',status:'working'});
    }else{
    const reviewedGap=old.coverage.find(c=>c.actionId===action.id),noticeSource=reviewedGap?.reason.match(/Uncovered source requirement \d+:([a-zA-Z0-9]+)-p\d+:/)?.[1];
-   const knownInstructionGap=update.kind==='find-request'&&['request','response'].includes(reviewedGap?.missingFact||'')&&!!noticeSource&&research.documents.some(d=>d.id===noticeSource);
+   const knownInstructionGap=update.kind==='find-request'&&!input.documentationUrl&&!update.url&&['request','response'].includes(reviewedGap?.missingFact||'')&&!!noticeSource&&research.documents.some(d=>d.id===noticeSource);
    if((!options.checkpoint||input.documentationUrl)&&!knownInstructionGap){
     emit({stage:'Finding the missing request',detail:'Checking only '+action.title+'. Your other instructions and confirmed choices are retained.',status:'working'});
     const supplied=input.documentationUrl||update.url;
