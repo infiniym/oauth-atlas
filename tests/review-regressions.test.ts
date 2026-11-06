@@ -1125,3 +1125,12 @@ test('completion: Sonnet 5.5 uses its documented no-up-front-thinking transport 
 test('completion: a value-returning conditional follow-up retains its resource action classification',async()=>{
  const {assembleStepParts}=await import('../lib/live-guide/plan-parts.ts');const action={...value().steps[1],testKind:'boundary',request:{...value().steps[1].request,responsePath:'$.text'}};const negative={...action,id:'denied-read',request:{...action.request,responsePath:''}};const result=assembleStepParts({steps:[action,negative],continuations:[]});assert.equal(result.steps[0].testKind,'action');assert.equal(result.steps[1].testKind,'boundary');assert.deepEqual(result.steps[0].actionIds,action.actionIds);assert.deepEqual(result.steps[0].request,action.request);
 });
+
+
+test('completion: a source-backed instruction rejection is corrected without researching the same fact again',async()=>{
+ const old=run(),patch=wire(value());old.guide.coverage[0]={...old.guide.coverage[0],status:'unresolved',support:'unresolved',missingFact:'request',reason:'Uncovered source requirement 0:s1-p3: Supply the documented resource request.'};let calls=0;const before=structuredClone(old);
+ const result=await generate({...old.guide.input,previousId:old.guide.id,resolution:{kind:'find-request',actionId:'read',requestId:crypto.randomUUID()}},bindings,()=>{},new AbortController().signal,async(u,init)=>{
+  assert.equal(String(u),'https://api.anthropic.com/v1/messages');calls++;const body=JSON.parse(String(init?.body));return body.system.startsWith('Independently')?aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'The corrected request and grant are documented.'}]}):aiResponse({findings:[],coverage:patch.coverage,steps:[patch.steps[1]]});
+ },old);
+ assert.equal(calls,2);assert.equal(result.guide.coverage[0].support,'reviewed');assert.deepEqual(result.documents,old.documents);assert.deepEqual(old,before);
+});
