@@ -1009,3 +1009,32 @@ test('completion: a source notice about a different field need not invent an ext
   const context=JSON.parse(JSON.parse(String(init?.body)).messages[0].content);return aiResponse({requestComplete:true,missingActions:[],reviews:[{id:'0',status:'supported',reason:'Read supported.'}],completenessChecks:context.completenessEvidence.map((p:any)=>({id:p.id,applies:false,covered:false,stepIds:[],reason:'The requested issue fields do not include attachments.'}))});
  },sources);assert.equal(reviewed.value.coverage[0].support,'reviewed');assert.equal(reviewed.value.requestedActions.length,1);
 });
+
+
+test('completion: GraphQL variable declarations do not change the paginated connection identity',async()=>{
+ const {hasPaginationPair}=await import('../lib/live-guide/request-examples.ts');const step=(query:string,variables?:unknown)=>({actionIds:['read'],request:{endpoint:'https://api.acme.com/graphql',example:"curl 'https://api.acme.com/graphql' -H 'Content-Type: application/json' -d '"+JSON.stringify({query,...(variables?{variables}:{})})+"'"}});
+ const first=step('query { issues(first: 50) { nodes { title } pageInfo { hasNextPage endCursor } } }');const next=step('query($after: String) { issues(first: 50, after: $after) { nodes { title } pageInfo { hasNextPage endCursor } } }',{after:'<END_CURSOR>'});
+ assert.equal(hasPaginationPair([first,next]),true);assert.equal(hasPaginationPair([first,step('query Next($after: String) { projects(first: 50, after: $after) { nodes { title } } }',{after:'<END_CURSOR>'})]),false);assert.equal(hasPaginationPair([first,step('query($after: String) { issues(first: 50, after: $after) { nodes { title } } }',{after:null})]),false);
+});
+
+test('completion: the request stub records curl form defaults and rejects JSON sent as a form',async()=>{
+ const {inspectHandoff}=await import('../scripts/inspect-handoff.mts');const p=run().guide;p.steps[1]={...p.steps[1],testKind:'authorization',fields:['Client ID and callback code from the registered app.'],request:{method:'POST',endpoint:'/oauth/token',example:"curl 'https://api.acme.com/oauth/token' -d 'client_id=<CLIENT_ID>' --data-urlencode 'code=<AUTH_CODE>'"},doneWhen:'The token response contains access_token.'};
+ const form=inspectHandoff(p)[0];assert.equal(form.stub.method,'POST');assert.equal(form.stub.headers['content-type'],'application/x-www-form-urlencoded');assert.deepEqual(form.stub.body,['client_id=test-client-id','code=test-resource-id']);assert.deepEqual(form.errors,[]);
+ p.steps[1].request!.example="curl 'https://api.acme.com/oauth/token' -d '{\"code\":\"<AUTH_CODE>\"}'";assert.ok(inspectHandoff(p)[0].errors.some(s=>s.includes('JSON body requires')));p.steps[1].request!.example="curl 'https://api.acme.com/oauth/token' --json '{\"code\":\"<AUTH_CODE>\"}'";assert.equal(inspectHandoff(p)[0].stub.headers['content-type'],'application/json');assert.deepEqual(inspectHandoff(p)[0].errors,[]);
+});
+
+
+test('completion: a generated pagination pair retains its own initial request and dependency',async()=>{
+ const {assembleStepParts}=await import('../lib/live-guide/plan-parts.ts');const initial={...value().steps[1],id:'properties-first',request:{method:'GET',endpoint:'/issues/{id}/properties',example:"curl 'https://api.acme.com/issues/<ID>/properties'",responsePath:'$.results[].title'}};const next={...initial,id:'properties-next',dependsOn:[],request:{...initial.request,example:"curl 'https://api.acme.com/issues/<ID>/properties?cursor=<NEXT_CURSOR>'"}};
+ const built=assembleStepParts({steps:[value().steps[0]],continuations:[{initial,next}],blockers:[]});assert.deepEqual(built.steps.map((s:any)=>s.id),['register','properties-first','properties-next']);assert.ok(built.steps[2].dependsOn.includes('properties-first'));assert.equal(built.steps[1].testKind,'action');assert.equal(built.steps[2].testKind,'action');
+});
+
+test('completion: setup constants preserve the actual authorization URL and adjacent token response',async()=>{
+ const {documentedSetup}=await import('../lib/live-guide/interpretation.ts');const source={...docs[0],text:'The authorization URL starts with https://api.acme.com/oauth/authorize and requires a registered client ID.\nUse POST /oauth/token to exchange the returned code.\nThe successful token response contains access_token and token_type bearer.\nThe configured grant does not permit edits.'};const context=documentedSetup([source]);assert.equal(context.length,1);assert.match(JSON.stringify(context),/api.acme.com\/oauth\/authorize/);assert.match(JSON.stringify(context),/successful token response contains access_token/);assert.ok(context[0].passages.every(p=>sourcePassages([source]).some(original=>original.id===p.id&&original.text===p.text)));
+});
+
+test('completion: empty-parameter recovery retains the exact official search result among its probes',async()=>{
+ const {retrieve}=await import('../lib/live-guide/retrieval.ts');const target='https://acmetasks.example.com/docs/reference-parameter';const links=Array.from({length:9},(_,i)=>'https://acmetasks.example.com/docs/tutorial/example-'+i);const previous={website:url,inferred:false,warnings:[],documents:[{...docs[0],links}]};const reads:string[]=[];
+ const result=await retrieve(run().guide.input,{},()=>{},new AbortController().signal,async(u)=>{const s=String(u);if(s.includes('cloudflare-dns'))return Response.json({Answer:[{type:1,data:'104.18.40.45'}]});reads.push(s);if(s.includes('duckduckgo.com'))return new Response('<main><a href="'+target+'">Official parameter reference</a></main>');return new Response('<main>'+(s===target?'The container parameter is an empty string to select the permitted root. This applies to the configured folder.':'This tutorial discusses account metadata and does not establish parameter values.')+'</main>');},{previous,query:'Acme empty container parameter',emptyField:'container',topics:['permissions']});
+ assert.ok(reads.includes(target));assert.equal(result.documents.length,2);assert.equal(result.documents[1].url,target);assert.deepEqual(result.documents[0],previous.documents[0]);
+});

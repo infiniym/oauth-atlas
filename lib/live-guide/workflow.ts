@@ -82,7 +82,8 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
       emit({stage:'Checking a missing requirement',detail:'Looking only for missing '+materialTopics.join(', ')+' evidence.',status:'working'});
       const constantGap=interpreted.telemetry?.validationIssues?.find(reason=>reason.startsWith('A request constant is not documented.'));
-      const gap=constantGap?.replace('A request constant is not documented. ','');
+      let gap=constantGap?.replace('A request constant is not documented. ','');
+      if(!gap){const issue=interpreted.telemetry?.validationIssues?.find(reason=>/API request is not documented|authorization example is not documented/.test(reason));if(issue)try{const detail=JSON.parse(issue.slice(issue.indexOf('{')));gap='Official endpoint reference, host, required parameters and response for '+(detail.endpoint||detail.url)+'. '+detail.reason;}catch{ /* Keep ordinary topic recovery when the diagnostic has no endpoint. */ }}
       const expanded=await retrieve(gap?{...input,useCase:input.useCase+' Missing evidence: '+gap}:input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics,...(gap?{query:input.app+' API '+gap,emptyField:gap.match(/^Field ([\w.-]+)/)?.[1]}:{} )});
       if(expanded.documents.length>research.documents.length){
         research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});

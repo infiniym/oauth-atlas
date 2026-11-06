@@ -21,7 +21,7 @@ export function inspectHandoff(guide:any,options:{requireResponsePath?:boolean}=
   const split=spawnSync('python3',['-c','import shlex,json,sys;print(json.dumps(shlex.split(sys.stdin.read())))'],{input:substitute(example,step.request?.endpoint||''),encoding:'utf8'});
   let args:string[]=[];try{args=JSON.parse(split.stdout);}catch{}
   const values=(...flags:string[])=>args.flatMap((a,i)=>flags.includes(a)&&args[i+1]?[args[i+1]]:[]);
-  const body=values('-d','--data','--data-raw','--data-binary','--json'),headerLines=values('-H','--header');
+  const body=values('-d','--data','--data-raw','--data-binary','--data-urlencode','--json'),headerLines=values('-H','--header');
   const method=(values('-X','--request')[0]||(body.length?'POST':'GET')).toUpperCase();
   const rawUrl=values('--url')[0]||args.find(a=>/^https:\/\//.test(a));
   const errors:string[]=[];let url:URL|undefined;
@@ -29,10 +29,11 @@ export function inspectHandoff(guide:any,options:{requireResponsePath?:boolean}=
   if(syntax.status!==0||args[0]!=='curl'||args.some(a=>[';','&&','|','>'].includes(a)))errors.push('Example must be one parseable curl request');
   if(method!==step.request?.method.toUpperCase())errors.push('Method differs from request metadata');
   const headers=Object.fromEntries(headerLines.map(h=>{const i=h.indexOf(':');return [h.slice(0,i).toLowerCase(),h.slice(i+1).trim()];}));
+  if(body.length&&!headers['content-type'])headers['content-type']=args.includes('--json')?'application/json':'application/x-www-form-urlencoded';
   const basic=values('-u','--user')[0];if(basic)headers.authorization='Basic '+Buffer.from(basic).toString('base64');
   if(guide.accessModel==='oauth'&&step.testKind==='action'&&!/^Bearer test-access-token$/i.test(headers.authorization||''))errors.push('Missing replaceable OAuth bearer token');
-  if(body.length&&!headers['content-type'])errors.push('Missing request content type');
   const parsedBody=body.map(b=>{if(/^\s*[\[{]/.test(b))try{return JSON.parse(b);}catch{errors.push('Malformed JSON body after substitution');}return b;});
+  if(parsedBody.some(b=>b&&typeof b==='object')&&!/application\/(?:[^;]+\+)?json\b/i.test(headers['content-type']||''))errors.push('JSON body requires the documented JSON content type');
   if(/-Version:\s*(?:<|\$|[A-Z_]+(?:'|"|\s|$))/i.test(example))errors.push('Unresolved documentation-derived version header');
   const boundary=step.detail+' '+step.doneWhen+' '+guide.steps.filter((s:any)=>s.testKind==='boundary').map((s:any)=>s.detail).join(' ');
   if(step.testKind==='action'&&!/boundary check:\s*(?!none\b|not (?:needed|required|applicable)\b|n\/a\b)\S[^.;\n]{11}/i.test(step.detail+' '+step.doneWhen))errors.push('No safe boundary check instruction');
@@ -43,7 +44,8 @@ export function inspectHandoff(guide:any,options:{requireResponsePath?:boolean}=
   // prose omits the literal word "response". Request-body flags do not qualify.
   const requestKeys=new Set(parsedBody.flatMap(value=>value&&typeof value==='object'?Object.keys(value):[]));
   const responseCondition=(step.evidence||[]).some((e:{quote:string})=>[...String(e.quote).matchAll(/([a-zA-Z_][\w.]*)\s+\(?boolean\)?\b/gi)].some(match=>{const field=match[1].replace(/^\./,'');return !requestKeys.has(field)&&new RegExp('\\b'+field.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b\\s*(?:is|=|:)?\\s*(?:true|false)\\b','i').test(outcome);}));
-  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(outcome)&&!responseCondition&&!(step.testKind==='authorization'&&(/callback|authorization code|access_token/i.test(outcome)||/redirect/i.test(outcome)&&/\bcode\b/i.test(outcome))))errors.push('Expected successful response absent');
+  const scalar=step.request?.responsePath?.match(/\.([A-Za-z_][\w:-]*)$/)?.[1],documentedScalar=scalar&&(step.evidence||[]).some((e:{quote:string})=>new RegExp('\\b'+scalar+'\\b').test(e.quote));
+  if(!/response|returns?|HTTP|200|results|entries|collection|names|titles|nodes/i.test(outcome)&&!responseCondition&&!documentedScalar&&!(step.testKind==='authorization'&&(/callback|authorization code|access_token/i.test(outcome)||/redirect/i.test(outcome)&&/\bcode\b/i.test(outcome))))errors.push('Expected successful response absent');
   // This is the request received by the stub, not a canned HTTP success.
   const stub={method,url:url?.href,headers,body:parsedBody};
   return {stepId:step.id,stub,syntaxChecked:true,userInputsSubstituted:true,executed:false,errors};

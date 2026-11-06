@@ -25,7 +25,8 @@ export function shellSafeCurl(example:string):string{
 }
 export function requestExampleParts(example:string){
  const args=curlArguments(example),values=(...flags:string[])=>args.flatMap((a,i)=>flags.includes(a)&&args[i+1]?[args[i+1]]:[]);
- const bodies=values('-d','--data','--data-raw','--data-binary','--json'),headers=Object.fromEntries(values('-H','--header').map(h=>{const at=h.indexOf(':');return [h.slice(0,at).toLowerCase(),h.slice(at+1).trim()];}));
+ const bodies=values('-d','--data','--data-raw','--data-binary','--data-urlencode','--json'),headers=Object.fromEntries(values('-H','--header').map(h=>{const at=h.indexOf(':');return [h.slice(0,at).toLowerCase(),h.slice(at+1).trim()];}));
+ if(bodies.length&&!headers['content-type'])headers['content-type']=args.includes('--json')?'application/json':'application/x-www-form-urlencoded';
  return {method:(values('-X','--request')[0]||(bodies.length?'POST':'GET')).toUpperCase(),url:values('--url')[0]||args.find(a=>/^https:\/\//.test(a)||a.startsWith('<INSTANCE_BASE_URL>')||/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(a))||'',headers,bodies};
 }
 function paginationState(example:string){
@@ -39,8 +40,10 @@ function paginationState(example:string){
  try{const url=new URL(parts.url.replace(/^<INSTANCE_BASE_URL>/,'https://instance.invalid'));for(const [name,value] of url.searchParams)add(name,value);}catch{}
  const walk=(body:unknown)=>{if(body&&typeof body==='object')for(const [name,value] of Object.entries(body)){if(typeof value==='string'||typeof value==='number')add(name,value);else walk(value);}};
  let connection='';for(const body of parts.bodies)try{const parsed=JSON.parse(body);walk(parsed);if(typeof parsed.query==='string'){
-  connection=parsed.query.match(/\b(\w+)\s*\([^)]*\b(?:after|before|first|last)\s*:/)?.[1]||parsed.query.match(/\{\s*(\w+)\s*(?:\([^)]*\))?\s*\{/)?.[1]||'';
-  for(const match of parsed.query.matchAll(/\b(after|before)\s*:\s*("[^"\s]+"|\$([a-zA-Z_][\w]*))/g))add(match[1],match[3]?parsed.variables?.[match[3]]:match[2].slice(1,-1));
+  // Operation variable declarations are not connection field arguments.
+  const query=parsed.query.replace(/^\s*(?:query|mutation|subscription)\b\s*(?:[A-Za-z_]\w*\s*)?(?:\([^)]*\))?\s*/,'');
+  connection=query.match(/\b(\w+)\s*\([^)]*\b(?:after|before|first|last)\s*:/)?.[1]||query.match(/\{\s*(\w+)\s*(?:\([^)]*\))?\s*\{/)?.[1]||'';
+  for(const match of query.matchAll(/\b(after|before)\s*:\s*("[^"\s]+"|\$([a-zA-Z_][\w]*))/g))add(match[1],match[3]?parsed.variables?.[match[3]]:match[2].slice(1,-1));
  }}catch{}
  return {values,nextUrl:/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(parts.url),connection};
 }

@@ -341,11 +341,14 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const candidates=new Map<string,string>();
   for(const d of previous)for(const link of d.links||[])if(sameDocumentationVersion(link,seed)&&!previous.some(p=>p.url===link)&&score(link)>0)candidates.set(link,'');
   const queue = options.urls?.length?options.urls.map(u=>publicUrl(u).href):previous.length?[...candidates.keys()].filter(l=>topics.some(t=>topicPatterns[t].test(l))||(topics.includes('permissions')&&actionLinkScore(l,'',input.useCase,input.app)>0)||(/paginat|continuation|cursor/i.test(input.useCase)&&/paginat|swagger|openapi|general.concepts|api\/usage/i.test(l))).sort((a,b)=>score(b)-score(a)).slice(0,12):[seed];
+  const searchTargets=new Set<string>();
   if(previous.length&&(!queue.length||!!options.query&&!options.urls?.length)){
     emit({stage:'Finding missing evidence',detail:'Looking for '+topics.join(', ')+' documentation.',status:'working'});
     try{const query=options.query||`site:${new URL(seed).hostname.replace(/^(docs|developers|developer)\./,'')} ${input.app} OAuth ${topics.join(' ')}`;
-      if(bindings.LIVE_GUIDE_FIRECRAWL_KEY){const data=await firecrawl('search',{query,limit:4,sources:[{type:'web'}]});queue.unshift(...(data.data?.web||[]).map((x:{url:string})=>x.url));}
-      else{const result=await reader.read('https://html.duckduckgo.com/html/?q='+encodeURIComponent(query));queue.unshift(...parsePage(result.url,result.body).links.map(l=>new URL(l).searchParams.get('uddg')||l));}
+      let found:string[]=[];
+      if(bindings.LIVE_GUIDE_FIRECRAWL_KEY){const data=await firecrawl('search',{query,limit:4,sources:[{type:'web'}]});found=(data.data?.web||[]).map((x:{url:string})=>x.url);}
+      else{const result=await reader.read('https://html.duckduckgo.com/html/?q='+encodeURIComponent(query));found=parsePage(result.url,result.body).links.map(l=>new URL(l).searchParams.get('uddg')||l);}
+      for(const url of found)searchTargets.add(url);queue.unshift(...found);
     }catch{warnings.push('The targeted follow-up search was unavailable.');}
   }
   const refreshed=new Set((options.refresh?options.urls||[]:[]).map(sourceKey));
@@ -365,8 +368,11 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   if(options.emptyField&&options.previous){
     // A link title cannot prove a parameter's semantics. Check a bounded set
     // of official examples in parallel and retain the actual matching text.
-    const probeScore=(url:string)=>score(url)-(/\/sdks?\//i.test(url)?80:0)+( /tutorial|examples?|quick.?start|working.with|using.the|writing|script/i.test(url)?100:0)-(/api-reference|\/reference\/|oauth|authoriz|app-console|overview\/?$/i.test(url)?60:0);
-    const targets=[...candidates.keys()].filter(l=>allowed(l)&&!attempted.has(sourceKey(l))).sort((a,b)=>probeScore(b)-probeScore(a)).slice(0,6);
+    const probeScore=(url:string)=>score(url)+(searchTargets.has(url)?150:0)-(/\/sdks?\/|support|community/i.test(url)?80:0)+( /tutorial|examples?|quick.?start|working.with|using.the|writing|script|developer-guide/i.test(url)?100:0)-(/api-reference|\/reference\/|oauth|authoriz|app-console|overview\/?$/i.test(url)?60:0);
+    const links=[...new Set([...searchTargets,...candidates.keys()])].filter(l=>{try{return allowed(l)&&!attempted.has(sourceKey(l));}catch{return false;}}).sort((a,b)=>probeScore(b)-probeScore(a));
+    let priority:string[]=[];
+    if(links.length>=20)try{const choice=await chooseNavigation({...input,useCase:input.useCase+' Missing evidence: the documented meaning of empty '+options.emptyField+'.'},links.slice(0,120).map(l=>[l,candidates.get(l)||'']),bindings,signal,fetcher,previous.map(({url,title})=>({url,title})));priority=[...choice.context,...choice.requests,...choice.setup];}catch{ /* Keep the bounded deterministic probes. */ }
+    const targets=[...new Set([...priority,...links])].slice(0,6);
     for(let i=0;i<targets.length&&!signal.aborted;i+=3){
       const results=await Promise.allSettled(targets.slice(i,i+3).map(link=>retrieve(input,bindings,emit,signal,fetcher,{previous:options.previous,urls:[link],readOne:true})));
       for(const result of results)if(result.status==='fulfilled'&&result.value.documents.slice(previous.length).some(d=>emptyValueEvidence(d.text,options.emptyField!)))return result.value;
