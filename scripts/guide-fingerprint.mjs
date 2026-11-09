@@ -8,7 +8,7 @@ export function guideCodeFingerprint(root=process.cwd()){
  const excluded=new Set(['app/api/release/route.ts','data/decisions.json','public/decision-log.md']);
  const files=[];const walk=path=>{if(!existsSync(path))return;if(statSync(path).isDirectory()){for(const name of readdirSync(path))walk(join(path,name));}else if(!excluded.has(relative(root,path)))files.push(path);};
  for(const directory of ['app','components','lib','data','public','worker'])walk(join(root,directory));
- for(const file of ['package.json','package-lock.json','vite.config.ts','tsconfig.json','scripts/start-local.mjs','scripts/guide-fingerprint.mjs'])walk(join(root,file));
+ for(const file of ['package.json','package-lock.json','vite.config.ts','next.config.ts','vercel.json','db/postgres.sql','tsconfig.json','scripts/start-local.mjs','scripts/guide-fingerprint.mjs'])walk(join(root,file));
  const hash=createHash('sha256');for(const path of files.sort((a,b)=>relative(root,a).localeCompare(relative(root,b),'en'))){hash.update(relative(root,path));hash.update('\0');hash.update(readFileSync(path));hash.update('\0');}
  return hash.digest('hex');
 }

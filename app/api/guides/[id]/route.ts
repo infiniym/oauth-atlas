@@ -1,6 +1,7 @@
-import { env } from 'cloudflare:workers';
+import { getRuntime } from '@/lib/server/runtime';
 export const dynamic='force-dynamic';
 export async function GET(_request:Request,{params}:{params:Promise<{id:string}>}){
+  const env=getRuntime();
  const {id}=await params;
  if(!/^draft-[a-z0-9-]{20,60}$/.test(id))return Response.json({error:'Guide not found.'},{status:404});
  try{

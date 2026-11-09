@@ -1,12 +1,14 @@
+import { requestAddress, type RuntimeBindings } from '../server/runtime-types.ts';
 import { normalizeInput } from './contracts.ts';
-import type { Bindings, StoredRun } from './contracts.ts';
+import type { StoredRun } from './contracts.ts';
 import { generate } from './workflow.ts';
 import {ModelServiceFailure} from './failures.ts';
+import {guideReadiness} from './readiness.ts';
 
 export interface Store {
   prepare(sql: string): { bind(...args: unknown[]): { first<T>(): Promise<T | null>; run(): Promise<unknown> } };
 }
-type Environment = Bindings & { DB?: Store };
+type Environment = RuntimeBindings;
 const json = (body: unknown, status = 200) => Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export async function load(store: Store, id: string): Promise<StoredRun | null> {
   if (!/^lg-[a-f0-9-]{36}$/.test(id)) return null;
@@ -34,7 +36,7 @@ export async function postGuide(request: Request, env: Environment, fetcher: typ
   } catch { return json({error:'Enter valid app details and a public HTTPS website.'},400); }
   let previous: StoredRun | null = null;
   try {
-    const hour = Math.floor(Date.now()/3_600_000), address = request.headers.get('cf-connecting-ip') || 'local-preview';
+    const hour = Math.floor(Date.now()/3_600_000), address = requestAddress(request,env);
     const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(hour+':'+address));
     const bucket = hour+':'+Array.from(new Uint8Array(digest).slice(0,12),x=>x.toString(16).padStart(2,'0')).join('');
     const result = await env.DB.prepare('INSERT INTO live_guide_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=count+1 RETURNING count').bind(bucket).first<{count:number}>();
@@ -48,9 +50,9 @@ export async function postGuide(request: Request, env: Environment, fetcher: typ
     async start(controller) {
       const send = (data: unknown) => { if(!closed && !signal.aborted) {try{controller.enqueue(encoder.encode(JSON.stringify(data)+'\n'));}catch{closed=true;abort.abort();}} };
       try {
-        const run = await generate(input,env,event=>send({type:'progress',event}),signal,fetcher,previous || undefined);
+        const run = await generate(input,env,event=>send({type:'progress',event}),signal,fetcher,previous || undefined,{oauthSetup:true});
         signal.throwIfAborted();
-        if(!run.guide.questions.length&&run.guide.mode==='interpreted'&&(!run.guide.engine||run.guide.engine.outcome==='accepted'))await (await import('../plan/storage.ts')).freezeResearchPlan(run.guide,db);
+        if(guideReadiness(run.guide)==='usable-guide')await (await import('../plan/storage.ts')).freezeResearchPlan(run.guide,db);
         await db.prepare('INSERT INTO live_guides (id,payload,created_at) VALUES (?,?,?)').bind(run.guide.id,JSON.stringify(run),run.guide.generatedAt).run();
         send({type:'complete',guide:run.guide});
       } catch(error) {

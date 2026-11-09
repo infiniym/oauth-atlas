@@ -13,7 +13,7 @@ export async function saveReviewedPlan(input:unknown,db:Store,metadata?:ManagedM
   const plan=reviewedPlan(assessment,recommend(assessment,metadata));plan.id='lp-'+crypto.randomUUID();plan.metadata=metadata;
   await db.prepare('INSERT INTO launch_plans (id,payload,created_at) VALUES (?,?,?)').bind(plan.id,JSON.stringify(plan),plan.createdAt).run();return plan;
 }
-export async function freezeResearchPlan(guide:LiveGuide,db:Store):Promise<LaunchPlan>{const plan=researchedPlan(guide);await db.prepare('INSERT OR IGNORE INTO launch_plans (id,payload,created_at) VALUES (?,?,?)').bind(plan.id,JSON.stringify(plan),plan.createdAt).run();const row=await db.prepare('SELECT payload FROM launch_plans WHERE id = ?').bind(plan.id).first<{payload:string}>();return row?JSON.parse(row.payload):plan;}
+export async function freezeResearchPlan(guide:LiveGuide,db:Store):Promise<LaunchPlan>{const plan=researchedPlan(guide);await db.prepare('INSERT INTO launch_plans (id,payload,created_at) VALUES (?,?,?) ON CONFLICT DO NOTHING').bind(plan.id,JSON.stringify(plan),plan.createdAt).run();const row=await db.prepare('SELECT payload FROM launch_plans WHERE id = ?').bind(plan.id).first<{payload:string}>();return row?JSON.parse(row.payload):plan;}
 export async function readPlan(id:string,db:Store):Promise<LaunchPlan|null>{
   if(!/^(?:lp|lg)-[a-f0-9-]{36}$/.test(id))return null;
   const row=await db.prepare('SELECT payload FROM launch_plans WHERE id = ?').bind(id).first<{payload:string}>();if(row)return JSON.parse(row.payload);

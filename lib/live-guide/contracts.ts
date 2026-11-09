@@ -60,6 +60,18 @@ export type InferenceTelemetry = {
   outcome:InferenceOutcome;followupOutcome?:InferenceOutcome;
   reviewOutcome?:InferenceOutcome;
 };
+export type SetupCheck = 'registration' | 'authorization' | 'permissions' | 'launch';
+export type LaunchApproval = {
+  kind: 'provider-review' | 'marketplace-listing' | 'customer-admin';
+  applicability: 'required' | 'conditional' | 'not-required' | 'unknown';
+  detail: string;
+  evidence: Evidence[];
+};
+export type SetupReview = {
+  gaps: Partial<Record<SetupCheck, string>>;
+  approvals: LaunchApproval[];
+};
+export type OAuthSetup = { review?: SetupReview; exampleNotes: string[] };
 export type LiveGuide = Interpretation & {
   schemaVersion: 1; id: string; previousId?: string; generatedAt: string; input: GuideInput;
   provider: { website: string; identity: 'provided' | 'inferred' };
@@ -75,6 +87,7 @@ export type LiveGuide = Interpretation & {
   followupDone?:boolean;
   journey?:{modelCalls:number;inputTokens:number;outputTokens:number;modelMs:number};
   observations?:{blockerTitle:string;note:string;satisfied:boolean;recordedAt:string;reportedBy:'developer'}[];
+  oauthSetup?:OAuthSetup;
   sources: Omit<Document, 'text'>[];
   integration: { catalogName?: string; docsUrl?: string; message: string };
 };
@@ -83,7 +96,7 @@ export type Bindings = IntentAiBindings & {
   LIVE_GUIDE_FIRECRAWL_KEY?: string;
 };
 export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[];navigationCalls?:number };
-export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;facts?:Interpretation;draft?:Interpretation;draftAccepted?:boolean;pendingReviewActionId?:string};
+export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;facts?:Interpretation;draft?:Interpretation;draftAccepted?:boolean;pendingReviewActionId?:string;exampleNotes?:string[];setupFeedback?:string[];setupReview?:SetupReview;setupCorrectionDone?:boolean};
 
 export function normalizeInput(raw: unknown): GuideInput {
   const parsed = inputSchema.safeParse(raw);

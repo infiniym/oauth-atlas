@@ -1,12 +1,13 @@
-import {isResource,concreteRequest} from './semantics.ts';
+import {isResource,concreteRequest,isResourceExample} from './semantics.ts';
 import {resolveGuide} from './resolution.ts';
 import catalog from '../../data/catalog.json' with { type:'json' };
 import { normalizeInput,interpretationSchema } from './contracts.ts';
-import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun,WorkflowCheckpoint,Interpretation } from './contracts.ts';
+import type { Bindings, GuideInput, LiveGuide, Progress, StoredRun,WorkflowCheckpoint,Interpretation,OAuthSetup } from './contracts.ts';
 import { retrieve,discoverProvider } from './retrieval.ts';
 import { interpretEvidence, reviewMappings,repairReviewedSetup,evidenceOnly, PROMPT_VERSION } from './interpretation.ts';
 import {guideReadiness} from './readiness.ts';
 import {modelServiceFetcher} from './model-service.ts';
+import {reviewOAuthSetup} from './setup-review.ts';
 
 export function integrationContext(app: string): LiveGuide['integration'] {
   const normalize = (s:string) => s.toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -25,15 +26,24 @@ export function continuation(input: GuideInput, previous: StoredRun): void {
   }
 }
 const draftFields=(value:Interpretation)=>Object.fromEntries(Object.keys(interpretationSchema.shape).map(key=>[key,value[key as keyof Interpretation]])) as Interpretation;
-export async function generate(raw: unknown, bindings: Bindings, emit: (event: Progress)=>void, signal: AbortSignal, fetcher: typeof fetch = fetch, previous?: StoredRun,options:{checkpoint?:WorkflowCheckpoint;save?:(checkpoint:WorkflowCheckpoint)=>Promise<void>}={}): Promise<StoredRun> {
+export async function generate(raw: unknown, bindings: Bindings, emit: (event: Progress)=>void, signal: AbortSignal, fetcher: typeof fetch = fetch, previous?: StoredRun,options:{checkpoint?:WorkflowCheckpoint;save?:(checkpoint:WorkflowCheckpoint)=>Promise<void>;oauthSetup?:boolean}={}): Promise<StoredRun> {
   fetcher=modelServiceFetcher(fetcher);
   const input = normalizeInput(raw);
   if (input.previousId && !previous) throw new Error('The previous guide could not be found. Start fresh research.');
   if (!input.previousId && Object.keys(input.answers).length) throw new Error('Answers must refer to an existing guide.');
   if (previous) continuation(input,previous);
-  if(input.resolution&&previous)return resolveGuide(input,previous,bindings,emit,signal,fetcher,options);
+  const oauthSetup=options.oauthSetup||!!previous?.guide.oauthSetup;
+  if(input.resolution&&previous&&!(oauthSetup&&input.resolution.kind==='documentation'))return resolveGuide(input,previous,bindings,emit,signal,fetcher,options);
+  if(oauthSetup&&input.resolution?.kind==='documentation')input.documentationUrl=input.resolution.url;
+  let setup:OAuthSetup|undefined=oauthSetup?{exampleNotes:options.checkpoint?.exampleNotes||[]}:undefined;
   let retainedFacts=options.checkpoint?.facts;const originalSave=options.save;
-  options={...options,save:async checkpoint=>{if('facts' in checkpoint)retainedFacts=checkpoint.facts;await originalSave?.({...checkpoint,...(retainedFacts&&!('facts' in checkpoint)?{facts:retainedFacts}:{})});}};
+  const retainedSetup:Partial<WorkflowCheckpoint>={};
+  for(const field of ['exampleNotes','setupFeedback','setupReview','setupCorrectionDone'] as const)if(options.checkpoint&&field in options.checkpoint)Object.assign(retainedSetup,{[field]:options.checkpoint[field]});
+  options={...options,save:async checkpoint=>{
+    if('facts' in checkpoint)retainedFacts=checkpoint.facts;
+    for(const field of ['exampleNotes','setupFeedback','setupReview','setupCorrectionDone'] as const)if(field in checkpoint)Object.assign(retainedSetup,{[field]:checkpoint[field]});
+    await originalSave?.({...retainedSetup,...checkpoint,...(retainedFacts&&!('facts' in checkpoint)?{facts:retainedFacts}:{})});
+  }};
   const cumulative=previous?.guide.journey||{modelCalls:previous?.guide.engine?.attempts||0,inputTokens:previous?.guide.engine?.inputTokens||0,outputTokens:previous?.guide.engine?.outputTokens||0,modelMs:previous?.guide.engine?.elapsedMs||0};
   const decisions=new Map((previous?.guide.decisions||[]).map(d=>[d.id,d]));
   for(const question of previous?.guide.questions||[])if(input.answers[question.id])decisions.set(question.id,{id:question.id,question:question.prompt,answer:input.answers[question.id]});
@@ -45,7 +55,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   let clarificationUsed=!!previous?.guide.clarificationUsed||!!options.checkpoint?.clarificationUsed||!!previous?.guide.questions.some(q=>q.id!=='provider-identity');
   let followupDone=previous?.guide.followupDone||options.checkpoint?.followupDone||false;
   const intent=options.checkpoint?.intent||(previous?{requestedActions:previous.guide.requestedActions||[],prohibitions:previous.guide.prohibitions||[]}:undefined);
-  let interpreted:{value:Interpretation;mode:'interpreted'|'evidence-only';notice:string;telemetry?:LiveGuide['engine']}|Awaited<ReturnType<typeof interpretEvidence>>;
+  let interpreted:{value:Interpretation;mode:'interpreted'|'evidence-only';notice:string;telemetry?:LiveGuide['engine'];exampleNotes?:string[]}|Awaited<ReturnType<typeof interpretEvidence>>;
   if(!identityConfirmed){
     interpreted={value:{...evidenceOnly([]),questions:[{id:'provider-identity',prompt:'Continue with '+new URL(research!.website).hostname+'?',why:'Confirm the provider before documentation research or model planning begins.',options:['Yes, this is the provider','No, I will enter its website']}]},mode:'evidence-only',notice:'Provider discovery is complete. No documentation crawl or model planning has run.'};
   }else if(deferred.length){
@@ -55,20 +65,20 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     if(input.documentationUrl){
       research=await retrieve(input,bindings,emit,signal,fetcher,{previous:research||undefined,urls:[input.documentationUrl],refresh:true});
       // New evidence invalidates a saved interpretation, not confirmed intent.
-      retainedFacts=undefined;options={...options,checkpoint:undefined};followupDone=false;
+      retainedFacts=undefined;for(const key of Object.keys(retainedSetup))delete retainedSetup[key as keyof WorkflowCheckpoint];options={...options,checkpoint:undefined};followupDone=false;
       await options.save?.({research,clarificationUsed,followupDone,intent});
     }
     if(!research?.documents.length){research=await retrieve({...input,website:research?.website||input.website},bindings,emit,signal,fetcher);research.inferred=false;await options.save?.({research,clarificationUsed,followupDone,intent});}
     emit({stage:clarificationUsed?'Building your guide':'Checking setup choices',detail:'Using '+research.documents.length+' saved source snapshots. Your request and previous answers are retained.',status:'working'});
     const savedDraft=options.checkpoint?.draft;
     const acceptedDraft=savedDraft&&(options.checkpoint?.draftAccepted===true||savedDraft.oauthSupport!=='unknown'&&savedDraft.requestedActions?.length&&savedDraft.steps.some(s=>s.testKind==='action'))?draftFields(savedDraft):undefined;
-    interpreted=acceptedDraft?{value:acceptedDraft,mode:'interpreted',notice:'Continuing the saved plan checkpoint. No completed planning call was repeated.'}:await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:clarificationUsed,intent,facts:options.checkpoint?.facts,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
+    interpreted=acceptedDraft?{value:acceptedDraft,mode:'interpreted',notice:'Continuing the saved plan checkpoint. No completed planning call was repeated.'}:await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:clarificationUsed,intent,facts:options.checkpoint?.facts,oauthSetup,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
     if('decisionOnly' in interpreted&&interpreted.decisionOnly&&!interpreted.value.questions.length){
       const decisionTelemetry=interpreted.telemetry;
       const confirmedIntent={requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions};
       clarificationUsed=true;await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent});
       emit({stage:'Building your guide',detail:'Requirements are clear. Creating the plan from saved evidence.',status:'working'});
-      interpreted=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:confirmedIntent,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent:confirmedIntent,facts});}});
+      interpreted=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:confirmedIntent,oauthSetup,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent:confirmedIntent,facts});}});
       if(decisionTelemetry&&interpreted.telemetry)for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[k]=(interpreted.telemetry[k]||0)+(decisionTelemetry[k]||0);
     }
     if(clarificationUsed&&interpreted.value.questions.length){
@@ -76,7 +86,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       interpreted.value.questions=[];interpreted.value.steps=interpreted.value.steps.filter(s=>s.stage==='prepare');
     }
     if(interpreted.mode==='evidence-only'&&interpreted.telemetry?.outcome==='upstream-error')await options.save?.({research,clarificationUsed,followupDone,intent,draftAccepted:false});
-    const materialTopics=interpreted.value.researchNeeded.filter(t=>t!=='distribution');
+    const materialTopics=interpreted.value.researchNeeded.filter(t=>oauthSetup||t!=='distribution');
     if(!interpreted.value.questions.length&&(materialTopics.length||interpreted.mode==='evidence-only')&&interpreted.telemetry?.outcome!=='upstream-error'&&!followupDone){
       if(!materialTopics.length)materialTopics.push(interpreted.telemetry?.validationIssues?.some(s=>s.startsWith('Unestablished OAuth'))?'registration':'permissions');
       followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
@@ -87,14 +97,51 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       const expanded=await retrieve(gap?{...input,useCase:input.useCase+' Missing evidence: '+gap}:input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics,...(gap?{query:input.app+' API '+gap,emptyField:gap.match(/^Field ([\w.-]+)/)?.[1]}:{} )});
       if(expanded.documents.length>research.documents.length){
         research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
-        const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions},facts:retainedFacts?.oauthSupport==='documented'&&retainedFacts.coverage.every(c=>c.status==='mapped')&&!retainedFacts.researchNeeded.some(t=>t!=='distribution')?retainedFacts:undefined,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
+        const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions},oauthSetup,facts:retainedFacts?.oauthSupport==='documented'&&retainedFacts.coverage.every(c=>c.status==='mapped')&&!retainedFacts.researchNeeded.some(t=>oauthSetup||t!=='distribution')?retainedFacts:undefined,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
         const original=interpreted.telemetry;
         if(refined.mode==='interpreted')interpreted=refined;else research.warnings.push('Additional evidence was saved, but the follow-up interpretation failed. Earlier findings remain provisional.');
         if(original&&refined.telemetry){const totals={...original,outcome:refined.mode==='interpreted'?refined.telemetry.outcome:original.outcome,followupOutcome:refined.telemetry.outcome,validationIssues:[...original.validationIssues||[],...refined.telemetry.validationIssues||[]]};for(const k of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)totals[k]=(original[k]||0)+(refined.telemetry[k]||0);interpreted.telemetry=totals;}
       }
 
     }
-    if(interpreted.mode==='interpreted'&&!interpreted.value.questions.length){
+    if(oauthSetup&&interpreted.mode==='interpreted'&&!interpreted.value.questions.length&&interpreted.value.oauthSupport==='documented'){
+      setup!.exampleNotes=[...setup!.exampleNotes,...interpreted.exampleNotes||[]];
+      const confirmedIntent={requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions};
+      const addUsage=(usage:NonNullable<typeof interpreted.telemetry>)=>{
+        if(!interpreted.telemetry)interpreted.telemetry={...usage,attempts:0,inputTokens:0,outputTokens:0,elapsedMs:0};
+        for(const key of ['attempts','inputTokens','outputTokens','elapsedMs','thinkingTokens'] as const)interpreted.telemetry[key]=(interpreted.telemetry[key]||0)+(usage[key]||0);
+        interpreted.telemetry.validationIssues=[...interpreted.telemetry.validationIssues||[],...usage.validationIssues||[]];
+      };
+      await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent,draft:interpreted.value,draftAccepted:true,exampleNotes:setup!.exampleNotes});
+      emit({stage:'Checking OAuth setup and launch',detail:'Checking registration, consent and credentials, access boundaries and customer launch prerequisites against official sources.',status:'working'});
+      const savedReview=options.checkpoint?.setupReview;
+      let checked:Awaited<ReturnType<typeof reviewOAuthSetup>>=savedReview?{review:savedReview,telemetry:{model:interpreted.telemetry?.model||'',attempts:0,inputTokens:0,outputTokens:0,elapsedMs:0,outcome:'accepted'}}:await reviewOAuthSetup(interpreted.value,input,research.documents,bindings,signal,fetcher);
+      addUsage(checked.telemetry);
+      const feedback=Object.values(checked.review?.gaps||{});
+      if(feedback.length&&!options.checkpoint?.setupCorrectionDone){
+        await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent,draft:interpreted.value,draftAccepted:true,exampleNotes:setup!.exampleNotes,setupFeedback:feedback,setupReview:checked.review,setupCorrectionDone:false});
+        emit({stage:'Correcting OAuth instructions',detail:'Addressing the specific setup or launch gaps found in the saved official evidence.',status:'working'});
+        const corrected=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:confirmedIntent,oauthSetup:true,setupFeedback:feedback,facts:!checked.review?.gaps.permissions&&!checked.review?.gaps.launch?retainedFacts:undefined});
+        addUsage(corrected.telemetry);
+        if(corrected.mode==='interpreted'){
+          interpreted.value=corrected.value;
+          setup!.exampleNotes=[...setup!.exampleNotes,...corrected.exampleNotes||[]];
+          await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent,draft:interpreted.value,draftAccepted:true,exampleNotes:setup!.exampleNotes,setupReview:undefined,setupCorrectionDone:true});
+          checked=await reviewOAuthSetup(interpreted.value,input,research.documents,bindings,signal,fetcher);
+          addUsage(checked.telemetry);
+        }
+        await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent,draft:interpreted.value,draftAccepted:true,setupReview:checked.review,setupCorrectionDone:true});
+      }
+      setup!.review=checked.review;
+      interpreted.telemetry!.reviewOutcome=checked.telemetry.outcome;
+      if(checked.exampleIssue){
+        interpreted.value.steps=interpreted.value.steps.filter(s=>!isResourceExample(s));
+        setup!.exampleNotes.push('Resource example omitted. '+checked.exampleIssue);
+      }
+      setup!.exampleNotes=[...new Set(setup!.exampleNotes)];
+      if(checked.review&&!checked.review.gaps.permissions)interpreted.value.coverage=interpreted.value.coverage.map(c=>({...c,support:c.status==='mapped'?'reviewed':'unresolved'}));
+      await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent,draft:interpreted.value,draftAccepted:true,exampleNotes:setup!.exampleNotes,setupFeedback:Object.values(checked.review?.gaps||{}),setupReview:checked.review});
+    }else if(!oauthSetup&&interpreted.mode==='interpreted'&&!interpreted.value.questions.length){
       await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.value,draftAccepted:true});
       emit({stage:'Checking action coverage',detail:'Reviewing each permission relationship separately from execution.',status:'working'});
       const beforeReview=structuredClone(interpreted.value),review=await reviewMappings(beforeReview,input,bindings,signal,fetcher,research.documents,{onRetry:()=>emit({stage:'Retrying guide check',detail:'The check did not finish. Retrying it once with your saved instructions and evidence.',status:'working'})});
@@ -111,6 +158,11 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   }
   research=research!;signal.throwIfAborted();
   const value=interpreted.value;
+  if(oauthSetup&&value.steps.length){
+    const work=value.steps.filter(s=>s.owner==='developer'&&s.stage!=='launch'&&!isResourceExample(s));
+    const launch=value.steps.filter(s=>s.stage==='launch'&&s.owner!=='provider');
+    value.activeEffort={range:work.length+' hands-on setup tasks',assumptions:'Workload estimate from the documented checklist. Includes registration, callback implementation and a representative authorization where specified. Assumes a web app and representative account are available. '+launch.length+' launch preparation tasks are listed separately. Elapsed time depends on the existing backend, account access and implementation experience.'};
+  }
   const pendingQuestions=!identityConfirmed?deferred:[];
   if(value.questions.length){value.summary='Confirm the setup choices for '+input.app+'. Your request and evidence are saved.';value.recommendation='Continue with these choices to build your guide.';value.nextAction='Answer the current setup choices.';value.steps=[];value.activeEffort={range:'',assumptions:''};}
   const phase=!identityConfirmed?'identity':value.questions.length?'clarification':'ready';
@@ -119,15 +171,15 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     ...value,phase,clarificationUsed:clarificationUsed||phase==='clarification',followupDone,schemaVersion:1,id:'lg-'+crypto.randomUUID(),...(previous?{previousId:previous.guide.id}:{}),generatedAt:new Date().toISOString(),input,
     provider:{website:research.website,identity:identityConfirmed?'provided':'inferred'},
     status:value.oauthSupport==='unsupported'?'unsupported':value.questions.length?'needs-input':interpreted.mode==='interpreted' && value.oauthSupport==='documented' && !research.warnings.length && value.unknowns.length===0 && value.coverage.every(c=>c.status==='mapped') && !value.blockers.some(b=>b.consequence==='test')?'documented-plan':'provisional',
-    mode:interpreted.mode,notice:interpreted.notice,warnings:research.warnings,setupTested:false,
+    mode:interpreted.mode,notice:interpreted.notice,warnings:research.warnings,setupTested:false,...(setup?{oauthSetup:setup}:{}),
     decisions:[...decisions.values()],
     ...(pendingQuestions.length?{pendingQuestions}:{}),
-    ...(telemetry?.attempts?{engine:{...telemetry,provider:'anthropic' as const,promptVersion:PROMPT_VERSION}}:{}),
+    ...(telemetry&&(telemetry.attempts||oauthSetup)?{engine:{...telemetry,provider:'anthropic' as const,promptVersion:PROMPT_VERSION}}:{}),
     journey:{modelCalls:cumulative.modelCalls+(telemetry?.attempts||0),inputTokens:cumulative.inputTokens+(telemetry?.inputTokens||0),outputTokens:cumulative.outputTokens+(telemetry?.outputTokens||0),modelMs:cumulative.modelMs+(telemetry?.elapsedMs||0)},
     sources:research.documents.map(({text:_text,...source})=>source),integration:integrationContext(input.app),
   };
   let completed:StoredRun={guide,documents:research.documents};
-  if(guide.phase==='ready'&&guide.mode==='interpreted'&&guide.oauthSupport==='documented'&&(!guide.engine?.reviewOutcome||guide.engine.reviewOutcome==='accepted')){
+  if(!oauthSetup&&guide.phase==='ready'&&guide.mode==='interpreted'&&guide.oauthSupport==='documented'&&(!guide.engine?.reviewOutcome||guide.engine.reviewOutcome==='accepted')){
     const gaps=guide.requestedActions.filter(a=>isResource(a)&&(!guide.coverage.some(c=>c.actionId===a.id&&c.status==='mapped'&&c.support==='reviewed')||!guide.steps.some(s=>s.testKind==='action'&&s.actionIds?.includes(a.id)&&concreteRequest(s)))).slice(0,2);
     for(const action of gaps){
       emit({stage:'Repairing an incomplete action',detail:'Checking the missing request or access evidence for '+action.title+'. Completed setup and your answers are retained.',status:'working'});
@@ -145,6 +197,10 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   completed.guide.researchMetrics={navigationCalls:research.navigationCalls||0};
   const requestsDocumented=completed.guide.resultState==='usable-guide';
   const failed=completed.guide.resultState==='research-failure';
+  if(oauthSetup){
+    emit(failed?{stage:'OAuth guide unfinished',detail:Object.values(setup?.review?.gaps||{})[0]||'The setup review did not finish. Your completed instructions and sources are saved.',status:'warning'}:{stage:phase==='ready'?'OAuth setup guide saved':'Waiting for your choices',detail:phase==='ready'?'Registration, authorization, permissions and launch guidance are documented. Follow the checklist with a representative account.':'Continue this saved request to reuse its evidence and confirmed choices.',status:'done'});
+    return completed;
+  }
   emit(failed?{stage:'Guide unfinished',detail:'Your request and '+research.documents.length+' sources are saved. Retry the unfinished planning step.',status:'warning'}:{stage:phase==='ready'?(requestsDocumented?'Requested test documented':'Guide saved with gaps'):'Waiting for your choices',detail:phase==='ready'?(requestsDocumented?'The requested API test is documented. Setup and execution have not been verified.':'Your sources and available steps are saved. Resolve the marked gaps before the requested API test.'):'Continue this saved request; completed work will be reused.',status:'done'});
   return completed;
 }

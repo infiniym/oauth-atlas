@@ -31,7 +31,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
  let telemetry:InferenceTelemetry={model:config.model||'',attempts:0,inputTokens:0,outputTokens:0,elapsedMs:0,outcome:'accepted',thinking:'adaptive',effort:'medium'};
  if(old.questions.length)throw new Error('Finish the current setup choices before updating an item.');
  if(update.kind==='refresh'){
-  value=reconcile(completeRequestExamples(value,research.documents));
+  value=old.oauthSetup?value:reconcile(completeRequestExamples(value,research.documents));
   emit({stage:'Guide fixes applied',detail:'Saved a new version using the existing facts, answers and sources. No research or model call was needed.',status:'done'});
  }else if(update.kind==='observation'){
   const blocker=old.blockers.find(b=>b.title===update.blockerTitle);
@@ -135,6 +135,7 @@ export async function resolveGuide(input:GuideInput,previous:StoredRun,bindings:
   }catch(error){if(error instanceof ModelServiceFailure)throw error;signal.throwIfAborted();console.warn('[live-guide] action update rejected',error instanceof z.ZodError?error.issues.map(i=>i.path.join('.')+': '+i.message).join('; '):error instanceof Error&&/^(?:A citation|A selected permission|A step|Action coverage|Update exceeded|A shared permission|Incomplete update|Model unavailable)/.test(error.message)?error.message:'The action response did not match the required JSON contract.');value=structuredClone(base);telemetry.outcome=error instanceof z.ZodError?'validation-rejected':'incomplete';telemetry.validationIssues=[error instanceof z.ZodError?error.issues.map(i=>i.path.join('.')+': '+i.message).join('; ').slice(0,1200):error instanceof Error&&/^(?:A citation|A selected permission|A step|Action coverage|Update exceeded|Incomplete update|Model unavailable)/.test(error.message)?error.message:'The action response did not match the required contract.'];emit({stage:'Action update unfinished',detail:'The earlier guide is unchanged. Sources collected for this action are saved for retry.',status:'warning'});}
  }
  telemetry.elapsedMs=Date.now()-started;
+ if(old.oauthSetup&&(update.kind==='refresh'||update.kind==='observation'))telemetry.reviewOutcome=old.engine?.reviewOutcome;
  const totals=old.journey||{modelCalls:0,inputTokens:0,outputTokens:0,modelMs:0};
  const result:StoredRun={documents:research.documents,guide:{...old,...value,input,id:'lg-'+crypto.randomUUID(),previousId:old.id,generatedAt:new Date().toISOString(),observations,setupTested:false,sources:research.documents.map(({text:_text,...d})=>d),warnings:research.warnings,engine:{...telemetry,provider:'anthropic',promptVersion:PROMPT_VERSION},journey:{modelCalls:totals.modelCalls+telemetry.attempts,inputTokens:totals.inputTokens+telemetry.inputTokens,outputTokens:totals.outputTokens+telemetry.outputTokens,modelMs:totals.modelMs+telemetry.elapsedMs}}};
  result.guide.resultState=guideReadiness(result.guide);return result;

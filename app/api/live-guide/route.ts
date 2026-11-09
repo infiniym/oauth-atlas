@@ -1,5 +1,5 @@
-import { env } from 'cloudflare:workers';
+import { getRuntime } from '@/lib/server/runtime';
 import { postGuide } from '@/lib/live-guide/http';
-import type { Bindings } from '@/lib/live-guide/contracts';
 export const dynamic = 'force-dynamic';
-export async function POST(request: Request) { return postGuide(request,env as typeof env & Bindings); }
+export const maxDuration=240;
+export async function POST(request: Request) { return postGuide(request,getRuntime()); }

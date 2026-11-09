@@ -1,6 +1,7 @@
 import type {Interpretation} from './contracts.ts';
 export const isResource=(a:Interpretation['requestedActions'][number])=>a.category!=='authorization'&&a.operation!=='authorize';
 export const concreteRequest=(s:Interpretation['steps'][number])=>!!(s.request?.method&&s.request.endpoint&&s.request.example);
+export const isResourceExample=(s:Interpretation['steps'][number])=>s.testKind==='action'||s.testKind==='boundary';
 // Only migration reads legacy prose. Current resolution uses action + missing
 // fact, so changing a title cannot change a structured blocker's behavior.
 export function legacyRequestGap(b:Interpretation['blockers'][number]):boolean{return b.kind==='missing-evidence'||(!b.kind&&/(?:endpoint|API request|request shape|GraphQL (?:query|operation))/i.test(b.title+' '+b.resolution)&&/(?:not (?:verified|established|supplied|in)|unverified|missing|unresolved|documentation)/i.test(b.title+' '+b.resolution));}

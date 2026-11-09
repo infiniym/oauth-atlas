@@ -1,5 +1,7 @@
 import type { Assessment } from '../advisor/types.ts';
 import type {ManagedMetadata} from '../advisor/types.ts';
+import type {OAuthSetup} from '../live-guide/contracts.ts';
+export const approvalLabels={'provider-review':'Provider review and production access','marketplace-listing':'Marketplace or directory listing','customer-admin':'Customer administrator approval'};
 export type PlanEvidence={sourceId:string;quote:string};
 export type PlanSource={id:string;title:string;url:string;checkedAt:string};
 export type PlanItem={id:string;title:string;detail:string;appliesWhen?:string;label?:string;sourceIds:string[];evidence?:PlanEvidence[];stage?:'prepare'|'test'|'launch';stepIds?:string[]};
@@ -10,6 +12,8 @@ export type LaunchPlan={
   basis:'Reviewed rules'|'Live research'|'Reference notes';status:string;summary:string;route:string;
   next:PlanStep|null;steps:PlanStep[];permissions:(PlanItem&{identifier:string;classification:string})[];
   nextNote?:string;
+  oauthSetup?:OAuthSetup;
+  examples?:PlanStep[];
   observations?:{blockerTitle:string;note:string;satisfied:boolean;recordedAt:string;reportedBy:'developer'}[];
   coverage?:{actionId?:string;action:string;permissions:string[];status:'mapped'|'unresolved'|'unsupported';reason:string;support?:'reviewed'|'unresolved';execution?:'untested';evidence?:PlanEvidence[]}[];
   requirements:PlanItem[];blockers:PlanBlocker[];sources:PlanSource[];

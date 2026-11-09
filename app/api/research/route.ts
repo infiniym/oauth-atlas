@@ -1,9 +1,11 @@
-import { env } from 'cloudflare:workers';
+import { requestAddress } from '@/lib/server/runtime-types';
+import { getRuntime } from '@/lib/server/runtime';
 import { researchProvider, validateInput } from '@/lib/research';
 export const dynamic = 'force-dynamic';
 const json=(body:unknown,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store'}});
 
 export async function POST(request:Request) {
+  const env=getRuntime();
  const origin=request.headers.get('origin');
  if(!origin || origin!==new URL(request.url).origin) return json({error:'Start research from this site.'},403);
  if(!(request.headers.get('content-type')||'').startsWith('application/json')) return json({error:'Send app details as JSON.'},415);
@@ -18,7 +20,7 @@ export async function POST(request:Request) {
  const db=env.DB;if(!db)return json({error:'The guide store is unavailable. Please try again shortly.'},503);
  try{
   const hour=Math.floor(Date.now()/3_600_000);
-  const ip=request.headers.get('cf-connecting-ip')||'shared';
+  const ip=requestAddress(request,env);
   const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip+':'+hour));
   const bucket=hour+':'+Array.from(new Uint8Array(hash)).slice(0,12).map(x=>x.toString(16).padStart(2,'0')).join('');
   const limit=await db.prepare('INSERT INTO research_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=count+1 RETURNING count').bind(bucket).first<{count:number}>();
