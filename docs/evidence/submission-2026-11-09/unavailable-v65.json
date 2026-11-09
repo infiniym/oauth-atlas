@@ -1,0 +1,108 @@
+{
+  "checkedAt": "2026-11-09T10:26:48.691Z",
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "b3c5dda9622cb8ac470938a7171cd274368a9a36",
+    "guideCodeFingerprint": "63cf3644d3f467a44912c648b541dde86f0addebfa9f7e8cf8e9ba42ad01c30b",
+    "builtAt": "2026-11-09T10:25:19.511Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.65",
+    "runtime": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "configured": true,
+      "storage": "d1"
+    }
+  },
+  "input": {
+    "app": "Unavailable OAuth source",
+    "website": "https://example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09",
+    "useCase": "Read the connected person’s item names. Never change data.",
+    "audience": "customers",
+    "answers": {}
+  },
+  "job": {
+    "id": "job-df068905-063a-467c-8b25-6213fc6d0cc4",
+    "input": {
+      "app": "Unavailable OAuth source",
+      "website": "https://example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09",
+      "useCase": "Read the connected person’s item names. Never change data.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09",
+        "status": "working",
+        "at": "2026-11-09T10:26:48.472Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09.",
+        "status": "warning",
+        "at": "2026-11-09T10:26:48.675Z"
+      }
+    ],
+    "createdAt": "2026-11-09T10:26:48.430Z",
+    "updatedAt": "2026-11-09T10:26:48.678Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-09T10:26:48.465Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+      "url": "https://example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09"
+    },
+    "error": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+    "savedSources": []
+  },
+  "reopened": {
+    "id": "job-df068905-063a-467c-8b25-6213fc6d0cc4",
+    "input": {
+      "app": "Unavailable OAuth source",
+      "website": "https://example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09",
+      "useCase": "Read the connected person’s item names. Never change data.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09",
+        "status": "working",
+        "at": "2026-11-09T10:26:48.472Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09.",
+        "status": "warning",
+        "at": "2026-11-09T10:26:48.675Z"
+      }
+    ],
+    "createdAt": "2026-11-09T10:26:48.430Z",
+    "updatedAt": "2026-11-09T10:26:48.678Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-09T10:26:48.465Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+      "url": "https://example.com/this-page-does-not-exist-oauth-launch-advisor-2026-11-09"
+    },
+    "error": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+    "savedSources": []
+  },
+  "elapsedMs": 318,
+  "checks": {
+    "interrupted": true,
+    "inputRetained": true,
+    "clearError": true,
+    "noFabricatedOAuth": true
+  },
+  "pass": true
+}

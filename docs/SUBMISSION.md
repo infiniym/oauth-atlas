@@ -24,13 +24,11 @@ Do not upload source archives or secrets by default. The assignment asks for a w
 
 ## Notes and release status
 
-Use [the short submission notes](SUBMISSION-NOTES.md) and [current local evaluation](evaluations/LOCAL-2026-11-03.md). On 3 November 2026 the candidate explicitly deferred publication to Sites and GitHub and chose to keep the work local, with Vercel to be considered later. No new Site, Vercel project or public release is part of this handoff.
-
-The existing public demo is an earlier candidate. The final local PDF is suitable for reviewing the product narrative; it is not a claim that the public deployment or repository main contains the local release.
+The 9 November instruction authorizes Vercel and matching GitHub publication. Use [the current evaluation](evaluations/SUBMISSION-2026-11-09.md), [short notes](SUBMISSION-NOTES.md) and [overview](SUBMISSION-OVERVIEW.md). Public Vercel deployment, fresh live acceptance and final desktop verification remain pending. The earlier Sites demo is an older candidate.
 
 ## Before a later submission
 
-- Publish the selected tested source and matching GitHub commit/tag when authorized; verify the public build identity and repeat affected live/UI checks.
+- Publish the selected tested source and matching GitHub commit/tag; verify the public build identity and repeat affected live/UI checks.
 - Replace the local preview reference in the overview and notes with that verified canonical demo; regenerate and visually inspect the PDF and its link annotations.
 - Check model configuration, reviewer quota and public links shortly before submission.
 - Supply the candidate's original application email and verify the attachment type/size. The allowlist remains unverified; no upload is authorized here.

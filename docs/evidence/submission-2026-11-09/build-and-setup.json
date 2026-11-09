@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-11-09T10:43:43.819Z",
+  "sourceCommit": "6114d53ec2e575e578705d29be149d16ab6bd60e",
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "6114d53ec2e575e578705d29be149d16ab6bd60e",
+    "guideCodeFingerprint": "18a84e87e5deb348e5e00e588aa7f0da89f2a6c64b1e243f85063c53355d8761",
+    "builtAt": "2026-11-09T10:35:04.024Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.65",
+    "runtime": {
+      "provider": null,
+      "model": null,
+      "configured": false,
+      "storage": "d1"
+    }
+  },
+  "cleanTrackedTree": true,
+  "ownerVariablesAbsent": true,
+  "checks": {
+    "npmCi": true,
+    "tests": 371,
+    "typecheck": true,
+    "localProductionBuild": true,
+    "vercelProductionBuild": true,
+    "fourD1Migrations": true,
+    "keylessReviewedRuntime": true
+  },
+  "commands": [
+    "npm ci",
+    "npm test",
+    "npm run typecheck",
+    "npm run build",
+    "npm run build:vercel",
+    "four documented drizzle migrations into an empty isolated local D1 store",
+    "npm start -- --port 5189 --persist-to .wrangler/reproduction-submission"
+  ],
+  "boundary": "Clean checkout verifies local setup and production compilation. Live generation uses the separately configured main preview. Hosted Vercel and Neon connectivity remain unverified."
+}

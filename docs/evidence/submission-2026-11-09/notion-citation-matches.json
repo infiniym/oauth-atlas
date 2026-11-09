@@ -1,0 +1,298 @@
+{
+  "sourceCommit": "6114d53ec2e575e578705d29be149d16ab6bd60e",
+  "guideId": "lg-f2c7a28d-afcc-4141-9cb7-38e4232d339c",
+  "boundary": "Exact passage matching only. Semantic audit is recorded separately.",
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://developers.notion.com/guides/authorization/overview.md",
+      "title": "Authorization",
+      "length": 21855,
+      "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+    },
+    {
+      "id": "s2",
+      "url": "https://developers.notion.com/reference/page.md",
+      "title": "Page",
+      "length": 4692,
+      "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+    },
+    {
+      "id": "s3",
+      "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+      "title": "Retrieve a page",
+      "length": 54101,
+      "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+    },
+    {
+      "id": "s4",
+      "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+      "title": "Retrieve a page property item",
+      "length": 54182,
+      "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+    },
+    {
+      "id": "s5",
+      "url": "https://developers.notion.com/reference/get-block-children.md",
+      "title": "Retrieve block children",
+      "length": 57098,
+      "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+    },
+    {
+      "id": "s6",
+      "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+      "title": "Retrieve a page as markdown",
+      "length": 17572,
+      "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+    },
+    {
+      "id": "s7",
+      "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview.md",
+      "title": "OAuth integrations",
+      "length": 3580,
+      "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+    },
+    {
+      "id": "s8",
+      "url": "https://developers.notion.com/reference/capabilities.md",
+      "title": "Connection capabilities",
+      "length": 5512,
+      "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+    },
+    {
+      "id": "s9",
+      "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+      "title": "Set up content for users",
+      "length": 10723,
+      "hash": "80b3c750a684f55daf79cabffaa3b5cd9490c1c00a4ebf68aab64d124c5595e4"
+    },
+    {
+      "id": "s10",
+      "url": "https://developers.notion.com/reference/page-property-values.md",
+      "title": "Page property values",
+      "length": 35158,
+      "hash": "121e5564921b17ec1258f8348f8c4016bcdb673930406355bec5828885a81771"
+    },
+    {
+      "id": "s11",
+      "url": "https://developers.notion.com/reference/pagination.md",
+      "title": "Pagination",
+      "length": 2689,
+      "hash": "ed6da656a168b9f496dc23d457c382e309f91b2273b82b6e5f2a8bd80c04aeaf"
+    }
+  ],
+  "allMatched": true,
+  "checks": [
+    {
+      "sourceId": "s7",
+      "quote": "## Installation scope Choose **Or select 1 or more workspaces** when creating your integration. Only those workspaces can install it, and it cannot be listed on the Marketplace. To make",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "Fill out the form with your connection details, including your redirect URI(s) under the OAuth configuration section and the connection's installation scope — either **Any workspace** or **Or select 1",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "An OAuth integration can be installed in any Notion workspace within its installation scope — a specific set chosen at creation time for scoped integrations, or any workspace for public",
+      "exact": true
+    },
+    {
+      "sourceId": "s8",
+      "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve",
+      "exact": true
+    },
+    {
+      "sourceId": "s6",
+      "quote": "> > Your connection must have read content capabilities on the target page in order to call this endpoint. To update your connection's capabilities, navigate to the Developer portal, select",
+      "exact": true
+    },
+    {
+      "sourceId": "s8",
+      "quote": "* If your connection is reading data to export it out of Notion, your connection will only need **Read content** capabilities.",
+      "exact": true
+    },
+    {
+      "sourceId": "s7",
+      "quote": "**Step 3** The user selects which pages to grant the connection access to using the page picker.",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "> [!NOTE] > > After a user authorizes an OAuth integration, only that user is able to interact or share pages and databases with the connection. Unlike internal connections, if",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "> [!NOTE] > > The page picker only displays pages or databases to which a user has full access, because a user needs full access to a resource in order",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "Both scoped OAuth integrations and public integrations use this flow. You can start authorization as soon as you configure the integration’s client credentials and redirect URI; Marketplace submission or review",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "> [!NOTE] > > Marketplace listing details (such as descriptions, categories, and images) are managed separately through the **Listings** section. Refer to the List on the Marketplace guide to learn",
+      "exact": true
+    },
+    {
+      "sourceId": "s8",
+      "quote": "In general, you want to request minimum capabilities that your connection needs in order to function. The fewer capabilities you request, the more likely a workspace admin will be able",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "Fill out the form with your connection details, including your redirect URI(s) under the OAuth configuration section and the connection's installation scope — either **Any workspace** or **Or select 1",
+      "exact": true
+    },
+    {
+      "sourceId": "s7",
+      "quote": "Select **Create new connection**. Enter the connection name, development workspace, and redirect URIs. Choose **Or select 1 or more workspaces**, select the workspaces, and choose the capabilities your app needs.",
+      "exact": true
+    },
+    {
+      "sourceId": "s7",
+      "quote": "Open the **Configuration** tab to find your **OAuth client ID** and **OAuth client secret**. Use them to implement the OAuth authorization flow.",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "``` www.example.com/my-redirect-uri?error=access_denied&state= ``` You can use this `error`query parameter to conditionally update your app’s state as needed.",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "| `state` | If the user was in the middle of an interaction or operation, then this parameter can be used to restore state after the user returns. It can",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "After creating an OAuth integration in the Developer portal, access the connection’s secrets in the **Configuration** tab. Similarly to the internal connections, these values should be protected and should never",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "```html HTML theme={null} <a href=\"https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code\">Add to Notion</a>",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "| `client_id` | An identifier for your connection, found in the connection settings. | ✅ |",
+      "exact": true
+    },
+    {
+      "sourceId": "s7",
+      "quote": "> [!NOTE] > > After a user authorizes a OAuth integration, only that user can interact with the connection in their workspace. If multiple members in a workspace want to",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "Next, send the `code` as part of a `POST` request to Notion’s token endpoint: https://api.notion.com/v1/oauth/token.",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "The request is authorized using HTTP Basic Authentication. The credential is a colon-delimited combination of the connection’s `CLIENT_ID` and `CLIENT_SECRET`, like so:",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "| `\"grant_type\"` | `string` | Always use `\"authorization_code\"`. | ✅ |",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "Refreshing an access token will generate a new access token and a new refresh token.",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "| `\"grant_type\"` | `string` | Always use `\"refresh_token\"`. | ✅ |",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "connection, where Notion may return a new `access_token` and `refresh_token`.",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "Both scoped OAuth integrations and public integrations use this flow. You can start authorization as soon as you configure the integration’s client credentials and redirect URI; Marketplace submission or review",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "> [!NOTE] > > Marketplace listing details (such as descriptions, categories, and images) are managed separately through the **Listings** section. Refer to the List on the Marketplace guide to learn",
+      "exact": true
+    },
+    {
+      "sourceId": "s8",
+      "quote": "In general, you want to request minimum capabilities that your connection needs in order to function. The fewer capabilities you request, the more likely a workspace admin will be able",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "## GET /v1/pages/{page_id} | Retrieve a page",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Parameter Notion-Version in header (unspecified type, required): The API version to use for this request. The latest version is `2026-03-11`. Schema: {\"enum\":[\"2026-03-11\"]}",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Response JSON paths for GET /v1/pages/{page_id}: $.properties.*.title[].plain_text (string)",
+      "exact": true
+    },
+    {
+      "sourceId": "s8",
+      "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Retrieves a page object by ID. The response includes page property values. To read the page’s content, use Retrieve block children.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "For a page in a data source, the property values follow that data source’s schema. For a page whose parent is another page, the only property is `title`.",
+      "exact": true
+    },
+    {
+      "sourceId": "s6",
+      "quote": "> > Your connection must have read content capabilities on the target page in order to call this endpoint. To update your connection's capabilities, navigate to the Developer portal, select",
+      "exact": true
+    },
+    {
+      "sourceId": "s6",
+      "quote": "* **Permissions**: The page contains child pages or other content that is not shared with the connection.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Retrieves a page object by ID. The response includes page property values. To read the page’s content, use Retrieve block children.",
+      "exact": true
+    },
+    {
+      "sourceId": "s7",
+      "quote": "**Step 3** The user selects which pages to grant the connection access to using the page picker.",
+      "exact": true
+    },
+    {
+      "sourceId": "s7",
+      "quote": "**Step 5** Your connection exchanges the code for an access token, which is used for all subsequent API requests on behalf of that user.",
+      "exact": true
+    },
+    {
+      "sourceId": "s1",
+      "quote": "**Step 2** After the user selects which workspace pages to share, Notion redirects the user to the connection’s redirect URI and includes a `code` query parameter. The redirect URI is",
+      "exact": true
+    }
+  ],
+  "citationCount": 42
+}

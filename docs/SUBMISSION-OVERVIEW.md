@@ -1,34 +1,30 @@
 # OAuth Launch Advisor
 
-From an integration idea to the first useful test.
+A desktop guide from an integration idea to OAuth setup and approval.
 
-[Project repository](https://github.com/infiniym/oauth-atlas) · [Local desktop preview](http://127.0.0.1:5187)
+[Project repository](https://github.com/infiniym/oauth-atlas/tree/codex/submission-readiness) · [Acceptance evidence](https://github.com/infiniym/oauth-atlas/blob/codex/submission-readiness/docs/evaluations/SUBMISSION-2026-11-09.md)
 
-This overview accompanies the local desktop build and its test evidence. Public release is deferred.
-
-## The problem
-
-An agent developer wants to read a customer's email. Before building the feature, they must choose an app model, request the right access and understand whose approval is needed. The provider explains each option. The developer has to work out which ones apply to this feature.
+Candidate for review. Public Vercel deployment is pending, and live-guide acceptance is incomplete.
 
 ## Start with the feature
 
-“Read email and prepare drafts” needs a different plan from “send email only.” OAuth Launch Advisor begins with that distinction. It considers managed and developer-owned options, explains the permission boundary, and separates a first test from customer launch. The aim is an actionable next step, with its owner and a clear finish.
+An agent developer wants to read a customer's email. Before building the feature, they must choose an app model, request the necessary access and understand whose approval is needed. OAuth Launch Advisor starts with what the app should do and what it must never do, then gives the developer a next action with an owner and a clear finish.
 
 ## The developer's journey
 
-1. **Describe.** Enter an app name or official website, what the agent should do, and what it must never do. Apps outside the directory can use live research.
-2. **Confirm.** Answer choices that change the setup, such as acting as the app or the connected person. The product researches provider facts and retains previous answers.
-3. **Prepare and test.** Follow sourced registration and authorization instructions, then use a representative API request with the required access, inputs and expected response. Missing facts sit beside the affected action. Targeted recovery keeps completed work.
-4. **Continue together.** Track your own progress, review the separate launch requirements, and share a dated plan or download the same useful instructions as Markdown. Editing creates a new version.
+1. **Describe.** Enter the provider, the intended feature and its boundaries. Gmail, Slack and GitHub have reviewed assessments. Unfamiliar providers use research from official documentation.
+2. **Confirm.** Answer choices that change the app model, credential actor or distribution path. Research and confirmed choices are saved between stages.
+3. **Configure.** Follow registration, redirect, consent, credential and permission instructions. Review provider approval, marketplace listing and customer-admin prerequisites separately. Workload guidance identifies setup tasks and assumptions. Applicable published waiting times are cited.
+4. **Continue together.** Track personal progress, share a dated plan or export Markdown. Editing creates a new version. The developer performs configuration, authorization and any required approval process.
 
-## One useful learning
+## A concrete distinction
 
-In the Gmail walkthrough, reading and drafting selected gmail.readonly and gmail.compose. Sending only selected gmail.send. The guide shows that gmail.compose also grants sending, even when the feature only prepares drafts.
+For Gmail, reading and preparing drafts selects gmail.readonly and gmail.compose. Sending only selects gmail.send. The guide explains that gmail.compose also permits sending, even when the requested feature only prepares drafts. Slack's person and app identities change the route, while GitHub supports a selected-repository installation boundary.
 
-## Try it
+## Try the reviewed journey
 
-Choose Gmail, select reading and drafts, then edit the plan to send-only. Compare the permissions and launch consequences. For live research, ask for titles and content from Notion pages each customer explicitly shares. Specify read-only access. The local release evaluation records the exact inputs and outcomes.
+Choose Gmail with reading and drafts, then edit to send-only. Compare the permissions, setup tasks and launch guidance. Share the saved version and inspect its sources and Markdown.
 
-## Scope
+## Scope and current limits
 
-The focused slice combines reviewed Gmail, Slack and GitHub guidance with research from official provider documentation. The catalog helps developers discover apps. Developers register and connect accounts, run the requests, and obtain any required approvals.
+The focused slice covers OAuth setup and approval. Resource API examples are supplementary and labeled as illustrative. Missing essential evidence blocks live-guide readiness. The current Notion, Dropbox and Calendly checks remain incomplete. Automated tests and both production builds pass. Public deployment and the final desktop walkthrough remain pending. Detailed outcomes and retained failures are in the repository.

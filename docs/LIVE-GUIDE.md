@@ -1,3 +1,5 @@
+> The current desktop candidate generates OAuth setup and approval guidance. New guides carry a separate setup review and optional resource examples. The retained resource implementation paths below also describe older saved guides. Current results are in [the submission evaluation](evaluations/SUBMISSION-2026-11-09.md).
+
 # Shared launch plans and live research
 
 The advisor is one product: describe an integration, confirm consequential choices, and get a launch plan. Reviewed rules cover Gmail, Slack and GitHub. Unfamiliar providers use public-source research. Both produce the `LaunchPlan` contract and render through the same application shell and `LaunchPlanView`.

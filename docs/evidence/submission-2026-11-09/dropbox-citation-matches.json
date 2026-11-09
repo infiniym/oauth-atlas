@@ -1,0 +1,273 @@
+{
+  "sourceCommit": "6114d53ec2e575e578705d29be149d16ab6bd60e",
+  "guideId": "lg-eaa72148-a672-4a7e-a075-2bf79588a8f4",
+  "boundary": "Exact passage matching only. Semantic audit is recorded separately.",
+  "sources": [
+    {
+      "id": "s1",
+      "url": "https://www.dropbox.com/developers",
+      "title": "DBX Platform for Developers - Dropbox",
+      "length": 2722,
+      "hash": "49f9f81a6c38392b8f37ac1050ff501e35681457cffa261c2c62960e1558fb7e"
+    },
+    {
+      "id": "s2",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files",
+      "title": "Files",
+      "length": 397,
+      "hash": "fbda88de989581781071fe73d139c5b4585306a2be37c2184a4de4d374764294"
+    },
+    {
+      "id": "s3",
+      "url": "https://docs.dropboxapi.com/dropbox-api/docs/oauth.md",
+      "title": "OAuth",
+      "length": 14889,
+      "hash": "b74a5e9c816087cec23999da330052c555c63c89a2d58ef9aabd25b1130ecb87"
+    },
+    {
+      "id": "s4",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder.md",
+      "title": "List Folder",
+      "length": 37321,
+      "hash": "014770bce1318090ab882efc0fcf86119b7ce8348887e1871b4a381a2f8e9d92"
+    },
+    {
+      "id": "s5",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/list-folder-continue.md",
+      "title": "List Folder Continue",
+      "length": 32679,
+      "hash": "42edae871d899761d2c2d736be29516128090ad0bc2bc297201c570e4b496c0a"
+    },
+    {
+      "id": "s6",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/file-requests/list.md",
+      "title": "List",
+      "length": 18738,
+      "hash": "6651da9b26109223adbbc1cb25e5f3304862f6226d35f23ef663530995800f8c"
+    },
+    {
+      "id": "s7",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/get-folder-metadata.md",
+      "title": "Get Folder Metadata",
+      "length": 48019,
+      "hash": "7b1b72e6a3e77cd04485d0592da9450209ceb87947a3e52e01e9bc7daaf72d97"
+    },
+    {
+      "id": "s8",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members.md",
+      "title": "List Folder Members",
+      "length": 48107,
+      "hash": "c235284de2b8871f0560f4ed6b394984727c70723e69167d9eb73261b5667950"
+    },
+    {
+      "id": "s9",
+      "url": "https://www.dropbox.com/.well-known/oauth-authorization-server",
+      "title": "www.dropbox.com",
+      "length": 5413,
+      "hash": "265974e0ec9bcbb4586c2021123aa8637554f94f7b045696a4a1c0dfe302cb55"
+    },
+    {
+      "id": "s10",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folder-members-continue",
+      "title": "List Folder Members Continue",
+      "length": 36990,
+      "hash": "b9958524e7c02d36a86e04858d8129539e35b32c09bbf8b6397ed13ce4f4fd2c"
+    },
+    {
+      "id": "s11",
+      "url": "https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/sharing/list-folders.md",
+      "title": "List Folders",
+      "length": 45955,
+      "hash": "045375d92bfb9077612bc891bcb8c8ad51d6f00b157dc6aa814b7aacc92d6d6d"
+    }
+  ],
+  "allMatched": true,
+  "checks": [
+    {
+      "sourceId": "s3",
+      "quote": "Before you can get started, you'll need to register your app with Dropbox by creating a new app in the Developer Console. That page will guide you through the process",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Do *not* instruct your users to register their own Dropbox application to use your app - you just need to register your app once. Your end-users will connect to that",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "`https://www.dropbox.com/oauth2/authorize?client_id=MY_CLIENT_ID&redirect_uri=MY_REDIRECT_URI&response_type=code` 2. Wait for the end user to complete authorization on dropbox.com, whom is then redirected back to your URI with an authorization code",
+      "exact": true
+    },
+    {
+      "sourceId": "s4",
+      "quote": "**Required scope:** `files.metadata.read` **Endpoint format:** RPC",
+      "exact": true
+    },
+    {
+      "sourceId": "s5",
+      "quote": "list_folder. **Required scope:** `files.metadata.read`",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "* **App Folder:** Your application will be able to take actions allowed by its scopes on data within its app folder *only* (in the /apps folder). This option is suitable",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "### Minimal Access Always ask for the *least* amount permissions required by your applications. Requesting more scope and content access than required may result in end users not accepting your",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Apps that request only scopes from the User API will receive a token associated with the user that authorizes the app.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "* **App Folder:** Your application will be able to take actions allowed by its scopes on data within its app folder *only* (in the /apps folder). This option is suitable",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "If you'd like to quickly test out the Dropbox APIs using your own Dropbox account before implementing OAuth, you can generate an access token from your newly created app in",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Keep in mind that this is only for your own account - you'll need to use the standard OAuth flow to obtain access tokens for other users.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Before you can get started, you'll need to register your app with Dropbox by creating a new app in the Developer Console. That page will guide you through the process",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Do *not* instruct your users to register their own Dropbox application to use your app - you just need to register your app once. Your end-users will connect to that",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "* **App Folder:** Your application will be able to take actions allowed by its scopes on data within its app folder *only* (in the /apps folder). This option is suitable",
+      "exact": true
+    },
+    {
+      "sourceId": "s4",
+      "quote": "**Required scope:** `files.metadata.read` **Endpoint format:** RPC",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "### Minimal Access Always ask for the *least* amount permissions required by your applications. Requesting more scope and content access than required may result in end users not accepting your",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "* **App Folder:** Your application will be able to take actions allowed by its scopes on data within its app folder *only* (in the /apps folder). This option is suitable",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "* You'll need to register the exact redirect URI(s) your app may use in the Developer Console for your application. Add them under **Redirect URIs** in the OAuth 2 section",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "of the Settings tab. Dropbox checks that the specified `redirect_uri` parameter in your Authorization URL matches one of the registered values at authorization time.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "* If your application needs additional context to complete the redirect, you may pass a `state` parameter the authorization URL - which will be returned as a query parameter in",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "`https://www.dropbox.com/oauth2/authorize?client_id=MY_CLIENT_ID&redirect_uri=MY_REDIRECT_URI&response_type=code` 2. Wait for the end user to complete authorization on dropbox.com, whom is then redirected back to your URI with an authorization code",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "in the query string",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "**Note** : you’ll need to include `token_access_type=offline` as a parameter on your Authorization URL in order to return a `refresh_token` inside your access token payload.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "3. Call the /oauth2/token endpoint with your app’s `client_secret` to exchange the code for an access token in order to make API calls",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "When using refresh tokens, your call to the /oauth2/token endpoint with the `grant_type` of `authorization_code` will return a short-lived access token and a refresh token, which should be securely stored.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "When using the code flow, your app must keep the `client_secret` secure. If your app can’t guarantee it’s security, then we recommend the use of PKCE as described below",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "If the token expires - throwing a 401 error - your application may simply re-authenticate as described above. If your token is expired, but the user is signed into Dropbox",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "To update your access token, call the /oauth2/token endpoint - specifying your `refresh_token` as a parameter and using the `grant_type` of `refresh_token`. The endpoint will return a new short-lived access",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Your application may then securely store the token for future use. Authorizations may be revoked by the user, whereas apps may revoke tokens they receive.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "Keep in mind that this is only for your own account - you'll need to use the standard OAuth flow to obtain access tokens for other users.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "OAuth request and could impact your app review process.",
+      "exact": true
+    },
+    {
+      "sourceId": "s4",
+      "quote": "**Required scope:** `files.metadata.read` **Endpoint format:** RPC",
+      "exact": true
+    },
+    {
+      "sourceId": "s4",
+      "quote": "- `entries` (list of files.Metadata, required) — The files and (direct) subfolders in the folder.",
+      "exact": true
+    },
+    {
+      "sourceId": "s5",
+      "quote": "list_folder. **Required scope:** `files.metadata.read`",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "In this flow: * The user will be redirected to Dropbox to authorize your app to access their Dropbox data.",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "* Your application exchanges the authorization code for an access token that can be used to make secure calls to the Dropbox API (not shown)",
+      "exact": true
+    },
+    {
+      "sourceId": "s3",
+      "quote": "When working with the Dropbox APIs, your app will access Dropbox on behalf of your users. You'll need to have each user of your app sign into dropbox.com to grant",
+      "exact": true
+    }
+  ],
+  "citationCount": 37
+}

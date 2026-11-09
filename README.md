@@ -1,14 +1,14 @@
 # OAuth Launch Advisor
 
-Turn an integration idea into a sourced setup plan and first representative API test. Start with what the agent should do and what it must never do; then choose an app model, understand the actual permission boundary, and separate testing from customer launch.
+Turn an integration idea into a sourced OAuth setup and approval guide. Start with what the app should do and what it must never do, then follow registration, redirect, consent, credential and permission instructions with a concrete next action. The guide distinguishes a representative test from customer launch, provider review, marketplace listing and customer-admin policy.
 
-Reviewed Gmail, Slack and GitHub rules and live research for unfamiliar providers share one desktop experience, immutable saved plans and Markdown export. The dated 1,694-entry directory is discovery coverage, not 1,694 validated guides.
+The desktop slice includes reviewed Gmail, Slack and GitHub assessments and live research for unfamiliar providers from a name or ordinary official URL. Saved plans, edits, personal progress, citations and Markdown export use one common guide. The dated 1,694-entry catalog supports discovery.
 
-**Release status:** local validation is in progress. Publication to Sites and GitHub was deferred by the user on 3 November 2026; Vercel is a later step. The existing public demo and repository main are earlier candidates. Use the [local release evaluation](docs/evaluations/LOCAL-2026-11-03.md) for the selected source, exact outcomes and verification boundaries.
+The candidate source is on [codex/submission-readiness](https://github.com/infiniym/oauth-atlas/tree/codex/submission-readiness). The three fresh live acceptance cases remain incomplete. Vercel account access and final public and desktop verification are pending. The earlier Sites demo contains an older version. [Current acceptance evidence](docs/evaluations/SUBMISSION-2026-11-09.md)
 
 ## Run locally
 
-Requires Node 22.13+, npm, Python 3 and Bash for the request-verification tests. Reviewed rules work without credentials. For model-powered live guides, copy `.dev.vars.example` to the ignored root `.dev.vars` and configure `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY` and an exact `ANTHROPIC_MODEL` supporting adaptive thinking and structured outputs. The current candidate uses `claude-sonnet-5-5`; its source checks and release evaluation are linked below. Keep keys server-side.
+Requires Node 22.13+, npm, Python 3 and Bash for the existing request checks. Reviewed assessments work without model credentials. Copy `.dev.vars.example` to the ignored `.dev.vars` and configure `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY` and `ANTHROPIC_MODEL=claude-sonnet-5-5` for live generation. Keys stay on the server.
 
 ```sh
 npm ci
@@ -17,7 +17,7 @@ npm run typecheck
 npm run build
 ```
 
-Initialize an **empty** local database once (do not reapply SQL to an existing store):
+Initialize an empty local D1 store once. Use a separate persistence directory when reproducing these commands.
 
 ```sh
 for migration in drizzle/0000_orange_wallop.sql drizzle/0001_groovy_mister_fear.sql drizzle/0002_romantic_lockheed.sql drizzle/0003_simple_vulcan.sql; do
@@ -26,22 +26,22 @@ done
 npm start -- --port 5187 --persist-to .wrangler/state
 ```
 
-Open [localhost:5187](http://127.0.0.1:5187). `npm start` loads the root `.dev.vars` by absolute path. Restart after binding changes. `/api/release` exposes the built source commit and prompt version; rebuild after code changes. The development command is `npm run dev -- --port 5187`.
+Open [localhost:5187](http://127.0.0.1:5187). Restart the preview after rebuilding. `/api/release` reports the built commit, guide fingerprint, configured model and storage backend. `npm run dev -- --port 5187` starts development mode.
 
-## Three starting journeys
+## Vercel setup
 
-- **Gmail:** compare read-and-draft with send-only. Permissions and launch consequences change; the draft grant also permits sending.
-- **Slack / GitHub:** compare person versus app identity and pilot versus public distribution; inspect GitHub's selected-repository installation and Contents read boundary.
-- **An unfamiliar app:** enter a name or ordinary official documentation URL. Try Notion: “Read titles and content of pages each customer explicitly shares. Read only; never create or modify pages.” Confirm consequential setup choices, then inspect the cited requests, required inputs, response and boundary check.
+`npm run build:vercel` compiles the existing Next.js routes into `.next-vercel`. Local Vinext retains D1. Vercel uses persistent Neon Postgres through the same parameterized storage operations. Configure `DATABASE_URL` and the three model variables above as server-side Vercel environment variables. Initialize `db/postgres.sql` with `npm run db:postgres` in a process with `DATABASE_URL` available. An ignored `.env.local` can be used with `node --env-file=.env.local scripts/migrate-postgres.mjs`.
 
-The planner researches public facts and automatically retrieves missing evidence within bounded work. **Find missing request** and **Add documentation** update a selected action while preserving answers, other actions and earlier versions. Reloading reconnects to the saved job. Personal checkmarks advance the next action; a reported check is never treated as verified execution.
+The checked-in Vercel configuration supplies install and build commands. Use an existing or free database and the intended Vercel account, then deploy this branch. Verify `/api/release`, a fresh anonymous live journey and persistent sharing on the public URL. [Vercel runtime preflight](docs/evidence/submission-2026-11-09/PREFLIGHT.md)
 
-## Evidence and scope
+## Try the focused flow
 
-[Current evaluation](docs/evaluations/LOCAL-2026-11-03.md) · [Exact cases and retained attempts](docs/evidence/completion-2026-11-02/cases.json) · [Diagnostic corrections](docs/evidence/completion-2026-11-02/DIAGNOSTIC-NOTES.md)
+- Compare Gmail read-and-draft with send-only. The selected permissions and launch consequences change. The draft grant also allows sending.
+- Compare Slack person/pilot with app/public distribution, then inspect GitHub's selected-repository and Contents read boundary.
+- Enter an unfamiliar app name or official URL. Ask for read-only access to the connected person's data, confirm consequential choices, and inspect registration, authorization, permissions and launch guidance.
 
-Acceptance inspects real model output and parses each generated request with dummy inputs, including method, URL, headers and body. It does not call provider APIs. The product supplies instructions; developers register their apps, authorize accounts, run requests and obtain applicable approvals. No real provider account connection or completed approval is claimed.
+Live jobs save sources, confirmed choices and completed planning between stages. Reload reconnects to the saved process. An explicit retry resumes unfinished work. Adding official documentation reopens the affected setup research. Sharing preserves a dated snapshot, while editing creates another version.
 
-The selected slice targets a desktop developer workflow. The larger guide library, private workspaces and a deployment migration are outside this release. Historical evaluations retain their original failures and dated hosts; they are not claims about the final local code.
+Resource API examples are supplementary and labeled as illustrative. Invalid examples are omitted with a reason. Missing core registration, authorization, permission or launch evidence prevents setup readiness. Workload guidance counts the documented setup tasks and states assumptions. Published applicable review times are cited, and unpublished durations remain unknown. Developers register apps, implement callbacks, perform consent and obtain approvals.
 
-[Product overview](docs/SUBMISSION-OVERVIEW.md) · [Submission notes](docs/SUBMISSION-NOTES.md) · [Architecture](docs/ARCHITECTURE.md) · [Live workflow](docs/LIVE-GUIDE.md) · [Walkthrough](docs/PRODUCT-WALKTHROUGH.md)
+[Declared acceptance cases](docs/evidence/submission-2026-11-09/cases.json) · [Current results](docs/evaluations/SUBMISSION-2026-11-09.md) · [One-page overview](docs/SUBMISSION-OVERVIEW.md) · [Submission notes](docs/SUBMISSION-NOTES.md)

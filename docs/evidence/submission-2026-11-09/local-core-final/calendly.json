@@ -1,0 +1,446 @@
+{
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "6114d53ec2e575e578705d29be149d16ab6bd60e",
+    "guideCodeFingerprint": "18a84e87e5deb348e5e00e588aa7f0da89f2a6c64b1e243f85063c53355d8761",
+    "builtAt": "2026-11-09T10:34:06.494Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.65",
+    "runtime": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "configured": true,
+      "storage": "d1"
+    }
+  },
+  "input": {
+    "app": "Calendly",
+    "website": "",
+    "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-09T10:38:09.650Z",
+  "anonymous": true,
+  "jobs": [
+    {
+      "id": "job-94d3f4ea-49b6-496e-958b-1c38f059d608",
+      "input": {
+        "app": "Calendly",
+        "website": "",
+        "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+        "audience": "customers"
+      }
+    },
+    {
+      "id": "job-aa945f1b-bfca-4ae5-8b5a-8c081acc7aa1",
+      "input": {
+        "app": "Calendly",
+        "website": "",
+        "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-bf83a367-014d-4162-861c-a747378e4870"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Finding the provider",
+      "detail": "Searching for Calendly OAuth documentation.",
+      "status": "working",
+      "at": "2026-11-09T10:38:09.665Z"
+    },
+    {
+      "stage": "Waiting for your choices",
+      "detail": "Continue this saved request to reuse its evidence and confirmed choices.",
+      "status": "done",
+      "at": "2026-11-09T10:38:10.632Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/openapi.yaml",
+      "status": "working",
+      "at": "2026-11-09T10:38:10.655Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Available APIs",
+      "status": "done",
+      "at": "2026-11-09T10:38:14.012Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/openapi/calendly-oauth.yaml",
+      "status": "working",
+      "at": "2026-11-09T10:38:14.012Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read developer.calendly.com/openapi/calendly-oauth.yaml.",
+      "status": "warning",
+      "at": "2026-11-09T10:38:14.620Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/openapi/calendly-api.yaml",
+      "status": "working",
+      "at": "2026-11-09T10:38:14.620Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read developer.calendly.com/openapi/calendly-api.yaml.",
+      "status": "warning",
+      "at": "2026-11-09T10:38:14.716Z"
+    },
+    {
+      "stage": "Checking setup choices",
+      "detail": "Using 1 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-09T10:38:14.723Z"
+    },
+    {
+      "stage": "Building your guide",
+      "detail": "Requirements are clear. Creating the plan from saved evidence.",
+      "status": "working",
+      "at": "2026-11-09T10:38:17.411Z"
+    },
+    {
+      "stage": "Checking a missing requirement",
+      "detail": "Looking only for missing registration, permissions, distribution evidence.",
+      "status": "working",
+      "at": "2026-11-09T10:38:38.456Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/openapi/calendly-oauth.yaml",
+      "status": "working",
+      "at": "2026-11-09T10:38:38.457Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read developer.calendly.com/openapi/calendly-oauth.yaml.",
+      "status": "warning",
+      "at": "2026-11-09T10:38:39.399Z"
+    },
+    {
+      "stage": "OAuth guide unfinished",
+      "detail": "The setup review did not finish. Your completed instructions and sources are saved.",
+      "status": "warning",
+      "at": "2026-11-09T10:38:39.400Z"
+    }
+  ],
+  "manualAudit": "Pending. Automated readiness is insufficient for the evidence-quality gate.",
+  "job": {
+    "id": "job-aa945f1b-bfca-4ae5-8b5a-8c081acc7aa1",
+    "input": {
+      "app": "Calendly",
+      "website": "",
+      "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+      "audience": "customers",
+      "answers": {
+        "provider-identity": "Yes, this is the provider"
+      },
+      "previousId": "lg-bf83a367-014d-4162-861c-a747378e4870"
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/openapi.yaml",
+        "status": "working",
+        "at": "2026-11-09T10:38:10.655Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Available APIs",
+        "status": "done",
+        "at": "2026-11-09T10:38:14.012Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/openapi/calendly-oauth.yaml",
+        "status": "working",
+        "at": "2026-11-09T10:38:14.012Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read developer.calendly.com/openapi/calendly-oauth.yaml.",
+        "status": "warning",
+        "at": "2026-11-09T10:38:14.620Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/openapi/calendly-api.yaml",
+        "status": "working",
+        "at": "2026-11-09T10:38:14.620Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read developer.calendly.com/openapi/calendly-api.yaml.",
+        "status": "warning",
+        "at": "2026-11-09T10:38:14.716Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 1 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-09T10:38:14.723Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-09T10:38:17.411Z"
+      },
+      {
+        "stage": "Checking a missing requirement",
+        "detail": "Looking only for missing registration, permissions, distribution evidence.",
+        "status": "working",
+        "at": "2026-11-09T10:38:38.456Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/openapi/calendly-oauth.yaml",
+        "status": "working",
+        "at": "2026-11-09T10:38:38.457Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read developer.calendly.com/openapi/calendly-oauth.yaml.",
+        "status": "warning",
+        "at": "2026-11-09T10:38:39.399Z"
+      },
+      {
+        "stage": "OAuth guide unfinished",
+        "detail": "The setup review did not finish. Your completed instructions and sources are saved.",
+        "status": "warning",
+        "at": "2026-11-09T10:38:39.400Z"
+      }
+    ],
+    "createdAt": "2026-11-09T10:38:10.642Z",
+    "updatedAt": "2026-11-09T10:38:39.408Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-09T10:38:10.653Z",
+      "finishedAt": "2026-11-09T10:38:39.400Z",
+      "elapsedMs": 28747
+    },
+    "attempts": [
+      {
+        "modelCalls": 4,
+        "inputTokens": 12552,
+        "outputTokens": 2765,
+        "modelMs": 23727
+      }
+    ],
+    "guide": {
+      "accessModel": "unknown",
+      "requestedActions": [
+        {
+          "id": "read-event-types",
+          "title": "Read the connected person's event types and show their names",
+          "category": "resource",
+          "operation": "read"
+        },
+        {
+          "id": "authorize-customer-accounts",
+          "title": "Let each customer account authorize individually",
+          "category": "authorization",
+          "operation": "authorize"
+        }
+      ],
+      "prohibitions": [
+        "Never create bookings",
+        "Never change event types",
+        "Never administer the organization"
+      ],
+      "oauthSupport": "unknown",
+      "summary": "The supplied Calendly snapshot only lists available API specifications (Calendly API and Calendly OAuth) and gives no details on OAuth flow, scopes, or approval. App model and permission boundary for reading event types remain unestablished.",
+      "recommendation": "The supplied Calendly snapshot only lists available API specifications (Calendly API and Calendly OAuth) and gives no details on OAuth flow, scopes, or approval. App model and permission boundary for reading event types remain unestablished.",
+      "nextAction": "Resolve the missing evidence below.",
+      "findings": [],
+      "steps": [],
+      "questions": [],
+      "activeEffort": {
+        "range": "",
+        "assumptions": ""
+      },
+      "unknowns": [
+        "Whether Calendly OAuth is supported for per-customer user authorization, and the app registration and client credential requirements.",
+        "Which scopes or grants, if any, apply to reading event types.",
+        "Whether production access, provider review, or marketplace listing is required for customer organizations."
+      ],
+      "blockers": [
+        {
+          "title": "OAuth registration, flow and scope details are not in the supplied evidence",
+          "consequence": "test",
+          "kind": "missing-evidence",
+          "owner": "developer",
+          "resolution": "Open the Calendly OAuth specification at https://developer.calendly.com/openapi/calendly-oauth.yaml and supply its content so the registration console, redirect URI rules, authorization and token endpoints, client authentication and PKCE requirements can be documented.",
+          "stepIds": [],
+          "resolutionStepIds": []
+        },
+        {
+          "title": "Grants for reading event types are not documented",
+          "consequence": "test",
+          "kind": "missing-evidence",
+          "owner": "developer",
+          "resolution": "Provide the Calendly API specification at https://developer.calendly.com/openapi/calendly-api.yaml to identify the event types endpoint and any scope or grant it requires, so the least-privilege permission map for read-event-types can be built without adding administration, booking or event type modification access.",
+          "stepIds": [],
+          "resolutionStepIds": []
+        },
+        {
+          "title": "Distribution requirements for customer organizations are not established",
+          "consequence": "launch",
+          "kind": "missing-evidence",
+          "owner": "developer",
+          "resolution": "Provide Calendly documentation stating whether provider review, production access or marketplace listing is required before other customer organizations can authorize the app, and what customer admin policies may apply.",
+          "stepIds": [],
+          "resolutionStepIds": []
+        }
+      ],
+      "coverage": [
+        {
+          "action": "Read the connected person's event types and show their names",
+          "actionId": "read-event-types",
+          "permissions": [],
+          "status": "unresolved",
+          "reason": "The snapshot only lists the Calendly API and Calendly OAuth specifications; it does not document event type endpoints, grants, or access boundaries.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Calendly API Calendly OAuth"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Select an API to view its OpenAPI specification."
+            }
+          ]
+        },
+        {
+          "action": "Let each customer account authorize individually",
+          "actionId": "authorize-customer-accounts",
+          "permissions": [],
+          "status": "unresolved",
+          "reason": "A Calendly OAuth spec is referenced but its content, registration, redirect and consent requirements are not in the supplied passages.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Calendly API Calendly OAuth"
+            }
+          ]
+        }
+      ],
+      "researchNeeded": [
+        "registration",
+        "permissions",
+        "distribution"
+      ],
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": true,
+      "schemaVersion": 1,
+      "id": "lg-68ce865a-543f-4521-8004-2e35f4a9c7ec",
+      "previousId": "lg-bf83a367-014d-4162-861c-a747378e4870",
+      "generatedAt": "2026-11-09T10:38:39.400Z",
+      "input": {
+        "app": "Calendly",
+        "website": "",
+        "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-bf83a367-014d-4162-861c-a747378e4870"
+      },
+      "provider": {
+        "website": "https://developer.calendly.com/openapi.yaml",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Prepared from official documentation. OAuth setup, approval and permissions are checked separately from resource examples.",
+      "warnings": [
+        "Could not read developer.calendly.com/openapi/calendly-oauth.yaml.",
+        "Could not read developer.calendly.com/openapi/calendly-api.yaml."
+      ],
+      "setupTested": false,
+      "oauthSetup": {
+        "exampleNotes": []
+      },
+      "decisions": [
+        {
+          "id": "provider-identity",
+          "question": "Continue with developer.calendly.com?",
+          "answer": "Yes, this is the provider"
+        }
+      ],
+      "engine": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 4,
+        "elapsedMs": 23727,
+        "inputTokens": 12552,
+        "outputTokens": 2765,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "Unestablished OAuth cannot produce setup steps."
+        ],
+        "provider": "anthropic",
+        "promptVersion": "live-guide.65"
+      },
+      "journey": {
+        "modelCalls": 4,
+        "inputTokens": 12552,
+        "outputTokens": 2765,
+        "modelMs": 23727
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://developer.calendly.com/openapi.yaml",
+          "title": "Available APIs",
+          "retrievedAt": "2026-11-09T10:38:14.717Z",
+          "hash": "7d6210ec3cba9cb8dd0e162871c4b9b4eb41a2194c5e02064244453987710bf1",
+          "links": [
+            "https://developer.calendly.com/openapi/calendly-oauth.yaml",
+            "https://developer.calendly.com/openapi/calendly-api.yaml"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "Calendly",
+        "docsUrl": "https://docs.composio.dev/toolkits/calendly",
+        "message": "Calendly appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "resultState": "research-failure",
+      "researchMetrics": {
+        "navigationCalls": 0
+      }
+    },
+    "error": "The saved sources do not establish the OAuth setup needed for this request. Add the official OAuth application-registration or authorization reference; your request and sources are retained.",
+    "failure": {
+      "category": "planning",
+      "message": "The saved sources do not establish the OAuth setup needed for this request. Add the official OAuth application-registration or authorization reference; your request and sources are retained."
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://developer.calendly.com/openapi.yaml",
+        "title": "Available APIs",
+        "retrievedAt": "2026-11-09T10:38:14.717Z",
+        "hash": "7d6210ec3cba9cb8dd0e162871c4b9b4eb41a2194c5e02064244453987710bf1",
+        "links": [
+          "https://developer.calendly.com/openapi/calendly-oauth.yaml",
+          "https://developer.calendly.com/openapi/calendly-api.yaml"
+        ]
+      }
+    ]
+  },
+  "automatedCorePass": false,
+  "elapsedMs": 29771
+}

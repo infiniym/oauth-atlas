@@ -1,0 +1,2252 @@
+{
+  "checkedAt": "2026-11-09T10:43:44.018Z",
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "6114d53ec2e575e578705d29be149d16ab6bd60e",
+    "guideCodeFingerprint": "18a84e87e5deb348e5e00e588aa7f0da89f2a6c64b1e243f85063c53355d8761",
+    "builtAt": "2026-11-09T10:35:04.024Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.65",
+    "runtime": {
+      "provider": null,
+      "model": null,
+      "configured": false,
+      "storage": "d1"
+    }
+  },
+  "scope": "API creation, anonymous API readback and page-shell availability. Desktop interaction, actual editing controls and observed downloads remain pending.",
+  "checks": {
+    "gmailPermissionsChange": true,
+    "gmailLaunchGuidanceChange": true,
+    "slackIdentityAndDistributionChange": true,
+    "githubSelectedRepositories": true,
+    "oldSnapshotPreserved": true
+  },
+  "records": [
+    {
+      "name": "gmail-read-draft",
+      "input": {
+        "version": 1,
+        "provider": "gmail",
+        "description": "",
+        "capabilities": [
+          "read",
+          "draft"
+        ],
+        "audience": "pilot",
+        "stage": "test",
+        "branding": "no",
+        "background": "no",
+        "dataHandling": "servers",
+        "workspaceOnly": "no",
+        "slackIdentity": "unknown",
+        "repoAccess": "unknown",
+        "orgPolicy": "standard",
+        "managedScopes": "unknown",
+        "customScopes": "no",
+        "dedicatedQuota": "no",
+        "customInstance": "no",
+        "special": ""
+      },
+      "plan": {
+        "schemaVersion": 1,
+        "id": "lp-a59cfcd5-0d56-472a-9ebf-9c1a2a4d1344",
+        "provider": "Gmail",
+        "request": "Read email content, Create and manage drafts",
+        "createdAt": "2026-11-09T10:43:43.781Z",
+        "basis": "Reviewed rules",
+        "status": "Ready to start setup",
+        "summary": "Start with the managed app to avoid unnecessary provider registration. Scope, identity and organization-policy checks remain required.",
+        "route": "Google OAuth web application",
+        "next": {
+          "id": "managed-fit",
+          "title": "Check the managed grant before proceeding",
+          "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+          "sourceIds": [
+            "managed",
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/toolkits/managed-auth",
+          "fields": []
+        },
+        "steps": [
+          {
+            "id": "managed-fit",
+            "title": "Check the managed grant before proceeding",
+            "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+            "sourceIds": [
+              "managed",
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/managed-auth",
+            "fields": []
+          },
+          {
+            "id": "auth-config",
+            "title": "Use the verified managed Auth Config",
+            "detail": "Use managed auth only after the scope and identity checks pass. If they do not pass, create a custom Auth Config instead.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+            "sourceIds": [
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "fields": [
+              "Toolkit",
+              "Authentication method",
+              "Auth config ID"
+            ]
+          },
+          {
+            "id": "session",
+            "title": "Create a session scoped to the selected toolkit",
+            "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+            "sourceIds": [
+              "sessions"
+            ],
+            "destination": "https://docs.composio.dev/docs/configuring-sessions",
+            "fields": []
+          },
+          {
+            "id": "connect",
+            "title": "Authorize a representative account",
+            "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+            "owner": "Developer",
+            "stage": "test",
+            "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          },
+          {
+            "id": "request-read",
+            "title": "Test: Read email content",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "read"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Use only a seeded test mailbox. For read-only access, inspect that no write scope was granted; do not test a write.",
+            "doneWhen": "HTTP 200 with the selected test message id and payload. Record the actual response; this example has not been executed.",
+            "fields": [
+              "TEST_MESSAGE_ID: list test messages with GET https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=1 and copy messages[0].id"
+            ],
+            "sourceIds": [
+              "gmail-request-read",
+              "proxy-execute"
+            ],
+            "destination": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get",
+            "request": {
+              "method": "GET",
+              "endpoint": "https://gmail.googleapis.com/gmail/v1/users/me/messages/TEST_MESSAGE_ID?format=full",
+              "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"gmail\",\n  \"method\": \"GET\",\n  \"endpoint\": \"https://gmail.googleapis.com/gmail/v1/users/me/messages/TEST_MESSAGE_ID?format=full\"\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "request-draft",
+            "title": "Test: Create and manage drafts",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "draft"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Do not send the draft. gmail.compose also grants sending: enforce draft-only behavior in your tool layer.",
+            "doneWhen": "HTTP 200 with draft id and message id; the message remains a draft. Record the actual response; this example has not been executed.",
+            "fields": [
+              "Use the connected test account as From and a mailbox you control as To; generate raw with the supplied MIME line"
+            ],
+            "sourceIds": [
+              "gmail-request-draft",
+              "proxy-execute"
+            ],
+            "destination": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/create",
+            "request": {
+              "method": "POST",
+              "endpoint": "https://gmail.googleapis.com/gmail/v1/users/me/drafts",
+              "example": "const raw = Buffer.from(\"From: your-connected-test-account@example.com\\r\\nTo: your-test-inbox@example.com\\r\\nSubject: Integration test\\r\\n\\r\\nTest message only.\").toString(\"base64url\");\nconst response = await session.proxyExecute({\n  \"toolkit\": \"gmail\",\n  \"method\": \"POST\",\n  \"endpoint\": \"https://gmail.googleapis.com/gmail/v1/users/me/drafts\",\n  \"body\": {\n    \"message\": {\n      \"raw\": raw\n    }\n  }\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "gate-GOOGLE-ASSESSMENT",
+            "title": "Server handling adds a security assessment check",
+            "detail": "Restricted data stored or transmitted through servers triggers Google’s assessment requirements unless the application qualifies for an exception. Include external AI processing in the data-flow review; a test exception is not production approval.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "google-restricted"
+            ],
+            "destination": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+            "fields": []
+          },
+          {
+            "id": "review",
+            "title": "Review launch evidence and unresolved questions",
+            "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          }
+        ],
+        "permissions": [
+          {
+            "id": "permission-0",
+            "identifier": "https://www.googleapis.com/auth/gmail.readonly",
+            "classification": "Restricted",
+            "title": "https://www.googleapis.com/auth/gmail.readonly",
+            "detail": "Read mailbox content.",
+            "sourceIds": [
+              "gmail-scopes"
+            ]
+          },
+          {
+            "id": "permission-1",
+            "identifier": "https://www.googleapis.com/auth/gmail.compose",
+            "classification": "Restricted",
+            "title": "https://www.googleapis.com/auth/gmail.compose",
+            "detail": "Manage drafts and send email; grants sending even if the product only drafts.",
+            "sourceIds": [
+              "gmail-scopes"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "GOOGLE-MANAGED",
+            "title": "Confirm the managed grant for your feature",
+            "detail": "Composio owns the managed registration. Confirm the selected scope set, the permitted use case and data-handling obligations before production. No developer-owned registration is included in this candidate path.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "custom",
+              "google-restricted"
+            ],
+            "stepIds": [
+              "managed-fit"
+            ],
+            "stage": "prepare"
+          },
+          {
+            "id": "GOOGLE-ASSESSMENT",
+            "title": "Server handling adds a security assessment check",
+            "detail": "Restricted data stored or transmitted through servers triggers Google’s assessment requirements unless the application qualifies for an exception. Include external AI processing in the data-flow review; a test exception is not production approval.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "google-restricted"
+            ],
+            "stepIds": [
+              "gate-GOOGLE-ASSESSMENT"
+            ],
+            "stage": "launch"
+          }
+        ],
+        "blockers": [],
+        "sources": [
+          {
+            "id": "toolkit-api",
+            "title": "Toolkit metadata API and managed auth methods",
+            "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "managed",
+            "title": "Managed OAuth directory",
+            "url": "https://docs.composio.dev/toolkits/managed-auth",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "custom",
+            "title": "Managed vs custom auth",
+            "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "sessions",
+            "title": "Configuring sessions",
+            "url": "https://docs.composio.dev/docs/configuring-sessions",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "auth",
+            "title": "Authentication and connected accounts",
+            "url": "https://docs.composio.dev/docs/authentication",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "gmail-toolkit",
+            "title": "Gmail toolkit authentication",
+            "url": "https://docs.composio.dev/toolkits/gmail",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "gmail-scopes",
+            "title": "Gmail scope classifications",
+            "url": "https://developers.google.com/workspace/gmail/api/auth/scopes",
+            "publisher": "Google",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "google-restricted",
+            "title": "Restricted scope verification and exceptions",
+            "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+            "publisher": "Google",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "gmail-request-read",
+            "title": "Test: Read email content API reference",
+            "url": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "gmail-request-draft",
+            "title": "Test: Create and manage drafts API reference",
+            "url": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.drafts/create",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "proxy-execute",
+            "title": "Run provider requests through an authorized Composio session",
+            "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "timing": {
+          "work": "30–90 minutes",
+          "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+          "wait": "No new developer-owned Google registration is included in this managed candidate path. Confirm the actual permissions and permitted use before assuming you can proceed without additional work.",
+          "waitSourceIds": [
+            "managed",
+            "custom"
+          ],
+          "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+        },
+        "integration": "Evaluate managed OAuth first. It is available in the documentation, but scope and token-role fit still need to be verified.",
+        "details": [
+          {
+            "id": "AUTH-METHOD",
+            "title": "Check the method, then check the fit",
+            "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "managed",
+              "toolkit-api",
+              "gmail-toolkit"
+            ]
+          },
+          {
+            "id": "GMAIL-SCOPES",
+            "title": "Scope classification follows the selected actions",
+            "detail": "At least one selected scope is restricted. Reducing access to send-only changes this assessment.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "gmail-scopes"
+            ]
+          },
+          {
+            "id": "GMAIL-WRITE",
+            "title": "Separate granted permissions from agent tools",
+            "detail": "The chosen scope can permit sending. Limit exposed tools and require product approval for sends where appropriate; tool restrictions do not narrow the provider-issued scope.",
+            "label": "Recommendation",
+            "sourceIds": [
+              "gmail-scopes",
+              "sessions"
+            ]
+          }
+        ],
+        "preparation": [
+          {
+            "title": "Permissions rationale",
+            "text": "https://www.googleapis.com/auth/gmail.readonly: Read mailbox content.\nhttps://www.googleapis.com/auth/gmail.compose: Manage drafts and send email; grants sending even if the product only drafts."
+          },
+          {
+            "title": "Auth configuration worksheet",
+            "text": "Provider registration: use the managed app only after verifying its actual scope and identity fit.\nToolkit: gmail\nPermissions: https://www.googleapis.com/auth/gmail.readonly, https://www.googleapis.com/auth/gmail.compose\nRecord the verified auth config ID."
+          },
+          {
+            "title": "First connection test",
+            "text": "Authorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Read email content: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Use only a seeded test mailbox. For read-only access, inspect that no write scope was granted; do not test a write.\nDone when: HTTP 200 with the selected test message id and payload. Record the actual response; this example has not been executed.\nTest: Create and manage drafts: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Do not send the draft. gmail.compose also grants sending: enforce draft-only behavior in your tool layer.\nDone when: HTTP 200 with draft id and message id; the message remains a draft. Record the actual response; this example has not been executed."
+          }
+        ],
+        "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+        "context": [
+          {
+            "label": "Actions",
+            "value": "Read email content, Create and manage drafts"
+          },
+          {
+            "label": "Who will use the integration?",
+            "value": "A limited customer pilot"
+          },
+          {
+            "label": "What are you preparing for?",
+            "value": "Development and testing"
+          },
+          {
+            "label": "Must the provider show your own app name during consent?",
+            "value": "No"
+          }
+        ],
+        "assessment": {
+          "version": 1,
+          "provider": "gmail",
+          "description": "",
+          "capabilities": [
+            "read",
+            "draft"
+          ],
+          "audience": "pilot",
+          "stage": "test",
+          "branding": "no",
+          "background": "no",
+          "dataHandling": "servers",
+          "workspaceOnly": "no",
+          "slackIdentity": "unknown",
+          "repoAccess": "unknown",
+          "orgPolicy": "standard",
+          "managedScopes": "unknown",
+          "customScopes": "no",
+          "dedicatedQuota": "no",
+          "customInstance": "no",
+          "special": ""
+        },
+        "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"gmail\"],\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+        "metadata": {
+          "provider": "gmail",
+          "authMethods": [
+            "OAUTH2"
+          ],
+          "managedMethods": [
+            "OAUTH2"
+          ],
+          "origin": "Documentation snapshot",
+          "checkedAt": "2026-10-30",
+          "scopeCoverage": "unknown",
+          "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+          "toolkitSlug": "gmail"
+        }
+      },
+      "share": "http://127.0.0.1:5189/plan/lp-a59cfcd5-0d56-472a-9ebf-9c1a2a4d1344",
+      "roundTrip": true,
+      "pageShellAvailable": true,
+      "markdown": "gmail-read-draft.md"
+    },
+    {
+      "name": "gmail-send-only",
+      "input": {
+        "version": 1,
+        "provider": "gmail",
+        "description": "",
+        "capabilities": [
+          "send"
+        ],
+        "audience": "pilot",
+        "stage": "test",
+        "branding": "no",
+        "background": "no",
+        "dataHandling": "servers",
+        "workspaceOnly": "no",
+        "slackIdentity": "unknown",
+        "repoAccess": "unknown",
+        "orgPolicy": "standard",
+        "managedScopes": "unknown",
+        "customScopes": "no",
+        "dedicatedQuota": "no",
+        "customInstance": "no",
+        "special": ""
+      },
+      "plan": {
+        "schemaVersion": 1,
+        "id": "lp-009f1842-7b39-4366-b96e-76812c3fe9de",
+        "provider": "Gmail",
+        "request": "Send email",
+        "createdAt": "2026-11-09T10:43:43.902Z",
+        "basis": "Reviewed rules",
+        "status": "Ready to start setup",
+        "summary": "Start with the managed app to avoid unnecessary provider registration. Scope, identity and organization-policy checks remain required.",
+        "route": "Google OAuth web application",
+        "next": {
+          "id": "managed-fit",
+          "title": "Check the managed grant before proceeding",
+          "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+          "sourceIds": [
+            "managed",
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/toolkits/managed-auth",
+          "fields": []
+        },
+        "steps": [
+          {
+            "id": "managed-fit",
+            "title": "Check the managed grant before proceeding",
+            "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+            "sourceIds": [
+              "managed",
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/managed-auth",
+            "fields": []
+          },
+          {
+            "id": "auth-config",
+            "title": "Use the verified managed Auth Config",
+            "detail": "Use managed auth only after the scope and identity checks pass. If they do not pass, create a custom Auth Config instead.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+            "sourceIds": [
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "fields": [
+              "Toolkit",
+              "Authentication method",
+              "Auth config ID"
+            ]
+          },
+          {
+            "id": "session",
+            "title": "Create a session scoped to the selected toolkit",
+            "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+            "sourceIds": [
+              "sessions"
+            ],
+            "destination": "https://docs.composio.dev/docs/configuring-sessions",
+            "fields": []
+          },
+          {
+            "id": "connect",
+            "title": "Authorize a representative account",
+            "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+            "owner": "Developer",
+            "stage": "test",
+            "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          },
+          {
+            "id": "request-send",
+            "title": "Test: Send email",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "send"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This sends a real test email when you run it. Use only your own test recipient. With a send-only grant, a mailbox read should be denied; inspect the grant first.",
+            "doneWhen": "HTTP 200 with the sent message id; confirm receipt in your test inbox. Record the actual response; this example has not been executed.",
+            "fields": [
+              "Use the connected test account as From and a recipient you control as To; generate raw with the supplied MIME line"
+            ],
+            "sourceIds": [
+              "gmail-request-send",
+              "proxy-execute"
+            ],
+            "destination": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/send",
+            "request": {
+              "method": "POST",
+              "endpoint": "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
+              "example": "const raw = Buffer.from(\"From: your-connected-test-account@example.com\\r\\nTo: your-test-inbox@example.com\\r\\nSubject: Integration test\\r\\n\\r\\nTest message only.\").toString(\"base64url\");\nconst response = await session.proxyExecute({\n  \"toolkit\": \"gmail\",\n  \"method\": \"POST\",\n  \"endpoint\": \"https://gmail.googleapis.com/gmail/v1/users/me/messages/send\",\n  \"body\": {\n    \"raw\": raw\n  }\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "review",
+            "title": "Review launch evidence and unresolved questions",
+            "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          }
+        ],
+        "permissions": [
+          {
+            "id": "permission-0",
+            "identifier": "https://www.googleapis.com/auth/gmail.send",
+            "classification": "Sensitive",
+            "title": "https://www.googleapis.com/auth/gmail.send",
+            "detail": "Send email without mailbox reading.",
+            "sourceIds": [
+              "gmail-scopes"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "GOOGLE-MANAGED",
+            "title": "Confirm the managed grant for your feature",
+            "detail": "Composio owns the managed registration. Confirm the selected scope set, the permitted use case and data-handling obligations before production. No developer-owned registration is included in this candidate path.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "custom",
+              "google-restricted"
+            ],
+            "stepIds": [
+              "managed-fit"
+            ],
+            "stage": "prepare"
+          }
+        ],
+        "blockers": [],
+        "sources": [
+          {
+            "id": "toolkit-api",
+            "title": "Toolkit metadata API and managed auth methods",
+            "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "managed",
+            "title": "Managed OAuth directory",
+            "url": "https://docs.composio.dev/toolkits/managed-auth",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "custom",
+            "title": "Managed vs custom auth",
+            "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "sessions",
+            "title": "Configuring sessions",
+            "url": "https://docs.composio.dev/docs/configuring-sessions",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "auth",
+            "title": "Authentication and connected accounts",
+            "url": "https://docs.composio.dev/docs/authentication",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "gmail-toolkit",
+            "title": "Gmail toolkit authentication",
+            "url": "https://docs.composio.dev/toolkits/gmail",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "gmail-scopes",
+            "title": "Gmail scope classifications",
+            "url": "https://developers.google.com/workspace/gmail/api/auth/scopes",
+            "publisher": "Google",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "google-restricted",
+            "title": "Restricted scope verification and exceptions",
+            "url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification",
+            "publisher": "Google",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "gmail-request-send",
+            "title": "Test: Send email API reference",
+            "url": "https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/send",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "proxy-execute",
+            "title": "Run provider requests through an authorized Composio session",
+            "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "timing": {
+          "work": "30–90 minutes",
+          "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+          "wait": "No new developer-owned Google registration is included in this managed candidate path. Confirm the actual permissions and permitted use before assuming you can proceed without additional work.",
+          "waitSourceIds": [
+            "managed",
+            "custom"
+          ],
+          "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+        },
+        "integration": "Evaluate managed OAuth first. It is available in the documentation, but scope and token-role fit still need to be verified.",
+        "details": [
+          {
+            "id": "AUTH-METHOD",
+            "title": "Check the method, then check the fit",
+            "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "managed",
+              "toolkit-api",
+              "gmail-toolkit"
+            ]
+          },
+          {
+            "id": "GMAIL-SCOPES",
+            "title": "Scope classification follows the selected actions",
+            "detail": "The send-only scope is sensitive. It does not grant reading or draft management.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "gmail-scopes"
+            ]
+          }
+        ],
+        "preparation": [
+          {
+            "title": "Permissions rationale",
+            "text": "https://www.googleapis.com/auth/gmail.send: Send email without mailbox reading."
+          },
+          {
+            "title": "Auth configuration worksheet",
+            "text": "Provider registration: use the managed app only after verifying its actual scope and identity fit.\nToolkit: gmail\nPermissions: https://www.googleapis.com/auth/gmail.send\nRecord the verified auth config ID."
+          },
+          {
+            "title": "First connection test",
+            "text": "Authorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Send email: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This sends a real test email when you run it. Use only your own test recipient. With a send-only grant, a mailbox read should be denied; inspect the grant first.\nDone when: HTTP 200 with the sent message id; confirm receipt in your test inbox. Record the actual response; this example has not been executed."
+          }
+        ],
+        "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+        "context": [
+          {
+            "label": "Actions",
+            "value": "Send email"
+          },
+          {
+            "label": "Who will use the integration?",
+            "value": "A limited customer pilot"
+          },
+          {
+            "label": "What are you preparing for?",
+            "value": "Development and testing"
+          },
+          {
+            "label": "Must the provider show your own app name during consent?",
+            "value": "No"
+          }
+        ],
+        "assessment": {
+          "version": 1,
+          "provider": "gmail",
+          "description": "",
+          "capabilities": [
+            "send"
+          ],
+          "audience": "pilot",
+          "stage": "test",
+          "branding": "no",
+          "background": "no",
+          "dataHandling": "servers",
+          "workspaceOnly": "no",
+          "slackIdentity": "unknown",
+          "repoAccess": "unknown",
+          "orgPolicy": "standard",
+          "managedScopes": "unknown",
+          "customScopes": "no",
+          "dedicatedQuota": "no",
+          "customInstance": "no",
+          "special": ""
+        },
+        "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"gmail\"],\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+        "metadata": {
+          "provider": "gmail",
+          "authMethods": [
+            "OAUTH2"
+          ],
+          "managedMethods": [
+            "OAUTH2"
+          ],
+          "origin": "Documentation snapshot",
+          "checkedAt": "2026-10-30",
+          "scopeCoverage": "unknown",
+          "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+          "toolkitSlug": "gmail"
+        }
+      },
+      "share": "http://127.0.0.1:5189/plan/lp-009f1842-7b39-4366-b96e-76812c3fe9de",
+      "roundTrip": true,
+      "pageShellAvailable": true,
+      "markdown": "gmail-send-only.md"
+    },
+    {
+      "name": "slack-person-pilot",
+      "input": {
+        "version": 1,
+        "provider": "slack",
+        "description": "",
+        "capabilities": [
+          "read",
+          "post"
+        ],
+        "audience": "pilot",
+        "stage": "test",
+        "branding": "no",
+        "background": "no",
+        "dataHandling": "servers",
+        "workspaceOnly": "no",
+        "slackIdentity": "user",
+        "repoAccess": "unknown",
+        "orgPolicy": "standard",
+        "managedScopes": "unknown",
+        "customScopes": "no",
+        "dedicatedQuota": "no",
+        "customInstance": "no",
+        "special": ""
+      },
+      "plan": {
+        "schemaVersion": 1,
+        "id": "lp-1b8d727f-0d1a-4ce9-b2d6-ca6b8f18f78d",
+        "provider": "Slack",
+        "request": "Read public channel messages, Post messages",
+        "createdAt": "2026-11-09T10:43:43.946Z",
+        "basis": "Reviewed rules",
+        "status": "Ready to start setup",
+        "summary": "Start with the managed app to avoid unnecessary provider registration. Scope, identity and organization-policy checks remain required.",
+        "route": "Slack app with user authorization",
+        "next": {
+          "id": "managed-fit",
+          "title": "Check the managed grant before proceeding",
+          "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+          "sourceIds": [
+            "managed",
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/toolkits/managed-auth",
+          "fields": []
+        },
+        "steps": [
+          {
+            "id": "managed-fit",
+            "title": "Check the managed grant before proceeding",
+            "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+            "sourceIds": [
+              "managed",
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/managed-auth",
+            "fields": []
+          },
+          {
+            "id": "auth-config",
+            "title": "Use the verified managed Auth Config",
+            "detail": "Use managed auth only after the scope and identity checks pass. If they do not pass, create a custom Auth Config instead.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+            "sourceIds": [
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "fields": [
+              "Toolkit",
+              "Authentication method",
+              "Auth config ID"
+            ]
+          },
+          {
+            "id": "session",
+            "title": "Create a session scoped to the selected toolkit",
+            "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+            "sourceIds": [
+              "sessions"
+            ],
+            "destination": "https://docs.composio.dev/docs/configuring-sessions",
+            "fields": []
+          },
+          {
+            "id": "connect",
+            "title": "Authorize a representative account",
+            "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+            "owner": "Developer",
+            "stage": "test",
+            "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          },
+          {
+            "id": "request-read",
+            "title": "Test: Read public channel messages",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "read"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Repeat a read using a private test channel this identity cannot access; it must return ok=false without message data.",
+            "doneWhen": "HTTP 200 with ok=true and the test channel messages. Record the actual response; this example has not been executed.",
+            "fields": [
+              "TEST_CHANNEL_ID: copy the ID from a test channel; add the selected bot/person to that channel"
+            ],
+            "sourceIds": [
+              "slack-request-read",
+              "proxy-execute"
+            ],
+            "destination": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "request": {
+              "method": "GET",
+              "endpoint": "https://slack.com/api/conversations.history?channel=TEST_CHANNEL_ID&limit=1",
+              "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"slack\",\n  \"method\": \"GET\",\n  \"endpoint\": \"https://slack.com/api/conversations.history?channel=TEST_CHANNEL_ID&limit=1\"\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "request-post",
+            "title": "Test: Post messages",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "post"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This posts a real message when run. Use your test channel; inspect the scope and identity before testing an inaccessible channel.",
+            "doneWhen": "HTTP 200 with ok=true, channel and ts; the test message appears in that channel. Record the actual response; this example has not been executed.",
+            "fields": [
+              "TEST_CHANNEL_ID: copy the ID from a disposable test channel and invite the selected identity"
+            ],
+            "sourceIds": [
+              "slack-request-post",
+              "proxy-execute"
+            ],
+            "destination": "https://docs.slack.dev/reference/methods/chat.postMessage/",
+            "request": {
+              "method": "POST",
+              "endpoint": "https://slack.com/api/chat.postMessage",
+              "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"slack\",\n  \"method\": \"POST\",\n  \"endpoint\": \"https://slack.com/api/chat.postMessage\",\n  \"body\": {\n    \"channel\": \"TEST_CHANNEL_ID\",\n    \"text\": \"Integration test - test channel only.\"\n  }\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "gate-SLACK-MANAGED-INSTALL",
+            "title": "Check managed app installation policy",
+            "detail": "Each customer workspace must permit the actual managed app and requested access. Managed credentials do not guarantee installation under customer policy or Marketplace eligibility.",
+            "owner": "Developer + admin",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "slack-distribution",
+              "slack-toolkit"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/slack",
+            "fields": []
+          },
+          {
+            "id": "gate-SLACK-HISTORY-LIMITS",
+            "title": "Validate history access and rate limits",
+            "detail": "Token type, channel membership, plan and distribution status affect history access. Check the current conversations.history limits for your app category before designing a polling summarizer.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "slack-limits"
+            ],
+            "destination": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "fields": []
+          },
+          {
+            "id": "gate-SLACK-ADMIN",
+            "title": "Workspace permission is a separate gate",
+            "detail": "A workspace may require administrator approval or allow only Marketplace apps. Ask its administrator about the specific app; enabling distribution alone does not grant installation rights.",
+            "owner": "Developer + admin",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "slack-distribution"
+            ],
+            "destination": "https://docs.slack.dev/app-management/distribution/",
+            "fields": []
+          },
+          {
+            "id": "review",
+            "title": "Review launch evidence and unresolved questions",
+            "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          }
+        ],
+        "permissions": [
+          {
+            "id": "permission-0",
+            "identifier": "channels:history",
+            "classification": "Bot or user scope",
+            "title": "channels:history",
+            "detail": "Read public-channel history accessible to the selected token.",
+            "sourceIds": [
+              "slack-history"
+            ]
+          },
+          {
+            "id": "permission-1",
+            "identifier": "chat:write",
+            "classification": "Token context must be checked",
+            "title": "chat:write",
+            "detail": "Post messages with the selected app/token identity.",
+            "sourceIds": [
+              "slack-write"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "SLACK-MANAGED-INSTALL",
+            "title": "Check managed app installation policy",
+            "detail": "Each customer workspace must permit the actual managed app and requested access. Managed credentials do not guarantee installation under customer policy or Marketplace eligibility.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "slack-distribution",
+              "slack-toolkit"
+            ],
+            "stepIds": [
+              "gate-SLACK-MANAGED-INSTALL"
+            ],
+            "stage": "launch"
+          },
+          {
+            "id": "SLACK-HISTORY-LIMITS",
+            "title": "Validate history access and rate limits",
+            "detail": "Token type, channel membership, plan and distribution status affect history access. Check the current conversations.history limits for your app category before designing a polling summarizer.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "slack-limits"
+            ],
+            "stepIds": [
+              "gate-SLACK-HISTORY-LIMITS"
+            ],
+            "stage": "launch"
+          },
+          {
+            "id": "SLACK-ADMIN",
+            "title": "Workspace permission is a separate gate",
+            "detail": "A workspace may require administrator approval or allow only Marketplace apps. Ask its administrator about the specific app; enabling distribution alone does not grant installation rights.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "slack-distribution"
+            ],
+            "stepIds": [
+              "gate-SLACK-ADMIN"
+            ],
+            "stage": "launch"
+          }
+        ],
+        "blockers": [],
+        "sources": [
+          {
+            "id": "toolkit-api",
+            "title": "Toolkit metadata API and managed auth methods",
+            "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "managed",
+            "title": "Managed OAuth directory",
+            "url": "https://docs.composio.dev/toolkits/managed-auth",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "custom",
+            "title": "Managed vs custom auth",
+            "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "sessions",
+            "title": "Configuring sessions",
+            "url": "https://docs.composio.dev/docs/configuring-sessions",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "auth",
+            "title": "Authentication and connected accounts",
+            "url": "https://docs.composio.dev/docs/authentication",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slackbot-toolkit",
+            "title": "Slackbot authentication and token roles",
+            "url": "https://docs.composio.dev/toolkits/slackbot",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-toolkit",
+            "title": "Slack toolkit authentication",
+            "url": "https://docs.composio.dev/toolkits/slack",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-distribution",
+            "title": "App lifecycle and distribution",
+            "url": "https://docs.slack.dev/app-management/distribution/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-history",
+            "title": "Public channel history scope",
+            "url": "https://docs.slack.dev/reference/scopes/channels.history/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-write",
+            "title": "Post message scope",
+            "url": "https://docs.slack.dev/reference/scopes/chat.write/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-limits",
+            "title": "Conversations history rate limits",
+            "url": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-request-read",
+            "title": "Test: Read public channel messages API reference",
+            "url": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "slack-request-post",
+            "title": "Test: Post messages API reference",
+            "url": "https://docs.slack.dev/reference/methods/chat.postMessage/",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "proxy-execute",
+            "title": "Run provider requests through an authorized Composio session",
+            "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "timing": {
+          "work": "30–90 minutes",
+          "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+          "wait": "Unlisted distribution can support an early-customer pilot without completing Marketplace listing first. Customer workspace policy can still prevent installation; no administrator turnaround is established.",
+          "waitSourceIds": [
+            "slack-distribution"
+          ],
+          "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+        },
+        "integration": "Evaluate managed OAuth first. It is available in the documentation, but scope and token-role fit still need to be verified.",
+        "details": [
+          {
+            "id": "AUTH-METHOD",
+            "title": "Check the method, then check the fit",
+            "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "managed",
+              "toolkit-api",
+              "slack-toolkit"
+            ]
+          },
+          {
+            "id": "SLACK-IDENTITY",
+            "title": "Choose Slack versus Slackbot deliberately",
+            "detail": "The Slack toolkit documents user authorization. Confirm the token role for each operation and do not treat the as_user parameter as an OAuth permission grant.",
+            "label": "Recommendation",
+            "sourceIds": [
+              "slack-toolkit",
+              "slackbot-toolkit"
+            ]
+          }
+        ],
+        "preparation": [
+          {
+            "title": "Permissions rationale",
+            "text": "channels:history: Read public-channel history accessible to the selected token.\nchat:write: Post messages with the selected app/token identity."
+          },
+          {
+            "title": "Auth configuration worksheet",
+            "text": "Provider registration: use the managed app only after verifying its actual scope and identity fit.\nToolkit: slack\nPermissions: channels:history, chat:write\nRecord the verified auth config ID."
+          },
+          {
+            "title": "First connection test",
+            "text": "Authorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Read public channel messages: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Repeat a read using a private test channel this identity cannot access; it must return ok=false without message data.\nDone when: HTTP 200 with ok=true and the test channel messages. Record the actual response; this example has not been executed.\nTest: Post messages: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This posts a real message when run. Use your test channel; inspect the scope and identity before testing an inaccessible channel.\nDone when: HTTP 200 with ok=true, channel and ts; the test message appears in that channel. Record the actual response; this example has not been executed."
+          }
+        ],
+        "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+        "context": [
+          {
+            "label": "Actions",
+            "value": "Read public channel messages, Post messages"
+          },
+          {
+            "label": "Who will use the integration?",
+            "value": "A limited customer pilot"
+          },
+          {
+            "label": "What are you preparing for?",
+            "value": "Development and testing"
+          },
+          {
+            "label": "Must the provider show your own app name during consent?",
+            "value": "No"
+          },
+          {
+            "label": "Who should appear to act in Slack?",
+            "value": "The person who connected their Slack account"
+          }
+        ],
+        "assessment": {
+          "version": 1,
+          "provider": "slack",
+          "description": "",
+          "capabilities": [
+            "read",
+            "post"
+          ],
+          "audience": "pilot",
+          "stage": "test",
+          "branding": "no",
+          "background": "no",
+          "dataHandling": "servers",
+          "workspaceOnly": "no",
+          "slackIdentity": "user",
+          "repoAccess": "unknown",
+          "orgPolicy": "standard",
+          "managedScopes": "unknown",
+          "customScopes": "no",
+          "dedicatedQuota": "no",
+          "customInstance": "no",
+          "special": ""
+        },
+        "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"slack\"],\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+        "metadata": {
+          "provider": "slack",
+          "authMethods": [
+            "OAUTH2"
+          ],
+          "managedMethods": [
+            "OAUTH2"
+          ],
+          "origin": "Documentation snapshot",
+          "checkedAt": "2026-10-30",
+          "scopeCoverage": "unknown",
+          "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+          "toolkitSlug": "slack"
+        }
+      },
+      "share": "http://127.0.0.1:5189/plan/lp-1b8d727f-0d1a-4ce9-b2d6-ca6b8f18f78d",
+      "roundTrip": true,
+      "pageShellAvailable": true,
+      "markdown": "slack-person-pilot.md"
+    },
+    {
+      "name": "slack-app-public",
+      "input": {
+        "version": 1,
+        "provider": "slack",
+        "description": "",
+        "capabilities": [
+          "read",
+          "post"
+        ],
+        "audience": "public",
+        "stage": "production",
+        "branding": "no",
+        "background": "no",
+        "dataHandling": "servers",
+        "workspaceOnly": "no",
+        "slackIdentity": "bot",
+        "repoAccess": "unknown",
+        "orgPolicy": "standard",
+        "managedScopes": "unknown",
+        "customScopes": "no",
+        "dedicatedQuota": "no",
+        "customInstance": "no",
+        "special": ""
+      },
+      "plan": {
+        "schemaVersion": 1,
+        "id": "lp-07c36871-6f8e-4da5-b8de-8d2118c1b873",
+        "provider": "Slack",
+        "request": "Read public channel messages, Post messages",
+        "createdAt": "2026-11-09T10:43:43.975Z",
+        "basis": "Reviewed rules",
+        "status": "Ready to start setup",
+        "summary": "Start with the managed app to avoid unnecessary provider registration. Scope, identity and organization-policy checks remain required.",
+        "route": "Slack app with bot and reviewed user permissions",
+        "next": {
+          "id": "managed-fit",
+          "title": "Check the managed grant before proceeding",
+          "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+          "sourceIds": [
+            "managed",
+            "custom"
+          ],
+          "destination": "https://docs.composio.dev/toolkits/managed-auth",
+          "fields": []
+        },
+        "steps": [
+          {
+            "id": "managed-fit",
+            "title": "Check the managed grant before proceeding",
+            "detail": "Inspect the chosen toolkit, its OAuth2 method and scopes. Compare the actual grant with every selected capability. Switch to custom credentials if a required permission is unavailable.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "The actual managed grant and token identity cover every selected action, or you have switched to a custom configuration.",
+            "sourceIds": [
+              "managed",
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/managed-auth",
+            "fields": []
+          },
+          {
+            "id": "auth-config",
+            "title": "Use the verified managed Auth Config",
+            "detail": "Use managed auth only after the scope and identity checks pass. If they do not pass, create a custom Auth Config instead.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+            "sourceIds": [
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "fields": [
+              "Toolkit",
+              "Authentication method",
+              "Auth config ID"
+            ]
+          },
+          {
+            "id": "session",
+            "title": "Create a session scoped to the selected toolkit",
+            "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+            "sourceIds": [
+              "sessions"
+            ],
+            "destination": "https://docs.composio.dev/docs/configuring-sessions",
+            "fields": []
+          },
+          {
+            "id": "connect",
+            "title": "Authorize a representative account",
+            "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+            "owner": "Developer",
+            "stage": "test",
+            "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          },
+          {
+            "id": "request-read",
+            "title": "Test: Read public channel messages",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "read"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Repeat a read using a private test channel this identity cannot access; it must return ok=false without message data.",
+            "doneWhen": "HTTP 200 with ok=true and the test channel messages. Record the actual response; this example has not been executed.",
+            "fields": [
+              "TEST_CHANNEL_ID: copy the ID from a test channel; add the selected bot/person to that channel"
+            ],
+            "sourceIds": [
+              "slack-request-read",
+              "proxy-execute"
+            ],
+            "destination": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "request": {
+              "method": "GET",
+              "endpoint": "https://slack.com/api/conversations.history?channel=TEST_CHANNEL_ID&limit=1",
+              "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"slackbot\",\n  \"method\": \"GET\",\n  \"endpoint\": \"https://slack.com/api/conversations.history?channel=TEST_CHANNEL_ID&limit=1\"\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "request-post",
+            "title": "Test: Post messages",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "post"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This posts a real message when run. Use your test channel; inspect the scope and identity before testing an inaccessible channel.",
+            "doneWhen": "HTTP 200 with ok=true, channel and ts; the test message appears in that channel. Record the actual response; this example has not been executed.",
+            "fields": [
+              "TEST_CHANNEL_ID: copy the ID from a disposable test channel and invite the selected identity"
+            ],
+            "sourceIds": [
+              "slack-request-post",
+              "proxy-execute"
+            ],
+            "destination": "https://docs.slack.dev/reference/methods/chat.postMessage/",
+            "request": {
+              "method": "POST",
+              "endpoint": "https://slack.com/api/chat.postMessage",
+              "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"slackbot\",\n  \"method\": \"POST\",\n  \"endpoint\": \"https://slack.com/api/chat.postMessage\",\n  \"body\": {\n    \"channel\": \"TEST_CHANNEL_ID\",\n    \"text\": \"Integration test - test channel only.\"\n  }\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "gate-SLACK-MANAGED-INSTALL",
+            "title": "Check managed app installation policy",
+            "detail": "Each customer workspace must permit the actual managed app and requested access. Managed credentials do not guarantee installation under customer policy or Marketplace eligibility.",
+            "owner": "Developer + admin",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "slack-distribution",
+              "slack-toolkit"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/slack",
+            "fields": []
+          },
+          {
+            "id": "gate-SLACK-HISTORY-LIMITS",
+            "title": "Validate history access and rate limits",
+            "detail": "Token type, channel membership, plan and distribution status affect history access. Check the current conversations.history limits for your app category before designing a polling summarizer.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "slack-limits"
+            ],
+            "destination": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "fields": []
+          },
+          {
+            "id": "gate-SLACK-ADMIN",
+            "title": "Workspace permission is a separate gate",
+            "detail": "A workspace may require administrator approval or allow only Marketplace apps. Ask its administrator about the specific app; enabling distribution alone does not grant installation rights.",
+            "owner": "Developer + admin",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "slack-distribution"
+            ],
+            "destination": "https://docs.slack.dev/app-management/distribution/",
+            "fields": []
+          },
+          {
+            "id": "review",
+            "title": "Review launch evidence and unresolved questions",
+            "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          }
+        ],
+        "permissions": [
+          {
+            "id": "permission-0",
+            "identifier": "channels:history",
+            "classification": "Bot or user scope",
+            "title": "channels:history",
+            "detail": "Read public-channel history accessible to the selected token.",
+            "sourceIds": [
+              "slack-history"
+            ]
+          },
+          {
+            "id": "permission-1",
+            "identifier": "chat:write",
+            "classification": "Token context must be checked",
+            "title": "chat:write",
+            "detail": "Post messages with the selected app/token identity.",
+            "sourceIds": [
+              "slack-write"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "SLACK-MANAGED-INSTALL",
+            "title": "Check managed app installation policy",
+            "detail": "Each customer workspace must permit the actual managed app and requested access. Managed credentials do not guarantee installation under customer policy or Marketplace eligibility.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "slack-distribution",
+              "slack-toolkit"
+            ],
+            "stepIds": [
+              "gate-SLACK-MANAGED-INSTALL"
+            ],
+            "stage": "launch"
+          },
+          {
+            "id": "SLACK-HISTORY-LIMITS",
+            "title": "Validate history access and rate limits",
+            "detail": "Token type, channel membership, plan and distribution status affect history access. Check the current conversations.history limits for your app category before designing a polling summarizer.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "slack-limits"
+            ],
+            "stepIds": [
+              "gate-SLACK-HISTORY-LIMITS"
+            ],
+            "stage": "launch"
+          },
+          {
+            "id": "SLACK-ADMIN",
+            "title": "Workspace permission is a separate gate",
+            "detail": "A workspace may require administrator approval or allow only Marketplace apps. Ask its administrator about the specific app; enabling distribution alone does not grant installation rights.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "slack-distribution"
+            ],
+            "stepIds": [
+              "gate-SLACK-ADMIN"
+            ],
+            "stage": "launch"
+          }
+        ],
+        "blockers": [],
+        "sources": [
+          {
+            "id": "toolkit-api",
+            "title": "Toolkit metadata API and managed auth methods",
+            "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "managed",
+            "title": "Managed OAuth directory",
+            "url": "https://docs.composio.dev/toolkits/managed-auth",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "custom",
+            "title": "Managed vs custom auth",
+            "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "sessions",
+            "title": "Configuring sessions",
+            "url": "https://docs.composio.dev/docs/configuring-sessions",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "auth",
+            "title": "Authentication and connected accounts",
+            "url": "https://docs.composio.dev/docs/authentication",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slackbot-toolkit",
+            "title": "Slackbot authentication and token roles",
+            "url": "https://docs.composio.dev/toolkits/slackbot",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-toolkit",
+            "title": "Slack toolkit authentication",
+            "url": "https://docs.composio.dev/toolkits/slack",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-distribution",
+            "title": "App lifecycle and distribution",
+            "url": "https://docs.slack.dev/app-management/distribution/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-history",
+            "title": "Public channel history scope",
+            "url": "https://docs.slack.dev/reference/scopes/channels.history/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-write",
+            "title": "Post message scope",
+            "url": "https://docs.slack.dev/reference/scopes/chat.write/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-limits",
+            "title": "Conversations history rate limits",
+            "url": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "publisher": "Slack",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "slack-request-read",
+            "title": "Test: Read public channel messages API reference",
+            "url": "https://docs.slack.dev/reference/methods/conversations.history/",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "slack-request-post",
+            "title": "Test: Post messages API reference",
+            "url": "https://docs.slack.dev/reference/methods/chat.postMessage/",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "proxy-execute",
+            "title": "Run provider requests through an authorized Composio session",
+            "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "timing": {
+          "work": "30–90 minutes",
+          "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+          "wait": "No new developer-owned Slack registration is included in this managed candidate path. Confirm the managed app’s permitted distribution, actual access and customer installation policy before launch.",
+          "waitSourceIds": [
+            "slack-distribution",
+            "managed",
+            "custom"
+          ],
+          "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+        },
+        "integration": "Evaluate managed OAuth first. It is available in the documentation, but scope and token-role fit still need to be verified.",
+        "details": [
+          {
+            "id": "AUTH-METHOD",
+            "title": "Check the method, then check the fit",
+            "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "managed",
+              "toolkit-api",
+              "slack-toolkit"
+            ]
+          },
+          {
+            "id": "SLACK-IDENTITY",
+            "title": "Choose Slack versus Slackbot deliberately",
+            "detail": "Evaluate the Slackbot toolkit for bot behavior. Its documented connection can also request user access. Review the actual bot/user scopes and token role for each selected tool.",
+            "label": "Recommendation",
+            "sourceIds": [
+              "slack-toolkit",
+              "slackbot-toolkit"
+            ]
+          }
+        ],
+        "preparation": [
+          {
+            "title": "Permissions rationale",
+            "text": "channels:history: Read public-channel history accessible to the selected token.\nchat:write: Post messages with the selected app/token identity."
+          },
+          {
+            "title": "Auth configuration worksheet",
+            "text": "Provider registration: use the managed app only after verifying its actual scope and identity fit.\nToolkit: slackbot\nPermissions: channels:history, chat:write\nRecord the verified auth config ID."
+          },
+          {
+            "title": "First connection test",
+            "text": "Authorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Read public channel messages: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Repeat a read using a private test channel this identity cannot access; it must return ok=false without message data.\nDone when: HTTP 200 with ok=true and the test channel messages. Record the actual response; this example has not been executed.\nTest: Post messages: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. This posts a real message when run. Use your test channel; inspect the scope and identity before testing an inaccessible channel.\nDone when: HTTP 200 with ok=true, channel and ts; the test message appears in that channel. Record the actual response; this example has not been executed."
+          }
+        ],
+        "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+        "context": [
+          {
+            "label": "Actions",
+            "value": "Read public channel messages, Post messages"
+          },
+          {
+            "label": "Who will use the integration?",
+            "value": "Customers / public release"
+          },
+          {
+            "label": "What are you preparing for?",
+            "value": "Production launch"
+          },
+          {
+            "label": "Must the provider show your own app name during consent?",
+            "value": "No"
+          },
+          {
+            "label": "Who should appear to act in Slack?",
+            "value": "My app / bot · for example, Acme Assistant"
+          }
+        ],
+        "assessment": {
+          "version": 1,
+          "provider": "slack",
+          "description": "",
+          "capabilities": [
+            "read",
+            "post"
+          ],
+          "audience": "public",
+          "stage": "production",
+          "branding": "no",
+          "background": "no",
+          "dataHandling": "servers",
+          "workspaceOnly": "no",
+          "slackIdentity": "bot",
+          "repoAccess": "unknown",
+          "orgPolicy": "standard",
+          "managedScopes": "unknown",
+          "customScopes": "no",
+          "dedicatedQuota": "no",
+          "customInstance": "no",
+          "special": ""
+        },
+        "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"slackbot\"],\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+        "metadata": {
+          "provider": "slack",
+          "authMethods": [
+            "OAUTH2"
+          ],
+          "managedMethods": [
+            "OAUTH2"
+          ],
+          "origin": "Documentation snapshot",
+          "checkedAt": "2026-10-30",
+          "scopeCoverage": "unknown",
+          "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+          "toolkitSlug": "slackbot"
+        }
+      },
+      "share": "http://127.0.0.1:5189/plan/lp-07c36871-6f8e-4da5-b8de-8d2118c1b873",
+      "roundTrip": true,
+      "pageShellAvailable": true,
+      "markdown": "slack-app-public.md"
+    },
+    {
+      "name": "github-selected",
+      "input": {
+        "version": 1,
+        "provider": "github",
+        "description": "",
+        "capabilities": [
+          "contents"
+        ],
+        "audience": "pilot",
+        "stage": "test",
+        "branding": "no",
+        "background": "no",
+        "dataHandling": "servers",
+        "workspaceOnly": "no",
+        "slackIdentity": "unknown",
+        "repoAccess": "selected",
+        "orgPolicy": "standard",
+        "managedScopes": "unknown",
+        "customScopes": "no",
+        "dedicatedQuota": "no",
+        "customInstance": "no",
+        "special": ""
+      },
+      "plan": {
+        "schemaVersion": 1,
+        "id": "lp-d2665086-45f5-412c-960c-1e3b8a6a2e23",
+        "provider": "GitHub",
+        "request": "Read repository contents",
+        "createdAt": "2026-11-09T10:43:43.995Z",
+        "basis": "Reviewed rules",
+        "status": "Ready to start setup",
+        "summary": "Use your own GitHub App for the selected automation, configure it in Composio, and install it separately on customer repositories.",
+        "route": "GitHub App",
+        "next": {
+          "id": "register",
+          "title": "Register your GitHub App",
+          "detail": "Choose ownership, callback configuration and installation visibility. Keep credentials in your server’s secret store.",
+          "owner": "Developer",
+          "stage": "prepare",
+          "doneWhen": "The test app exists, its identity and callback configuration are recorded, and its credentials are stored server-side.",
+          "sourceIds": [
+            "github-register"
+          ],
+          "destination": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app",
+          "fields": [
+            "App name",
+            "App owner",
+            "Test account / workspace",
+            "Provider redirect URI"
+          ]
+        },
+        "steps": [
+          {
+            "id": "register",
+            "title": "Register your GitHub App",
+            "detail": "Choose ownership, callback configuration and installation visibility. Keep credentials in your server’s secret store.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "The test app exists, its identity and callback configuration are recorded, and its credentials are stored server-side.",
+            "sourceIds": [
+              "github-register"
+            ],
+            "destination": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app",
+            "fields": [
+              "App name",
+              "App owner",
+              "Test account / workspace",
+              "Provider redirect URI"
+            ]
+          },
+          {
+            "id": "permissions",
+            "title": "Configure the permissions listed above",
+            "detail": "Set repository permissions in GitHub App settings and subscribe only to required events. Permissions come from app settings and installation grants.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "The configured grant matches the permission list and contains no unnecessary access.",
+            "sourceIds": [
+              "github-toolkit"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/github",
+            "fields": [
+              "Contents: read"
+            ]
+          },
+          {
+            "id": "redirect",
+            "title": "Copy the exact provider redirect URI from Composio",
+            "detail": "Begin a custom Auth Config for the correct toolkit and OAuth2 method. Copy its displayed redirect URI into the provider settings; this differs from your product’s Connect Link return URL.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "The exact redirect URI displayed by the Auth Config is saved in the provider app.",
+            "sourceIds": [
+              "custom",
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "fields": []
+          },
+          {
+            "id": "auth-config",
+            "title": "Finish the custom Auth Config",
+            "detail": "Store provider credentials only in Composio/server-side secret configuration. Record the auth config ID; never paste credentials into this advisor.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A usable auth config ID is recorded and its credentials are stored securely.",
+            "sourceIds": [
+              "custom"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "fields": [
+              "Toolkit",
+              "Authentication method",
+              "Auth config ID"
+            ]
+          },
+          {
+            "id": "install-link",
+            "title": "Provide the separate GitHub App installation link",
+            "detail": "Install the app on a representative account and selected test repositories, then complete the Composio connection. Record the installation link for later customer onboarding.",
+            "owner": "Developer + admin",
+            "stage": "prepare",
+            "doneWhen": "The app is installed on the intended test account and repositories; its installation URL is recorded.",
+            "sourceIds": [
+              "github-toolkit",
+              "github-install"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/github",
+            "fields": []
+          },
+          {
+            "id": "session",
+            "title": "Create a session scoped to the selected toolkit",
+            "detail": "Use a stable application user ID. Select your auth config when custom. Expose only required tools; session restrictions do not reduce the external provider’s grant.",
+            "owner": "Developer",
+            "stage": "prepare",
+            "doneWhen": "A session exists for the stable test user ID and the intended toolkit/auth config.",
+            "sourceIds": [
+              "sessions"
+            ],
+            "destination": "https://docs.composio.dev/docs/configuring-sessions",
+            "fields": []
+          },
+          {
+            "id": "connect",
+            "title": "Authorize a representative account",
+            "detail": "Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.",
+            "owner": "Developer",
+            "stage": "test",
+            "doneWhen": "The representative connected account reports successful authorization and the correct identity.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          },
+          {
+            "id": "request-contents",
+            "title": "Test: Read repository contents",
+            "stage": "test",
+            "testKind": "action",
+            "actionIds": [
+              "contents"
+            ],
+            "owner": "Developer",
+            "detail": "Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Read an excluded private test repository: expect 403/404 without content. Never use a public repository to prove installation isolation.",
+            "doneWhen": "HTTP 200 with repository entries. Record the actual response; this example has not been executed.",
+            "fields": [
+              "TEST_OWNER and TEST_REPO: an allowed test repository from the GitHub App installation"
+            ],
+            "sourceIds": [
+              "github-request-contents",
+              "proxy-execute"
+            ],
+            "destination": "https://docs.github.com/en/rest/repos/contents",
+            "request": {
+              "method": "GET",
+              "endpoint": "https://api.github.com/repos/TEST_OWNER/TEST_REPO/contents",
+              "example": "const response = await session.proxyExecute({\n  \"toolkit\": \"github\",\n  \"method\": \"GET\",\n  \"endpoint\": \"https://api.github.com/repos/TEST_OWNER/TEST_REPO/contents\"\n});\nif (response.resultType !== \"completed\") throw new Error(response.message);\nconsole.log(response.status, response.data);",
+              "language": "javascript"
+            }
+          },
+          {
+            "id": "gate-GITHUB-COMPOSIO",
+            "title": "Bring your own GitHub App, then install it",
+            "detail": "Composio documents custom GitHub App client ID/secret support. Supply the installation link separately; users must install the app and grant repository access before connecting. Auth-config scopes do not set GitHub App permissions.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "github-toolkit"
+            ],
+            "destination": "https://docs.composio.dev/toolkits/github",
+            "fields": []
+          },
+          {
+            "id": "gate-GITHUB-INSTALL",
+            "title": "Installation and authorization are separate",
+            "detail": "Use a representative account to install on the intended repositories. Organization policy or owner approval can block access even after user authorization.",
+            "owner": "Developer + admin",
+            "stage": "launch",
+            "doneWhen": "The applicable approval or policy decision is recorded, with any outstanding owner and requirement.",
+            "sourceIds": [
+              "github-install"
+            ],
+            "destination": "https://docs.github.com/en/apps/using-github-apps/installing-your-own-github-app",
+            "fields": []
+          },
+          {
+            "id": "review",
+            "title": "Review launch evidence and unresolved questions",
+            "detail": "Record actual results, customer-admin decisions and provider review outcomes. These personal checkmarks do not verify provider approval or execution success.",
+            "owner": "Developer",
+            "stage": "launch",
+            "doneWhen": "Actual test results and outstanding launch gates are recorded.",
+            "sourceIds": [
+              "auth"
+            ],
+            "destination": "https://docs.composio.dev/docs/authentication",
+            "fields": []
+          }
+        ],
+        "permissions": [
+          {
+            "id": "permission-0",
+            "identifier": "Contents: read",
+            "classification": "Repository permission",
+            "title": "Contents: read",
+            "detail": "Inspect repository code.",
+            "sourceIds": [
+              "github-contents"
+            ]
+          }
+        ],
+        "requirements": [
+          {
+            "id": "GITHUB-COMPOSIO",
+            "title": "Bring your own GitHub App, then install it",
+            "detail": "Composio documents custom GitHub App client ID/secret support. Supply the installation link separately; users must install the app and grant repository access before connecting. Auth-config scopes do not set GitHub App permissions.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "github-toolkit"
+            ],
+            "stepIds": [
+              "gate-GITHUB-COMPOSIO"
+            ],
+            "stage": "launch"
+          },
+          {
+            "id": "GITHUB-INSTALL",
+            "title": "Installation and authorization are separate",
+            "detail": "Use a representative account to install on the intended repositories. Organization policy or owner approval can block access even after user authorization.",
+            "label": "Conditional requirement",
+            "sourceIds": [
+              "github-install"
+            ],
+            "stepIds": [
+              "gate-GITHUB-INSTALL"
+            ],
+            "stage": "launch"
+          }
+        ],
+        "blockers": [
+          {
+            "id": "unknown-0",
+            "title": "Confirm the selected Composio tools use the intended GitHub App grant and work for the required background execution. No installation-token or tool-execution test was performed.",
+            "consequence": "follow-up",
+            "owner": "Developer",
+            "resolution": "Confirm the selected Composio tools use the intended GitHub App grant and work for the required background execution. No installation-token or tool-execution test was performed."
+          }
+        ],
+        "sources": [
+          {
+            "id": "toolkit-api",
+            "title": "Toolkit metadata API and managed auth methods",
+            "url": "https://docs.composio.dev/reference/api-reference/toolkits/getToolkitsBySlug",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "managed",
+            "title": "Managed OAuth directory",
+            "url": "https://docs.composio.dev/toolkits/managed-auth",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "custom",
+            "title": "Managed vs custom auth",
+            "url": "https://docs.composio.dev/docs/authentication/custom-app-vs-managed-app",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "sessions",
+            "title": "Configuring sessions",
+            "url": "https://docs.composio.dev/docs/configuring-sessions",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "auth",
+            "title": "Authentication and connected accounts",
+            "url": "https://docs.composio.dev/docs/authentication",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "github-toolkit",
+            "title": "GitHub toolkit authentication",
+            "url": "https://docs.composio.dev/toolkits/github",
+            "publisher": "Composio",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "github-model",
+            "title": "Choosing a GitHub App",
+            "url": "https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/deciding-when-to-build-a-github-app",
+            "publisher": "GitHub",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "github-contents",
+            "title": "Repository contents API permissions",
+            "url": "https://docs.github.com/en/rest/repos/contents",
+            "publisher": "GitHub",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "github-install",
+            "title": "Install on selected repositories",
+            "url": "https://docs.github.com/en/apps/using-github-apps/installing-your-own-github-app",
+            "publisher": "GitHub",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "github-register",
+            "title": "Register a GitHub App",
+            "url": "https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app",
+            "publisher": "GitHub",
+            "checkedAt": "2026-10-30"
+          },
+          {
+            "id": "github-request-contents",
+            "title": "Test: Read repository contents API reference",
+            "url": "https://docs.github.com/en/rest/repos/contents",
+            "checkedAt": "2026-11-02"
+          },
+          {
+            "id": "proxy-execute",
+            "title": "Run provider requests through an authorized Composio session",
+            "url": "https://docs.composio.dev/docs/extending-sessions/proxy-execute",
+            "checkedAt": "2026-11-02"
+          }
+        ],
+        "timing": {
+          "work": "1–3 hours",
+          "workBasis": "Planning estimate, not a timed setup result. Assumes an existing provider account, a working app/backend and Composio access. Covers configuration and a first test connection; excludes building the feature, review preparation, security remediation and external waiting.",
+          "wait": "The documented registration/install path does not identify a general provider review queue. This does not remove customer organization approval or any separate Marketplace requirements.",
+          "waitSourceIds": [
+            "github-register"
+          ],
+          "external": "Customer administrator turnaround is not known. Check the target organization’s policy and actual permissions during the first connection test."
+        },
+        "integration": "Managed OAuth2 availability does not supply your repository-scoped GitHub App. Use your own app and installation flow with Composio’s documented custom configuration.",
+        "details": [
+          {
+            "id": "AUTH-METHOD",
+            "title": "Check the method, then check the fit",
+            "detail": "OAuth2 managed availability is documented. This does not verify the scopes, token identity or organization policy needed by this assessment.",
+            "label": "Verified requirement",
+            "sourceIds": [
+              "managed",
+              "toolkit-api",
+              "github-toolkit"
+            ]
+          },
+          {
+            "id": "GITHUB-MODEL",
+            "title": "Use installation-based repository access",
+            "detail": "Background operation, selected repositories or PR writing/review makes a GitHub App the recommended model. It supports fine-grained permissions and repository installation grants.",
+            "label": "Recommendation",
+            "sourceIds": [
+              "github-model",
+              "github-install"
+            ]
+          }
+        ],
+        "preparation": [
+          {
+            "title": "Permissions rationale",
+            "text": "Contents: read: Inspect repository code."
+          },
+          {
+            "title": "Registration worksheet",
+            "text": "Provider app: GitHub App\nCallback: copy the exact provider redirect URI from the auth configuration.\nKeep client secrets in your backend or secret manager.\nToolkit: github\nPermissions: Contents: read\nRecord the verified auth config ID."
+          },
+          {
+            "title": "First connection test",
+            "text": "Authorize a representative account: Use the session’s Connect Link. Check completion and account identity in Composio; a successful callback alone is insufficient.\nDone when: The representative connected account reports successful authorization and the correct identity.\nTest: Read repository contents: Run this backend JavaScript with the authorized session created below. Replace the test inputs first. Read an excluded private test repository: expect 403/404 without content. Never use a public repository to prove installation isolation.\nDone when: HTTP 200 with repository entries. Record the actual response; this example has not been executed."
+          }
+        ],
+        "verification": "Provider rules were checked against documentation. The product has not created an app, exchanged tokens or obtained approval.",
+        "context": [
+          {
+            "label": "Actions",
+            "value": "Read repository contents"
+          },
+          {
+            "label": "Which repositories should it access?",
+            "value": "Repositories each customer selects"
+          }
+        ],
+        "assessment": {
+          "version": 1,
+          "provider": "github",
+          "description": "",
+          "capabilities": [
+            "contents"
+          ],
+          "audience": "pilot",
+          "stage": "test",
+          "branding": "no",
+          "background": "no",
+          "dataHandling": "servers",
+          "workspaceOnly": "no",
+          "slackIdentity": "unknown",
+          "repoAccess": "selected",
+          "orgPolicy": "standard",
+          "managedScopes": "unknown",
+          "customScopes": "no",
+          "dedicatedQuota": "no",
+          "customInstance": "no",
+          "special": ""
+        },
+        "code": "const session = await composio.sessions.create({\n  userId: \"your_stable_user_id\",\n  toolkits: [\"github\"],\n  authConfigs: { github: \"ac_your_config_id\" },\n});\n// Complete this session’s Connect Link and test selected tools.\n// Provider permissions and session tool limits are separate controls.",
+        "metadata": {
+          "provider": "github",
+          "authMethods": [
+            "OAUTH2"
+          ],
+          "managedMethods": [
+            "OAUTH2"
+          ],
+          "origin": "Documentation snapshot",
+          "checkedAt": "2026-10-30",
+          "scopeCoverage": "unknown",
+          "note": "No Composio API key configured. Using the dated documentation snapshot; scope suitability remains unverified.",
+          "toolkitSlug": "github"
+        }
+      },
+      "share": "http://127.0.0.1:5189/plan/lp-d2665086-45f5-412c-960c-1e3b8a6a2e23",
+      "roundTrip": true,
+      "pageShellAvailable": true,
+      "markdown": "github-selected.md"
+    }
+  ]
+}
