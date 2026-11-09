@@ -352,7 +352,7 @@ export function validateInterpretation(raw: unknown, documents: Document[],reque
   if (value.oauthSupport !== 'documented' && value.steps.length&&value.accessModel!=='public') throw new Error('Unestablished OAuth cannot produce setup steps.');
   const ids=new Set(value.steps.map(s=>s.id).filter(Boolean));
   if(ids.size!==value.steps.filter(s=>s.id).length)throw new Error('A step identifier is duplicated.');
-  const walk=(id:string,path:Set<string>)=>{if(path.has(id))throw new Error('A step dependency contains a cycle.');for(const dep of value.steps.find(s=>s.id===id)?.dependsOn||[]){if(!ids.has(dep))throw new Error('A step dependency is missing.');walk(dep,new Set([...path,id]));}};
+  const walk=(id:string,path:Set<string>)=>{if(path.has(id))throw new Error('A step dependency contains a cycle.');for(const dep of value.steps.find(s=>s.id===id)?.dependsOn||[]){if(!ids.has(dep))throw new Error('A step dependency is missing. '+JSON.stringify({stepId:id,dependency:dep,available:[...ids]}));walk(dep,new Set([...path,id]));}};
   for(const id of ids)walk(id!,new Set());
   for(const b of value.blockers)if([...b.stepIds||[],...b.resolutionStepIds||[]].some(id=>!ids.has(id)))throw new Error('A step blocker references a missing step.');
   if (new Set(value.questions.map(q=>q.id)).size !== value.questions.length) throw new Error('Duplicate question identifiers.');
@@ -470,7 +470,7 @@ function expandSetupSteps(named:Record<string,any>,passages:Passage[]){
  const assembled=assembleStepParts(named);
  const examples=(assembled.steps as Interpretation['steps']).filter(isResourceExample);
  const ids=new Set(examples.map(step=>step.id).filter(Boolean));
- const setup={steps:assembled.steps.filter((step:Interpretation['steps'][number])=>!isResourceExample(step)),blockers:assembled.blockers.filter((b:Interpretation['blockers'][number])=>!b.stepIds?.length||!b.stepIds.every(id=>ids.has(id))).map((b:Interpretation['blockers'][number])=>({...b,stepIds:b.stepIds?.filter(id=>!ids.has(id)),resolutionStepIds:b.resolutionStepIds?.filter(id=>!ids.has(id))}))};
+ const setup={steps:assembled.steps.filter((step:Interpretation['steps'][number])=>!isResourceExample(step)).map((step:Interpretation['steps'][number])=>({...step,dependsOn:step.dependsOn?.filter(id=>!ids.has(id))})),blockers:assembled.blockers.filter((b:Interpretation['blockers'][number])=>!b.stepIds?.length||!b.stepIds.every(id=>ids.has(id))).map((b:Interpretation['blockers'][number])=>({...b,stepIds:b.stepIds?.filter(id=>!ids.has(id)),resolutionStepIds:b.resolutionStepIds?.filter(id=>!ids.has(id))}))};
  const expand=(steps:typeof setup)=>expandPassageReferences(expandPartEvidence(steps),passages) as Pick<Interpretation,'steps'|'blockers'>;
  return {setup:expand(setup),examples,expand};
 }

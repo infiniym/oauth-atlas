@@ -12,9 +12,9 @@ const applicability=['required','conditional','not-required','unknown'] as const
 const string={type:'string'};
 const object=(properties:Record<string,unknown>)=>({type:'object',properties,required:Object.keys(properties),additionalProperties:false});
 const shape=z.object({
- gaps:z.object({registration:z.string().max(450),authorization:z.string().max(450),permissions:z.string().max(450),launch:z.string().max(450)}).strict(),
- approvals:z.array(z.object({kind:z.enum(approvalKinds),applicability:z.enum(applicability),detail:z.string().trim().min(1).max(650),passageIds:z.array(z.string()).max(3)}).strict()).length(3),
- exampleIssue:z.string().max(400),
+ gaps:z.object({registration:z.string(),authorization:z.string(),permissions:z.string(),launch:z.string()}).strict(),
+ approvals:z.array(z.object({kind:z.enum(approvalKinds),applicability:z.enum(applicability),detail:z.string().trim().min(1),passageIds:z.array(z.string()).max(3)}).strict()).length(3),
+ exampleIssue:z.string(),
 }).strict();
 const schema=object({
  gaps:object(Object.fromEntries(setupChecks.map(check=>[check,string]))),
@@ -53,7 +53,8 @@ export async function reviewOAuthSetup(value:Interpretation,input:GuideInput,doc
   if(new Set(raw.approvals.map(a=>a.kind)).size!==approvalKinds.length)throw new Error('Review omitted an approval category.');
   const approvals=raw.approvals.map(({passageIds,...approval})=>{
    const citations=[...new Set(passageIds)].map(id=>evidence.get(id));
-   if(citations.some(p=>!p)||approval.applicability!=='unknown'&&!citations.length)throw new Error('Approval policy is missing a supplied citation.');
+   if(citations.some(p=>!p))throw new Error('Approval '+approval.kind+' references an unknown or non-citable passage.');
+   if(approval.applicability!=='unknown'&&!citations.length)throw new Error('Approval '+approval.kind+' claims applicability without supplied evidence.');
    return {...approval,evidence:citations.map(p=>({sourceId:p!.sourceId,quote:p!.text}))};
   });
   const gaps:SetupReview['gaps']={};
@@ -65,7 +66,8 @@ export async function reviewOAuthSetup(value:Interpretation,input:GuideInput,doc
   if(error instanceof ModelServiceFailure)throw error;
   signal.throwIfAborted();
   if(deadline.aborted)telemetry.outcome='timeout';
-  telemetry.validationIssues=['The OAuth setup review did not complete with valid approval evidence.'];
+  const diagnostic=error instanceof z.ZodError?error.issues.map(issue=>issue.path.join('.')+' '+issue.message).join('. '):error instanceof Error&&/^Approval |^Review omitted/.test(error.message)?error.message:'The review response did not match its required JSON contract.';
+  telemetry.validationIssues=['The OAuth setup review did not complete. '+diagnostic];
   return {telemetry};
  }finally{telemetry.elapsedMs=Date.now()-started;}
 }

@@ -41,7 +41,7 @@ function previous():StoredRun{return {documents:[document],guide:{
 function rawStep(id:string,testKind:string,text:string,request={method:'',endpoint:'',example:'',responsePath:''}){
  return {id,testKind,title:id,detail:'Follow the documented '+id+' instructions.',owner:'developer',stage:testKind==='prepare'?'prepare':'test',doneWhen:'Record the configured '+id+' result.',dependsOn:id==='registration'?[]:['registration'],actionIds:[],destination:url,fields:[],request,evidence:ref(text)};
 }
-function network(launchGap=''){
+function network(launchGap='',reviewDetail='Direct customer authorization is available without provider review.'){
  let calls=0;
  const fetcher:typeof fetch=async(_input,init)=>{
   calls++;
@@ -56,10 +56,11 @@ function network(launchGap=''){
     rawStep('consent','authorization','Use GET https://api.acme.com/oauth/authorize',{method:'GET',endpoint:'https://api.acme.com/oauth/authorize',example:"curl 'https://api.acme.com/oauth/authorize?response_type=code&client_id=<CLIENT_ID>&redirect_uri=<REDIRECT_URI>&state=<STATE>'",responsePath:''}),
     rawStep('token-exchange','authorization','Use POST https://api.acme.com/oauth/token',{method:'POST',endpoint:'https://api.acme.com/oauth/token',example:"curl --request POST 'https://api.acme.com/oauth/token' --user '<CLIENT_ID>:<CLIENT_SECRET>' --data 'grant_type=authorization_code&code=<CODE>&redirect_uri=<REDIRECT_URI>'",responsePath:''}),
     {...rawStep('resource','action','Use GET https://api.acme.com/issues',{method:'GET',endpoint:'https://api.acme.com/invented',example:"curl 'https://api.acme.com/invented' -H 'Authorization: Bearer <TOKEN>'",responsePath:'$.names[]'}),actionIds:['read']},
+    {...rawStep('launch','launch','Direct customer'),stage:'launch',dependsOn:['resource'],detail:'Confirm representative authorization before direct customer rollout.'},
    ],continuations:[],blockers:[]};
   }else if(payload.system.startsWith('Check this OAuth setup')){
    result={gaps:{registration:'',authorization:'',permissions:'',launch:launchGap},exampleIssue:'',approvals:[
-    {kind:'provider-review',applicability:'not-required',detail:'Direct customer authorization is available without provider review.',passageIds:[passage('Direct customer').id]},
+    {kind:'provider-review',applicability:'not-required',detail:reviewDetail,passageIds:[passage('Direct customer').id]},
     {kind:'marketplace-listing',applicability:'unknown',detail:'Check the provider directory policy before listing.',passageIds:[]},
     {kind:'customer-admin',applicability:'unknown',detail:'Check the representative customer’s account policy.',passageIds:[]},
    ]};
@@ -91,6 +92,8 @@ test('OAuth setup generation retains a sound handoff when an optional request is
  const plan=researchedPlan(result.guide),markdown=exportPlan(plan);
  assert.equal(plan.blockers.filter(b=>b.consequence==='test').length,0);
  assert.equal(plan.examples!.length,0);
+ assert.deepEqual(plan.steps.find(s=>s.id==='launch')!.dependsOn,[]);
+ assert.match(plan.steps.find(s=>s.id==='launch')!.detail,/representative authorization/);
  assert.match(markdown,/Optional resource examples/);
  assert.match(markdown,/Direct customer authorization is available/);
  assert.match(markdown,/omitted/);
@@ -124,4 +127,15 @@ test('a resource example with mismatched evidence is omitted without changing th
  const result=attachResourceExamples(core,[step],[document],'Read issue names. Never change issues.');
  assert.deepEqual(result.value,core);
  assert.match(result.exampleNotes[0],/citation/i);
+});
+
+test('review explanation length cannot discard a grounded verdict or clear a negative decision',async()=>{
+ const old=previous(),longDetail='Direct customer authorization is available without provider review. '.repeat(12),net=network('',longDetail);
+ const complete=await generate({...old.guide.input,previousId:old.guide.id},{ANTHROPIC_API_KEY:'fixture',ANTHROPIC_MODEL:'fixture'},()=>{},new AbortController().signal,net.fetcher,old,{oauthSetup:true});
+ assert.equal(guideReadiness(complete.guide),'usable-guide');
+ assert.equal(complete.guide.oauthSetup!.review!.approvals[0].detail,longDetail.trim());
+ const gap='Production access requires the documented application step. '.repeat(10),negative=network(gap);
+ const incomplete=await generate({...old.guide.input,previousId:old.guide.id},{ANTHROPIC_API_KEY:'fixture',ANTHROPIC_MODEL:'fixture'},()=>{},new AbortController().signal,negative.fetcher,old,{oauthSetup:true});
+ assert.equal(guideReadiness(incomplete.guide),'research-failure');
+ assert.equal(incomplete.guide.oauthSetup!.review!.gaps.launch,gap.trim());
 });

@@ -15,6 +15,8 @@ if(!label||!/^[a-z0-9-]+$/.test(label))throw new Error('Supply a unique lowercas
 const declaration=JSON.parse(readFileSync('docs/evidence/submission-2026-11-09/cases.json','utf8'));
 const cases=declaration.cases.filter((c:GuideInput)=>!requested.length||requested.includes(c.app.toLowerCase())).map(({newToPriorMatrix:_new,...input}:GuideInput&{newToPriorMatrix?:boolean})=>input);
 if(!cases.length)throw new Error('Choose a declared case.');
+const retryId=process.env.SUBMISSION_RETRY_JOB;
+if(retryId&&(cases.length!==1||!/^job-[a-f0-9-]{36}$/.test(retryId)))throw new Error('A repaired attempt must name one existing process and one declared case.');
 const directory='docs/evidence/submission-2026-11-09/'+label;
 mkdirSync(directory,{recursive:true});
 const release=await (await fetch(origin+'/api/release')).json() as {sourceCommit:string;guideCodeFingerprint:string;runtime?:{configured:boolean;storage:string|null}};
@@ -25,19 +27,26 @@ for(const input of cases){
  const file=directory+'/'+input.app.toLowerCase()+'.json';
  if(existsSync(file))throw new Error('Preserve the existing attempt. Supply a new evidence label.');
  const started=Date.now(),events:Progress[]=[],jobs:{id:string;input:GuideInput}[]=[];
- const record:{release:unknown;input:GuideInput;startedAt:string;anonymous:boolean;jobs:typeof jobs;events:Progress[];job?:GuideJob;plan?:LaunchPlan;share?:string;automatedCorePass?:boolean;manualAudit:string;error?:string;elapsedMs?:number}={
+ const record:{release:unknown;input:GuideInput;startedAt:string;anonymous:boolean;jobs:typeof jobs;events:Progress[];job?:GuideJob;plan?:LaunchPlan;share?:string;automatedCorePass?:boolean;manualAudit:string;error?:string;elapsedMs?:number;repairedFrom?:string}={
   release,input,startedAt:new Date().toISOString(),anonymous:true,jobs,events,manualAudit:'Pending. Automated readiness is insufficient for the evidence-quality gate.',
  };
  const save=()=>writeFileSync(file,JSON.stringify(record,null,2)+'\n');
+ const watch=(job:GuideJob,retry=false)=>monitorJob(job,{retry,signal:AbortSignal.timeout(215000),fetcher:(path,init)=>fetch(origin+path,{...init,headers:{...init?.headers,origin}}),onProgress:event=>{events.push(event);save();}});
  async function stage(next:GuideInput){
   const created=await fetch(origin+'/api/live-guide/jobs',{method:'POST',headers:{origin,'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID()},body:JSON.stringify({input:next}),signal:AbortSignal.timeout(15000)});
   const data=await created.json() as {job:GuideJob;error?:string};
   if(!created.ok)throw new Error(data.error||'Job creation failed.');
   jobs.push({id:data.job.id,input:next});save();
-  return monitorJob(data.job,{signal:AbortSignal.timeout(215000),fetcher:(path,init)=>fetch(origin+path,{...init,headers:{...init?.headers,origin}}),onProgress:event=>{events.push(event);save();}});
+  return watch(data.job);
  }
  try{
-  let job=await stage(input);
+  let job:GuideJob;
+  if(retryId){
+   const saved=await(await fetch(origin+'/api/live-guide/jobs/'+retryId)).json() as {job:GuideJob};
+   if(saved.job.state!=='interrupted'||['app','website','useCase','audience'].some(key=>saved.job.input[key as keyof GuideInput]!==input[key as keyof GuideInput]))throw new Error('The saved process does not match the declared interrupted journey.');
+   record.repairedFrom=retryId;jobs.push({id:retryId,input:saved.job.input});save();
+   job=await watch(saved.job,true);
+  }else job=await stage(input);
   for(let choices=0;job.state==='waiting'&&choices<3;choices++){
    const guide=job.guide!;
    job=await stage({...guide.input,previousId:guide.id,answers:acceptanceAnswers(guide)});
