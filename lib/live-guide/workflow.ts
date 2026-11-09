@@ -35,6 +35,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   const oauthSetup=options.oauthSetup||!!previous?.guide.oauthSetup;
   if(input.resolution&&previous&&!(oauthSetup&&input.resolution.kind==='documentation'))return resolveGuide(input,previous,bindings,emit,signal,fetcher,options);
   if(oauthSetup&&input.resolution?.kind==='documentation')input.documentationUrl=input.resolution.url;
+  if(oauthSetup&&options.checkpoint&&options.checkpoint.promptVersion!==PROMPT_VERSION)options={...options,checkpoint:{...options.checkpoint,setupReview:undefined,setupCorrectionDone:false,followupDone:false}};
   let setup:OAuthSetup|undefined=oauthSetup?{exampleNotes:options.checkpoint?.exampleNotes||[]}:undefined;
   let retainedFacts=options.checkpoint?.facts;const originalSave=options.save;
   const retainedSetup:Partial<WorkflowCheckpoint>={};
@@ -42,7 +43,7 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   options={...options,save:async checkpoint=>{
     if('facts' in checkpoint)retainedFacts=checkpoint.facts;
     for(const field of ['exampleNotes','setupFeedback','setupReview','setupCorrectionDone'] as const)if(field in checkpoint)Object.assign(retainedSetup,{[field]:checkpoint[field]});
-    await originalSave?.({...retainedSetup,...checkpoint,...(retainedFacts&&!('facts' in checkpoint)?{facts:retainedFacts}:{})});
+    await originalSave?.({...retainedSetup,...checkpoint,promptVersion:PROMPT_VERSION,...(retainedFacts&&!('facts' in checkpoint)?{facts:retainedFacts}:{})});
   }};
   const cumulative=previous?.guide.journey||{modelCalls:previous?.guide.engine?.attempts||0,inputTokens:previous?.guide.engine?.inputTokens||0,outputTokens:previous?.guide.engine?.outputTokens||0,modelMs:previous?.guide.engine?.elapsedMs||0};
   const decisions=new Map((previous?.guide.decisions||[]).map(d=>[d.id,d]));
@@ -63,12 +64,12 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     emit({stage:'Saved choices ready',detail:'Reusing the questions and documentation already collected.',status:'done'});
   }else{
     if(input.documentationUrl){
-      research=await retrieve(input,bindings,emit,signal,fetcher,{previous:research||undefined,urls:[input.documentationUrl],refresh:true});
+      research=await retrieve(input,bindings,emit,signal,fetcher,{previous:research||undefined,urls:[input.documentationUrl],refresh:true,oauthSetup});
       // New evidence invalidates a saved interpretation, not confirmed intent.
       retainedFacts=undefined;for(const key of Object.keys(retainedSetup))delete retainedSetup[key as keyof WorkflowCheckpoint];options={...options,checkpoint:undefined};followupDone=false;
       await options.save?.({research,clarificationUsed,followupDone,intent});
     }
-    if(!research?.documents.length){research=await retrieve({...input,website:research?.website||input.website},bindings,emit,signal,fetcher);research.inferred=false;await options.save?.({research,clarificationUsed,followupDone,intent});}
+    if(!research?.documents.length){research=await retrieve({...input,website:research?.website||input.website},bindings,emit,signal,fetcher,{oauthSetup});research.inferred=false;await options.save?.({research,clarificationUsed,followupDone,intent});}
     emit({stage:clarificationUsed?'Building your guide':'Checking setup choices',detail:'Using '+research.documents.length+' saved source snapshots. Your request and previous answers are retained.',status:'working'});
     const savedDraft=options.checkpoint?.draft;
     const acceptedDraft=savedDraft&&(options.checkpoint?.draftAccepted===true||savedDraft.oauthSupport!=='unknown'&&savedDraft.requestedActions?.length&&savedDraft.steps.some(s=>s.testKind==='action'))?draftFields(savedDraft):undefined;
@@ -87,14 +88,14 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
     }
     if(interpreted.mode==='evidence-only'&&interpreted.telemetry?.outcome==='upstream-error')await options.save?.({research,clarificationUsed,followupDone,intent,draftAccepted:false});
     const materialTopics=interpreted.value.researchNeeded.filter(t=>oauthSetup||t!=='distribution');
-    if(!interpreted.value.questions.length&&(materialTopics.length||interpreted.mode==='evidence-only')&&interpreted.telemetry?.outcome!=='upstream-error'&&!followupDone){
+    if(!interpreted.value.questions.length&&(materialTopics.length||interpreted.mode==='evidence-only'&&(!oauthSetup||!retainedFacts))&&interpreted.telemetry?.outcome!=='upstream-error'&&!followupDone){
       if(!materialTopics.length)materialTopics.push(interpreted.telemetry?.validationIssues?.some(s=>s.startsWith('Unestablished OAuth'))?'registration':'permissions');
       followupDone=true;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
       emit({stage:'Checking a missing requirement',detail:'Looking only for missing '+materialTopics.join(', ')+' evidence.',status:'working'});
       const constantGap=interpreted.telemetry?.validationIssues?.find(reason=>reason.startsWith('A request constant is not documented.'));
       let gap=constantGap?.replace('A request constant is not documented. ','');
       if(!gap){const issue=interpreted.telemetry?.validationIssues?.find(reason=>/API request is not documented|authorization example is not documented/.test(reason));if(issue)try{const detail=JSON.parse(issue.slice(issue.indexOf('{')));gap='Official endpoint reference, host, required parameters and response for '+(detail.endpoint||detail.url)+'. '+detail.reason;}catch{ /* Keep ordinary topic recovery when the diagnostic has no endpoint. */ }}
-      const expanded=await retrieve(gap?{...input,useCase:input.useCase+' Missing evidence: '+gap}:input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics,...(gap?{query:input.app+' API '+gap,emptyField:gap.match(/^Field ([\w.-]+)/)?.[1]}:{} )});
+      const expanded=await retrieve(gap?{...input,useCase:input.useCase+' Missing evidence: '+gap}:input,bindings,emit,signal,fetcher,{previous:research,topics:materialTopics,oauthSetup,...(gap?{query:input.app+' API '+gap,emptyField:gap.match(/^Field ([\w.-]+)/)?.[1]}:{} )});
       if(expanded.documents.length>research.documents.length){
         research=expanded;await options.save?.({research,clarificationUsed,followupDone,intent,draft:interpreted.mode==='interpreted'?interpreted.value:undefined,draftAccepted:interpreted.mode==='interpreted'});
         const refined=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:{requestedActions:interpreted.value.requestedActions,prohibitions:interpreted.value.prohibitions},oauthSetup,facts:retainedFacts?.oauthSupport==='documented'&&retainedFacts.coverage.every(c=>c.status==='mapped')&&!retainedFacts.researchNeeded.some(t=>oauthSetup||t!=='distribution')?retainedFacts:undefined,onFacts:async facts=>{await options.save?.({research:research!,clarificationUsed,followupDone,intent,facts});}});
@@ -121,6 +122,16 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
       if(feedback.length&&!options.checkpoint?.setupCorrectionDone){
         await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent,draft:interpreted.value,draftAccepted:true,exampleNotes:setup!.exampleNotes,setupFeedback:feedback,setupReview:checked.review,setupCorrectionDone:false});
         emit({stage:'Correcting OAuth instructions',detail:'Addressing the specific setup or launch gaps found in the saved official evidence.',status:'working'});
+        if(!followupDone){
+          followupDone=true;
+          const topics:Interpretation['researchNeeded']=[];
+          if(checked.review?.gaps.registration||checked.review?.gaps.authorization)topics.push('registration');
+          if(checked.review?.gaps.permissions)topics.push('permissions');
+          if(checked.review?.gaps.launch)topics.push('distribution');
+          research=await retrieve({...input,useCase:input.useCase+' Missing setup evidence: '+feedback.join(' ')},bindings,emit,signal,fetcher,{previous:research,topics,oauthSetup:true});
+          retainedFacts=undefined;
+          await options.save?.({research,clarificationUsed,followupDone,intent:confirmedIntent,facts:undefined,draft:interpreted.value,draftAccepted:true,setupFeedback:feedback});
+        }
         const corrected=await interpretEvidence(input,research.documents,bindings,signal,fetcher,[...decisions.values()],{final:true,intent:confirmedIntent,oauthSetup:true,setupFeedback:feedback,facts:!checked.review?.gaps.permissions&&!checked.review?.gaps.launch?retainedFacts:undefined});
         addUsage(corrected.telemetry);
         if(corrected.mode==='interpreted'){
@@ -159,9 +170,10 @@ export async function generate(raw: unknown, bindings: Bindings, emit: (event: P
   research=research!;signal.throwIfAborted();
   const value=interpreted.value;
   if(oauthSetup&&value.steps.length){
-    const work=value.steps.filter(s=>s.owner==='developer'&&s.stage!=='launch'&&!isResourceExample(s));
+    const work=value.steps.filter(s=>s.stage!=='launch'&&!isResourceExample(s)&&s.owner!=='provider');
+    const developer=work.filter(s=>s.owner==='developer').length,customer=work.filter(s=>s.owner==='connected user'||s.owner==='customer admin').length,drafts=work.filter(s=>s.owner==='agent').length;
     const launch=value.steps.filter(s=>s.stage==='launch'&&s.owner!=='provider');
-    value.activeEffort={range:work.length+' hands-on setup tasks',assumptions:'Workload estimate from the documented checklist. Includes registration, callback implementation and a representative authorization where specified. Assumes a web app and representative account are available. '+launch.length+' launch preparation tasks are listed separately. Elapsed time depends on the existing backend, account access and implementation experience.'};
+    value.activeEffort={range:work.length+' setup and consent tasks',assumptions:'Checklist workload estimate. '+developer+' developer tasks, '+customer+' customer consent or admin tasks and '+drafts+' agent-preparable drafts. '+launch.length+' launch preparation tasks are listed separately. Assumes a web app and representative account are available. Elapsed time depends on the existing backend, account access and implementation experience.'};
   }
   const pendingQuestions=!identityConfirmed?deferred:[];
   if(value.questions.length){value.summary='Confirm the setup choices for '+input.app+'. Your request and evidence are saved.';value.recommendation='Continue with these choices to build your guide.';value.nextAction='Answer the current setup choices.';value.steps=[];value.activeEffort={range:'',assumptions:''};}

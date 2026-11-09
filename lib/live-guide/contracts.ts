@@ -23,7 +23,7 @@ export const findingSchema = z.object({
   stage:z.enum(['prepare','test','launch']).optional(),stepIds:z.array(text(60)).max(10).optional(),
 }).strict();
 const stepSchema = z.object({
-  title: text(120), detail: text(800), owner: z.enum(['developer', 'agent', 'customer admin', 'provider']),
+  title: text(120), detail: text(800), owner: z.enum(['developer', 'agent', 'connected user', 'customer admin', 'provider']),
   doneWhen: text(400), evidence: evidenceSchema,
   appliesWhen:z.string().max(400).optional(),
   id:text(60).optional(),dependsOn:z.array(text(60)).max(10).optional(),actionIds:z.array(text(60)).max(10).optional(),
@@ -96,7 +96,7 @@ export type Bindings = IntentAiBindings & {
   LIVE_GUIDE_FIRECRAWL_KEY?: string;
 };
 export type Research = { documents: Document[]; website: string; inferred: boolean; warnings: string[];navigationCalls?:number };
-export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;facts?:Interpretation;draft?:Interpretation;draftAccepted?:boolean;pendingReviewActionId?:string;exampleNotes?:string[];setupFeedback?:string[];setupReview?:SetupReview;setupCorrectionDone?:boolean};
+export type WorkflowCheckpoint={research:Research;clarificationUsed?:boolean;followupDone?:boolean;intent?:RequestIntent;facts?:Interpretation;draft?:Interpretation;draftAccepted?:boolean;pendingReviewActionId?:string;promptVersion?:string;exampleNotes?:string[];setupFeedback?:string[];setupReview?:SetupReview;setupCorrectionDone?:boolean};
 
 export function normalizeInput(raw: unknown): GuideInput {
   const parsed = inputSchema.safeParse(raw);

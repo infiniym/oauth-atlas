@@ -17,6 +17,8 @@ export function openApiText(body:string|Record<string,unknown>,useCase=''):{titl
   return out;
  };
  const lines=['# '+title,'Schema version: '+(spec.info?.version||''),'Documented server: '+(spec.host?(spec.schemes?.[0]||'https')+'://'+spec.host+base:JSON.stringify(spec.servers||[])),'Security definitions: '+JSON.stringify(spec.securityDefinitions||spec.components?.securitySchemes||{})];
+ if(spec.info?.description)lines.push(spec.info.description);
+ if(spec.externalDocs?.url)lines.push('[Provider documentation]('+spec.externalDocs.url+')');
  const operations:[string,string,any,any][]=[];
  for(const [path,item] of Object.entries(spec.paths) as [string,any][])for(const method of ['get','post','put','patch','delete','head'])if(item[method])operations.push([path,method,item[method],item]);
  const words=[...new Set(useCase.toLowerCase().replace(/\b(?:never|no|do not)\b[^.;]*/g,'').split(/\W+/).filter(w=>w.length>3&&!['list','read','names','titles','visible','connected','person','individual','customer','customers','accounts','including','pagination','oauth','only','backend','application','their','with','that','each','user','input','retain','instance','instances','base'].includes(w)).map(w=>w.length>6?w.slice(0,5):w.replace(/s$/,'')))];
@@ -24,6 +26,8 @@ export function openApiText(body:string|Record<string,unknown>,useCase=''):{titl
  operations.sort((a,b)=>rank(b)-rank(a));
  for(const [path,method,op,item] of operations.slice(0,12)){
  lines.push('\n## '+method.toUpperCase()+' '+base+path+' | '+(op.summary||op.operationId||''),op.description||'');
+ if(op.servers?.length)lines.push('Operation server: '+JSON.stringify(op.servers));
+ if(op.externalDocs?.url)lines.push('[Operation documentation]('+op.externalDocs.url+')');
  for(const p of [...item.parameters||[],...op.parameters||[]].map(p=>resolve(p)))lines.push('Parameter '+p.name+' in '+p.in+' ('+(p.type||p.schema?.type||'unspecified type')+', '+(p.required?'required':'optional')+'): '+(p.description||'')+' Schema: '+JSON.stringify(resolve(p.schema||{type:p.type,...(p.enum?{enum:p.enum}:{}),...(p.default!==undefined?{default:p.default}:{})})));
  if(op.requestBody)lines.push('Request body: '+JSON.stringify(resolve(op.requestBody)));
  lines.push('Operation security: '+JSON.stringify(op.security||spec.security||[]));

@@ -9,6 +9,8 @@ import {researchedPlan} from '../lib/plan/adapters.ts';
 import {exportPlan} from '../lib/plan/export.ts';
 import {nextFromProgress} from '../lib/plan/presentation.ts';
 import {requestExampleParts} from '../lib/live-guide/request-examples.ts';
+import {documentationScore,parsePage,publicReader,retrieve} from '../lib/live-guide/retrieval.ts';
+import {reviewOAuthSetup} from '../lib/live-guide/setup-review.ts';
 
 const url='https://developer.acme.com/oauth';
 const document:Document={id:'s1',url,title:'OAuth applications',hash:'fixture',retrievedAt:'2026-11-09T00:00:00Z',text:[
@@ -44,6 +46,7 @@ function rawStep(id:string,testKind:string,text:string,request={method:'',endpoi
 function network(launchGap='',reviewDetail='Direct customer authorization is available without provider review.'){
  let calls=0;
  const fetcher:typeof fetch=async(_input,init)=>{
+  if(!String(_input).includes('api.anthropic.com'))throw new Error('No additional documentation in this fixture.');
   calls++;
   const payload=JSON.parse(String(init?.body));
   let result:unknown;
@@ -138,4 +141,58 @@ test('review explanation length cannot discard a grounded verdict or clear a neg
  const incomplete=await generate({...old.guide.input,previousId:old.guide.id},{ANTHROPIC_API_KEY:'fixture',ANTHROPIC_MODEL:'fixture'},()=>{},new AbortController().signal,negative.fetcher,old,{oauthSetup:true});
  assert.equal(guideReadiness(incomplete.guide),'research-failure');
  assert.equal(incomplete.guide.oauthSetup!.review!.gaps.launch,gap.trim());
+});
+
+test('all approval citations are checked when a policy uses more than three passages',async()=>{
+ const ids=passages.filter(p=>p.citable).slice(0,4).map(p=>p.id);
+ const net:typeof fetch=async()=>Response.json({stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify({gaps:{registration:'',authorization:'',permissions:'',launch:''},exampleIssue:'',approvals:[
+  {kind:'provider-review',applicability:'not-required',detail:'Direct authorization follows the documented path.',passageIds:ids},
+  {kind:'marketplace-listing',applicability:'unknown',detail:'Listing policy is unresolved.',passageIds:[]},
+  {kind:'customer-admin',applicability:'unknown',detail:'Check the customer policy.',passageIds:[]},
+ ]})}]});
+ const result=await reviewOAuthSetup(facts(),previous().guide.input,[document],{ANTHROPIC_API_KEY:'fixture',ANTHROPIC_MODEL:'fixture'},new AbortController().signal,net);
+ assert.equal(result.telemetry.outcome,'accepted');
+ assert.equal(result.review!.approvals[0].evidence.length,4);
+ ids.push('s1-p9999');
+ const rejected=await reviewOAuthSetup(facts(),previous().guide.input,[document],{ANTHROPIC_API_KEY:'fixture',ANTHROPIC_MODEL:'fixture'},new AbortController().signal,net);
+ assert.equal(rejected.telemetry.outcome,'validation-rejected');
+ assert.equal(rejected.review,undefined);
+});
+
+const yaml='openapi: 3.1.0\ninfo:\n  title: Acme OAuth\n  version: 1\n  description: Create an OAuth application in the developer console before customer authorization.\nexternalDocs:\n  url: https://developer.acme.com/docs/app-review\nservers:\n  - url: https://auth.acme.com\npaths:\n  /oauth/token:\n    post:\n      summary: Exchange an authorization code\n      description: Use client credentials and the callback code to obtain the user token.\n      parameters:\n        - name: grant_type\n          in: query\n          required: true\n          schema:\n            type: string\n            enum: [authorization_code]\n      responses:\n        "200":\n          description: Returns the user access token.\n';
+test('public YAML schemas retain registration descriptions, operation fields and documentation links',async()=>{
+ const fetcher:typeof fetch=async input=>String(input).includes('dns-query')?Response.json({Answer:[{type:1,data:'1.1.1.1'}]}):new Response(yaml,{headers:{'Content-Type':'application/x-yaml; charset=utf-8'}});
+ const read=await publicReader(fetcher,new AbortController().signal).read('https://developer.acme.com/openapi/oauth.yaml');
+ const page=parsePage(read.url,read.body);
+ assert.match(page.text,/POST \/oauth\/token/);
+ assert.match(page.text,/grant_type/);
+ assert.match(page.text,/Create an OAuth application/);
+ assert.ok(page.links.includes('https://developer.acme.com/docs/app-review'));
+});
+
+test('a short documentation index is followed to OAuth specifications and launch evidence',async()=>{
+ const calls:string[]=[];
+ const fetcher:typeof fetch=async input=>{
+  const address=String(input);
+  if(address.includes('dns-query'))return Response.json({Answer:[{type:1,data:'1.1.1.1'}]});
+  calls.push(address);
+  if(address==='https://developer.acme.com/openapi.yaml')return new Response('<html><title>Available APIs</title><main>Select an API to view its OpenAPI specification. <a href="/openapi/oauth.yaml">Acme OAuth</a></main></html>',{headers:{'Content-Type':'text/html'}});
+  if(address.endsWith('/openapi/oauth.yaml'))return new Response(yaml,{headers:{'Content-Type':'application/x-yaml'}});
+  if(address.endsWith('/docs/app-review'))return new Response('# App review\nProvider review is required before production access. Register a client with an exact redirect URI.',{headers:{'Content-Type':'text/markdown'}});
+  return new Response('Unavailable',{status:404});
+ };
+ const result=await retrieve(normalizeInput({app:'Acme',website:'https://developer.acme.com/openapi.yaml',useCase:'Read item names.',audience:'customers'}),{},()=>{},new AbortController().signal,fetcher,{oauthSetup:true});
+ assert.ok(result.documents.some(d=>d.title==='Acme OAuth'));
+ assert.ok(result.documents.some(d=>d.url.endsWith('/docs/app-review')));
+ assert.ok(!result.documents.some(d=>d.title==='Available APIs'));
+ assert.ok(calls.includes('https://developer.acme.com/openapi/oauth.yaml'));
+});
+
+test('OAuth setup retrieval prioritizes launch policy over unrelated operation and agent references',()=>{
+ const input=normalizeInput({app:'Acme',website:'https://developer.acme.com',useCase:'Read file names. Never administer teams or the workspace.',audience:'customers'});
+ const policy=documentationScore('https://developer.acme.com/docs/marketplace-listing','Listing and review',input,true);
+ const operation=documentationScore('https://developer.acme.com/api-reference/team/resend-verification-emails','Send verification emails',input,true);
+ assert.ok(policy>operation);
+ assert.ok(documentationScore('https://developer.acme.com/guides/mcp/tools-agents','Agent delegation',input,true)<0);
+ assert.ok(documentationScore('https://developer.acme.com/openapi-adminApi.json','Admin API',input,true)<0);
 });
