@@ -47,7 +47,6 @@ export default defineConfig(async ({ command }) => {
 
   return {
     define: Object.fromEntries(Object.entries(releaseMetadata()).map(([key, value]) => ['process.env.' + key, JSON.stringify(value)])),
-    resolve: { alias: [{ find: /^@\/lib\/server\/runtime$/, replacement: fileURLToPath(new URL('./lib/server/runtime.cloudflare.ts', import.meta.url)) }] },
     server: {
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }
@@ -57,6 +56,18 @@ export default defineConfig(async ({ command }) => {
         : {}),
     },
     plugins: [
+      {
+        name: 'oauth-cloudflare-runtime',
+        enforce: 'pre',
+        resolveId(source) {
+          // Vinext resolves tsconfig aliases before this plugin. Match the
+          // resolved server module as well as its original import.
+          const runtime = fileURLToPath(new URL('./lib/server/runtime', import.meta.url));
+          if (source === '@/lib/server/runtime' || source === runtime || source === runtime + '.ts') {
+            return fileURLToPath(new URL('./lib/server/runtime.cloudflare.ts', import.meta.url));
+          }
+        },
+      },
       vinext(),
       sites({ mockAuth: !managedLinux }),
       connectorPreview(),

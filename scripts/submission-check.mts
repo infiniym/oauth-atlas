@@ -26,7 +26,7 @@ for(const input of cases){
  const save=()=>writeFileSync(file,JSON.stringify(record,null,2)+'\n');
  async function stage(next:GuideInput){
   const created=await fetch(origin+'/api/live-guide/jobs',{method:'POST',headers:{origin,'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID()},body:JSON.stringify({input:next}),signal:AbortSignal.timeout(15000)});
-  const data=await created.json();
+  const data=await created.json() as {job:GuideJob;error?:string};
   if(!created.ok)throw new Error(data.error||'Job creation failed.');
   jobs.push({id:data.job.id,input:next});save();
   return monitorJob(data.job,{signal:AbortSignal.timeout(215000),fetcher:(path,init)=>fetch(origin+path,{...init,headers:{...init?.headers,origin}}),onProgress:event=>{events.push(event);save();}});
@@ -42,7 +42,7 @@ for(const input of cases){
   if(job.guide){
    const response=await fetch(origin+'/api/plans/'+job.guide.id,{cache:'no-store'});
    if(response.ok){
-    record.plan=(await response.json()).plan;
+    record.plan=((await response.json()) as {plan:LaunchPlan}).plan;
     record.share=origin+'/plan/'+job.guide.id;
     writeFileSync(directory+'/'+input.app.toLowerCase()+'.md',exportPlan(record.plan!));
    }
@@ -52,7 +52,7 @@ for(const input of cases){
   record.error=error instanceof Error?error.message:'Recorder failed.';
   record.automatedCorePass=false;
   const last=jobs.at(-1);
-  if(last)try{record.job=(await (await fetch(origin+'/api/live-guide/jobs/'+last.id,{signal:AbortSignal.timeout(6000)})).json()).job;}catch{ /* Retain the job URL when readback is unavailable. */ }
+  if(last)try{record.job=((await (await fetch(origin+'/api/live-guide/jobs/'+last.id,{signal:AbortSignal.timeout(6000)})).json()) as {job:GuideJob}).job;}catch{ /* Retain the job URL when readback is unavailable. */ }
  }
  record.elapsedMs=Date.now()-started;save();
  console.log(JSON.stringify({app:input.app,automatedCorePass:record.automatedCorePass,elapsedMs:record.elapsedMs,share:record.share,error:record.error||record.job?.error}));
