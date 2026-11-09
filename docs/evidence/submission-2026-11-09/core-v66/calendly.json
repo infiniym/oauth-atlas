@@ -1,0 +1,1423 @@
+{
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "268ad7f6b8916418b584ebe23e8fb5caae1c6d5b",
+    "guideCodeFingerprint": "05eb3088e12810d1d2e3fc9c80b774eb7074a1a326ab0df6bb77d693bd322a98",
+    "builtAt": "2026-11-09T17:58:44.884Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.66",
+    "runtime": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "configured": true,
+      "storage": "d1"
+    }
+  },
+  "input": {
+    "app": "Calendly",
+    "website": "",
+    "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-09T18:01:08.236Z",
+  "anonymous": true,
+  "jobs": [
+    {
+      "id": "job-554d0104-734d-4dcb-b997-c0c09a379efa",
+      "input": {
+        "app": "Calendly",
+        "website": "",
+        "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+        "audience": "customers"
+      }
+    },
+    {
+      "id": "job-fca5e6b4-c854-420b-bbd1-3f764a55d8de",
+      "input": {
+        "app": "Calendly",
+        "website": "",
+        "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-56d95da3-17de-43cb-b3de-4e6eed3750f4"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Finding the provider",
+      "detail": "Searching for Calendly OAuth documentation.",
+      "status": "working",
+      "at": "2026-11-09T18:01:08.255Z"
+    },
+    {
+      "stage": "Waiting for your choices",
+      "detail": "Continue this saved request to reuse its evidence and confirmed choices.",
+      "status": "done",
+      "at": "2026-11-09T18:01:09.822Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/docs/authentication/creating-an-oauth-app",
+      "status": "working",
+      "at": "2026-11-09T18:01:09.853Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Creating an OAuth app",
+      "status": "done",
+      "at": "2026-11-09T18:01:12.765Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/llms.txt",
+      "status": "working",
+      "at": "2026-11-09T18:01:12.765Z"
+    },
+    {
+      "stage": "Choosing relevant documentation",
+      "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+      "status": "working",
+      "at": "2026-11-09T18:01:13.475Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Calendly | Developer Documentation · documentation index",
+      "status": "done",
+      "at": "2026-11-09T18:01:15.624Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/release-notes/llms.txt",
+      "status": "working",
+      "at": "2026-11-09T18:01:15.624Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read developer.calendly.com/release-notes/llms.txt.",
+      "status": "warning",
+      "at": "2026-11-09T18:01:16.333Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/docs/authentication/scopes.md",
+      "status": "working",
+      "at": "2026-11-09T18:01:16.333Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Authorization Scopes",
+      "status": "done",
+      "at": "2026-11-09T18:01:17.016Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/api-docs/calendly-o-auth/o-auth/get-oauth-authorize.md",
+      "status": "working",
+      "at": "2026-11-09T18:01:17.016Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Get Authorization Code",
+      "status": "done",
+      "at": "2026-11-09T18:01:17.743Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token.md",
+      "status": "working",
+      "at": "2026-11-09T18:01:17.744Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Get Access Token",
+      "status": "done",
+      "at": "2026-11-09T18:01:18.493Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/docs/authentication/refresh-token-rotation-guide.md",
+      "status": "working",
+      "at": "2026-11-09T18:01:18.493Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "How to handle single-use refresh tokens",
+      "status": "done",
+      "at": "2026-11-09T18:01:19.181Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/docs/getting-started/frequently-asked-questions",
+      "status": "working",
+      "at": "2026-11-09T18:01:19.181Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Frequently Asked Questions",
+      "status": "done",
+      "at": "2026-11-09T18:01:20.139Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/docs/authentication/overview.md",
+      "status": "working",
+      "at": "2026-11-09T18:01:20.140Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Authentication",
+      "status": "done",
+      "at": "2026-11-09T18:01:20.845Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/openapi.json",
+      "status": "working",
+      "at": "2026-11-09T18:01:20.845Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Available APIs · documentation index",
+      "status": "done",
+      "at": "2026-11-09T18:01:22.211Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developer.calendly.com/openapi/calendly-oauth.json",
+      "status": "working",
+      "at": "2026-11-09T18:01:22.212Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Calendly OAuth",
+      "status": "done",
+      "at": "2026-11-09T18:01:22.963Z"
+    },
+    {
+      "stage": "Checking setup choices",
+      "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-09T18:01:22.972Z"
+    },
+    {
+      "stage": "Building your guide",
+      "detail": "Requirements are clear. Creating the plan from saved evidence.",
+      "status": "working",
+      "at": "2026-11-09T18:01:25.942Z"
+    },
+    {
+      "stage": "Checking a missing requirement",
+      "detail": "Looking only for missing distribution evidence.",
+      "status": "working",
+      "at": "2026-11-09T18:01:59.242Z"
+    },
+    {
+      "stage": "Finding missing evidence",
+      "detail": "Looking for distribution documentation.",
+      "status": "working",
+      "at": "2026-11-09T18:01:59.244Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "calendly.com/help/calendly-api-overview",
+      "status": "working",
+      "at": "2026-11-09T18:02:00.977Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Calendly API overview | Calendly Help",
+      "status": "done",
+      "at": "2026-11-09T18:02:03.024Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "calendly.com/help/scim-user-provisioning-overview",
+      "status": "working",
+      "at": "2026-11-09T18:02:03.024Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "SCIM user provisioning overview | Calendly Help",
+      "status": "done",
+      "at": "2026-11-09T18:02:04.020Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713",
+      "status": "working",
+      "at": "2026-11-09T18:02:04.020Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Calendly Oauth 2.0 connection -> Need client id, secret etc | Community",
+      "status": "done",
+      "at": "2026-11-09T18:02:08.002Z"
+    },
+    {
+      "stage": "Checking OAuth setup and launch",
+      "detail": "Checking registration, consent and credentials, access boundaries and customer launch prerequisites against official sources.",
+      "status": "working",
+      "at": "2026-11-09T18:02:08.616Z"
+    },
+    {
+      "stage": "OAuth guide unfinished",
+      "detail": "The setup review did not finish. Your completed instructions and sources are saved.",
+      "status": "warning",
+      "at": "2026-11-09T18:02:09.275Z"
+    }
+  ],
+  "manualAudit": "Pending. Automated readiness is insufficient for the evidence-quality gate.",
+  "job": {
+    "id": "job-fca5e6b4-c854-420b-bbd1-3f764a55d8de",
+    "input": {
+      "app": "Calendly",
+      "website": "",
+      "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+      "audience": "customers",
+      "answers": {
+        "provider-identity": "Yes, this is the provider"
+      },
+      "previousId": "lg-56d95da3-17de-43cb-b3de-4e6eed3750f4"
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/docs/authentication/creating-an-oauth-app",
+        "status": "working",
+        "at": "2026-11-09T18:01:09.853Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Creating an OAuth app",
+        "status": "done",
+        "at": "2026-11-09T18:01:12.765Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/llms.txt",
+        "status": "working",
+        "at": "2026-11-09T18:01:12.765Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-09T18:01:13.475Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Calendly | Developer Documentation · documentation index",
+        "status": "done",
+        "at": "2026-11-09T18:01:15.624Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/release-notes/llms.txt",
+        "status": "working",
+        "at": "2026-11-09T18:01:15.624Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read developer.calendly.com/release-notes/llms.txt.",
+        "status": "warning",
+        "at": "2026-11-09T18:01:16.333Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/docs/authentication/scopes.md",
+        "status": "working",
+        "at": "2026-11-09T18:01:16.333Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Authorization Scopes",
+        "status": "done",
+        "at": "2026-11-09T18:01:17.016Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/api-docs/calendly-o-auth/o-auth/get-oauth-authorize.md",
+        "status": "working",
+        "at": "2026-11-09T18:01:17.016Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Get Authorization Code",
+        "status": "done",
+        "at": "2026-11-09T18:01:17.743Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token.md",
+        "status": "working",
+        "at": "2026-11-09T18:01:17.744Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Get Access Token",
+        "status": "done",
+        "at": "2026-11-09T18:01:18.493Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/docs/authentication/refresh-token-rotation-guide.md",
+        "status": "working",
+        "at": "2026-11-09T18:01:18.493Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "How to handle single-use refresh tokens",
+        "status": "done",
+        "at": "2026-11-09T18:01:19.181Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/docs/getting-started/frequently-asked-questions",
+        "status": "working",
+        "at": "2026-11-09T18:01:19.181Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Frequently Asked Questions",
+        "status": "done",
+        "at": "2026-11-09T18:01:20.139Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/docs/authentication/overview.md",
+        "status": "working",
+        "at": "2026-11-09T18:01:20.140Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Authentication",
+        "status": "done",
+        "at": "2026-11-09T18:01:20.845Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/openapi.json",
+        "status": "working",
+        "at": "2026-11-09T18:01:20.845Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Available APIs · documentation index",
+        "status": "done",
+        "at": "2026-11-09T18:01:22.211Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developer.calendly.com/openapi/calendly-oauth.json",
+        "status": "working",
+        "at": "2026-11-09T18:01:22.212Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Calendly OAuth",
+        "status": "done",
+        "at": "2026-11-09T18:01:22.963Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-09T18:01:22.972Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-09T18:01:25.942Z"
+      },
+      {
+        "stage": "Checking a missing requirement",
+        "detail": "Looking only for missing distribution evidence.",
+        "status": "working",
+        "at": "2026-11-09T18:01:59.242Z"
+      },
+      {
+        "stage": "Finding missing evidence",
+        "detail": "Looking for distribution documentation.",
+        "status": "working",
+        "at": "2026-11-09T18:01:59.244Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "calendly.com/help/calendly-api-overview",
+        "status": "working",
+        "at": "2026-11-09T18:02:00.977Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Calendly API overview | Calendly Help",
+        "status": "done",
+        "at": "2026-11-09T18:02:03.024Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "calendly.com/help/scim-user-provisioning-overview",
+        "status": "working",
+        "at": "2026-11-09T18:02:03.024Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "SCIM user provisioning overview | Calendly Help",
+        "status": "done",
+        "at": "2026-11-09T18:02:04.020Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713",
+        "status": "working",
+        "at": "2026-11-09T18:02:04.020Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Calendly Oauth 2.0 connection -> Need client id, secret etc | Community",
+        "status": "done",
+        "at": "2026-11-09T18:02:08.002Z"
+      },
+      {
+        "stage": "Checking OAuth setup and launch",
+        "detail": "Checking registration, consent and credentials, access boundaries and customer launch prerequisites against official sources.",
+        "status": "working",
+        "at": "2026-11-09T18:02:08.616Z"
+      },
+      {
+        "stage": "OAuth guide unfinished",
+        "detail": "The setup review did not finish. Your completed instructions and sources are saved.",
+        "status": "warning",
+        "at": "2026-11-09T18:02:09.275Z"
+      }
+    ],
+    "createdAt": "2026-11-09T18:01:09.836Z",
+    "updatedAt": "2026-11-09T18:02:09.285Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-09T18:01:09.850Z",
+      "finishedAt": "2026-11-09T18:02:09.275Z",
+      "elapsedMs": 59425,
+      "firstActionMs": 59425
+    },
+    "attempts": [
+      {
+        "modelCalls": 5,
+        "inputTokens": 70977,
+        "outputTokens": 5204,
+        "modelMs": 37487
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "list-event-types",
+          "title": "Read the connected person's Calendly event types and show their names",
+          "category": "resource",
+          "operation": "read"
+        },
+        {
+          "id": "authorize-customer-accounts",
+          "title": "Let each customer account authorize individually so the app can act for that connected person",
+          "category": "authorization",
+          "operation": "authorize"
+        }
+      ],
+      "prohibitions": [
+        "Never create bookings",
+        "Never change event types",
+        "Never administer the organization"
+      ],
+      "oauthSupport": "documented",
+      "summary": "Calendly documents OAuth apps using authorization code flow with PKCE for per-user access across multiple accounts. The `event_types:read` scope covers GET /event_types for listing event types and does not include write or organization administration.",
+      "recommendation": "Calendly documents OAuth apps using authorization code flow with PKCE for per-user access across multiple accounts. The `event_types:read` scope covers GET /event_types for listing event types and does not include write or organization administration.",
+      "nextAction": "Register the OAuth app in Calendly Developer tools",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "OAuth with PKCE required for multi-account apps",
+          "detail": "OAuth is required for apps used by multiple accounts; personal access tokens are for a single account. Each user authorizes via the authorization code flow with S256 PKCE, and the server exchanges the code at /oauth/token with the client secret. Access tokens expire after 2 hours; refresh tokens are single-use and rotate.",
+          "appliesWhen": "Customer accounts each authorize the app individually.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s7",
+              "quote": "## App authentication There are two authentication types available based on how you plan to distribute your app: OAuth is required for multiple accounts, while personal access tokens are used"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Create an OAuth app to access Calendly data on behalf of other Calendly users. Then use the OAuth authorization code flow with PKCE to get an access token for each"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Every OAuth app must use Proof Key for Code Exchange (PKCE) with the `S256` method. If the authorization request does not include a code challenge, the request fails. For more"
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "permission",
+          "title": "event_types:read for listing event types",
+          "detail": "The `event_types:read` scope retrieves event type details and provides GET /event_types. It is read-only, so it excludes creating or changing event types and organization administration.",
+          "appliesWhen": "App lists the connected user's event types and shows their names.",
+          "scope": "event_types:read",
+          "evidence": [
+            {
+              "sourceId": "s2",
+              "quote": "| | `event_types:read` | Retrieve event type details and available times. | `GET /event_types` `GET /event_types/{uuid}` `GET /event_type_available_times` `GET /event_type_memberships` |"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "## Choosing Scopes When your app initiates an OAuth flow, it should request the minimum set of scopes needed for your use cases. Overly broad scopes can lead to unnecessary"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "* For newly created OAuth apps and new Personal Access Tokens, no API access is granted until scopes are explicitly requested and approved."
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Register an OAuth app and save credentials",
+          "detail": "Create the OAuth app in Calendly Developer tools with an app name, exactly one redirect URI, and an environment type, then select at least one scope. Sandbox is for development and allows localhost http; Production requires https redirect URIs and is recommended as a separate app for real customer data. The client ID, client secret and webhook signing key are shown only once.",
+          "appliesWhen": "Before the first test authorization.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "3. On the **OAuth apps** tab, select **Create OAuth app**."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "* **Environment type**: select **Sandbox** for development and testing, or **Production** when your app is ready for real users."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "> **Warning** > > Copy all three values and store them securely before you leave this screen. You cannot view the client secret or the webhook signing key again. At"
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "customer-approval",
+          "title": "Each user grants access individually",
+          "detail": "Each customer is redirected to Calendly's authorization page and grants access, and users can decline scopes. The sources do not describe organization-admin approval for this path.",
+          "appliesWhen": "Each customer account connects.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "&code_challenge_method=S256 &code_challenge=CODE_CHALLENGE ``` After the user grants access, Calendly redirects the user to your redirect URI with the authorization code:"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "* Confirm that the user granted all requested scopes (users can decline scopes during install)."
+            }
+          ],
+          "stage": "launch"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Register the OAuth app in Calendly Developer tools",
+          "detail": "Log in to Calendly, open Profile menu > Developer, then the OAuth apps tab > Create OAuth app. Enter an app name (letters, numbers, hyphens, spaces only), exactly one redirect URI and an environment type. Sandbox allows https and http on localhost; Production allows https only. Use a separate Sandbox app for development. Select only event_types:read, then Create. Anyone with a Calendly account can register.",
+          "owner": "developer",
+          "doneWhen": "The OAuth app appears in the OAuth apps tab with the chosen environment, one redirect URI and the event_types:read scope.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "3. On the **OAuth apps** tab, select **Create OAuth app**."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "* **Redirect URI**: the URL where Calendly sends users after they authorize your app. Enter exactly one URI."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "5. Select **Next**. 6. Select the scopes that your app needs. Select at least one scope. Learn more about scopes."
+            }
+          ],
+          "id": "register-app",
+          "dependsOn": [],
+          "actionIds": [
+            "list-event-types",
+            "authorize-customer-accounts"
+          ],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "prepare",
+          "destination": "https://calendly.com/app/developer",
+          "fields": [
+            "App name",
+            "Redirect URI",
+            "Environment type",
+            "Scopes: event_types:read"
+          ]
+        },
+        {
+          "title": "Save client ID, client secret and webhook signing key",
+          "detail": "Calendly shows the client ID, client secret and webhook signing key once after creation. Copy all three into a secrets manager before leaving the screen. They cannot be viewed again. The client secret is used only by your server.",
+          "owner": "developer",
+          "doneWhen": "Client ID and client secret are stored in server-side secret storage and not in client code or logs.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "> **Warning** > > Copy all three values and store them securely before you leave this screen. You cannot view the client secret or the webhook signing key again. At"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "* **Client ID**: your app's identifier. Send it in each OAuth request."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "* **Client secret**: a secret that your server uses to authenticate with Calendly."
+            }
+          ],
+          "id": "save-credentials",
+          "dependsOn": [
+            "register-app"
+          ],
+          "actionIds": [
+            "authorize-customer-accounts"
+          ],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "prepare",
+          "destination": "https://calendly.com/app/developer",
+          "fields": [
+            "Client ID",
+            "Client secret",
+            "Webhook signing key"
+          ]
+        },
+        {
+          "title": "Implement the server callback and PKCE generation",
+          "detail": "Implement an HTTPS callback at the exact registered redirect URI (http://localhost only in Sandbox). Per authorization attempt, generate a CODE_VERIFIER and an S256 CODE_CHALLENGE (SHA-256), and store the verifier server-side keyed to the signed-in app user. The agent can draft this code; the developer implements and deploys it. PKCE is mandatory or the request fails.",
+          "owner": "developer",
+          "doneWhen": "The callback route is reachable at the registered redirect URI and PKCE verifier/challenge generation is unit-tested.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Every OAuth app must use Proof Key for Code Exchange (PKCE) with the `S256` method. If the authorization request does not include a code challenge, the request fails. For more"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "1. Generate a `CODE_VERIFIER`."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "2. Build a `CODE_CHALLENGE` from the verifier with SHA-256."
+            }
+          ],
+          "id": "prepare-callback",
+          "dependsOn": [
+            "register-app"
+          ],
+          "actionIds": [
+            "authorize-customer-accounts"
+          ],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "prepare",
+          "destination": "https://developer.calendly.com/docs/authentication/creating-an-oauth-app",
+          "fields": [
+            "redirect_uri",
+            "code_verifier",
+            "code_challenge",
+            "code_challenge_method=S256"
+          ]
+        },
+        {
+          "title": "Send the connected user to the consent page",
+          "detail": "Redirect the user's browser to the authorization URL; it must be requested in a web browser. Required parameters: client_id, response_type=code, redirect_uri, code_challenge_method=S256, code_challenge. Request only the scope event_types:read (space-separated scopes parameter). The user can decline scopes. The docs do not state state-parameter handling or an account-choice screen. Bind the returned code to your signed-in app user via a stored session/verifier so one person's grant cannot overwrite another's.",
+          "owner": "connected user",
+          "doneWhen": "The browser lands on the redirect URI with ?code=... after the representative user approves.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "``` https://auth.calendly.com/oauth/authorize?client_id=CLIENT_ID&response_type=code&redirect_uri=com.site.app://auth/calendly&code_challenge_method=S256&code_challenge=CODE_CHALLENGE ``` After the user grants access, they will be redirected back to"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "&response_type=code &scope=scheduled_events:read webhooks:write ```"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "Parameter code_challenge in query (string, required): The PKCE code challenge, built from your code verifier with SHA-256. Required for every app. Schema: {\"type\":\"string\"}"
+            }
+          ],
+          "id": "consent-url",
+          "dependsOn": [
+            "prepare-callback",
+            "save-credentials"
+          ],
+          "actionIds": [
+            "authorize-customer-accounts",
+            "list-event-types"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://auth.calendly.com/oauth/authorize",
+            "example": "curl '-G' 'https://auth.calendly.com/oauth/authorize' '--data-urlencode' 'client_id=CLIENT_ID' '--data-urlencode' 'response_type=code' '--data-urlencode' 'redirect_uri=REDIRECT_URI' '--data-urlencode' 'code_challenge_method=S256' '--data-urlencode' 'code_challenge=CODE_CHALLENGE' '--data-urlencode' 'scope=event_types:read'",
+            "responsePath": ""
+          },
+          "stage": "test",
+          "destination": "https://auth.calendly.com/oauth/authorize",
+          "fields": [
+            "client_id",
+            "response_type=code",
+            "redirect_uri",
+            "code_challenge_method=S256",
+            "code_challenge",
+            "scope=event_types:read"
+          ]
+        },
+        {
+          "title": "Validate the callback before exchanging the code",
+          "detail": "On the callback, confirm the request matches an in-progress authorization for the signed-in app user, extract the code query parameter, and load the stored code_verifier for that attempt. Reject callbacks with no matching pending attempt. Do not log the code.",
+          "owner": "developer",
+          "doneWhen": "The callback handler extracts code and finds the matching stored verifier for the user's session.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "&code_challenge_method=S256 &code_challenge=CODE_CHALLENGE ``` After the user grants access, Calendly redirects the user to your redirect URI with the authorization code:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "```http REDIRECT_URI?code=f04281d639d8248435378b0365de7bd1f53bf452eda187d5f1e07ae7f04546d6 ``` ### Exchange the code for an access token"
+            }
+          ],
+          "id": "validate-callback",
+          "dependsOn": [
+            "consent-url"
+          ],
+          "actionIds": [
+            "authorize-customer-accounts"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "test",
+          "destination": "https://developer.calendly.com/docs/authentication/creating-an-oauth-app",
+          "fields": [
+            "code",
+            "code_verifier"
+          ]
+        },
+        {
+          "title": "Exchange the code for tokens on the server",
+          "detail": "Run on your server only. POST to the token endpoint with HTTP Basic auth (client ID as username, client secret as password) and body fields grant_type=authorization_code, code, redirect_uri (same as used for the code), client_id and code_verifier. Store access_token and refresh_token encrypted, keyed to the authorizing user (response owner) and organization. Access tokens last 2 hours; refresh tokens are single-use, so overwrite the stored one on every refresh.",
+          "owner": "developer",
+          "doneWhen": "The response contains access_token, refresh_token, owner and organization, and they are stored encrypted under that user.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Send a POST request to Get Access Token at `https://auth.calendly.com/oauth/token`. Include these parameters:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "If your app runs on a server, also send your client secret. Use HTTP Basic authentication with your client ID as the username and your client secret as the password."
+            },
+            {
+              "sourceId": "s8",
+              "quote": "Note: * Access Tokens expire after 2 hours."
+            }
+          ],
+          "id": "token-exchange",
+          "dependsOn": [
+            "validate-callback"
+          ],
+          "actionIds": [
+            "authorize-customer-accounts"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "POST",
+            "endpoint": "https://auth.calendly.com/oauth/token",
+            "example": "curl '-X' 'POST' 'https://auth.calendly.com/oauth/token' '-u' 'CLIENT_ID:CLIENT_SECRET' '-H' 'Content-Type: application/x-www-form-urlencoded' '--data-urlencode' 'grant_type=authorization_code' '--data-urlencode' 'code=AUTHORIZATION_CODE' '--data-urlencode' 'redirect_uri=REDIRECT_URI' '--data-urlencode' 'client_id=CLIENT_ID' '--data-urlencode' 'code_verifier=CODE_VERIFIER'",
+            "responsePath": "$.access_token"
+          },
+          "stage": "test",
+          "destination": "https://auth.calendly.com/oauth/token",
+          "fields": [
+            "grant_type=authorization_code",
+            "code",
+            "redirect_uri",
+            "client_id",
+            "code_verifier"
+          ]
+        },
+        {
+          "title": "Test with a representative account",
+          "detail": "Authorize with a Sandbox app and a representative Calendly account, then confirm only event_types:read is granted. Run two refresh cycles: use refresh token R1, store R2, confirm R1 is rejected, and use R2 again. Confirm a second test user's grant is stored separately.",
+          "owner": "developer",
+          "doneWhen": "Authorization succeeds, event type names are shown, the old refresh token is rejected and two users hold separate stored grants.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "Go through a token refresh cycle twice in a row. Use refresh token R1 to get a new token (response gives you R2). Any attempt to reuse R1 should be"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Immediately overwrites** the stored refresh token with the new `refresh_token` from every successful `POST /oauth/token` response."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "If your code reuses an old refresh token, the Calendly API will respond with HTTP 400 or 401 and the JSON error `invalid_grant`. This means the token was already used"
+            }
+          ],
+          "id": "test-representative",
+          "dependsOn": [
+            "token-exchange"
+          ],
+          "actionIds": [
+            "authorize-customer-accounts",
+            "list-event-types"
+          ],
+          "testKind": "lifecycle",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "test",
+          "destination": "https://developer.calendly.com/docs/authentication/refresh-token-rotation-guide.md",
+          "fields": [
+            "refresh_token",
+            "invalid_grant"
+          ]
+        },
+        {
+          "title": "Create the Production app and connect real customers",
+          "detail": "When ready for real customer data, create a second OAuth app with Environment type Production, https redirect URIs only, and the same minimal scope. Save its credentials and use them in production. Each customer authorizes individually. The sources do not state a provider review, marketplace listing or organization-admin policy requirement.",
+          "owner": "developer",
+          "doneWhen": "A Production OAuth app exists with an https redirect URI and a real customer completes authorization.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "We recommend that you start with a Sandbox app for development. Create a second app for Production when you are ready to use real customer data."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "| Production | `https` URIs only |"
+            }
+          ],
+          "id": "launch-production",
+          "dependsOn": [
+            "test-representative"
+          ],
+          "actionIds": [
+            "authorize-customer-accounts"
+          ],
+          "testKind": "launch",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "launch",
+          "destination": "https://calendly.com/app/developer",
+          "fields": [
+            "Environment type: Production",
+            "Redirect URI (https)",
+            "Scopes: event_types:read"
+          ]
+        },
+        {
+          "title": "Optional: list the user's event types",
+          "detail": "Representative request using the user's access token. The sources show GET /event_types is covered by event_types:read; the exact base URL and required query parameters are not shown in the supplied excerpts, so confirm in the API reference. Output is a representative response only.",
+          "owner": "developer",
+          "doneWhen": "A representative response lists the user's event types and their names.",
+          "evidence": [
+            {
+              "sourceId": "s2",
+              "quote": "| | `event_types:read` | Retrieve event type details and available times. | `GET /event_types` `GET /event_types/{uuid}` `GET /event_type_available_times` `GET /event_type_memberships` |"
+            },
+            {
+              "sourceId": "s8",
+              "quote": "Response JSON paths for POST /oauth/token: $.organization (string)"
+            }
+          ],
+          "id": "list-event-types-example",
+          "dependsOn": [
+            "token-exchange"
+          ],
+          "actionIds": [
+            "list-event-types"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://api.calendly.com/event_types",
+            "example": "curl '-G' 'https://api.calendly.com/event_types' '-H' 'Authorization: Bearer ACCESS_TOKEN' '--data-urlencode' 'user=USER_URI'",
+            "responsePath": "$.collection[*].name"
+          },
+          "stage": "test",
+          "destination": "https://developer.calendly.com/docs/authentication/scopes",
+          "fields": [
+            "Authorization: Bearer ACCESS_TOKEN",
+            "user"
+          ]
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "7 setup and consent tasks",
+        "assumptions": "Checklist workload estimate. 6 developer tasks, 1 customer consent or admin tasks and 0 agent-preparable drafts. 1 launch preparation tasks are listed separately. Assumes a web app and representative account are available. Elapsed time depends on the existing backend, account access and implementation experience."
+      },
+      "unknowns": [
+        "Whether Calendly requires provider review or marketplace listing before Production apps serve other customers is not stated in the supplied sources.",
+        "Whether organization admins can restrict user authorization is not stated."
+      ],
+      "blockers": [
+        {
+          "title": "Production distribution requirements not stated",
+          "consequence": "launch",
+          "kind": "missing-evidence",
+          "owner": "developer",
+          "resolution": "Ask Calendly developer support whether Production apps serving other customer organizations need provider review, and whether org admins can restrict user authorization.",
+          "stepIds": [
+            "launch-production"
+          ],
+          "resolutionStepIds": []
+        }
+      ],
+      "coverage": [
+        {
+          "action": "Read the connected person's Calendly event types and show their names",
+          "actionId": "list-event-types",
+          "permissions": [
+            "event_types:read"
+          ],
+          "status": "mapped",
+          "reason": "`event_types:read` provides GET /event_types and is read-only.",
+          "evidence": [
+            {
+              "sourceId": "s2",
+              "quote": "| | `event_types:read` | Retrieve event type details and available times. | `GET /event_types` `GET /event_types/{uuid}` `GET /event_type_available_times` `GET /event_type_memberships` |"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "**Read vs Write** * Read scopes allow safe retrieval of data."
+            },
+            {
+              "sourceId": "s2",
+              "quote": "> **Note** > > #### Required scopes: `scheduled_events:read`"
+            }
+          ]
+        },
+        {
+          "action": "Let each customer account authorize individually so the app can act for that connected person",
+          "actionId": "authorize-customer-accounts",
+          "permissions": [],
+          "status": "mapped",
+          "reason": "Setup via the OAuth authorization code flow with PKCE; the user grants the selected scopes and no separate resource scope is documented.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Create an OAuth app to access Calendly data on behalf of other Calendly users. Then use the OAuth authorization code flow with PKCE to get an access token for each"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "3. Redirect the user to Calendly's authorization page in a web browser. Replace `CLIENT_ID`, `REDIRECT_URI`, and `CODE_CHALLENGE` with your values."
+            },
+            {
+              "sourceId": "s7",
+              "quote": "## OAuth 2.1 If you need to provide a way for Calendly members to securely share their Calendly account data with a public application you've built, then use OAuth 2.1."
+            }
+          ]
+        }
+      ],
+      "researchNeeded": [
+        "distribution"
+      ],
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": true,
+      "schemaVersion": 1,
+      "id": "lg-4d5d1aed-2659-4d7b-baf5-9bc74679f6c2",
+      "previousId": "lg-56d95da3-17de-43cb-b3de-4e6eed3750f4",
+      "generatedAt": "2026-11-09T18:02:09.274Z",
+      "input": {
+        "app": "Calendly",
+        "website": "",
+        "useCase": "A web app reads the connected person's Calendly event types and shows their names. Customer accounts authorize individually. Never create bookings, change event types, or administer the organization.",
+        "audience": "customers",
+        "answers": {
+          "provider-identity": "Yes, this is the provider"
+        },
+        "previousId": "lg-56d95da3-17de-43cb-b3de-4e6eed3750f4"
+      },
+      "provider": {
+        "website": "https://developer.calendly.com/docs/authentication/creating-an-oauth-app",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Prepared from official documentation. OAuth setup, approval and permissions are checked separately from resource examples.",
+      "warnings": [
+        "Could not read developer.calendly.com/release-notes/llms.txt.",
+        "Additional evidence was saved, but the follow-up interpretation failed. Earlier findings remain provisional."
+      ],
+      "setupTested": false,
+      "oauthSetup": {
+        "exampleNotes": []
+      },
+      "decisions": [
+        {
+          "id": "provider-identity",
+          "question": "Continue with developer.calendly.com?",
+          "answer": "Yes, this is the provider"
+        }
+      ],
+      "engine": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 5,
+        "elapsedMs": 37487,
+        "inputTokens": 70977,
+        "outputTokens": 5204,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "followupOutcome": "upstream-error",
+        "validationIssues": [],
+        "reviewOutcome": "upstream-error",
+        "provider": "anthropic",
+        "promptVersion": "live-guide.66"
+      },
+      "journey": {
+        "modelCalls": 5,
+        "inputTokens": 70977,
+        "outputTokens": 5204,
+        "modelMs": 37487
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://developer.calendly.com/docs/authentication/creating-an-oauth-app",
+          "title": "Creating an OAuth app",
+          "retrievedAt": "2026-11-09T18:01:22.964Z",
+          "hash": "dc9c4c44c1851c7cfaa4d378732fb09c8749cca7b441f8c49b25f0355ccc18d4",
+          "links": [
+            "https://oauth.net/2/pkce/",
+            "https://developer.calendly.com/docs/getting-started/frequently-asked-questions",
+            "https://developer.calendly.com/docs/authentication/scopes",
+            "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token",
+            "https://developer.calendly.com/llms.txt",
+            "https://calendly.com/app/developer",
+            "https://developer.calendly.com/docs/api-guides/api-use-cases"
+          ]
+        },
+        {
+          "id": "s2",
+          "url": "https://developer.calendly.com/docs/authentication/scopes.md",
+          "title": "Authorization Scopes",
+          "retrievedAt": "2026-11-09T18:01:22.965Z",
+          "hash": "376eb19163c1b0198013bdb5435c1d9f5e24ba761a73ddd3079e4431230b65c2",
+          "links": [
+            "https://developer.calendly.com/llms.txt"
+          ]
+        },
+        {
+          "id": "s3",
+          "url": "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/get-oauth-authorize.md",
+          "title": "Get Authorization Code",
+          "retrievedAt": "2026-11-09T18:01:22.965Z",
+          "hash": "df07b9a1e5809271c32cd69619a55ca5de27d90eff9b8bcb1354cd0173f040d3",
+          "links": [
+            "https://oauth.net/2/pkce/",
+            "https://developer.calendly.com/llms.txt"
+          ]
+        },
+        {
+          "id": "s4",
+          "url": "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token.md",
+          "title": "Get Access Token",
+          "retrievedAt": "2026-11-09T18:01:22.966Z",
+          "hash": "4ba2cbaf6ea58d1369a7a0af5fc53bc0b7cae9340f41980a8ddc58a5a937efc7",
+          "links": [
+            "https://developer.calendly.com/llms.txt"
+          ]
+        },
+        {
+          "id": "s5",
+          "url": "https://developer.calendly.com/docs/authentication/refresh-token-rotation-guide.md",
+          "title": "How to handle single-use refresh tokens",
+          "retrievedAt": "2026-11-09T18:01:22.966Z",
+          "hash": "a696662d69db7e994a970a6e231a99a241f66fc4af70fff184dfec8399a63534",
+          "links": [
+            "https://developer.calendly.com/llms.txt",
+            "https://calendly.com/help"
+          ]
+        },
+        {
+          "id": "s6",
+          "url": "https://developer.calendly.com/docs/getting-started/frequently-asked-questions",
+          "title": "Frequently Asked Questions",
+          "retrievedAt": "2026-11-09T18:01:22.966Z",
+          "hash": "be5304127a44f96f302a9c56d40de042751a1236aa43ef0547b26135c75fa27a",
+          "links": [
+            "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token",
+            "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-revoke",
+            "https://developer.calendly.com/llms.txt",
+            "https://calendly.com/app/developer?tab=personal_access_tokens"
+          ]
+        },
+        {
+          "id": "s7",
+          "url": "https://developer.calendly.com/docs/authentication/overview.md",
+          "title": "Authentication",
+          "retrievedAt": "2026-11-09T18:01:22.967Z",
+          "hash": "9495aa2a4a75869d93b00f512d940db265f9f3253667bf75d300c73bd2f1ea08",
+          "links": [
+            "https://developer.calendly.com/docs/authentication/creating-an-oauth-app",
+            "https://developer.calendly.com/llms.txt",
+            "https://developer.calendly.com/docs/authentication/how-to-authenticate-with-personal-access-tokens"
+          ]
+        },
+        {
+          "id": "s8",
+          "url": "https://developer.calendly.com/openapi/calendly-oauth.json",
+          "title": "Calendly OAuth",
+          "retrievedAt": "2026-11-09T18:01:22.967Z",
+          "hash": "5e1da6c6a110a4ecc665937b50f467bb41cd87cdf03da342586ed09cb410e83b",
+          "links": [
+            "https://oauth.net/2/pkce/"
+          ]
+        },
+        {
+          "id": "s9",
+          "url": "https://calendly.com/help/calendly-api-overview",
+          "title": "Calendly API overview | Calendly Help",
+          "retrievedAt": "2026-11-09T18:02:08.004Z",
+          "hash": "a441a06ea3edd103322c3cd87685a2bebad9f5f1d33f4d6dfe2222d7448ab4fc",
+          "links": [
+            "https://developer.calendly.com/getting-started",
+            "https://calendly.com/help/user-roles-and-permissions",
+            "https://calendly.com/help/calendly-api-overview",
+            "https://calendly.com/fr/help/calendly-api-overview",
+            "https://calendly.com/es/help/calendly-api-overview",
+            "https://calendly.com/de/help/calendly-api-overview",
+            "https://calendly.com/pt/help/calendly-api-overview",
+            "https://developer.calendly.com/",
+            "https://community.calendly.com/developer-community-60",
+            "https://developer.calendly.com/docs/authentication/how-to-authenticate-with-personal-access-tokens?utm_source=chatgpt.com"
+          ]
+        },
+        {
+          "id": "s10",
+          "url": "https://calendly.com/help/scim-user-provisioning-overview",
+          "title": "SCIM user provisioning overview | Calendly Help",
+          "retrievedAt": "2026-11-09T18:02:08.009Z",
+          "hash": "7e69eb67b4c44c6b0e5f279acb0ac0d2f78fdaf2b81d7c59c02449f6e370c53d",
+          "links": [
+            "https://calendly.com/help/user-roles-and-permissions",
+            "https://developer.calendly.com/"
+          ]
+        },
+        {
+          "id": "s11",
+          "url": "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713",
+          "title": "Calendly Oauth 2.0 connection -> Need client id, secret etc | Community",
+          "retrievedAt": "2026-11-09T18:02:08.013Z",
+          "hash": "64d2bcfdfbce1d0e197b4a0e794bd32ff2246f40f7a080b270f107d4778a1097",
+          "links": [
+            "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713",
+            "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713?sort=mostRecentFirst",
+            "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713?sort=mostLiked",
+            "https://developer.calendly.com/getting-started",
+            "https://marketplace.zoho.com/app/crm/calendly-zoho-crm-sync",
+            "https://community.calendly.com/developer-community-60",
+            "https://community.calendly.com/developer-faq-62"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "Calendly",
+        "docsUrl": "https://docs.composio.dev/toolkits/calendly",
+        "message": "Calendly appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "resultState": "research-failure",
+      "researchMetrics": {
+        "navigationCalls": 1
+      }
+    },
+    "error": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation.",
+    "failure": {
+      "category": "planning",
+      "message": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation."
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://developer.calendly.com/docs/authentication/creating-an-oauth-app",
+        "title": "Creating an OAuth app",
+        "retrievedAt": "2026-11-09T18:01:22.964Z",
+        "hash": "dc9c4c44c1851c7cfaa4d378732fb09c8749cca7b441f8c49b25f0355ccc18d4",
+        "links": [
+          "https://oauth.net/2/pkce/",
+          "https://developer.calendly.com/docs/getting-started/frequently-asked-questions",
+          "https://developer.calendly.com/docs/authentication/scopes",
+          "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token",
+          "https://developer.calendly.com/llms.txt",
+          "https://calendly.com/app/developer",
+          "https://developer.calendly.com/docs/api-guides/api-use-cases"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://developer.calendly.com/docs/authentication/scopes.md",
+        "title": "Authorization Scopes",
+        "retrievedAt": "2026-11-09T18:01:22.965Z",
+        "hash": "376eb19163c1b0198013bdb5435c1d9f5e24ba761a73ddd3079e4431230b65c2",
+        "links": [
+          "https://developer.calendly.com/llms.txt"
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/get-oauth-authorize.md",
+        "title": "Get Authorization Code",
+        "retrievedAt": "2026-11-09T18:01:22.965Z",
+        "hash": "df07b9a1e5809271c32cd69619a55ca5de27d90eff9b8bcb1354cd0173f040d3",
+        "links": [
+          "https://oauth.net/2/pkce/",
+          "https://developer.calendly.com/llms.txt"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token.md",
+        "title": "Get Access Token",
+        "retrievedAt": "2026-11-09T18:01:22.966Z",
+        "hash": "4ba2cbaf6ea58d1369a7a0af5fc53bc0b7cae9340f41980a8ddc58a5a937efc7",
+        "links": [
+          "https://developer.calendly.com/llms.txt"
+        ]
+      },
+      {
+        "id": "s5",
+        "url": "https://developer.calendly.com/docs/authentication/refresh-token-rotation-guide.md",
+        "title": "How to handle single-use refresh tokens",
+        "retrievedAt": "2026-11-09T18:01:22.966Z",
+        "hash": "a696662d69db7e994a970a6e231a99a241f66fc4af70fff184dfec8399a63534",
+        "links": [
+          "https://developer.calendly.com/llms.txt",
+          "https://calendly.com/help"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://developer.calendly.com/docs/getting-started/frequently-asked-questions",
+        "title": "Frequently Asked Questions",
+        "retrievedAt": "2026-11-09T18:01:22.966Z",
+        "hash": "be5304127a44f96f302a9c56d40de042751a1236aa43ef0547b26135c75fa27a",
+        "links": [
+          "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-refresh-token",
+          "https://developer.calendly.com/api-docs/calendly-o-auth/o-auth/post-oauth-revoke",
+          "https://developer.calendly.com/llms.txt",
+          "https://calendly.com/app/developer?tab=personal_access_tokens"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://developer.calendly.com/docs/authentication/overview.md",
+        "title": "Authentication",
+        "retrievedAt": "2026-11-09T18:01:22.967Z",
+        "hash": "9495aa2a4a75869d93b00f512d940db265f9f3253667bf75d300c73bd2f1ea08",
+        "links": [
+          "https://developer.calendly.com/docs/authentication/creating-an-oauth-app",
+          "https://developer.calendly.com/llms.txt",
+          "https://developer.calendly.com/docs/authentication/how-to-authenticate-with-personal-access-tokens"
+        ]
+      },
+      {
+        "id": "s8",
+        "url": "https://developer.calendly.com/openapi/calendly-oauth.json",
+        "title": "Calendly OAuth",
+        "retrievedAt": "2026-11-09T18:01:22.967Z",
+        "hash": "5e1da6c6a110a4ecc665937b50f467bb41cd87cdf03da342586ed09cb410e83b",
+        "links": [
+          "https://oauth.net/2/pkce/"
+        ]
+      },
+      {
+        "id": "s9",
+        "url": "https://calendly.com/help/calendly-api-overview",
+        "title": "Calendly API overview | Calendly Help",
+        "retrievedAt": "2026-11-09T18:02:08.004Z",
+        "hash": "a441a06ea3edd103322c3cd87685a2bebad9f5f1d33f4d6dfe2222d7448ab4fc",
+        "links": [
+          "https://developer.calendly.com/getting-started",
+          "https://calendly.com/help/user-roles-and-permissions",
+          "https://calendly.com/help/calendly-api-overview",
+          "https://calendly.com/fr/help/calendly-api-overview",
+          "https://calendly.com/es/help/calendly-api-overview",
+          "https://calendly.com/de/help/calendly-api-overview",
+          "https://calendly.com/pt/help/calendly-api-overview",
+          "https://developer.calendly.com/",
+          "https://community.calendly.com/developer-community-60",
+          "https://developer.calendly.com/docs/authentication/how-to-authenticate-with-personal-access-tokens?utm_source=chatgpt.com"
+        ]
+      },
+      {
+        "id": "s10",
+        "url": "https://calendly.com/help/scim-user-provisioning-overview",
+        "title": "SCIM user provisioning overview | Calendly Help",
+        "retrievedAt": "2026-11-09T18:02:08.009Z",
+        "hash": "7e69eb67b4c44c6b0e5f279acb0ac0d2f78fdaf2b81d7c59c02449f6e370c53d",
+        "links": [
+          "https://calendly.com/help/user-roles-and-permissions",
+          "https://developer.calendly.com/"
+        ]
+      },
+      {
+        "id": "s11",
+        "url": "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713",
+        "title": "Calendly Oauth 2.0 connection -> Need client id, secret etc | Community",
+        "retrievedAt": "2026-11-09T18:02:08.013Z",
+        "hash": "64d2bcfdfbce1d0e197b4a0e794bd32ff2246f40f7a080b270f107d4778a1097",
+        "links": [
+          "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713",
+          "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713?sort=mostRecentFirst",
+          "https://community.calendly.com/api-webhook-help-61/calendly-oauth-2-0-connection-need-client-id-secret-etc-713?sort=mostLiked",
+          "https://developer.calendly.com/getting-started",
+          "https://marketplace.zoho.com/app/crm/calendly-zoho-crm-sync",
+          "https://community.calendly.com/developer-community-60",
+          "https://community.calendly.com/developer-faq-62"
+        ]
+      }
+    ]
+  },
+  "automatedCorePass": false,
+  "elapsedMs": 61068
+}

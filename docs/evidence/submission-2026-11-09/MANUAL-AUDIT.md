@@ -1,5 +1,7 @@
 # Manual source audit
 
+Historical v65 audit. The candidate subsequently authorized focused core repair. See the [latest v66 audit and v67 recovery evidence](MANUAL-AUDIT-v66.md) for the current state; the failed attempts below remain preserved.
+
 The declared inputs were fixed before new investigation. This audit reads the saved guide instructions and the retrieved official snapshots from their stored runs. The citation-match receipts record source URLs, content hashes and exact passage checks. Matching a quotation establishes its presence in the snapshot. The observations below assess the actual instructions and their applicability.
 
 All three required live cases remain incomplete. No partial guide or successful HTTP response is counted as a usable-guide pass. Source implementation is `6114d53ec2e575e578705d29be149d16ab6bd60e`, prompt `live-guide.65`, model `claude-sonnet-5-5`.

@@ -4,7 +4,7 @@ A desktop guide from an integration idea to OAuth setup and approval.
 
 [Project repository](https://github.com/infiniym/oauth-atlas/tree/codex/submission-readiness) · [Acceptance evidence](https://github.com/infiniym/oauth-atlas/blob/codex/submission-readiness/docs/evaluations/SUBMISSION-2026-11-09.md)
 
-Candidate for review. Public Vercel deployment is pending, and live-guide acceptance is incomplete.
+Candidate for review. Live-guide acceptance and public Vercel deployment remain pending.
 
 ## Start with the feature
 
@@ -27,4 +27,4 @@ Choose Gmail with reading and drafts, then edit to send-only. Compare the permis
 
 ## Scope and current limits
 
-The focused slice covers OAuth setup and approval. Resource API examples are supplementary and labeled as illustrative. Missing essential evidence blocks live-guide readiness. The current Notion, Dropbox and Calendly checks remain incomplete. Automated tests and both production builds pass. Public deployment and the final desktop walkthrough remain pending. Detailed outcomes and retained failures are in the repository.
+The focused slice covers OAuth setup and approval. Resource API examples are supplementary and labeled as illustrative. Missing essential evidence blocks readiness. The current Notion, Dropbox and Calendly checks remain incomplete; further live verification awaits model-account quota. All 378 tests, typecheck and both production builds pass in a clean checkout. Public Vercel deployment and the final desktop walkthrough remain pending. Detailed outcomes and retained failures are in the repository.

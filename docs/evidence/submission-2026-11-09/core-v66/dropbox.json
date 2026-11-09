@@ -1,0 +1,102 @@
+{
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "268ad7f6b8916418b584ebe23e8fb5caae1c6d5b",
+    "guideCodeFingerprint": "05eb3088e12810d1d2e3fc9c80b774eb7074a1a326ab0df6bb77d693bd322a98",
+    "builtAt": "2026-11-09T17:58:44.884Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.66",
+    "runtime": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "configured": true,
+      "storage": "d1"
+    }
+  },
+  "input": {
+    "app": "Dropbox",
+    "website": "https://www.dropbox.com/developers",
+    "useCase": "A web app lists file and folder names inside each customer's Dropbox App Folder. Metadata only. Never download or change files or use team administration.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-09T18:00:52.167Z",
+  "anonymous": true,
+  "jobs": [
+    {
+      "id": "job-7739b03c-3e76-4504-8c7a-90804566ce21",
+      "input": {
+        "app": "Dropbox",
+        "website": "https://www.dropbox.com/developers",
+        "useCase": "A web app lists file and folder names inside each customer's Dropbox App Folder. Metadata only. Never download or change files or use team administration.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "www.dropbox.com/developers",
+      "status": "working",
+      "at": "2026-11-09T18:00:52.268Z"
+    },
+    {
+      "stage": "Retrying source",
+      "detail": "A temporary network failure interrupted www.dropbox.com. Retrying that same address once.",
+      "status": "working",
+      "at": "2026-11-09T18:01:00.220Z"
+    },
+    {
+      "stage": "Source unavailable",
+      "detail": "Could not read www.dropbox.com/developers.",
+      "status": "warning",
+      "at": "2026-11-09T18:01:08.225Z"
+    }
+  ],
+  "manualAudit": "Pending. Automated readiness is insufficient for the evidence-quality gate.",
+  "job": {
+    "id": "job-7739b03c-3e76-4504-8c7a-90804566ce21",
+    "input": {
+      "app": "Dropbox",
+      "website": "https://www.dropbox.com/developers",
+      "useCase": "A web app lists file and folder names inside each customer's Dropbox App Folder. Metadata only. Never download or change files or use team administration.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "www.dropbox.com/developers",
+        "status": "working",
+        "at": "2026-11-09T18:00:52.268Z"
+      },
+      {
+        "stage": "Retrying source",
+        "detail": "A temporary network failure interrupted www.dropbox.com. Retrying that same address once.",
+        "status": "working",
+        "at": "2026-11-09T18:01:00.220Z"
+      },
+      {
+        "stage": "Source unavailable",
+        "detail": "Could not read www.dropbox.com/developers.",
+        "status": "warning",
+        "at": "2026-11-09T18:01:08.225Z"
+      }
+    ],
+    "createdAt": "2026-11-09T18:00:52.195Z",
+    "updatedAt": "2026-11-09T18:01:08.228Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-09T18:00:52.267Z"
+    },
+    "failure": {
+      "category": "source-unavailable",
+      "message": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+      "url": "https://www.dropbox.com/developers"
+    },
+    "error": "No readable documentation was found. Try a direct public API-reference or Markdown page.",
+    "savedSources": []
+  },
+  "automatedCorePass": false,
+  "elapsedMs": 16068
+}

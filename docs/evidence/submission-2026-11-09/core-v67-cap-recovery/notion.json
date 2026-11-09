@@ -1,0 +1,1168 @@
+{
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "b67430b9ed94ce5b5c152d5d4a566d203348b041",
+    "guideCodeFingerprint": "f124e96dbad6581025b9d57e18236ccc03dcc925f1844e5df6554cf487f860b4",
+    "builtAt": "2026-11-09T19:33:08.443Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.67",
+    "runtime": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "configured": true,
+      "storage": "d1"
+    }
+  },
+  "input": {
+    "app": "Notion",
+    "website": "https://developers.notion.com/guides/get-started/authorization",
+    "useCase": "A web app reads titles and content of pages each customer explicitly shares with the integration. Read only. Never create or modify pages or administer the workspace.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-09T19:34:34.216Z",
+  "anonymous": true,
+  "jobs": [
+    {
+      "id": "job-9c7e859b-1bc8-4bb0-9d2a-fab0ab1e4dee",
+      "input": {
+        "app": "Notion",
+        "website": "https://developers.notion.com/guides/get-started/authorization",
+        "useCase": "A web app reads titles and content of pages each customer explicitly shares with the integration. Read only. Never create or modify pages or administer the workspace.",
+        "audience": "customers",
+        "answers": {}
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Building your guide",
+      "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-09T19:34:34.289Z"
+    },
+    {
+      "stage": "Checking OAuth setup and launch",
+      "detail": "Checking registration, consent and credentials, access boundaries and customer launch prerequisites against official sources.",
+      "status": "working",
+      "at": "2026-11-09T19:34:34.294Z"
+    }
+  ],
+  "manualAudit": "Pending. Automated readiness is insufficient for the evidence-quality gate.",
+  "repairedFrom": "job-9c7e859b-1bc8-4bb0-9d2a-fab0ab1e4dee",
+  "job": {
+    "id": "job-9c7e859b-1bc8-4bb0-9d2a-fab0ab1e4dee",
+    "input": {
+      "app": "Notion",
+      "website": "https://developers.notion.com/guides/get-started/authorization",
+      "useCase": "A web app reads titles and content of pages each customer explicitly shares with the integration. Read only. Never create or modify pages or administer the workspace.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/get-started/authorization",
+        "status": "working",
+        "at": "2026-11-09T18:00:52.212Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Authorization",
+        "status": "done",
+        "at": "2026-11-09T18:00:53.531Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/llms.txt",
+        "status": "working",
+        "at": "2026-11-09T18:00:53.531Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-09T18:00:53.673Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion Docs · documentation index",
+        "status": "done",
+        "at": "2026-11-09T18:00:56.686Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview.md",
+        "status": "working",
+        "at": "2026-11-09T18:00:56.686Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "OAuth integrations",
+        "status": "done",
+        "at": "2026-11-09T18:00:57.054Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/connections-and-tokens/public-integrations/overview.md",
+        "status": "working",
+        "at": "2026-11-09T18:00:57.055Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Public integrations",
+        "status": "done",
+        "at": "2026-11-09T18:00:57.232Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/capabilities.md",
+        "status": "working",
+        "at": "2026-11-09T18:00:57.232Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Connection capabilities",
+        "status": "done",
+        "at": "2026-11-09T18:00:57.634Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/authentication.md",
+        "status": "working",
+        "at": "2026-11-09T18:00:57.634Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Authentication",
+        "status": "done",
+        "at": "2026-11-09T18:00:58.021Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+        "status": "working",
+        "at": "2026-11-09T18:00:58.021Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "List on the Marketplace",
+        "status": "done",
+        "at": "2026-11-09T18:00:58.226Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+        "status": "working",
+        "at": "2026-11-09T18:00:58.226Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Set up content for users",
+        "status": "done",
+        "at": "2026-11-09T18:00:58.405Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/authorization/credential-security.md",
+        "status": "working",
+        "at": "2026-11-09T18:00:58.406Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Secure API credentials",
+        "status": "done",
+        "at": "2026-11-09T18:00:58.894Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-09T18:00:58.911Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-09T18:01:04.271Z"
+      },
+      {
+        "stage": "Checking OAuth setup and launch",
+        "detail": "Checking registration, consent and credentials, access boundaries and customer launch prerequisites against official sources.",
+        "status": "working",
+        "at": "2026-11-09T18:01:46.624Z"
+      },
+      {
+        "stage": "OAuth guide unfinished",
+        "detail": "The setup review did not finish. Your completed instructions and sources are saved.",
+        "status": "warning",
+        "at": "2026-11-09T18:01:56.399Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-09T19:34:34.289Z"
+      },
+      {
+        "stage": "Checking OAuth setup and launch",
+        "detail": "Checking registration, consent and credentials, access boundaries and customer launch prerequisites against official sources.",
+        "status": "working",
+        "at": "2026-11-09T19:34:34.294Z"
+      }
+    ],
+    "createdAt": "2026-11-09T18:00:52.177Z",
+    "updatedAt": "2026-11-09T19:34:34.777Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-09T19:34:34.275Z"
+    },
+    "attempts": [
+      {
+        "modelCalls": 4,
+        "inputTokens": 111970,
+        "outputTokens": 6446,
+        "modelMs": 57471
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "read-page-titles",
+          "title": "Read titles of pages customers share with the integration",
+          "category": "resource",
+          "operation": "read"
+        },
+        {
+          "id": "read-page-content",
+          "title": "Read content of pages customers share with the integration",
+          "category": "resource",
+          "operation": "read"
+        },
+        {
+          "id": "authorize-customer-workspaces",
+          "title": "Let each customer workspace authorize and connect the integration",
+          "category": "authorization",
+          "operation": "authorize"
+        }
+      ],
+      "prohibitions": [
+        "Never create pages",
+        "Never modify pages",
+        "Never administer the workspace"
+      ],
+      "oauthSupport": "documented",
+      "summary": "Notion supports per-user OAuth for public integrations that any customer workspace can install; each user picks the pages to share. Read access uses the 'Read content' capability, with no insert or update capabilities requested.",
+      "recommendation": "Notion supports per-user OAuth for public integrations that any customer workspace can install; each user picks the pages to share. Read access uses the 'Read content' capability, with no insert or update capabilities requested.",
+      "nextAction": "Create a public OAuth connection in the Developer portal",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "OAuth flow with per-user page picker",
+          "detail": "Users go to the authorization URL, choose pages in the page picker, and Notion redirects with a code. The app exchanges the code for an access_token and refresh_token at the token endpoint. Each user must authorize individually. Authorization can start once client credentials and a redirect URI are configured; Marketplace review is not required.",
+          "appliesWhen": "Customer workspaces connect the integration",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Both scoped OAuth integrations and public integrations use this flow. You can start authorization as soon as you configure the integration’s client credentials and redirect URI; Marketplace submission or review"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "**Step 2** After the user selects which workspace pages to share, Notion redirects the user to the connection’s redirect URI and includes a `code` query parameter. The redirect URI is"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "> [!NOTE] > > After a user authorizes an OAuth integration, only that user is able to interact or share pages and databases with the connection. Unlike internal connections, if"
+            }
+          ],
+          "stage": "test"
+        },
+        {
+          "kind": "permission",
+          "title": "Read content capability",
+          "detail": "Read content lets a connection read existing content, so it covers reading page titles and content. Choose it without Update or Insert content capabilities, which keeps the integration read-only. Access is limited to shared pages and their children.",
+          "appliesWhen": "Reading titles and content of shared pages",
+          "scope": "Read content",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "> > When a connection receives access to a Notion page or database, it can read and write to both that resource and its children."
+            },
+            {
+              "sourceId": "s4",
+              "quote": "* If your connection is reading data to export it out of Notion, your connection will only need **Read content** capabilities."
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Public integration with Any workspace scope",
+          "detail": "Selected-workspace integrations can be installed only in the chosen workspaces. Serving arbitrary customer workspaces requires a public integration with 'Any workspace' scope. The scope cannot be changed after creation. Register a redirect URI and obtain the client ID and secret in the Developer portal.",
+          "appliesWhen": "Other customer organizations connect",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s2",
+              "quote": "## Installation scope Choose **Or select 1 or more workspaces** when creating your integration. Only those workspaces can install it, and it cannot be listed on the Marketplace. To make"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Fill out the form with your connection details, including your redirect URI(s) under the OAuth configuration section and the connection's installation scope — either **Any workspace** or **Or select 1"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "Open the **Configuration** tab to find your **OAuth client ID** and **OAuth client secret**. Use them to implement the OAuth authorization flow."
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "provider-review",
+          "title": "Marketplace listing is optional and reviewed separately",
+          "detail": "Public connections work through the OAuth flow without a Marketplace listing. A listing requires Any workspace scope and Notion team review, with a published response of 5-10 business days.",
+          "appliesWhen": "Only if the app is listed on the Marketplace",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s6",
+              "quote": "> > After submission, expect to hear back from our team within 5-10 business days via email. Check the status of your connection submission from the **Listings > Connections** page"
+            },
+            {
+              "sourceId": "s6",
+              "quote": "> > No. Public connections work independently of Marketplace listings. Listing on the Marketplace is optional and helps your connection reach a wider audience, but your connection can be used"
+            },
+            {
+              "sourceId": "s6",
+              "quote": "> [!NOTE] > > Only public connections with an installation scope of **Any workspace** can be listed on the Marketplace. Internal connections and **Selected workspaces only** public connections are not"
+            }
+          ],
+          "stage": "launch"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Create a public OAuth connection in the Developer portal",
+          "detail": "Open the Developer portal at https://app.notion.com/developers/connections (Build > Connections > Create new connection). Enter the connection name, development workspace and redirect URI(s). Choose installation scope 'Any workspace', because customer workspaces must be able to install it; scope cannot be changed after creation. Select only the 'Read content' capability. Do not select Update or Insert content.",
+          "owner": "developer",
+          "doneWhen": "The connection exists with 'Any workspace' scope, a registered redirect URI and only the Read content capability checked.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Fill out the form with your connection details, including your redirect URI(s) under the OAuth configuration section and the connection's installation scope — either **Any workspace** or **Or select 1"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "Select **Create new connection**. Enter the connection name, development workspace, and redirect URIs. Choose **Or select 1 or more workspaces**, select the workspaces, and choose the capabilities your app needs."
+            },
+            {
+              "sourceId": "s4",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            }
+          ],
+          "id": "register-integration",
+          "dependsOn": [],
+          "actionIds": [
+            "read-page-titles",
+            "read-page-content",
+            "authorize-customer-workspaces"
+          ],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "prepare",
+          "destination": "https://app.notion.com/developers/connections",
+          "fields": [
+            "connection name",
+            "development workspace",
+            "redirect URIs",
+            "installation scope",
+            "capabilities"
+          ]
+        },
+        {
+          "title": "Collect client credentials and authorization URL",
+          "detail": "Open the connection's Configuration tab and copy the OAuth client ID, OAuth client secret and authorization URL. Store them in environment variables or a secret manager (e.g. OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, NOTION_AUTH_URL). Never commit them to source code or version control.",
+          "owner": "developer",
+          "doneWhen": "Client ID, client secret and authorization URL are available to the server only through environment variables or a secret manager.",
+          "evidence": [
+            {
+              "sourceId": "s2",
+              "quote": "Open the **Configuration** tab to find your **OAuth client ID** and **OAuth client secret**. Use them to implement the OAuth authorization flow."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "After creating an OAuth integration in the Developer portal, access the connection’s secrets in the **Configuration** tab. Similarly to the internal connections, these values should be protected and should never"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "OAUTH_CLIENT_ID=<your-client-id> OAUTH_CLIENT_SECRET=<your-client-secret> NOTION_AUTH_URL=<your-auth-url> ```"
+            }
+          ],
+          "id": "collect-credentials",
+          "dependsOn": [
+            "register-integration"
+          ],
+          "actionIds": [],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "prepare",
+          "destination": "https://app.notion.com/developers/connections",
+          "fields": [
+            "OAUTH_CLIENT_ID",
+            "OAUTH_CLIENT_SECRET",
+            "NOTION_AUTH_URL"
+          ]
+        },
+        {
+          "title": "Implement the server callback at the redirect URI",
+          "detail": "The agent can draft the handler; the developer implements it. The callback route must match a registered redirect URI. It should read the code and state query parameters, verify state against the value stored for the initiating session (state is optional in the docs but supports CSRF protection), and handle error=access_denied when the user cancels. The docs describe no PKCE or account-choice parameter, so none is required. Keep token exchange server-side.",
+          "owner": "developer",
+          "doneWhen": "The callback route is reachable over HTTPS at the registered URI, parses code, state and error, and rejects a mismatched state.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "**Step 2** After the user selects which workspace pages to share, Notion redirects the user to the connection’s redirect URI and includes a `code` query parameter. The redirect URI is"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "``` www.example.com/my-redirect-uri?error=access_denied&state= ``` You can use this `error`query parameter to conditionally update your app’s state as needed."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "| `state` | If the user was in the middle of an interaction or operation, then this parameter can be used to restore state after the user returns. It can"
+            }
+          ],
+          "id": "prepare-callback",
+          "dependsOn": [
+            "register-integration"
+          ],
+          "actionIds": [
+            "authorize-customer-workspaces"
+          ],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "prepare",
+          "destination": "https://example.com/auth/notion/callback",
+          "fields": [
+            "code",
+            "state",
+            "error"
+          ]
+        },
+        {
+          "title": "Send a representative user to the consent URL",
+          "detail": "Direct a connected user to the authorization URL with client_id, redirect_uri (URL-encoded, matching a registered URI), response_type=code, owner=user, and optionally state. Notion shows the capabilities prompt and a page picker; the user chooses which pages to share. Test with a representative account in a workspace other than the development workspace.",
+          "owner": "connected user",
+          "doneWhen": "The user approves, selects pages, and the browser lands on the callback with a code and the original state; cancelling returns error=access_denied.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "```html HTML theme={null} <a href=\"https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code\">Add to Notion</a>"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "| `client_id` | An identifier for your connection, found in the connection settings. | ✅ |"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "``` www.example.com/my-redirect-uri?error=access_denied&state= ``` You can use this `error`query parameter to conditionally update your app’s state as needed."
+            }
+          ],
+          "id": "consent-url",
+          "dependsOn": [
+            "collect-credentials",
+            "prepare-callback"
+          ],
+          "actionIds": [
+            "authorize-customer-workspaces",
+            "read-page-titles",
+            "read-page-content"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://api.notion.com/v1/oauth/authorize",
+            "example": "curl '-G' 'https://api.notion.com/v1/oauth/authorize' '--data-urlencode' 'owner=user' '--data-urlencode' 'client_id=<OAUTH_CLIENT_ID>' '--data-urlencode' 'redirect_uri=<OAUTH_REDIRECT_URI>' '--data-urlencode' 'response_type=code' '--data-urlencode' 'state=<STATE>'",
+            "responsePath": ""
+          },
+          "stage": "test",
+          "destination": "https://api.notion.com/v1/oauth/authorize",
+          "fields": [
+            "client_id",
+            "redirect_uri",
+            "response_type",
+            "owner",
+            "state"
+          ]
+        },
+        {
+          "title": "Exchange the code for tokens on the server",
+          "detail": "The developer runs a server-side POST to the token endpoint using HTTP Basic auth (base64 of CLIENT_ID:CLIENT_SECRET) and a JSON body with grant_type=authorization_code, code, and redirect_uri (required when supplied in the authorization URL or when multiple redirect URIs are registered). Response includes access_token, refresh_token, bot_id, owner, workspace_id and workspace_name.",
+          "owner": "developer",
+          "doneWhen": "The response contains access_token, refresh_token, bot_id and workspace_id for the authorizing user.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Next, send the `code` as part of a `POST` request to Notion’s token endpoint: https://api.notion.com/v1/oauth/token."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "The request is authorized using HTTP Basic Authentication. The credential is a colon-delimited combination of the connection’s `CLIENT_ID` and `CLIENT_SECRET`, like so:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "| `\"grant_type\"` | `string` | Always use `\"authorization_code\"`. | ✅ |"
+            }
+          ],
+          "id": "token-exchange",
+          "dependsOn": [
+            "consent-url"
+          ],
+          "actionIds": [
+            "authorize-customer-workspaces"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "POST",
+            "endpoint": "https://api.notion.com/v1/oauth/token",
+            "example": "curl '-X' 'POST' 'https://api.notion.com/v1/oauth/token' '-u' '<OAUTH_CLIENT_ID>:<OAUTH_CLIENT_SECRET>' '-H' 'Content-Type: application/json' '-H' 'Accept: application/json' '-d' '{\"grant_type\":\"authorization_code\",\"code\":\"<CODE>\",\"redirect_uri\":\"<OAUTH_REDIRECT_URI>\"}'",
+            "responsePath": "access_token"
+          },
+          "stage": "test",
+          "destination": "https://api.notion.com/v1/oauth/token",
+          "fields": [
+            "grant_type",
+            "code",
+            "redirect_uri"
+          ]
+        },
+        {
+          "title": "Store tokens bound to user and workspace",
+          "detail": "Persist access_token and refresh_token together with bot_id, workspace_id and the owner user from the response, keyed so each user's grant in each workspace is stored separately and one person's authorization never overwrites or is reused by another. Store all returned fields, encrypt tokens at rest, never log them, and replace the pair on re-authorization.",
+          "owner": "developer",
+          "doneWhen": "Two test users in one workspace each have distinct stored token records keyed by user and workspace_id; neither overwrote the other.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Set up a way for your connection to store both the `access_token` and `refresh_token` that it receives. The `access_token` is used to make authorized requests to the Notion API, and"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "* The `bot_id` returned along with your tokens identifies the Notion bot for the authorization. Store the token pair from each successful authorization response. This includes re-authorization of the same"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "> [!NOTE] > > After a user authorizes an OAuth integration, only that user is able to interact or share pages and databases with the connection. Unlike internal connections, if"
+            }
+          ],
+          "id": "store-tokens",
+          "dependsOn": [
+            "token-exchange"
+          ],
+          "actionIds": [
+            "authorize-customer-workspaces"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": [
+            "access_token",
+            "refresh_token",
+            "bot_id",
+            "owner",
+            "workspace_id",
+            "workspace_name"
+          ]
+        },
+        {
+          "title": "Verify the read-only and shared-page boundary",
+          "detail": "With a representative account, confirm only pages the user picked (and their children) are accessible, and that unshared pages are not. Confirm Read content is the only capability, so create, update and workspace administration are not possible; do not attempt prohibited actions against customer data.",
+          "owner": "developer",
+          "doneWhen": "Shared pages are readable, unshared pages are denied, and the connection shows only the Read content capability.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "> > When a connection receives access to a Notion page or database, it can read and write to both that resource and its children."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "> [!NOTE] > > The page picker only displays pages or databases to which a user has full access, because a user needs full access to a resource in order"
+            }
+          ],
+          "id": "test-boundaries",
+          "dependsOn": [
+            "store-tokens"
+          ],
+          "actionIds": [
+            "read-page-titles",
+            "read-page-content"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "test",
+          "destination": "",
+          "fields": []
+        },
+        {
+          "title": "Implement token refresh",
+          "detail": "Send a server-side POST to the token endpoint with Basic auth and grant_type=refresh_token plus the stored refresh_token. A new access_token and new refresh_token are returned; replace both stored values for that same user and workspace.",
+          "owner": "developer",
+          "doneWhen": "A refresh returns a new token pair that replaces the stored pair for the correct user and workspace.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Refreshing an access token will generate a new access token and a new refresh token."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "| `\"grant_type\"` | `string` | Always use `\"refresh_token\"`. | ✅ |"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "| `\"refresh_token\"` | `string` | The `\"refresh_token\"` returned in the Authorization step. | ✅ |"
+            }
+          ],
+          "id": "refresh-lifecycle",
+          "dependsOn": [
+            "store-tokens"
+          ],
+          "actionIds": [],
+          "testKind": "lifecycle",
+          "request": {
+            "method": "POST",
+            "endpoint": "https://api.notion.com/v1/oauth/token",
+            "example": "curl '-X' 'POST' 'https://api.notion.com/v1/oauth/token' '-u' '<OAUTH_CLIENT_ID>:<OAUTH_CLIENT_SECRET>' '-H' 'Content-Type: application/json' '-d' '{\"grant_type\":\"refresh_token\",\"refresh_token\":\"<REFRESH_TOKEN>\"}'",
+            "responsePath": "access_token"
+          },
+          "stage": "test",
+          "destination": "https://api.notion.com/v1/oauth/token",
+          "fields": [
+            "grant_type",
+            "refresh_token"
+          ]
+        },
+        {
+          "title": "Optional: Marketplace listing (separate from launch)",
+          "detail": "Authorization works without any Marketplace submission or review. Listing is optional, requires 'Any workspace' scope and Notion team review (published 5-10 business days; approval not guaranteed). Start from the Marketplace listing dashboard: Listings > Connections > Start a new connection listing. Customer organization admin policies are not described in the supplied sources.",
+          "owner": "developer",
+          "doneWhen": "Either the team decides not to list, or the listing is submitted and its status is visible on Listings > Connections.",
+          "evidence": [
+            {
+              "sourceId": "s6",
+              "quote": "> > No. Public connections work independently of Marketplace listings. Listing on the Marketplace is optional and helps your connection reach a wider audience, but your connection can be used"
+            },
+            {
+              "sourceId": "s6",
+              "quote": "> [!NOTE] > > Only public connections with an installation scope of **Any workspace** can be listed on the Marketplace. Internal connections and **Selected workspaces only** public connections are not"
+            },
+            {
+              "sourceId": "s6",
+              "quote": "> > After submission, expect to hear back from our team within 5-10 business days via email. Check the status of your connection submission from the **Listings > Connections** page"
+            }
+          ],
+          "id": "launch-optional-listing",
+          "dependsOn": [
+            "test-boundaries"
+          ],
+          "actionIds": [],
+          "testKind": "launch",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": "",
+            "responsePath": ""
+          },
+          "stage": "launch",
+          "destination": "https://www.notion.com/integrations/all",
+          "fields": [
+            "listing name",
+            "description",
+            "category",
+            "images",
+            "associated connection"
+          ]
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "8 setup and consent tasks",
+        "assumptions": "Checklist workload estimate. 7 developer tasks, 1 customer consent or admin tasks and 0 agent-preparable drafts. 1 launch preparation tasks are listed separately. Assumes a web app and representative account are available. Elapsed time depends on the existing backend, account access and implementation experience."
+      },
+      "unknowns": [
+        "Whether a customer workspace admin must approve installation is not stated in the supplied sources.",
+        "Whether customers may use a public integration that is not listed on the Marketplace is not stated beyond the OAuth flow working unlisted."
+      ],
+      "blockers": [
+        {
+          "title": "Workspace admin approval policy not documented",
+          "consequence": "launch",
+          "kind": "missing-evidence",
+          "owner": "developer",
+          "resolution": "Ask Notion support or check customer workspace admin settings whether admin approval is required for a public integration, and publish guidance to customers.",
+          "stepIds": [
+            "consent-url"
+          ],
+          "resolutionStepIds": [
+            "launch-optional-listing"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "action": "Read titles of pages customers share with the integration",
+          "actionId": "read-page-titles",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "mapped",
+          "reason": "Read content allows reading existing content; the user's page picker limits it to shared pages.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "**Step 3** The user selects which pages to grant the connection access to using the page picker."
+            },
+            {
+              "sourceId": "s4",
+              "quote": "> > When a connection receives access to a Notion page or database, it can read and write to both that resource and its children."
+            }
+          ]
+        },
+        {
+          "action": "Read content of pages customers share with the integration",
+          "actionId": "read-page-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "mapped",
+          "reason": "Read content covers reading existing content for shared pages and their children, with no write capability.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "* If your connection is reading data to export it out of Notion, your connection will only need **Read content** capabilities."
+            },
+            {
+              "sourceId": "s4",
+              "quote": "> > When a connection receives access to a Notion page or database, it can read and write to both that resource and its children."
+            }
+          ]
+        },
+        {
+          "action": "Let each customer workspace authorize and connect the integration",
+          "actionId": "authorize-customer-workspaces",
+          "permissions": [],
+          "status": "mapped",
+          "reason": "This is the OAuth authorization setup; there is no separate resource scope. Each user authorizes via the page picker.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "**Step 1** Navigate the user to the connection’s authorization URL. This URL is provided in the Developer portal."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "> [!NOTE] > > After a user authorizes an OAuth integration, only that user is able to interact or share pages and databases with the connection. Unlike internal connections, if"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Both scoped OAuth integrations and public integrations use this flow. You can start authorization as soon as you configure the integration’s client credentials and redirect URI; Marketplace submission or review"
+            }
+          ]
+        }
+      ],
+      "researchNeeded": [],
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": false,
+      "schemaVersion": 1,
+      "id": "lg-ee0930ee-c02a-42d7-bd70-3ae1d8aec922",
+      "generatedAt": "2026-11-09T18:01:56.399Z",
+      "input": {
+        "app": "Notion",
+        "website": "https://developers.notion.com/guides/get-started/authorization",
+        "useCase": "A web app reads titles and content of pages each customer explicitly shares with the integration. Read only. Never create or modify pages or administer the workspace.",
+        "audience": "customers",
+        "answers": {}
+      },
+      "provider": {
+        "website": "https://developers.notion.com/guides/get-started/authorization",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Prepared from official documentation. OAuth setup, approval and permissions are checked separately from resource examples.",
+      "warnings": [],
+      "setupTested": false,
+      "oauthSetup": {
+        "exampleNotes": [
+          "Resource example omitted. A step destination is not documented in the supplied sources."
+        ]
+      },
+      "decisions": [],
+      "engine": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 4,
+        "elapsedMs": 57471,
+        "inputTokens": 111970,
+        "outputTokens": 6446,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "The OAuth setup review did not complete. Approval provider-review references an unknown or non-citable passage."
+        ],
+        "reviewOutcome": "validation-rejected",
+        "provider": "anthropic",
+        "promptVersion": "live-guide.66"
+      },
+      "journey": {
+        "modelCalls": 4,
+        "inputTokens": 111970,
+        "outputTokens": 6446,
+        "modelMs": 57471
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "title": "Authorization",
+          "retrievedAt": "2026-11-09T18:00:58.897Z",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+            "https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code",
+            "https://oauth.net/2/",
+            "https://www.oauth.com/oauth2-servers/redirect-uris/",
+            "https://api.notion.com/v1/oauth/token",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://www.notion.com/help/sharing-and-permissions",
+            "https://developers.notion.com/guides/authorization/credential-security.md",
+            "https://developers.notion.com/guides/authorization/overview.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://app.notion.com/developers/connections",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type",
+            "https://www.notion.so/developers",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"
+          ]
+        },
+        {
+          "id": "s2",
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview.md",
+          "title": "OAuth integrations",
+          "retrievedAt": "2026-11-09T18:00:58.900Z",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195",
+          "links": [
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+            "https://www.oauth.com/oauth2-servers/redirect-uris/",
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://app.notion.com/developers/connections"
+          ]
+        },
+        {
+          "id": "s3",
+          "url": "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview.md",
+          "title": "Public integrations",
+          "retrievedAt": "2026-11-09T18:00:58.901Z",
+          "hash": "1736f63d07880e2fdaa5f82526599563a24c4e0c840e459521aa905d356f3364",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+            "https://oauth.net/2/",
+            "https://www.oauth.com/oauth2-servers/redirect-uris/",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview.md",
+            "https://developers.notion.com/guides/connections-and-tokens/overview",
+            "https://app.notion.com/developers/connections"
+          ]
+        },
+        {
+          "id": "s4",
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "title": "Connection capabilities",
+          "retrievedAt": "2026-11-09T18:00:58.902Z",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8",
+          "links": [
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+            "https://app.notion.com/developers/connections"
+          ]
+        },
+        {
+          "id": "s5",
+          "url": "https://developers.notion.com/reference/authentication.md",
+          "title": "Authentication",
+          "retrievedAt": "2026-11-09T18:00:58.903Z",
+          "hash": "cc25d5cb9ec792af732aef07d6863446e368120525a3a3aac69b1dc016bf771e",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md"
+          ]
+        },
+        {
+          "id": "s6",
+          "url": "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+          "title": "List on the Marketplace",
+          "retrievedAt": "2026-11-09T18:00:58.903Z",
+          "hash": "4a6f324817e92073bbaff762fb58b89e5db681e095c34fd5736078139e30f30d",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+            "https://www.notion.com/integrations/all",
+            "https://www.notion.so/profile/connections",
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/index.md",
+            "https://developers.notion.com/guides/connections-and-tokens/overview"
+          ]
+        },
+        {
+          "id": "s7",
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+          "title": "Set up content for users",
+          "retrievedAt": "2026-11-09T18:00:58.904Z",
+          "hash": "80b3c750a684f55daf79cabffaa3b5cd9490c1c00a4ebf68aab64d124c5595e4",
+          "links": [
+            "https://developers.notion.com/guides/authorization/overview",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/data-apis/working-with-views.md",
+            "https://developers.notion.com/guides/data-apis/creating-pages-from-templates.md",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+            "https://developers.notion.com/guides/data-apis/working-with-databases.md"
+          ]
+        },
+        {
+          "id": "s8",
+          "url": "https://developers.notion.com/guides/authorization/credential-security.md",
+          "title": "Secure API credentials",
+          "retrievedAt": "2026-11-09T18:00:58.905Z",
+          "hash": "a51f8d8ce32fa3b47e1c75edfcd4ebc4f108df93c47541e4945ed22cd70ad5e7",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+            "https://www.notion.so/developers/tokens"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "Notion",
+        "docsUrl": "https://docs.composio.dev/toolkits/notion",
+        "message": "Notion appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "resultState": "research-failure",
+      "researchMetrics": {
+        "navigationCalls": 1
+      }
+    },
+    "failure": {
+      "category": "model-service",
+      "serviceCode": "usage-limit",
+      "upstreamStatus": 400,
+      "modelRequests": 1,
+      "message": "Guide generation is unavailable because the configured Anthropic account has reached its API usage cap. Your request, answers and sources are saved. The service owner must restore available API quota before retrying."
+    },
+    "error": "Guide generation is unavailable because the configured Anthropic account has reached its API usage cap. Your request, answers and sources are saved. The service owner must restore available API quota before retrying.",
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://developers.notion.com/guides/authorization/overview.md",
+        "title": "Authorization",
+        "retrievedAt": "2026-11-09T18:00:58.897Z",
+        "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code",
+          "https://oauth.net/2/",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://api.notion.com/v1/oauth/token",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://www.notion.com/help/sharing-and-permissions",
+          "https://developers.notion.com/guides/authorization/credential-security.md",
+          "https://developers.notion.com/guides/authorization/overview.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://app.notion.com/developers/connections",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type",
+          "https://www.notion.so/developers",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview.md",
+        "title": "OAuth integrations",
+        "retrievedAt": "2026-11-09T18:00:58.900Z",
+        "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195",
+        "links": [
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://app.notion.com/developers/connections"
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview.md",
+        "title": "Public integrations",
+        "retrievedAt": "2026-11-09T18:00:58.901Z",
+        "hash": "1736f63d07880e2fdaa5f82526599563a24c4e0c840e459521aa905d356f3364",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+          "https://oauth.net/2/",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview.md",
+          "https://developers.notion.com/guides/connections-and-tokens/overview",
+          "https://app.notion.com/developers/connections"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://developers.notion.com/reference/capabilities.md",
+        "title": "Connection capabilities",
+        "retrievedAt": "2026-11-09T18:00:58.902Z",
+        "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8",
+        "links": [
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+          "https://app.notion.com/developers/connections"
+        ]
+      },
+      {
+        "id": "s5",
+        "url": "https://developers.notion.com/reference/authentication.md",
+        "title": "Authentication",
+        "retrievedAt": "2026-11-09T18:00:58.903Z",
+        "hash": "cc25d5cb9ec792af732aef07d6863446e368120525a3a3aac69b1dc016bf771e",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+        "title": "List on the Marketplace",
+        "retrievedAt": "2026-11-09T18:00:58.903Z",
+        "hash": "4a6f324817e92073bbaff762fb58b89e5db681e095c34fd5736078139e30f30d",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/marketplace-listing.md",
+          "https://www.notion.com/integrations/all",
+          "https://www.notion.so/profile/connections",
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/index.md",
+          "https://developers.notion.com/guides/connections-and-tokens/overview"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/preparing-for-users.md",
+        "title": "Set up content for users",
+        "retrievedAt": "2026-11-09T18:00:58.904Z",
+        "hash": "80b3c750a684f55daf79cabffaa3b5cd9490c1c00a4ebf68aab64d124c5595e4",
+        "links": [
+          "https://developers.notion.com/guides/authorization/overview",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/data-apis/working-with-views.md",
+          "https://developers.notion.com/guides/data-apis/creating-pages-from-templates.md",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+          "https://developers.notion.com/guides/data-apis/working-with-databases.md"
+        ]
+      },
+      {
+        "id": "s8",
+        "url": "https://developers.notion.com/guides/authorization/credential-security.md",
+        "title": "Secure API credentials",
+        "retrievedAt": "2026-11-09T18:00:58.905Z",
+        "hash": "a51f8d8ce32fa3b47e1c75edfcd4ebc4f108df93c47541e4945ed22cd70ad5e7",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+          "https://www.notion.so/developers/tokens"
+        ]
+      }
+    ]
+  },
+  "automatedCorePass": false,
+  "elapsedMs": 599
+}

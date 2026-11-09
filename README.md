@@ -4,7 +4,7 @@ Turn an integration idea into a sourced OAuth setup and approval guide. Start wi
 
 The desktop slice includes reviewed Gmail, Slack and GitHub assessments and live research for unfamiliar providers from a name or ordinary official URL. Saved plans, edits, personal progress, citations and Markdown export use one common guide. The dated 1,694-entry catalog supports discovery.
 
-The candidate source is on [codex/submission-readiness](https://github.com/infiniym/oauth-atlas/tree/codex/submission-readiness). The three fresh live acceptance cases remain incomplete. Vercel account access and final public and desktop verification are pending. The earlier Sites demo contains an older version. [Current acceptance evidence](docs/evaluations/SUBMISSION-2026-11-09.md)
+The candidate source is on [codex/submission-readiness](https://github.com/infiniym/oauth-atlas/tree/codex/submission-readiness). The focused core repair has 378 passing tests and clean local/Vercel production builds. The three live acceptance cases remain incomplete, and the configured Anthropic account has reached its API usage cap. Vercel account access and final public and desktop verification are pending. The earlier Sites demo contains an older version. [Current acceptance evidence](docs/evaluations/SUBMISSION-2026-11-09.md)
 
 ## Run locally
 
@@ -40,7 +40,7 @@ The checked-in Vercel configuration supplies install and build commands. Use an 
 - Compare Slack person/pilot with app/public distribution, then inspect GitHub's selected-repository and Contents read boundary.
 - Enter an unfamiliar app name or official URL. Ask for read-only access to the connected person's data, confirm consequential choices, and inspect registration, authorization, permissions and launch guidance.
 
-Live jobs save sources, confirmed choices and completed planning between stages. Reload reconnects to the saved process. An explicit retry resumes unfinished work. Adding official documentation reopens the affected setup research. Sharing preserves a dated snapshot, while editing creates another version.
+Live jobs save sources, confirmed choices and completed planning between stages. Reload reconnects to the saved process. An explicit retry resumes unfinished work. Credit, account usage-cap and credential failures preserve completed work and identify the owner action needed before retry. A transient starting-page failure can search for another readable page on the same provider's domain, within the existing time budget. Adding official documentation reopens the affected setup research. Sharing preserves a dated snapshot, while editing creates another version.
 
 Resource API examples are supplementary and labeled as illustrative. Invalid examples are omitted with a reason. Missing core registration, authorization, permission or launch evidence prevents setup readiness. Workload guidance counts the documented setup tasks and states assumptions. Published applicable review times are cited, and unpublished durations remain unknown. Developers register apps, implement callbacks, perform consent and obtain approvals.
 

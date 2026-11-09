@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-11-09T19:37:14.968127+00:00",
+  "sourceCommit": "b67430b9ed94ce5b5c152d5d4a566d203348b041",
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "b67430b9ed94ce5b5c152d5d4a566d203348b041",
+    "guideCodeFingerprint": "f124e96dbad6581025b9d57e18236ccc03dcc925f1844e5df6554cf487f860b4",
+    "builtAt": "2026-11-09T19:36:13.570Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.67",
+    "runtime": {
+      "provider": null,
+      "model": null,
+      "configured": false,
+      "storage": "d1"
+    }
+  },
+  "cleanTrackedTree": true,
+  "ownerVariablesAbsent": true,
+  "checks": {
+    "npmCi": true,
+    "tests": 378,
+    "typecheck": true,
+    "localProductionBuild": true,
+    "vercelProductionBuild": true,
+    "fourD1Migrations": true,
+    "keylessReviewedRuntime": true
+  },
+  "commands": [
+    "npm ci",
+    "npm test",
+    "npm run typecheck",
+    "npm run build",
+    "npm run build:vercel",
+    "four documented drizzle migrations into an empty isolated .wrangler/reproduction-core-v67 store",
+    "npm start -- --port 5189 --persist-to .wrangler/reproduction-core-v67"
+  ],
+  "boundary": "Clean detached checkout at b67430b verifies the documented setup without owner variables. Hosted Vercel, Neon HTTP transport and desktop interactions remain unverified."
+}
