@@ -41,14 +41,16 @@ function publicAddress(ip: string): boolean {
     (a === 192 && (b === 0 || b === 168 || b === 2 || (b === 88 && c === 99))) ||
     (a === 198 && (b === 18 || b === 19 || (b === 51 && c === 100))) || (a === 203 && b === 0 && c === 113));
 }
+function transientSourceFailure(error:unknown):boolean{
+  const message=error instanceof Error?error.message:'';
+  return error instanceof TypeError||error instanceof DOMException&&error.name==='TimeoutError'||/HTTP (?:408|425|429|5\d\d)\b|fetch failed|network connection|connection (?:lost|reset)|internal error; reference/i.test(message);
+}
 export function publicReader(fetcher: Fetcher, signal: AbortSignal, onRetry?:(url:string)=>void) {
   const checked = new Set<string>();
   async function transientRetry<T>(url:string,work:()=>Promise<T>):Promise<T>{
     for(let attempt=0;;attempt++)try{return await work();}catch(error){
       signal.throwIfAborted();
-      const message=error instanceof Error?error.message:'';
-      const transient=error instanceof TypeError||error instanceof DOMException&&error.name==='TimeoutError'||/HTTP (?:408|425|429|5\d\d)\b|fetch failed|network connection|connection (?:lost|reset)|internal error; reference/i.test(message);
-      if(attempt||!transient)throw error;
+      if(attempt||!transientSourceFailure(error))throw error;
       onRetry?.(url);
     }
   }
@@ -370,7 +372,7 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
   const refreshed=new Set((options.refresh?options.urls||[]:[]).map(sourceKey));
   const attempted = new Set<string>(previous.filter(d=>!refreshed.has(sourceKey(d.url))).map(d=>sourceKey(d.url))); const pages: Page[] = [];
   const covered=new Set<ResearchTopic>();
-  let selections=0;const selectedTargets=new Set<string>(),selectedSetup=new Set<string>(),selectedRequests=new Set<string>();
+  let selections=0,recoverySearchDone=false;const selectedTargets=new Set<string>(),selectedSetup=new Set<string>(),selectedRequests=new Set<string>();
   const executable=(url:string)=>{
     if(sourceKey(url)===sourceKey(seed))return false;
     const {hostname,pathname}=new URL(url);
@@ -480,6 +482,23 @@ export async function retrieve(input: GuideInput, bindings: Bindings, emit: (eve
     } catch(error) {
       outer.throwIfAborted();failures.push(sourceFailure(error,url)); warnings.push(`Could not read ${new URL(url).hostname}${new URL(url).pathname}.`);
       emit({stage:'Source unavailable',detail:warnings.at(-1)!,status:'warning'});
+      if(!recoverySearchDone&&!previous.length&&!pages.length&&!options.urls?.length&&sourceKey(url)===sourceKey(seed)&&transientSourceFailure(error)&&!signal.aborted){
+        recoverySearchDone=true;
+        emit({stage:'Finding another official source',detail:'The starting page is temporarily unavailable. Searching within the same provider for readable OAuth documentation.',status:'working'});
+        try{
+          const domain=new URL(seed).hostname.replace(/^(?:www|docs|developers?)\./,'');
+          const query=`site:${domain} ${input.app} OAuth app registration review`;
+          let found:string[]=[];
+          if(bindings.LIVE_GUIDE_FIRECRAWL_KEY){const result=await firecrawl('search',{query,limit:4,sources:[{type:'web'}]});found=(result.data?.web||[]).map((item:{url:string})=>item.url);}
+          else{
+            const searchReader=publicReader(fetcher,AbortSignal.any([signal,AbortSignal.timeout(5000)]));
+            const results=await Promise.allSettled(['https://html.duckduckgo.com/html/?q=','https://search.brave.com/search?q='].map(engine=>searchReader.read(engine+encodeURIComponent(query))));
+            found=results.flatMap(result=>result.status==='fulfilled'?parsePage(result.value.url,result.value.body).links:[]).map(link=>new URL(link).searchParams.get('uddg')||link);
+          }
+          const targets=[...new Set(found)].filter(link=>{try{return !!publicUrl(link)&&onProvider(link,seed)&&allowed(link)&&!executable(link)&&!attempted.has(sourceKey(link))&&score(link)>0;}catch{return false;}}).sort((a,b)=>score(b)-score(a)).slice(0,3);
+          queue.unshift(...targets);
+        }catch{warnings.push('The bounded search for another official documentation page was unavailable.');}
+      }
     }
   }
   outer.throwIfAborted();

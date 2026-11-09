@@ -11,6 +11,7 @@ import {nextFromProgress} from '../lib/plan/presentation.ts';
 import {requestExampleParts} from '../lib/live-guide/request-examples.ts';
 import {documentationScore,parsePage,publicReader,retrieve} from '../lib/live-guide/retrieval.ts';
 import {reviewOAuthSetup} from '../lib/live-guide/setup-review.ts';
+import {ModelServiceFailure} from '../lib/live-guide/failures.ts';
 
 const url='https://developer.acme.com/oauth';
 const document:Document={id:'s1',url,title:'OAuth applications',hash:'fixture',retrievedAt:'2026-11-09T00:00:00Z',text:[
@@ -145,11 +146,18 @@ test('review explanation length cannot discard a grounded verdict or clear a neg
 
 test('all approval citations are checked when a policy uses more than three passages',async()=>{
  const ids=passages.filter(p=>p.citable).slice(0,4).map(p=>p.id);
- const net:typeof fetch=async()=>Response.json({stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify({gaps:{registration:'',authorization:'',permissions:'',launch:''},exampleIssue:'',approvals:[
+ const net:typeof fetch=async(_input,init)=>{
+  const schema=JSON.parse(String(init?.body)).output_config.format.schema;
+  const allowed=schema.properties.approvals.items.properties.passageIds.items.enum;
+  assert.ok(allowed.length>0);
+  assert.ok(allowed.every((id:string)=>passages.some(p=>p.id===id&&p.citable)));
+  assert.ok(!allowed.includes('s1-p9999'));
+  return Response.json({stop_reason:'end_turn',content:[{type:'text',text:JSON.stringify({gaps:{registration:'',authorization:'',permissions:'',launch:''},exampleIssue:'',approvals:[
   {kind:'provider-review',applicability:'not-required',detail:'Direct authorization follows the documented path.',passageIds:ids},
   {kind:'marketplace-listing',applicability:'unknown',detail:'Listing policy is unresolved.',passageIds:[]},
   {kind:'customer-admin',applicability:'unknown',detail:'Check the customer policy.',passageIds:[]},
  ]})}]});
+ };
  const result=await reviewOAuthSetup(facts(),previous().guide.input,[document],{ANTHROPIC_API_KEY:'fixture',ANTHROPIC_MODEL:'fixture'},new AbortController().signal,net);
  assert.equal(result.telemetry.outcome,'accepted');
  assert.equal(result.review!.approvals[0].evidence.length,4);
@@ -195,4 +203,50 @@ test('OAuth setup retrieval prioritizes launch policy over unrelated operation a
  assert.ok(policy>operation);
  assert.ok(documentationScore('https://developer.acme.com/guides/mcp/tools-agents','Agent delegation',input,true)<0);
  assert.ok(documentationScore('https://developer.acme.com/openapi-adminApi.json','Admin API',input,true)<0);
+});
+
+test('a temporary starting-page failure searches the same provider without accepting off-provider results',async()=>{
+ const calls:string[]=[];
+ const fetcher:typeof fetch=async input=>{
+  const address=String(input);
+  if(address.includes('dns-query'))return Response.json({Answer:[{type:1,data:'1.1.1.1'}]});
+  calls.push(address);
+  if(address==='https://www.acme.com/developers')throw new TypeError('fetch failed');
+  if(/html.duckduckgo.com|search.brave.com/.test(address))return new Response('<html><a href="https://docs.acme.com/oauth">OAuth setup</a><a href="https://unrelated.example/oauth">OAuth setup</a></html>');
+  if(address==='https://docs.acme.com/oauth')return new Response('# OAuth setup\n'+document.text);
+  assert.fail('Unexpected source '+address);
+ };
+ const result=await retrieve(normalizeInput({app:'Acme',website:'https://www.acme.com/developers',useCase:'Read issue names.',audience:'customers'}),{},()=>{},new AbortController().signal,fetcher,{oauthSetup:true});
+ assert.equal(calls.filter(url=>url==='https://www.acme.com/developers').length,2);
+ assert.ok(result.documents.some(source=>source.url==='https://docs.acme.com/oauth'));
+ assert.ok(result.warnings.some(warning=>warning.includes('www.acme.com/developers')));
+ assert.ok(!calls.some(url=>url.startsWith('https://unrelated.example')));
+});
+
+test('a missing starting page stays recoverable without substituting a different source',async()=>{
+ const calls:string[]=[];
+ const fetcher:typeof fetch=async input=>{
+  const address=String(input);
+  if(address.includes('dns-query'))return Response.json({Answer:[{type:1,data:'1.1.1.1'}]});
+  calls.push(address);return new Response('Not found',{status:404});
+ };
+ await assert.rejects(()=>retrieve(normalizeInput({app:'Acme',website:'https://www.acme.com/missing',useCase:'Read issue names.',audience:'customers'}),{},()=>{},new AbortController().signal,fetcher,{oauthSetup:true}));
+ assert.deepEqual(calls,['https://www.acme.com/missing']);
+});
+
+test('an account usage cap preserves a focused draft and resumes only its unfinished review',async()=>{
+ const old=previous(),net=network();let checkpoint:WorkflowCheckpoint|undefined;
+ const input={...old.guide.input,previousId:old.guide.id},bindings={ANTHROPIC_API_KEY:'fixture',ANTHROPIC_MODEL:'fixture'};
+ await generate(input,bindings,()=>{},new AbortController().signal,net.fetcher,old,{oauthSetup:true,save:async saved=>{checkpoint=structuredClone(saved);}});
+ checkpoint!.setupReview=undefined;
+ const draft=structuredClone(checkpoint!.draft),sources=structuredClone(checkpoint!.research.documents);let calls=0;
+ await assert.rejects(()=>generate(input,bindings,()=>{},new AbortController().signal,async()=>{
+  calls++;return Response.json({error:{type:'invalid_request_error',message:'You have reached your specified API usage limits. You will regain access on 2026-12-01 at 00:00 UTC. secret-fixture'}},{status:400});
+ },old,{oauthSetup:true,checkpoint,save:async saved=>{checkpoint=structuredClone(saved);}}),error=>{
+  assert.ok(error instanceof ModelServiceFailure);assert.equal(error.failure.serviceCode,'usage-limit');assert.equal(error.failure.modelRequests,1);assert.doesNotMatch(error.message,/secret-fixture/);return true;
+ });
+ assert.equal(calls,1);assert.deepEqual(JSON.parse(JSON.stringify(checkpoint!.draft)),JSON.parse(JSON.stringify(draft)));assert.deepEqual(checkpoint!.research.documents,sources);
+ const resumed=network();
+ const result=await generate(input,bindings,()=>{},new AbortController().signal,resumed.fetcher,old,{oauthSetup:true,checkpoint});
+ assert.equal(resumed.calls(),1);assert.equal(guideReadiness(result.guide),'usable-guide');assert.deepEqual(result.documents,sources);
 });
