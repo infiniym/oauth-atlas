@@ -1,0 +1,2189 @@
+{
+  "scope": "All frozen-source/model and review-contract diagnostic controls. These are excluded from the fresh-guide ledger and never replace an initial journey. Original control files remain ignored local traces; this summary excludes model thinking and credentials.",
+  "controls": [
+    {
+      "artifact": "model-comparison-v57-claude-haiku-5-5-forgejo.json",
+      "scope": "Model comparison on identical saved official snapshots, confirmed intent and validated facts. New planning and independent review; no source retrieval, manual endpoint bundle, provider execution, saved guide substitution, HTTP journey or acceptance pass.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e456dca58c521f687b37b53ef83281d040a65009",
+      "guideCodeFingerprint": "7b0025fc376519d431aeb94081b97d8678d295c5854f9342c69a8b52fa71e25f",
+      "model": "claude-haiku-5-5",
+      "case": "forgejo",
+      "elapsedMs": 18821,
+      "readiness": null,
+      "error": null,
+      "planning": {
+        "model": "claude-haiku-5-5",
+        "attempts": 1,
+        "elapsedMs": 15012,
+        "inputTokens": 43980,
+        "outputTokens": 3782,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged."
+        ]
+      },
+      "review": {
+        "model": "claude-haiku-5-5",
+        "attempts": 1,
+        "elapsedMs": 3524,
+        "inputTokens": 39313,
+        "outputTokens": 391,
+        "thinkingTokens": 0,
+        "outcome": "accepted",
+        "thinking": "disabled",
+        "effort": "medium"
+      },
+      "coverage": [
+        {
+          "action": "List repository names visible to the connected person, including pagination",
+          "actionId": "list-visible-repositories",
+          "permissions": [],
+          "status": "unresolved",
+          "reason": "The OAuth grant has no scope boundary and the guide does not establish a read-only enforcement; the boundary check relies only on request logging, which must be stated as a verification of the app's own requests rather than token enforcement, and the grant entry lists no permissions for the unscoped grant; the request pagination instructions also need the documented Link next-link flow with limit preserved, which the next-page step already states, while page 2 step should not restate a second parallel pagination method. Affected steps: list-repos-page-1, list-repos-page-2, list-repos-next-page, boundary-check-read-only.",
+          "evidence": [
+            {
+              "sourceId": "s2",
+              "quote": "## GET /api/v1/repos/search | Search for repositories"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "Parameter private in query (boolean, optional): include private repositories this user has access to (defaults to true) Schema: {\"type\":\"boolean\"}"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Pagination The API supports pagination. The page and limit parameters are used to specify the page number and the number of items per page. As well, the Link header is"
+            }
+          ],
+          "support": "unresolved",
+          "missingFact": "request"
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 14820,
+          "usage": {
+            "input_tokens": 43980,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 3782,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 3412,
+          "usage": {
+            "input_tokens": 39313,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 391,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "hash": "c9f2916c64464b6b5a2a3a1b52cc1b43bfef33b3ed4b148d4f7812da4b931de8"
+        },
+        {
+          "url": "https://v17.next.forgejo.org/swagger.v1.json",
+          "hash": "e4884f0c2470fc61b978bda6a5212fdbdf4dbdd866187c59d90aef6bccd29929"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "hash": "00aadeba086635cedcc17321e9ad8eed2b7940fdad1d83ae5d001679ecfb882a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "hash": "8b18dcccefe5cf12bd6f2d34d54529592e3115f733228531290cc3635c3788bb"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/usage/",
+          "hash": "17951a443e5ee7576cb271cbcb5ce178adb5da04bc2429ce68827cce1a2abaec"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/versions/",
+          "hash": "00b424f9b466e020eeabe3486c9c6c520382693b2c27942f482d95c9450890a6"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "hash": "853f77717f88dee37f1b53fb7e15870af803853ce113ebf2fa372721a2a81e46"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "hash": "304e115c3ab4b231ca2610190bd025c9a7e5bf8bd2456d281cb4b67ddcec712a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "hash": "26632d9ec58a0ea23cea0ec78ad6f714766aecd4fe349a971ab1ec0cb840ecc7"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "hash": "7dbc013a2a2c166e2643c2b9ae4a434d1be48a2ebe7d4dfc5bc37849edbd1030"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/actions/reference/",
+          "hash": "a5ad03ebe9953d75fc1c1b935aafb96d276f688ff6f2d0b0219208a92964128a"
+        }
+      ],
+      "factsSha256": "f98bdad97afc5e6e63df62ca68fdb8e1a30ac0db269d71fc784d029bc1c9ccd7"
+    },
+    {
+      "artifact": "model-comparison-v57-claude-haiku-5-5-notion.json",
+      "scope": "Model comparison on identical saved official snapshots, confirmed intent and validated facts. New planning and independent review; no source retrieval, manual endpoint bundle, provider execution, saved guide substitution, HTTP journey or acceptance pass.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e456dca58c521f687b37b53ef83281d040a65009",
+      "guideCodeFingerprint": "7b0025fc376519d431aeb94081b97d8678d295c5854f9342c69a8b52fa71e25f",
+      "model": "claude-haiku-5-5",
+      "case": "notion",
+      "elapsedMs": 39265,
+      "readiness": null,
+      "error": null,
+      "planning": {
+        "model": "claude-haiku-5-5",
+        "attempts": 2,
+        "elapsedMs": 35067,
+        "inputTokens": 173077,
+        "outputTokens": 8254,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged.",
+          "A step destination lacks a concrete source-declared follow-up request. {\"sourceId\":\"s5\",\"sourceText\":\"The endpoint also accepts non-navigable block IDs returned in `unknown_block_ids` from a previous truncated response. Pass these IDs to fetch additional subtrees of a large page.\",\"returnedField\":\"unknown_block_ids\",\"repair\":\"Add a separate action step with a real curl and response path for the returned IDs. Bind its input explicitly to the prior response field and state the repeat/end condition; prose in the first request is insufficient.\"}",
+          "Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged."
+        ]
+      },
+      "review": {
+        "model": "claude-haiku-5-5",
+        "attempts": 1,
+        "elapsedMs": 3941,
+        "inputTokens": 60966,
+        "outputTokens": 684,
+        "thinkingTokens": 0,
+        "outcome": "accepted",
+        "thinking": "disabled",
+        "effort": "medium",
+        "validationIssues": [
+          "Uncovered source requirement 0:s5-p18: * **Unsupported block types**: Certain block types (such as bookmarks, embeds, and link previews) are not yet supported in the markdown format. Correction: State the documented unsupported formats beside the request and report them as not read; do not claim complete content for those formats."
+        ]
+      },
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "Uncovered source requirement 0:s5-p18: State the documented unsupported formats beside the request and report them as not read; do not claim complete content for those formats. Affected steps: test-read-unknown-subtrees.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Retrieves a page object by ID. The response includes page property values. To read the page\u2019s content, use Retrieve block children."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "> > Your connection must have read content capabilities on the target page in order to call this endpoint. To update your connection's capabilities, navigate to the Developer portal, select"
+            }
+          ],
+          "support": "unresolved",
+          "missingFact": "request"
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 15990,
+          "usage": {
+            "input_tokens": 86419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 3771,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 18571,
+          "usage": {
+            "input_tokens": 86658,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 4483,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 3770,
+          "usage": {
+            "input_tokens": 60966,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 684,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "model-comparison-v57-claude-sonnet-5-5-notion.json",
+      "scope": "Model comparison on identical saved official snapshots, confirmed intent and validated facts. New planning and independent review; no source retrieval, manual endpoint bundle, provider execution, saved guide substitution, HTTP journey or acceptance pass.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e456dca58c521f687b37b53ef83281d040a65009",
+      "guideCodeFingerprint": "7b0025fc376519d431aeb94081b97d8678d295c5854f9342c69a8b52fa71e25f",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 955,
+      "readiness": null,
+      "error": null,
+      "planning": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 1,
+        "elapsedMs": 923,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "upstream-error",
+        "validationIssues": [
+          "Model unavailable. HTTP 400."
+        ]
+      },
+      "review": null,
+      "coverage": null,
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 400,
+          "stopReason": null,
+          "elapsedMs": 810,
+          "usage": null,
+          "error": {
+            "type": "invalid_request_error",
+            "message": "To turn thinking off on this model, send \"thinking\": {\"type\": \"between_tools\"} instead of {\"type\": \"disabled\"}. The model does not think before responding. The short updates it writes between tool calls come back as thinking blocks."
+          }
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "model-comparison-v57-compatible-claude-sonnet-5-5-forgejo.json",
+      "scope": "Model comparison on identical saved official snapshots, confirmed intent and validated facts. New planning and independent review; no source retrieval, manual endpoint bundle, provider execution, saved guide substitution, HTTP journey or acceptance pass.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e456dca58c521f687b37b53ef83281d040a65009",
+      "guideCodeFingerprint": "7b0025fc376519d431aeb94081b97d8678d295c5854f9342c69a8b52fa71e25f",
+      "model": "claude-sonnet-5-5",
+      "case": "forgejo",
+      "elapsedMs": 45685,
+      "readiness": null,
+      "error": null,
+      "planning": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 2,
+        "elapsedMs": 45654,
+        "inputTokens": 88108,
+        "outputTokens": 6630,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "validation-rejected",
+        "validationIssues": [
+          "A step destination needs a concrete documented authorization or token URL. {\"stepId\":\"consent-redirect\",\"endpoint\":\"/login/oauth/authorize\",\"repair\":\"Use the documented authorization/token endpoint and required parameters in the curl. A whole AUTH_URL placeholder cannot replace a known endpoint; keep placeholders for client credentials, callback values, tokens and instance hosts.\"}",
+          "A step destination needs a concrete documented authorization or token URL. {\"stepId\":\"consent-redirect\",\"endpoint\":\"/login/oauth/authorize\",\"repair\":\"Use the documented authorization/token endpoint and required parameters in the curl. A whole AUTH_URL placeholder cannot replace a known endpoint; keep placeholders for client credentials, callback values, tokens and instance hosts.\"}"
+        ]
+      },
+      "review": null,
+      "coverage": null,
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 21183,
+          "usage": {
+            "input_tokens": 43980,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 3127,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 24273,
+          "usage": {
+            "input_tokens": 44128,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 3503,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "hash": "c9f2916c64464b6b5a2a3a1b52cc1b43bfef33b3ed4b148d4f7812da4b931de8"
+        },
+        {
+          "url": "https://v17.next.forgejo.org/swagger.v1.json",
+          "hash": "e4884f0c2470fc61b978bda6a5212fdbdf4dbdd866187c59d90aef6bccd29929"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "hash": "00aadeba086635cedcc17321e9ad8eed2b7940fdad1d83ae5d001679ecfb882a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "hash": "8b18dcccefe5cf12bd6f2d34d54529592e3115f733228531290cc3635c3788bb"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/usage/",
+          "hash": "17951a443e5ee7576cb271cbcb5ce178adb5da04bc2429ce68827cce1a2abaec"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/versions/",
+          "hash": "00b424f9b466e020eeabe3486c9c6c520382693b2c27942f482d95c9450890a6"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "hash": "853f77717f88dee37f1b53fb7e15870af803853ce113ebf2fa372721a2a81e46"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "hash": "304e115c3ab4b231ca2610190bd025c9a7e5bf8bd2456d281cb4b67ddcec712a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "hash": "26632d9ec58a0ea23cea0ec78ad6f714766aecd4fe349a971ab1ec0cb840ecc7"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "hash": "7dbc013a2a2c166e2643c2b9ae4a434d1be48a2ebe7d4dfc5bc37849edbd1030"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/actions/reference/",
+          "hash": "a5ad03ebe9953d75fc1c1b935aafb96d276f688ff6f2d0b0219208a92964128a"
+        }
+      ],
+      "factsSha256": "f98bdad97afc5e6e63df62ca68fdb8e1a30ac0db269d71fc784d029bc1c9ccd7"
+    },
+    {
+      "artifact": "model-comparison-v57-compatible-claude-sonnet-5-5-notion.json",
+      "scope": "Model comparison on identical saved official snapshots, confirmed intent and validated facts. New planning and independent review; no source retrieval, manual endpoint bundle, provider execution, saved guide substitution, HTTP journey or acceptance pass.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e456dca58c521f687b37b53ef83281d040a65009",
+      "guideCodeFingerprint": "7b0025fc376519d431aeb94081b97d8678d295c5854f9342c69a8b52fa71e25f",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 75087,
+      "readiness": null,
+      "error": null,
+      "planning": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 2,
+        "elapsedMs": 75042,
+        "inputTokens": 86419,
+        "outputTokens": 6908,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "timeout",
+        "validationIssues": [
+          "steps: Array must contain at most 10 element(s)",
+          "The output violated the requested schema."
+        ]
+      },
+      "review": null,
+      "coverage": null,
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 44517,
+          "usage": {
+            "input_tokens": 86419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 6908,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "model-comparison-v58-claude-haiku-5-5-notion.json",
+      "scope": "Model comparison on identical saved official snapshots, confirmed intent and validated facts. New planning and independent review; no source retrieval, manual endpoint bundle, provider execution, saved guide substitution, HTTP journey or acceptance pass.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "c7d2138d4164d33889d55195a6c963af4de583ef",
+      "guideCodeFingerprint": "f3eabc68099eb833a3451e4e9bd0d750a0c364fdba642f6bf6ec51dcbab031e5",
+      "model": "claude-haiku-5-5",
+      "case": "notion",
+      "elapsedMs": 49299,
+      "readiness": null,
+      "error": null,
+      "planning": {
+        "model": "claude-haiku-5-5",
+        "attempts": 2,
+        "elapsedMs": 43717,
+        "inputTokens": 173067,
+        "outputTokens": 10076,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged.",
+          "A step destination lacks both requests for a source-declared paginated value. {\"field\":\"title\",\"sourceId\":\"s4\",\"sourceText\":\"### Paginated properties `title`, `rich_text`, `people`, and `relation` return a paginated list. Use this endpoint when a page response omits references. Continue with `next_cursor` until `has_more` is `false`. The next\",\"repair\":\"Retain every requested outcome. Include that value's own initial and continuation requests with response paths delivering the field; a pair for a different field or collection is insufficient.\"}",
+          "Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged."
+        ]
+      },
+      "review": {
+        "model": "claude-haiku-5-5",
+        "attempts": 1,
+        "elapsedMs": 5304,
+        "inputTokens": 61341,
+        "outputTokens": 954,
+        "thinkingTokens": 0,
+        "outcome": "accepted",
+        "thinking": "disabled",
+        "effort": "medium",
+        "validationIssues": [
+          "Uncovered source requirement 0:s5-p18: * **Unsupported block types**: Certain block types (such as bookmarks, embeds, and link previews) are not yet supported in the markdown format. Correction: State the documented unsupported formats beside the request and report them as not read; do not claim complete content for those formats."
+        ]
+      },
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "Uncovered source requirement 0:s5-p18: State the documented unsupported formats beside the request and report them as not read; do not claim complete content for those formats. Affected steps: read-page-get, read-page-property-title-initial, read-page-property-title-next, read-page-markdown, read-page-markdown-subtree.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Retrieves a page object by ID. The response includes page property values. To read the page\u2019s content, use Retrieve block children."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "> > Your connection must have read content capabilities on the target page in order to call this endpoint. To update your connection's capabilities, navigate to the Developer portal, select"
+            }
+          ],
+          "support": "unresolved",
+          "missingFact": "request"
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 23140,
+          "usage": {
+            "input_tokens": 86419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 5187,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 20005,
+          "usage": {
+            "input_tokens": 86648,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 4889,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 5128,
+          "usage": {
+            "input_tokens": 61341,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 954,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "model-comparison-v58-claude-sonnet-5-5-notion.json",
+      "scope": "Model comparison on identical saved official snapshots, confirmed intent and validated facts. New planning and independent review; no source retrieval, manual endpoint bundle, provider execution, saved guide substitution, HTTP journey or acceptance pass.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "c7d2138d4164d33889d55195a6c963af4de583ef",
+      "guideCodeFingerprint": "f3eabc68099eb833a3451e4e9bd0d750a0c364fdba642f6bf6ec51dcbab031e5",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 51368,
+      "readiness": null,
+      "error": null,
+      "planning": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 1,
+        "elapsedMs": 41014,
+        "inputTokens": 86419,
+        "outputTokens": 5944,
+        "thinkingTokens": 0,
+        "thinking": "mixed",
+        "effort": "low",
+        "outcome": "accepted",
+        "validationIssues": [
+          "Generic access-boundary check completed from the documented grant and declared restrictions; requests and sources unchanged."
+        ]
+      },
+      "review": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 1,
+        "elapsedMs": 10138,
+        "inputTokens": 60098,
+        "outputTokens": 904,
+        "thinkingTokens": 0,
+        "outcome": "accepted",
+        "thinking": "between_tools",
+        "effort": "medium",
+        "validationIssues": [
+          "Uncovered source requirement 0:s5-p18: * **Unsupported block types**: Certain block types (such as bookmarks, embeds, and link previews) are not yet supported in the markdown format. Correction: State beside the markdown request that bookmarks, embeds and link previews appear as unknown tags and are not read, without claiming complete data for them."
+        ]
+      },
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "Uncovered source requirement 0:s5-p18: State beside the markdown request that bookmarks, embeds and link previews appear as unknown tags and are not read, without claiming complete data for them. Affected steps: read-page-title, read-title-property-initial, read-title-property-next, read-page-markdown, read-markdown-unknown-subtree.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Retrieves a page object by ID. The response includes page property values. To read the page\u2019s content, use Retrieve block children."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "> > Your connection must have read content capabilities on the target page in order to call this endpoint. To update your connection's capabilities, navigate to the Developer portal, select"
+            }
+          ],
+          "support": "unresolved",
+          "missingFact": "request"
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 40710,
+          "usage": {
+            "input_tokens": 86419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 5944,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 9972,
+          "usage": {
+            "input_tokens": 60098,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 904,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "model-pipeline-comparison-v59-claude-haiku-5-5-forgejo.json",
+      "scope": "Complete planning/review/automatic instruction-recovery comparison using identical saved official snapshots, validated facts and previously confirmed provider identity. New research is disabled for both controls. No HTTP intake, fresh guide acceptance, saved-output substitution or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e004e56188d9cac0f0e4d8fde4599248ab203b04",
+      "guideCodeFingerprint": "663200e8bae8c2590b97b78c62ed262305ecc502425ea47ab7f72a8b659f32c1",
+      "model": "claude-haiku-5-5",
+      "case": "forgejo",
+      "elapsedMs": 34504,
+      "readiness": "research-failure",
+      "error": null,
+      "planning": null,
+      "review": null,
+      "coverage": [
+        {
+          "action": "List repository names visible to the connected person, including pagination",
+          "actionId": "list-visible-repositories",
+          "permissions": [],
+          "status": "unresolved",
+          "reason": "The OAuth provider documentation states scopes are not implemented for OAuth2 tokens and may execute any user action, so no scope boundary can be cited for the OAuth grant; the requested OAuth flow cannot be restricted to read-only from supplied evidence. The read:repository scope applies only to personal/scoped API tokens, which are a different credential type.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Note Scopes are not implemented for OAuth2 tokens and they can be used to"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "execute any actions on behalf of the user, not just Git-related actions."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Note Scoped tokens or personal access tokens are entirely different from OAuth2;"
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 14559,
+          "usage": {
+            "input_tokens": 44005,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 3575,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 4115,
+          "usage": {
+            "input_tokens": 39481,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 472,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "format",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 2061,
+          "usage": {
+            "input_tokens": 651,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 272,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "format",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 1733,
+          "usage": {
+            "input_tokens": 644,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 259,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": "format",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 4518,
+          "usage": {
+            "input_tokens": 4876,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 523,
+            "output_tokens_details": {
+              "thinking_tokens": 499
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": null,
+          "stopReason": null,
+          "elapsedMs": null,
+          "usage": null,
+          "error": null
+        },
+        {
+          "stage": "action-correction",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 6628,
+          "usage": {
+            "input_tokens": 31820,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 1309,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "hash": "c9f2916c64464b6b5a2a3a1b52cc1b43bfef33b3ed4b148d4f7812da4b931de8"
+        },
+        {
+          "url": "https://v17.next.forgejo.org/swagger.v1.json",
+          "hash": "e4884f0c2470fc61b978bda6a5212fdbdf4dbdd866187c59d90aef6bccd29929"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "hash": "00aadeba086635cedcc17321e9ad8eed2b7940fdad1d83ae5d001679ecfb882a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "hash": "8b18dcccefe5cf12bd6f2d34d54529592e3115f733228531290cc3635c3788bb"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/usage/",
+          "hash": "17951a443e5ee7576cb271cbcb5ce178adb5da04bc2429ce68827cce1a2abaec"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/versions/",
+          "hash": "00b424f9b466e020eeabe3486c9c6c520382693b2c27942f482d95c9450890a6"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "hash": "853f77717f88dee37f1b53fb7e15870af803853ce113ebf2fa372721a2a81e46"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "hash": "304e115c3ab4b231ca2610190bd025c9a7e5bf8bd2456d281cb4b67ddcec712a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "hash": "26632d9ec58a0ea23cea0ec78ad6f714766aecd4fe349a971ab1ec0cb840ecc7"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "hash": "7dbc013a2a2c166e2643c2b9ae4a434d1be48a2ebe7d4dfc5bc37849edbd1030"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/actions/reference/",
+          "hash": "a5ad03ebe9953d75fc1c1b935aafb96d276f688ff6f2d0b0219208a92964128a"
+        }
+      ],
+      "factsSha256": "f98bdad97afc5e6e63df62ca68fdb8e1a30ac0db269d71fc784d029bc1c9ccd7"
+    },
+    {
+      "artifact": "model-pipeline-comparison-v59-claude-haiku-5-5-notion.json",
+      "scope": "Complete planning/review/automatic instruction-recovery comparison using identical saved official snapshots, validated facts and previously confirmed provider identity. New research is disabled for both controls. No HTTP intake, fresh guide acceptance, saved-output substitution or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e004e56188d9cac0f0e4d8fde4599248ab203b04",
+      "guideCodeFingerprint": "663200e8bae8c2590b97b78c62ed262305ecc502425ea47ab7f72a8b659f32c1",
+      "model": "claude-haiku-5-5",
+      "case": "notion",
+      "elapsedMs": 47882,
+      "readiness": "research-failure",
+      "error": null,
+      "planning": null,
+      "review": null,
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "Title property items must be read with next_cursor until has_more is false. The property-response continuation path must be read in the same grant as the first page; the supplied continuation response path does not yet document a valid nested relation path, so the missing request-level response path remains unresolved.",
+          "evidence": [
+            {
+              "sourceId": "s4",
+              "quote": "### Paginated properties `title`, `rich_text`, `people`, and `relation` return a paginated list. Use this endpoint when a page response omits references. Continue with `next_cursor` until `has_more` is `false`. The next"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "Response JSON paths for GET /v1/pages/{page_id}/properties/{property_id}: $.results[].title.plain_text (string)"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "Use Retrieve a page property item when you need the full value. Read every page of property items. Formula and rollup calculation limits still apply."
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 17728,
+          "usage": {
+            "input_tokens": 86419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 4555,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 16072,
+          "usage": {
+            "input_tokens": 87269,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 4532,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 7790,
+          "usage": {
+            "input_tokens": 61081,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 1248,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "action-correction",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 5261,
+          "usage": {
+            "input_tokens": 83808,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 905,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "model-pipeline-comparison-v59-claude-sonnet-5-5-forgejo.json",
+      "scope": "Complete planning/review/automatic instruction-recovery comparison using identical saved official snapshots, validated facts and previously confirmed provider identity. New research is disabled for both controls. No HTTP intake, fresh guide acceptance, saved-output substitution or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e004e56188d9cac0f0e4d8fde4599248ab203b04",
+      "guideCodeFingerprint": "663200e8bae8c2590b97b78c62ed262305ecc502425ea47ab7f72a8b659f32c1",
+      "model": "claude-sonnet-5-5",
+      "case": "forgejo",
+      "elapsedMs": 24553,
+      "readiness": "usable-guide",
+      "error": null,
+      "planning": null,
+      "review": null,
+      "coverage": [
+        {
+          "action": "List repository names visible to the connected person, including pagination",
+          "actionId": "list-visible-repositories",
+          "permissions": [],
+          "status": "mapped",
+          "reason": "Documented Authorization Code setup, unscoped OAuth bearer token, GET /api/v1/repos/search with $.data[].name, Link-header continuation, and a log-inspection boundary are all source-supported.",
+          "evidence": [
+            {
+              "sourceId": "s2",
+              "quote": "## GET /api/v1/repos/search | Search for repositories"
+            },
+            {
+              "sourceId": "s2",
+              "quote": "Parameter private in query (boolean, optional): include private repositories this user has access to (defaults to true) Schema: {\"type\":\"boolean\"}"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "Pagination The API supports pagination. The page and limit parameters are used to specify the page number and the number of items per page. As well, the Link header is"
+            }
+          ],
+          "support": "reviewed"
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 19054,
+          "usage": {
+            "input_tokens": 44005,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 2739,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 4919,
+          "usage": {
+            "input_tokens": 37520,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 276,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/oauth2-provider/",
+          "hash": "c9f2916c64464b6b5a2a3a1b52cc1b43bfef33b3ed4b148d4f7812da4b931de8"
+        },
+        {
+          "url": "https://v17.next.forgejo.org/swagger.v1.json",
+          "hash": "e4884f0c2470fc61b978bda6a5212fdbdf4dbdd866187c59d90aef6bccd29929"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/authentication/token-scope/",
+          "hash": "00aadeba086635cedcc17321e9ad8eed2b7940fdad1d83ae5d001679ecfb882a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/collaboration/repo-permissions/",
+          "hash": "8b18dcccefe5cf12bd6f2d34d54529592e3115f733228531290cc3635c3788bb"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/usage/",
+          "hash": "17951a443e5ee7576cb271cbcb5ce178adb5da04bc2429ce68827cce1a2abaec"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/api/versions/",
+          "hash": "00b424f9b466e020eeabe3486c9c6c520382693b2c27942f482d95c9450890a6"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/first-repository/",
+          "hash": "853f77717f88dee37f1b53fb7e15870af803853ce113ebf2fa372721a2a81e46"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/email-settings/",
+          "hash": "304e115c3ab4b231ca2610190bd025c9a7e5bf8bd2456d281cb4b67ddcec712a"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/wiki/",
+          "hash": "26632d9ec58a0ea23cea0ec78ad6f714766aecd4fe349a971ab1ec0cb840ecc7"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/getting-started/issue-tracking-basics/",
+          "hash": "7dbc013a2a2c166e2643c2b9ae4a434d1be48a2ebe7d4dfc5bc37849edbd1030"
+        },
+        {
+          "url": "https://forgejo.org/docs/latest/user/actions/reference/",
+          "hash": "a5ad03ebe9953d75fc1c1b935aafb96d276f688ff6f2d0b0219208a92964128a"
+        }
+      ],
+      "factsSha256": "f98bdad97afc5e6e63df62ca68fdb8e1a30ac0db269d71fc784d029bc1c9ccd7"
+    },
+    {
+      "artifact": "model-pipeline-comparison-v59-claude-sonnet-5-5-notion.json",
+      "scope": "Complete planning/review/automatic instruction-recovery comparison using identical saved official snapshots, validated facts and previously confirmed provider identity. New research is disabled for both controls. No HTTP intake, fresh guide acceptance, saved-output substitution or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "e004e56188d9cac0f0e4d8fde4599248ab203b04",
+      "guideCodeFingerprint": "663200e8bae8c2590b97b78c62ed262305ecc502425ea47ab7f72a8b659f32c1",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 75116,
+      "readiness": "research-failure",
+      "error": null,
+      "planning": null,
+      "review": null,
+      "coverage": [],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 42123,
+          "usage": {
+            "input_tokens": 86419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 7200,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "model-pipeline-comparison-v60-claude-sonnet-5-5-notion.json",
+      "scope": "Complete planning/review/automatic instruction-recovery comparison using identical saved official snapshots, validated facts and previously confirmed provider identity. New research is disabled for both controls. No HTTP intake, fresh guide acceptance, saved-output substitution or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "f2c9915f6ac4fe464c49f310c20eaef59dc49a8e",
+      "guideCodeFingerprint": "e0ddcbfd883dfac806b3f06e3e2000e2631fe32d35ce3a1f4f627ce8b82ccfe9",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 82971,
+      "readiness": "research-failure",
+      "error": null,
+      "planning": null,
+      "review": null,
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "Uncovered source requirement 0:s5-p18: Unsupported block types (bookmarks, embeds, link previews) are mentioned but the guide should explicitly state they are reported as not read and that no fallback is claimed. Affected steps: retrieve-page-markdown, retrieve-unknown-block-subtree.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "### Paginated properties `title`, `rich_text`, `people`, and `relation` return a paginated list. Use this endpoint when a page response omits references. Continue with `next_cursor` until `has_more` is `false`. The next"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Truncation**: The page exceeds the record limit (approximately 20,000 blocks) and some blocks could not be loaded."
+            }
+          ],
+          "support": "unresolved",
+          "missingFact": "request"
+        }
+      ],
+      "calls": [
+        {
+          "stage": "steps",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 40061,
+          "usage": {
+            "input_tokens": 86419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 6141,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 14785,
+          "usage": {
+            "input_tokens": 60820,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 1497,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "action-correction",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 17336,
+          "usage": {
+            "input_tokens": 82290,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 2293,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": "review",
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": 9677,
+          "usage": {
+            "input_tokens": 60155,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 845,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd"
+        },
+        {
+          "url": "https://developers.notion.com/reference/page.md",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "hash": "aadb35791ced8bc6d85efbde8dbab91d5f815696941430806d5bf37e39b6b7d2"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "hash": "199b5f2b5df206f63d82c82ccdea6dd706d0b5ee6a10c66f6a7a6c101c3ee006"
+        },
+        {
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "hash": "7e10d0999097c79f76cb23d2327cd149e503c2745069a111ffc89b0e150c78e7"
+        },
+        {
+          "url": "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "hash": "e0c83ca39f28a0ca1b346228362bd7412873d04439aa3531b9880a48ddf39195"
+        },
+        {
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "hash": "b492c4a496106ed6523d7b9d960a4c9e4e055fec2c713f4f5e21c4a3dbe0f383"
+        },
+        {
+          "url": "https://developers.notion.com/reference/capabilities.md",
+          "hash": "9a99067a3285d006cbb6240b7fa7c6982ade338044afbd4568fd16082e537dd8"
+        }
+      ],
+      "factsSha256": "71f5f1705da06fc8404361814d1e52ea4e0518daadf5f773fbbadf3d8f81924d"
+    },
+    {
+      "artifact": "review-current-guide-v61-claude-haiku-5-5.json",
+      "scope": "Review-contract comparison on the unchanged, manually audited corrected v60 guide. No new planning, source retrieval, HTTP journey or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "f2c9915f6ac4fe464c49f310c20eaef59dc49a8e",
+      "guideCodeFingerprint": "1daed3b0bfe4b40fc62e9722f5ffa1034419b0ebee60fe548b7100aa2f1b34ae",
+      "model": "claude-haiku-5-5",
+      "case": "notion",
+      "elapsedMs": 10368,
+      "readiness": null,
+      "error": null,
+      "planning": null,
+      "review": {
+        "model": "claude-haiku-5-5",
+        "attempts": 2,
+        "elapsedMs": 10301,
+        "inputTokens": 152121,
+        "outputTokens": 1533,
+        "thinkingTokens": 0,
+        "outcome": "incomplete",
+        "thinking": "mixed",
+        "effort": "low",
+        "validationIssues": [
+          "Independent action review omitted or duplicated a source completeness notice.",
+          "Independent action review retried once using the same instructions and saved evidence within its original deadline.",
+          "A resolved setup gap needs an exact supplied source passage.",
+          "Retained completed action rejection from the unfinished check; correcting the guide is required before it can pass.",
+          "Retained completed action rejection through format recovery; correcting the guide is required before it can pass."
+        ]
+      },
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "The markdown step's unsupported-block limitation is reported as not read via markdown, but the guide does not explicitly state that bookmarks, embeds and link previews are reported as NOT READ beside the request, so the completeness notice is not covered.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "### Paginated properties `title`, `rich_text`, `people`, and `relation` return a paginated list. Use this endpoint when a page response omits references. Continue with `next_cursor` until `has_more` is `false`. The next"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Truncation**: The page exceeds the record limit (approximately 20,000 blocks) and some blocks could not be loaded."
+            }
+          ],
+          "support": "unresolved",
+          "missingFact": "response"
+        }
+      ],
+      "calls": [
+        {
+          "stage": null,
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": null,
+          "usage": {
+            "input_tokens": 76030,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 562,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": null,
+          "usage": {
+            "input_tokens": 76091,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 971,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": null,
+      "factsSha256": null
+    },
+    {
+      "artifact": "review-current-guide-v61-claude-sonnet-5-5.json",
+      "scope": "Review-contract comparison on the unchanged, manually audited corrected v60 guide. No new planning, source retrieval, HTTP journey or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "f2c9915f6ac4fe464c49f310c20eaef59dc49a8e",
+      "guideCodeFingerprint": "1daed3b0bfe4b40fc62e9722f5ffa1034419b0ebee60fe548b7100aa2f1b34ae",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 14171,
+      "readiness": null,
+      "error": null,
+      "planning": null,
+      "review": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 1,
+        "elapsedMs": 14124,
+        "inputTokens": 76030,
+        "outputTokens": 1106,
+        "thinkingTokens": 0,
+        "outcome": "accepted",
+        "thinking": "between_tools",
+        "effort": "medium",
+        "validationIssues": [
+          "Uncovered source requirement 0:s5-p18: * **Unsupported block types**: Certain block types (such as bookmarks, embeds, and link previews) are not yet supported in the markdown format. Correction: Step says to report unsupported blocks as not read but gives no concrete NOT READ output beside the request, and does not state that markdown does not claim to read them.",
+          "Setup gap unknown-0 resolved from s1-p63: The source states Marketplace submission or review is not required to start authorization for a public integration.",
+          "First-test gap unknown-1 reclassified as launch-only: Workspace admin approval is not documented, but the first test with a representative page is not blocked by it; s8-p39 only says fewer capabilities make admin install more likely."
+        ]
+      },
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "Uncovered source requirement 0:s5-p18: Step says to report unsupported blocks as not read but gives no concrete NOT READ output beside the request, and does not state that markdown does not claim to read them. Affected steps: retrieve-page-markdown, retrieve-unknown-block-subtree.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "### Paginated properties `title`, `rich_text`, `people`, and `relation` return a paginated list. Use this endpoint when a page response omits references. Continue with `next_cursor` until `has_more` is `false`. The next"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Truncation**: The page exceeds the record limit (approximately 20,000 blocks) and some blocks could not be loaded."
+            }
+          ],
+          "missingFact": "request",
+          "support": "unresolved"
+        }
+      ],
+      "calls": [
+        {
+          "stage": null,
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": null,
+          "usage": {
+            "input_tokens": 76030,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 1106,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": null,
+      "factsSha256": null
+    },
+    {
+      "artifact": "review-current-guide-v62-claude-sonnet-5-5.json",
+      "scope": "Review-contract comparison on the unchanged, manually audited corrected v60 guide. No new planning, source retrieval, HTTP journey or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "4b683781ed35b60e3058b921c15a488457318a0f",
+      "guideCodeFingerprint": "7b8afd3e305bbb8991a05a233e3304983bf019ceed03123349387171219f2651",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 15875,
+      "readiness": null,
+      "error": null,
+      "planning": null,
+      "review": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 2,
+        "elapsedMs": 15818,
+        "inputTokens": 152583,
+        "outputTokens": 1710,
+        "thinkingTokens": 0,
+        "outcome": "incomplete",
+        "thinking": "mixed",
+        "effort": "low",
+        "validationIssues": [
+          "0.reason: String must contain at least 1 character(s)",
+          "Independent action review retried once using the same instructions and saved evidence within its original deadline.",
+          "0.reason: String must contain at least 1 character(s)"
+        ]
+      },
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "The independent action-to-permission check did not complete. Confirm the documented relationship before executing this action.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "### Paginated properties `title`, `rich_text`, `people`, and `relation` return a paginated list. Use this endpoint when a page response omits references. Continue with `next_cursor` until `has_more` is `false`. The next"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Truncation**: The page exceeds the record limit (approximately 20,000 blocks) and some blocks could not be loaded."
+            }
+          ],
+          "missingFact": "request",
+          "support": "unresolved"
+        }
+      ],
+      "calls": [
+        {
+          "stage": null,
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": null,
+          "usage": {
+            "input_tokens": 76261,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 847,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        },
+        {
+          "stage": null,
+          "status": 200,
+          "stopReason": "end_turn",
+          "elapsedMs": null,
+          "usage": {
+            "input_tokens": 76322,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 0
+            },
+            "output_tokens": 863,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "service_tier": "standard",
+            "inference_geo": "global",
+            "speed": "standard"
+          },
+          "error": null
+        }
+      ],
+      "sourceHashes": null,
+      "factsSha256": null
+    },
+    {
+      "artifact": "review-current-guide-v63-claude-sonnet-5-5.json",
+      "scope": "Review-contract comparison on the unchanged, manually audited corrected v60 guide. No new planning, source retrieval, HTTP journey or provider execution.",
+      "diagnosticOnly": true,
+      "freshGuidePass": false,
+      "sourceCommit": "8ea96fd02e231212bc3021e369a8b53c2e7cef71",
+      "guideCodeFingerprint": "25daf22e6cda9e2d10849838cfc04351173c8accacb150b70046e2c9f891d188",
+      "model": "claude-sonnet-5-5",
+      "case": "notion",
+      "elapsedMs": 35120,
+      "readiness": null,
+      "error": null,
+      "planning": null,
+      "review": {
+        "model": "claude-sonnet-5-5",
+        "attempts": 1,
+        "elapsedMs": 35028,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "thinkingTokens": 0,
+        "outcome": "incomplete",
+        "thinking": "between_tools",
+        "effort": "medium",
+        "validationIssues": [
+          "The operation was aborted due to timeout"
+        ]
+      },
+      "coverage": [
+        {
+          "action": "Read titles and content of pages customers explicitly share with the integration",
+          "actionId": "read-shared-page-titles-and-content",
+          "permissions": [
+            "Read content"
+          ],
+          "status": "unresolved",
+          "reason": "The independent action-to-permission check did not complete. Confirm the documented relationship before executing this action.",
+          "evidence": [
+            {
+              "sourceId": "s8",
+              "quote": "* **Read content**: This capability gives a connection access to read existing content in a Notion workspace. For example, a connection with only this capability is able to call Retrieve"
+            },
+            {
+              "sourceId": "s4",
+              "quote": "### Paginated properties `title`, `rich_text`, `people`, and `relation` return a paginated list. Use this endpoint when a page response omits references. Continue with `next_cursor` until `has_more` is `false`. The next"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Truncation**: The page exceeds the record limit (approximately 20,000 blocks) and some blocks could not be loaded."
+            }
+          ],
+          "missingFact": "request",
+          "support": "unresolved"
+        }
+      ],
+      "calls": [],
+      "sourceHashes": null,
+      "factsSha256": null
+    }
+  ],
+  "selection": "Local runtime pinned to claude-sonnet-5-5 after source/request corrections and the complete Forgejo control. All earlier failed controls are retained. Final readiness depends on new full HTTP journeys, not this model selection.",
+  "modelTransportDocumentation": "https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide"
+}

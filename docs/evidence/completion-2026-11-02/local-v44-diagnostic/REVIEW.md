@@ -1,0 +1,7 @@
+# Native Markdown candidate diagnosis
+
+Source `67be6843ec155e0eed06a4466b9e3193ac24c32a`, prompt `live-guide.44`. The [original normal-input Notion attempt](notion-r1.json) failed after 136.7 seconds. It retained the partial result and did not publish a plan. Nine recorded model calls used 942,333 input tokens across interpretation, review and corrections. This targeted diagnostic is not an acceptance round.
+
+Native Markdown exposed the correct operation schema and Markdown response fields. Initial discovery nevertheless spent its final slots on an Admin API export and an undocumented API export before reading the linked page-property values reference. The JSON/OpenAPI renderer also stopped at `oneOf` and `anyOf` references, so the page and paginated-property responses lacked derived paths even though the original YAML contained their definitions. Independent review correctly kept full title-property pagination unresolved. Its correction retained only the initial page read. The content correction described the Markdown truncation loop, but the title failure still prevents a usable-guide pass.
+
+The next candidate keeps linked object/property references beside their operations, ranks selected setup/support references before broad exports, and avoids additional broad exports when an operation already supplies its schema. It resolves bounded internal-reference alternatives and dynamic maps without inventing fields or following external schema references. Original source text remains available alongside the projection.

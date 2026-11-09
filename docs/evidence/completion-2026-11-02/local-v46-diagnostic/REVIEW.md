@@ -1,0 +1,5 @@
+# Incomplete independent-review diagnosis
+
+Source `690ee11a76c69b112a98909da0d43f6982bf27fe`, prompt `live-guide.46`. The [original targeted Notion attempt](notion-r1.json) failed in 78.5 seconds. Its incomplete independent review was logged without the upstream HTTP status, so the original record does not establish that failure's exact upstream cause. The handoff also did not supply the complete title-property pagination path. It is not a usable-guide pass.
+
+A separate diagnostic replay on 5 November returned HTTP 400 with Anthropic's explicit insufficient-credit message. That replay is not a fresh-generation attempt or proof that every earlier incomplete review had the same cause. The user subsequently restored credits. The following implementation exposes a structured service-account failure, stops further calls within that job, preserves checkpoints, and allows explicit retry after access returns. A transient or malformed independent review retries only the same check once; a permanent request failure cannot trigger another source crawl or action rewrite.

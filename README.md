@@ -8,7 +8,7 @@ Reviewed Gmail, Slack and GitHub rules and live research for unfamiliar provider
 
 ## Run locally
 
-Requires Node 22.13+, npm, Python 3 and Bash for the request-verification tests. Reviewed rules work without credentials. For model-powered live guides, copy `.dev.vars.example` to the ignored root `.dev.vars` and configure `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY` and an exact `ANTHROPIC_MODEL` supporting adaptive thinking and structured outputs. The evaluated model is `claude-haiku-5-5`. Keep keys server-side.
+Requires Node 22.13+, npm, Python 3 and Bash for the request-verification tests. Reviewed rules work without credentials. For model-powered live guides, copy `.dev.vars.example` to the ignored root `.dev.vars` and configure `AI_PROVIDER=anthropic`, `ANTHROPIC_API_KEY` and an exact `ANTHROPIC_MODEL` supporting adaptive thinking and structured outputs. The current candidate uses `claude-sonnet-5-5`; its source checks and release evaluation are linked below. Keep keys server-side.
 
 ```sh
 npm ci

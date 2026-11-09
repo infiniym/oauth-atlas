@@ -1,0 +1,1698 @@
+{
+  "name": "notion",
+  "round": 1,
+  "release": {
+    "product": "OAuth Launch Advisor",
+    "sourceCommit": "67be6843ec155e0eed06a4466b9e3193ac24c32a",
+    "guideCodeFingerprint": "b1042bef1fda3fb9720b237f48d42b2dac7ff3563aa82eb04be56cc23a47a950",
+    "builtAt": "2026-11-04T17:40:16.505Z",
+    "repository": "https://github.com/infiniym/oauth-atlas",
+    "promptVersion": "live-guide.44"
+  },
+  "input": {
+    "app": "Notion",
+    "website": "https://developers.notion.com/guides/get-started/authorization",
+    "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+    "audience": "customers"
+  },
+  "startedAt": "2026-11-04T17:40:38.714Z",
+  "anonymous": true,
+  "cache": "Public documentation may be cached upstream; model results and saved guides are never substituted. New UUID per job.",
+  "jobs": [
+    {
+      "id": "job-ceedd363-b1e6-4e7e-827b-a1b97b05cb84",
+      "key": "103ce571-a238-4c92-bea3-1439b8981324",
+      "input": {
+        "app": "Notion",
+        "website": "https://developers.notion.com/guides/get-started/authorization",
+        "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+        "audience": "customers"
+      }
+    }
+  ],
+  "events": [
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/guides/get-started/authorization",
+      "status": "working",
+      "at": "2026-11-04T17:40:38.761Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Authorization",
+      "status": "done",
+      "at": "2026-11-04T17:40:40.215Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/llms.txt",
+      "status": "working",
+      "at": "2026-11-04T17:40:40.215Z"
+    },
+    {
+      "stage": "Choosing relevant documentation",
+      "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+      "status": "working",
+      "at": "2026-11-04T17:40:40.428Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Notion Docs · documentation index",
+      "status": "done",
+      "at": "2026-11-04T17:40:44.169Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/page.md",
+      "status": "working",
+      "at": "2026-11-04T17:40:44.169Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Page",
+      "status": "done",
+      "at": "2026-11-04T17:40:44.715Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/retrieve-a-page.md",
+      "status": "working",
+      "at": "2026-11-04T17:40:44.715Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Retrieve a page",
+      "status": "done",
+      "at": "2026-11-04T17:40:45.315Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/retrieve-a-page-property.md",
+      "status": "working",
+      "at": "2026-11-04T17:40:45.315Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Retrieve a page property item",
+      "status": "done",
+      "at": "2026-11-04T17:40:46.098Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/retrieve-page-markdown.md",
+      "status": "working",
+      "at": "2026-11-04T17:40:46.098Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Retrieve a page as markdown",
+      "status": "done",
+      "at": "2026-11-04T17:40:46.303Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/get-block-children.md",
+      "status": "working",
+      "at": "2026-11-04T17:40:46.303Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Retrieve block children",
+      "status": "done",
+      "at": "2026-11-04T17:40:47.016Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/openapi-adminApi.json",
+      "status": "working",
+      "at": "2026-11-04T17:40:47.016Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Notion Admin API",
+      "status": "done",
+      "at": "2026-11-04T17:40:47.980Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/openapi-undocumented.json",
+      "status": "working",
+      "at": "2026-11-04T17:40:47.980Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Notion API (Undocumented)",
+      "status": "done",
+      "at": "2026-11-04T17:40:50.155Z"
+    },
+    {
+      "stage": "Checking setup choices",
+      "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+      "status": "working",
+      "at": "2026-11-04T17:40:50.226Z"
+    },
+    {
+      "stage": "Building your guide",
+      "detail": "Requirements are clear. Creating the plan from saved evidence.",
+      "status": "working",
+      "at": "2026-11-04T17:40:55.447Z"
+    },
+    {
+      "stage": "Checking action coverage",
+      "detail": "Reviewing each permission relationship separately from execution.",
+      "status": "working",
+      "at": "2026-11-04T17:41:36.156Z"
+    },
+    {
+      "stage": "Repairing an incomplete action",
+      "detail": "Checking the missing request or access evidence for Read titles of pages customers explicitly share with the app. Completed setup and your answers are retained.",
+      "status": "working",
+      "at": "2026-11-04T17:41:59.839Z"
+    },
+    {
+      "stage": "Finding the missing request",
+      "detail": "Checking only Read titles of pages customers explicitly share with the app. Your other instructions and confirmed choices are retained.",
+      "status": "working",
+      "at": "2026-11-04T17:41:59.843Z"
+    },
+    {
+      "stage": "Finding missing evidence",
+      "detail": "Looking for  documentation.",
+      "status": "working",
+      "at": "2026-11-04T17:41:59.857Z"
+    },
+    {
+      "stage": "Choosing missing evidence",
+      "detail": "Selecting the official reference for the precise saved validation gap.",
+      "status": "working",
+      "at": "2026-11-04T17:42:01.261Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/page-property-values.md",
+      "status": "working",
+      "at": "2026-11-04T17:42:05.073Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Page property values",
+      "status": "done",
+      "at": "2026-11-04T17:42:05.921Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/llms.txt",
+      "status": "working",
+      "at": "2026-11-04T17:42:05.921Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Notion Docs · documentation index",
+      "status": "done",
+      "at": "2026-11-04T17:42:06.243Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/openapi.json",
+      "status": "working",
+      "at": "2026-11-04T17:42:06.244Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Notion API",
+      "status": "done",
+      "at": "2026-11-04T17:42:07.323Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/versioning",
+      "status": "working",
+      "at": "2026-11-04T17:42:07.326Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Versioning",
+      "status": "done",
+      "at": "2026-11-04T17:42:07.882Z"
+    },
+    {
+      "stage": "Updating action instructions",
+      "detail": "Using saved evidence for Read titles of pages customers explicitly share with the app. Your other steps are retained.",
+      "status": "working",
+      "at": "2026-11-04T17:42:07.923Z"
+    },
+    {
+      "stage": "Action instructions updated",
+      "detail": "Saved a new version for Read titles of pages customers explicitly share with the app. The missing evidence is still identified beside this action.",
+      "status": "done",
+      "at": "2026-11-04T17:42:29.301Z"
+    },
+    {
+      "stage": "Repairing an incomplete action",
+      "detail": "Checking the missing request or access evidence for Read content of pages customers explicitly share with the app. Completed setup and your answers are retained.",
+      "status": "working",
+      "at": "2026-11-04T17:42:29.329Z"
+    },
+    {
+      "stage": "Finding the missing request",
+      "detail": "Checking only Read content of pages customers explicitly share with the app. Your other instructions and confirmed choices are retained.",
+      "status": "working",
+      "at": "2026-11-04T17:42:29.330Z"
+    },
+    {
+      "stage": "Finding missing evidence",
+      "detail": "Looking for  documentation.",
+      "status": "working",
+      "at": "2026-11-04T17:42:29.339Z"
+    },
+    {
+      "stage": "Choosing missing evidence",
+      "detail": "Selecting the official reference for the precise saved validation gap.",
+      "status": "working",
+      "at": "2026-11-04T17:42:29.752Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/guides/data-apis/notion-flavored-markdown.md",
+      "status": "working",
+      "at": "2026-11-04T17:42:34.503Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Notion-flavored Markdown format",
+      "status": "done",
+      "at": "2026-11-04T17:42:34.986Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/llms.txt",
+      "status": "working",
+      "at": "2026-11-04T17:42:34.987Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Notion Docs · documentation index",
+      "status": "done",
+      "at": "2026-11-04T17:42:35.150Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/pagination.md",
+      "status": "working",
+      "at": "2026-11-04T17:42:35.151Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Pagination",
+      "status": "done",
+      "at": "2026-11-04T17:42:35.744Z"
+    },
+    {
+      "stage": "Reading documentation",
+      "detail": "developers.notion.com/reference/retrieve-a-block.md",
+      "status": "working",
+      "at": "2026-11-04T17:42:35.745Z"
+    },
+    {
+      "stage": "Source read",
+      "detail": "Retrieve a block",
+      "status": "done",
+      "at": "2026-11-04T17:42:36.598Z"
+    },
+    {
+      "stage": "Updating action instructions",
+      "detail": "Using saved evidence for Read content of pages customers explicitly share with the app. Your other steps are retained.",
+      "status": "working",
+      "at": "2026-11-04T17:42:36.654Z"
+    },
+    {
+      "stage": "Action instructions updated",
+      "detail": "Saved a new version for Read content of pages customers explicitly share with the app. The documented request is ready for your test.",
+      "status": "done",
+      "at": "2026-11-04T17:42:55.222Z"
+    },
+    {
+      "stage": "Guide unfinished",
+      "detail": "Your request and 8 sources are saved. Retry the unfinished planning step.",
+      "status": "warning",
+      "at": "2026-11-04T17:42:55.259Z"
+    }
+  ],
+  "job": {
+    "id": "job-ceedd363-b1e6-4e7e-827b-a1b97b05cb84",
+    "input": {
+      "app": "Notion",
+      "website": "https://developers.notion.com/guides/get-started/authorization",
+      "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+      "audience": "customers",
+      "answers": {}
+    },
+    "state": "interrupted",
+    "events": [
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/get-started/authorization",
+        "status": "working",
+        "at": "2026-11-04T17:40:38.761Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Authorization",
+        "status": "done",
+        "at": "2026-11-04T17:40:40.215Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/llms.txt",
+        "status": "working",
+        "at": "2026-11-04T17:40:40.215Z"
+      },
+      {
+        "stage": "Choosing relevant documentation",
+        "detail": "Prioritizing registration, access and the requested API operations from official navigation.",
+        "status": "working",
+        "at": "2026-11-04T17:40:40.428Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion Docs · documentation index",
+        "status": "done",
+        "at": "2026-11-04T17:40:44.169Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/page.md",
+        "status": "working",
+        "at": "2026-11-04T17:40:44.169Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Page",
+        "status": "done",
+        "at": "2026-11-04T17:40:44.715Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/retrieve-a-page.md",
+        "status": "working",
+        "at": "2026-11-04T17:40:44.715Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Retrieve a page",
+        "status": "done",
+        "at": "2026-11-04T17:40:45.315Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/retrieve-a-page-property.md",
+        "status": "working",
+        "at": "2026-11-04T17:40:45.315Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Retrieve a page property item",
+        "status": "done",
+        "at": "2026-11-04T17:40:46.098Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/retrieve-page-markdown.md",
+        "status": "working",
+        "at": "2026-11-04T17:40:46.098Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Retrieve a page as markdown",
+        "status": "done",
+        "at": "2026-11-04T17:40:46.303Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/get-block-children.md",
+        "status": "working",
+        "at": "2026-11-04T17:40:46.303Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Retrieve block children",
+        "status": "done",
+        "at": "2026-11-04T17:40:47.016Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/openapi-adminApi.json",
+        "status": "working",
+        "at": "2026-11-04T17:40:47.016Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion Admin API",
+        "status": "done",
+        "at": "2026-11-04T17:40:47.980Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/openapi-undocumented.json",
+        "status": "working",
+        "at": "2026-11-04T17:40:47.980Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion API (Undocumented)",
+        "status": "done",
+        "at": "2026-11-04T17:40:50.155Z"
+      },
+      {
+        "stage": "Checking setup choices",
+        "detail": "Using 8 saved source snapshots. Your request and previous answers are retained.",
+        "status": "working",
+        "at": "2026-11-04T17:40:50.226Z"
+      },
+      {
+        "stage": "Building your guide",
+        "detail": "Requirements are clear. Creating the plan from saved evidence.",
+        "status": "working",
+        "at": "2026-11-04T17:40:55.447Z"
+      },
+      {
+        "stage": "Checking action coverage",
+        "detail": "Reviewing each permission relationship separately from execution.",
+        "status": "working",
+        "at": "2026-11-04T17:41:36.156Z"
+      },
+      {
+        "stage": "Repairing an incomplete action",
+        "detail": "Checking the missing request or access evidence for Read titles of pages customers explicitly share with the app. Completed setup and your answers are retained.",
+        "status": "working",
+        "at": "2026-11-04T17:41:59.839Z"
+      },
+      {
+        "stage": "Finding the missing request",
+        "detail": "Checking only Read titles of pages customers explicitly share with the app. Your other instructions and confirmed choices are retained.",
+        "status": "working",
+        "at": "2026-11-04T17:41:59.843Z"
+      },
+      {
+        "stage": "Finding missing evidence",
+        "detail": "Looking for  documentation.",
+        "status": "working",
+        "at": "2026-11-04T17:41:59.857Z"
+      },
+      {
+        "stage": "Choosing missing evidence",
+        "detail": "Selecting the official reference for the precise saved validation gap.",
+        "status": "working",
+        "at": "2026-11-04T17:42:01.261Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/page-property-values.md",
+        "status": "working",
+        "at": "2026-11-04T17:42:05.073Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Page property values",
+        "status": "done",
+        "at": "2026-11-04T17:42:05.921Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/llms.txt",
+        "status": "working",
+        "at": "2026-11-04T17:42:05.921Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion Docs · documentation index",
+        "status": "done",
+        "at": "2026-11-04T17:42:06.243Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/openapi.json",
+        "status": "working",
+        "at": "2026-11-04T17:42:06.244Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion API",
+        "status": "done",
+        "at": "2026-11-04T17:42:07.323Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/versioning",
+        "status": "working",
+        "at": "2026-11-04T17:42:07.326Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Versioning",
+        "status": "done",
+        "at": "2026-11-04T17:42:07.882Z"
+      },
+      {
+        "stage": "Updating action instructions",
+        "detail": "Using saved evidence for Read titles of pages customers explicitly share with the app. Your other steps are retained.",
+        "status": "working",
+        "at": "2026-11-04T17:42:07.923Z"
+      },
+      {
+        "stage": "Action instructions updated",
+        "detail": "Saved a new version for Read titles of pages customers explicitly share with the app. The missing evidence is still identified beside this action.",
+        "status": "done",
+        "at": "2026-11-04T17:42:29.301Z"
+      },
+      {
+        "stage": "Repairing an incomplete action",
+        "detail": "Checking the missing request or access evidence for Read content of pages customers explicitly share with the app. Completed setup and your answers are retained.",
+        "status": "working",
+        "at": "2026-11-04T17:42:29.329Z"
+      },
+      {
+        "stage": "Finding the missing request",
+        "detail": "Checking only Read content of pages customers explicitly share with the app. Your other instructions and confirmed choices are retained.",
+        "status": "working",
+        "at": "2026-11-04T17:42:29.330Z"
+      },
+      {
+        "stage": "Finding missing evidence",
+        "detail": "Looking for  documentation.",
+        "status": "working",
+        "at": "2026-11-04T17:42:29.339Z"
+      },
+      {
+        "stage": "Choosing missing evidence",
+        "detail": "Selecting the official reference for the precise saved validation gap.",
+        "status": "working",
+        "at": "2026-11-04T17:42:29.752Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/guides/data-apis/notion-flavored-markdown.md",
+        "status": "working",
+        "at": "2026-11-04T17:42:34.503Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion-flavored Markdown format",
+        "status": "done",
+        "at": "2026-11-04T17:42:34.986Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/llms.txt",
+        "status": "working",
+        "at": "2026-11-04T17:42:34.987Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Notion Docs · documentation index",
+        "status": "done",
+        "at": "2026-11-04T17:42:35.150Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/pagination.md",
+        "status": "working",
+        "at": "2026-11-04T17:42:35.151Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Pagination",
+        "status": "done",
+        "at": "2026-11-04T17:42:35.744Z"
+      },
+      {
+        "stage": "Reading documentation",
+        "detail": "developers.notion.com/reference/retrieve-a-block.md",
+        "status": "working",
+        "at": "2026-11-04T17:42:35.745Z"
+      },
+      {
+        "stage": "Source read",
+        "detail": "Retrieve a block",
+        "status": "done",
+        "at": "2026-11-04T17:42:36.598Z"
+      },
+      {
+        "stage": "Updating action instructions",
+        "detail": "Using saved evidence for Read content of pages customers explicitly share with the app. Your other steps are retained.",
+        "status": "working",
+        "at": "2026-11-04T17:42:36.654Z"
+      },
+      {
+        "stage": "Action instructions updated",
+        "detail": "Saved a new version for Read content of pages customers explicitly share with the app. The documented request is ready for your test.",
+        "status": "done",
+        "at": "2026-11-04T17:42:55.222Z"
+      },
+      {
+        "stage": "Guide unfinished",
+        "detail": "Your request and 8 sources are saved. Retry the unfinished planning step.",
+        "status": "warning",
+        "at": "2026-11-04T17:42:55.259Z"
+      }
+    ],
+    "createdAt": "2026-11-04T17:40:38.726Z",
+    "updatedAt": "2026-11-04T17:42:55.285Z",
+    "leaseUntil": 0,
+    "timing": {
+      "startedAt": "2026-11-04T17:40:38.758Z",
+      "finishedAt": "2026-11-04T17:42:55.261Z",
+      "elapsedMs": 136503,
+      "firstActionMs": 136503
+    },
+    "attempts": [
+      {
+        "modelCalls": 9,
+        "inputTokens": 942333,
+        "outputTokens": 20773,
+        "modelMs": 124944
+      }
+    ],
+    "guide": {
+      "accessModel": "oauth",
+      "requestedActions": [
+        {
+          "id": "read-shared-page-titles",
+          "title": "Read titles of pages customers explicitly share with the app",
+          "category": "resource",
+          "operation": "read"
+        },
+        {
+          "id": "read-shared-page-content",
+          "title": "Read content of pages customers explicitly share with the app",
+          "category": "resource",
+          "operation": "read"
+        },
+        {
+          "id": "authorize-customer-workspace",
+          "title": "Authorize the app to access a customer's connected workspace",
+          "category": "authorization",
+          "operation": "authorize"
+        }
+      ],
+      "prohibitions": [
+        "Creating pages",
+        "Modifying pages",
+        "Workspace administration"
+      ],
+      "oauthSupport": "documented",
+      "summary": "Notion documents OAuth 2.0 for integrations that each customer authorizes, with the connection set up in the Developer portal. Access is limited to pages each customer shares, and reads require the read content capability.",
+      "recommendation": "The requested API test is not ready yet. Resolve the access mapping for Read titles of pages customers explicitly share with the app. Use “Find missing request” or add official documentation beside that action.",
+      "nextAction": "Resolve the missing evidence below.",
+      "findings": [
+        {
+          "kind": "oauth",
+          "title": "OAuth 2.0 authorization for customer workspaces is documented",
+          "detail": "OAuth integrations follow the OAuth 2.0 authorization code flow to connect a customer's workspace. Setup requires client credentials and a redirect URI; marketplace submission or review is not required to start authorization.",
+          "appliesWhen": "Each customer connects their own workspace through the app.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Both scoped OAuth integrations and public integrations use this flow. You can start authorization as soon as you configure the integration’s client credentials and redirect URI; Marketplace submission or review"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "a user-scoped static token, and OAuth integrations and public integrations use the OAuth 2.0 protocol."
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "permission",
+          "title": "Read content capability for page titles and content",
+          "detail": "Retrieving a page and its block children or markdown requires the connection to have the read content capability. Without it, Notion returns 403. This is the only capability needed for the confirmed read-only use case.",
+          "appliesWhen": "Reading titles and content of shared pages.",
+          "scope": "read content",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "> > Your connection must have read content capabilities on the target page in order to call this endpoint. To update your connection's capabilities, navigate to the Developer portal, select"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "## Errors The connection needs read content capabilities. Missing capabilities return `403`. A missing page or missing access returns `404`."
+            },
+            {
+              "sourceId": "s6",
+              "quote": "> > This endpoint requires a connection to have read content capabilities. Attempting to call this API without read content capabilities will return an HTTP response with a 403 status"
+            }
+          ],
+          "stage": "prepare"
+        },
+        {
+          "kind": "prerequisite",
+          "title": "Customers must share each page with the connection",
+          "detail": "After authorization, only the authorizing user can share pages with the connection, and pages must be selected in the page picker. Pages not shared return 404, so the app can only read what customers explicitly share.",
+          "appliesWhen": "Each customer must select the pages to share during authorization.",
+          "scope": "",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "If the user opts to `Select pages`, then a page picker interface opens. A user can search for and select pages and databases to share with the connection from the"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "> [!NOTE] > > After a user authorizes an OAuth integration, only that user is able to interact or share pages and databases with the connection. Unlike internal connections, if"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "multiple members in a workspace want to use an OAuth integration, each prospective user needs to individually follow the auth flow for the connection."
+            }
+          ],
+          "stage": "test"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Create the OAuth integration and configure client credentials and redirect URI",
+          "detail": "In the Notion Developer portal, create an OAuth integration, set the redirect URI under OAuth configuration, and choose the installation scope. Confirm the Read content capability under Configuration > Capabilities. Do not enable write or administration capabilities. Save the client ID and client secret in environment variables, never in source control.",
+          "owner": "developer",
+          "doneWhen": "The integration exists with a redirect URI, client ID and client secret stored securely, and only the read content capability enabled.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "Navigate to the Developer portal and create a new OAuth integration."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "Fill out the form with your connection details, including your redirect URI(s) under the OAuth configuration section and the connection's installation scope — either **Any workspace** or **Or select 1"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "## Errors The connection needs read content capabilities. Missing capabilities return `403`. A missing page or missing access returns `404`."
+            }
+          ],
+          "id": "prepare-oauth-integration",
+          "dependsOn": [],
+          "actionIds": [],
+          "testKind": "prepare",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": ""
+          },
+          "stage": "prepare",
+          "destination": "https://developers.notion.com/guides/authorization/overview.md",
+          "fields": [
+            "OAUTH_CLIENT_ID from Developer portal Configuration tab",
+            "OAUTH_CLIENT_SECRET from Developer portal Configuration tab",
+            "OAUTH_REDIRECT_URI matching the app callback URL"
+          ]
+        },
+        {
+          "title": "Send the customer to the authorization URL and verify the callback",
+          "detail": "Direct the customer to the authorization URL from the Configuration tab. The customer chooses which pages to share in the page picker. Notion redirects to the redirect URI with a code parameter on Allow access, or an error parameter on Cancel. Verify the callback returns a code and handle the error path gracefully.",
+          "owner": "customer admin",
+          "doneWhen": "The callback receives a temporary code after the customer selects pages, and a cancel produces a handled error response.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "**Step 1** Navigate the user to the connection’s authorization URL. This URL is provided in the Developer portal."
+            },
+            {
+              "sourceId": "s1",
+              "quote": "**Step 2** After the user selects which workspace pages to share, Notion redirects the user to the connection’s redirect URI and includes a `code` query parameter. The redirect URI is"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "If the user presses **Cancel**, they will be redirected to the redirect URI with and `error` query param added."
+            }
+          ],
+          "id": "authorize-customer-consent",
+          "dependsOn": [
+            "prepare-oauth-integration"
+          ],
+          "actionIds": [
+            "authorize-customer-workspace"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://api.notion.com/v1/oauth/authorize",
+            "example": "curl '--include' 'https://api.notion.com/v1/oauth/authorize?owner=user&client_id=<OAUTH_CLIENT_ID>&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code'"
+          },
+          "stage": "test",
+          "destination": "https://developers.notion.com/guides/authorization/overview.md",
+          "fields": [
+            "OAUTH_CLIENT_ID from Developer portal Configuration tab",
+            "redirect_uri must match the registered redirect URI",
+            "owner must be user",
+            "customer selects pages in the page picker"
+          ]
+        },
+        {
+          "title": "Exchange the authorization code for an access token",
+          "detail": "POST the temporary code to the token endpoint using HTTP Basic authentication with client ID and secret. Body includes grant_type authorization_code, the code, and the redirect_uri. Store the returned access_token, refresh_token and workspace_id for later requests.",
+          "owner": "developer",
+          "doneWhen": "The token response includes access_token, refresh_token, bot_id and workspace_id, and the tokens are stored securely.",
+          "evidence": [
+            {
+              "sourceId": "s1",
+              "quote": "{\"grant_type\":\"authorization_code\",\"code\":\"e202e8c9-0990-40af-855f-ff8f872b1ec6\", \"redirect_uri\":\"https://example.com/auth/notion/callback\"} ``` The Node-equivalent of this example would look something like this:"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "### Step 4 - Notion responds with an `access_token` , `refresh_token`, and additional information"
+            },
+            {
+              "sourceId": "s1",
+              "quote": "| `\"bot_id\"` | `string` | An identifier for this authorization. | ✅ |"
+            }
+          ],
+          "id": "exchange-authorization-code",
+          "dependsOn": [
+            "authorize-customer-consent"
+          ],
+          "actionIds": [
+            "authorize-customer-workspace"
+          ],
+          "testKind": "authorization",
+          "request": {
+            "method": "POST",
+            "endpoint": "https://api.notion.com/v1/oauth/token",
+            "example": "curl '--request' 'POST' 'https://api.notion.com/v1/oauth/token' '--user' '<OAUTH_CLIENT_ID>:<OAUTH_CLIENT_SECRET>' '--header' 'Content-Type: application/json' '--data' '{\"grant_type\":\"authorization_code\",\"code\":\"<AUTH_CODE_FROM_CALLBACK>\",\"redirect_uri\":\"https://example.com/auth/notion/callback\"}'"
+          },
+          "stage": "test",
+          "destination": "https://developers.notion.com/guides/authorization/overview.md",
+          "fields": [
+            "code is the temporary code from the redirect query string",
+            "redirect_uri must match the authorization request",
+            "OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET from Configuration tab"
+          ]
+        },
+        {
+          "title": "Retrieve a shared page title with the customer's access token",
+          "detail": "Retrieve one page the customer explicitly shared. The title is found under the page's properties object: locate the property whose type is title (its key varies by database schema; for a page whose parent is a page the only property is title). Read that property's title array and join every item's plain_text in order to form the title text. For a shared page that is not in a data source, use the property named title. A 404 means the page is not shared with the connection.",
+          "owner": "developer",
+          "doneWhen": "The response returns the page object and the title text is produced by joining plain_text from all title array items, or a 404 is reported as not shared. Boundary check: confirm the token holds only the read content capability and the request log contains only this GET; no create, update or workspace administration calls are made.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "## GET /v1/pages/{page_id} | Retrieve a page"
+            },
+            {
+              "sourceId": "s3",
+              "quote": "For a page in a data source, the property values follow that data source’s schema. For a page whose parent is another page, the only property is `title`."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "## Errors The connection needs read content capabilities. Missing capabilities return `403`. A missing page or missing access returns `404`."
+            }
+          ],
+          "id": "read-shared-page-title-representative",
+          "dependsOn": [
+            "exchange-authorization-code"
+          ],
+          "actionIds": [
+            "read-shared-page-titles"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://api.notion.com/v1/pages/{page_id}",
+            "example": "curl '--request' 'GET' 'https://api.notion.com/v1/pages/<PAGE_ID>' '--header' 'Authorization: Bearer <ACCESS_TOKEN>' '--header' 'Notion-Version: 2026-03-11'"
+          },
+          "stage": "test",
+          "destination": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "fields": [
+            "PAGE_ID is a page the customer explicitly shared, provided by the developer",
+            "ACCESS_TOKEN from the token exchange response",
+            "title located via the property whose type is title, join all plain_text segments of its title array"
+          ]
+        },
+        {
+          "title": "Read the content of a shared page as markdown",
+          "detail": "Retrieve the page content as markdown with GET /v1/pages/{page_id}/markdown using markdown_version=v2. Read the $.markdown string from the response. If $.truncated is true, repeat the same endpoint with each entry of $.unknown_block_ids as page_id, following the nested blocks until no unknown IDs remain or a 404/object_not_found is returned for a block the connection cannot access. Report inaccessible or unsupported blocks (bookmarks, embeds, link previews, and other unsupported types appearing as <unknown> tags) explicitly as unread beside the markdown; do not claim the markdown is complete when unknown blocks remain. Only the read content capability is used.",
+          "owner": "developer",
+          "doneWhen": "The markdown is read in full, or every truncated, inaccessible, or unsupported block is explicitly reported as unread without claiming completeness. Boundary check: confirm the grant is read content only and the outgoing requests include only GET calls to the markdown endpoint for the shared page and its unknown block IDs, with no create, update, or admin operations.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "Response JSON paths for GET /v1/pages/{page_id}/markdown: $.markdown (string)"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "When truncation or permissions cause unknown blocks, the `truncated` field is set to `true` and the `unknown_block_ids` array contains the affected block IDs."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Unsupported block types**: Certain block types (such as bookmarks, embeds, and link previews) are not yet supported in the markdown format."
+            }
+          ],
+          "id": "read-page-content-representative",
+          "dependsOn": [
+            "read-shared-page-title-representative"
+          ],
+          "actionIds": [
+            "read-shared-page-content"
+          ],
+          "testKind": "action",
+          "request": {
+            "method": "GET",
+            "endpoint": "https://api.notion.com/v1/pages/{page_id}/markdown",
+            "example": "curl '--request' 'GET' 'https://api.notion.com/v1/pages/<PAGE_ID>/markdown?markdown_version=v2' '--header' 'Authorization: Bearer <ACCESS_TOKEN>' '--header' 'Notion-Version: 2026-03-11'"
+          },
+          "stage": "test",
+          "destination": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "fields": [
+            "PAGE_ID is the same shared page used for the title test",
+            "markdown_version=v2 is recommended",
+            "If truncated is true, repeat with each unknown_block_ids entry as page_id",
+            "Access token: backend OAuth exchange for the test account; keep it out of this guide"
+          ]
+        },
+        {
+          "title": "Confirm the connection cannot write by inspecting the grant and making no write call",
+          "detail": "Do not call any create, update or delete endpoint. Verify the integration shows only the read content capability in the Developer portal Capabilities section. Confirm no page-creation or modification request is included in the app code.",
+          "owner": "developer",
+          "doneWhen": "The Capabilities section shows only read content and the codebase contains no write-capability endpoint calls.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "> > Your connection must have read content capabilities on the target page in order to call this endpoint. To update your connection's capabilities, navigate to the Developer portal, select"
+            },
+            {
+              "sourceId": "s5",
+              "quote": "your connection, open the **Configuration** tab, and scroll to the Capabilities section."
+            }
+          ],
+          "id": "boundary-no-write-check",
+          "dependsOn": [
+            "read-page-content-representative"
+          ],
+          "actionIds": [],
+          "testKind": "boundary",
+          "request": {
+            "method": "",
+            "endpoint": "",
+            "example": ""
+          },
+          "stage": "test",
+          "destination": "https://developers.notion.com/reference/capabilities.md",
+          "fields": [
+            "Capabilities section of the integration Configuration tab"
+          ]
+        }
+      ],
+      "questions": [],
+      "activeEffort": {
+        "range": "",
+        "assumptions": ""
+      },
+      "unknowns": [],
+      "blockers": [
+        {
+          "title": "Integration app registration and client credentials are required before any test",
+          "consequence": "test",
+          "kind": "prerequisite",
+          "owner": "developer",
+          "resolution": "Create the OAuth integration in the Developer portal and record client credentials and redirect URI.",
+          "stepIds": [
+            "prepare-oauth-integration"
+          ],
+          "resolutionStepIds": [
+            "prepare-oauth-integration"
+          ]
+        },
+        {
+          "title": "Read titles of pages customers explicitly share with the app",
+          "kind": "missing-evidence",
+          "gap": {
+            "actionId": "read-shared-page-titles",
+            "fact": "request"
+          },
+          "actionId": "read-shared-page-titles",
+          "consequence": "test",
+          "owner": "Developer",
+          "resolution": "Cite the page property schema showing the title-type discriminator and its title rich-text array with plain_text, state the path $.properties.<title key>.title[].plain_text, and, for full titles omitted by the 25-mention limit, add Retrieve a page property item and read every page of that property. Affected steps: read-shared-page-title-representative.",
+          "stepIds": [
+            "read-shared-page-title-representative"
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "action": "Read titles of pages customers explicitly share with the app",
+          "actionId": "read-shared-page-titles",
+          "permissions": [
+            "read content"
+          ],
+          "status": "unresolved",
+          "reason": "Cite the page property schema showing the title-type discriminator and its title rich-text array with plain_text, state the path $.properties.<title key>.title[].plain_text, and, for full titles omitted by the 25-mention limit, add Retrieve a page property item and read every page of that property. Affected steps: read-shared-page-title-representative.",
+          "evidence": [
+            {
+              "sourceId": "s3",
+              "quote": "Retrieves a page object by ID. The response includes page property values. To read the page’s content, use Retrieve block children."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "## Errors The connection needs read content capabilities. Missing capabilities return `403`. A missing page or missing access returns `404`."
+            },
+            {
+              "sourceId": "s3",
+              "quote": "For a page in a data source, the property values follow that data source’s schema. For a page whose parent is another page, the only property is `title`."
+            }
+          ],
+          "support": "unresolved",
+          "missingFact": "response"
+        },
+        {
+          "action": "Read content of pages customers explicitly share with the app",
+          "actionId": "read-shared-page-content",
+          "permissions": [
+            "read content"
+          ],
+          "status": "mapped",
+          "reason": "The read-page-content-representative step documents GET /v1/pages/{page_id}/markdown with markdown_version=v2 and Notion-Version, reads $.markdown, recursively re-fetches $.unknown_block_ids when $.truncated is true, reports unread blocks, and is bounded to GET-only read content capability, which the documented 403 and endpoint sources support.",
+          "evidence": [
+            {
+              "sourceId": "s5",
+              "quote": "> > Attempting to call this endpoint without read content capabilities returns an HTTP response with a 403 status code."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "* **Unsupported block types**: Certain block types (such as bookmarks, embeds, and link previews) are not yet supported in the markdown format."
+            },
+            {
+              "sourceId": "s5",
+              "quote": "For unsupported block types, use the block-based API to retrieve the full structured data."
+            }
+          ],
+          "support": "reviewed"
+        }
+      ],
+      "researchNeeded": [],
+      "semanticsVersion": 2,
+      "phase": "ready",
+      "clarificationUsed": true,
+      "followupDone": false,
+      "schemaVersion": 1,
+      "id": "lg-2df15b6f-f3c5-4de7-a754-c9f714638d58",
+      "generatedAt": "2026-11-04T17:42:55.225Z",
+      "input": {
+        "app": "Notion",
+        "website": "https://developers.notion.com/guides/get-started/authorization",
+        "useCase": "A web app reads titles and content of Notion pages that each customer explicitly shares with this integration. Read content only. Never create or modify pages; no workspace administration.",
+        "audience": "customers",
+        "answers": {}
+      },
+      "provider": {
+        "website": "https://developers.notion.com/guides/get-started/authorization",
+        "identity": "provided"
+      },
+      "status": "provisional",
+      "mode": "interpreted",
+      "notice": "Generated from retrieved documentation. A separate review checks the request and access mapping; setup has not been executed.",
+      "warnings": [],
+      "setupTested": false,
+      "decisions": [],
+      "engine": {
+        "model": "claude-haiku-5-5",
+        "attempts": 9,
+        "inputTokens": 942333,
+        "outputTokens": 20773,
+        "elapsedMs": 124944,
+        "outcome": "accepted",
+        "thinking": "adaptive",
+        "effort": "medium",
+        "thinkingTokens": 11200,
+        "provider": "anthropic",
+        "promptVersion": "live-guide.44"
+      },
+      "journey": {
+        "modelCalls": 9,
+        "inputTokens": 942333,
+        "outputTokens": 20773,
+        "modelMs": 124944
+      },
+      "sources": [
+        {
+          "id": "s1",
+          "url": "https://developers.notion.com/guides/authorization/overview.md",
+          "title": "Authorization",
+          "retrievedAt": "2026-11-04T17:40:50.214Z",
+          "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd",
+          "links": [
+            "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code",
+            "https://oauth.net/2/",
+            "https://www.oauth.com/oauth2-servers/redirect-uris/",
+            "https://api.notion.com/v1/oauth/token",
+            "https://www.notion.com/help/sharing-and-permissions",
+            "https://developers.notion.com/reference/intro.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+            "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+            "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+            "https://app.notion.com/developers/connections",
+            "https://developers.notion.com/guides/authorization/credential-security.md",
+            "https://developers.notion.com/reference/versioning",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type",
+            "https://developers.notion.com/reference/status-codes.md",
+            "https://www.notion.so/developers",
+            "https://developers.notion.com/guides/authorization/overview.md",
+            "https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication",
+            "https://developers.notion.com/reference/user.md",
+            "https://developers.notion.com/reference/refresh-a-token.md"
+          ]
+        },
+        {
+          "id": "s2",
+          "url": "https://developers.notion.com/reference/page.md",
+          "title": "Page",
+          "retrievedAt": "2026-11-04T17:40:50.217Z",
+          "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5",
+          "links": [
+            "https://developers.notion.com/reference/page-property-values",
+            "https://developers.notion.com/reference/page-property-values.md",
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/reference/parent-object.md",
+            "https://developers.notion.com/reference/data-source.md",
+            "https://developers.notion.com/reference/property-object.md",
+            "https://developers.notion.com/reference/block.md",
+            "https://developers.notion.com/reference/get-block-children.md",
+            "https://developers.notion.com/reference/user.md",
+            "https://developers.notion.com/reference/emoji-and-icon.md",
+            "https://developers.notion.com/reference/file-object.md",
+            "https://developers.notion.com/reference/property-object"
+          ]
+        },
+        {
+          "id": "s3",
+          "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+          "title": "Retrieve a page",
+          "retrievedAt": "2026-11-04T17:40:50.217Z",
+          "hash": "4e744de9246c68af3ab694482112df80cb19d875b50ab82556cdad355ec53315",
+          "links": [
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/reference/retrieve-a-page-property.md",
+            "https://developers.notion.com/reference/page.md",
+            "https://developers.notion.com/reference/page-property-values.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/reference/get-block-children.md",
+            "https://developers.notion.com/reference/property-object.md",
+            "https://developers.notion.com/reference/property-item-object.md",
+            "https://developers.notion.com/reference/status-codes.md",
+            "https://developers.notion.com/reference/request-limits.md",
+            "https://developers.notion.com/reference/versioning"
+          ]
+        },
+        {
+          "id": "s4",
+          "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "title": "Retrieve a page property item",
+          "retrievedAt": "2026-11-04T17:40:50.218Z",
+          "hash": "1fb8f2f2787d3021ab8a37dabbe3dc12679a53ef0f4a67782d506596d732f675",
+          "links": [
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/reference/retrieve-a-page.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/reference/property-item-object.md",
+            "https://developers.notion.com/reference/retrieve-a-data-source.md",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values.md",
+            "https://developers.notion.com/reference/status-codes.md",
+            "https://developers.notion.com/reference/request-limits.md",
+            "https://developers.notion.com/reference/versioning"
+          ]
+        },
+        {
+          "id": "s5",
+          "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+          "title": "Retrieve a page as markdown",
+          "retrievedAt": "2026-11-04T17:40:50.219Z",
+          "hash": "152ab45d3fbb058505cfc10303f5210b8f9230fbb6cc9a11ea31791511e2b294",
+          "links": [
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/reference/get-block-children.md",
+            "https://developers.notion.com/guides/data-apis/notion-flavored-markdown.md",
+            "https://developers.notion.com/guides/data-apis/working-with-markdown-content.md",
+            "https://app.notion.com/developers/connections",
+            "https://developers.notion.com/reference/retrieve-a-block.md",
+            "https://developers.notion.com/reference/request-limits.md",
+            "https://developers.notion.com/reference/status-codes.md",
+            "https://developers.notion.com/guides/data-apis/notion-flavored-markdown",
+            "https://developers.notion.com/reference/versioning"
+          ]
+        },
+        {
+          "id": "s6",
+          "url": "https://developers.notion.com/reference/get-block-children.md",
+          "title": "Retrieve block children",
+          "retrievedAt": "2026-11-04T17:40:50.219Z",
+          "hash": "adae694ac8ba29f8128f9a68a643c112a8f0c72b226a016cbac530582881b974",
+          "links": [
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/reference/block",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content.md",
+            "https://developers.notion.com/reference/block.md",
+            "https://developers.notion.com/reference/pagination.md",
+            "https://developers.notion.com/reference/request-limits.md",
+            "https://developers.notion.com/reference/status-codes.md",
+            "https://developers.notion.com/reference/versioning"
+          ]
+        },
+        {
+          "id": "s7",
+          "url": "https://developers.notion.com/openapi-adminApi.json",
+          "title": "Notion Admin API",
+          "retrievedAt": "2026-11-04T17:40:50.220Z",
+          "hash": "1abab0afb3ea43351653bc60d5171babccbef64d165d577009b07a44a2bc38c8",
+          "links": []
+        },
+        {
+          "id": "s8",
+          "url": "https://developers.notion.com/openapi-undocumented.json",
+          "title": "Notion API (Undocumented)",
+          "retrievedAt": "2026-11-04T17:40:50.220Z",
+          "hash": "363af84fe87e5f40e5013e1439466a704c5071ad6442de53afd2c887560182c0",
+          "links": []
+        },
+        {
+          "id": "s9",
+          "url": "https://developers.notion.com/reference/page-property-values.md",
+          "title": "Page property values",
+          "retrievedAt": "2026-11-04T17:42:07.905Z",
+          "hash": "121e5564921b17ec1258f8348f8c4016bcdb673930406355bec5828885a81771",
+          "links": [
+            "https://developers.notion.com/reference/retrieve-a-page.md",
+            "https://developers.notion.com/reference/retrieve-a-page-property.md",
+            "https://developers.notion.com/reference/post-page.md",
+            "https://developers.notion.com/reference/patch-page.md",
+            "https://developers.notion.com/reference/update-data-source-properties.md",
+            "https://developers.notion.com/reference/property-object.md",
+            "https://developers.notion.com/reference/retrieve-a-data-source.md",
+            "https://developers.notion.com/reference/page-property-values.md",
+            "https://developers.notion.com/reference/property-item-object.md",
+            "https://developers.notion.com/reference/update-a-data-source.md",
+            "https://developers.notion.com/reference/rich-text.md",
+            "https://developers.notion.com/reference/page.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/reference/request-limits.md",
+            "https://developers.notion.com/reference/user.md",
+            "https://developers.notion.com/reference/file-object.md",
+            "https://developers.notion.com/guides/data-apis/uploading-small-files.md",
+            "https://developers.notion.com/guides/data-apis/query-large-data-sources.md",
+            "https://developers.notion.com/reference/block.md",
+            "https://developers.notion.com/guides/data-apis/working-with-databases.md",
+            "https://developers.notion.com/reference/emoji-and-icon.md",
+            "https://developers.notion.com/guides/data-apis/read-page-property-values.md"
+          ]
+        },
+        {
+          "id": "s10",
+          "url": "https://developers.notion.com/openapi.json",
+          "title": "Notion API",
+          "retrievedAt": "2026-11-04T17:42:07.909Z",
+          "hash": "27cbd65425a374fb94a270338cef13fa82e8bc9c4fd1dc989b75585ff7d5b15c",
+          "links": []
+        },
+        {
+          "id": "s11",
+          "url": "https://developers.notion.com/reference/versioning",
+          "title": "Versioning",
+          "retrievedAt": "2026-11-04T17:42:07.909Z",
+          "hash": "229d2d749fe811e14a0aa859dce8c65ed179a1ea84dffe30ba255268ee15d506",
+          "links": [
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11.md",
+            "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03.md"
+          ]
+        },
+        {
+          "id": "s12",
+          "url": "https://developers.notion.com/guides/data-apis/notion-flavored-markdown.md",
+          "title": "Notion-flavored Markdown format",
+          "retrievedAt": "2026-11-04T17:42:36.634Z",
+          "hash": "45bead573e3e7f302e27c3fed41f09e25d86c322c904eb6b2fdd17437531d18f",
+          "links": [
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/data-apis/working-with-markdown-content.md",
+            "https://developers.notion.com/guides/data-apis/enhanced-markdown.md",
+            "https://developers.notion.com/guides/data-apis/migrate-to-notion-flavored-markdown.md",
+            "https://developers.notion.com/guides/data-apis/url"
+          ]
+        },
+        {
+          "id": "s13",
+          "url": "https://developers.notion.com/reference/pagination.md",
+          "title": "Pagination",
+          "retrievedAt": "2026-11-04T17:42:36.634Z",
+          "hash": "ed6da656a168b9f496dc23d457c382e309f91b2273b82b6e5f2a8bd80c04aeaf",
+          "links": [
+            "https://developers.notion.com/reference/get-block-children.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/reference/query-a-data-source.md",
+            "https://developers.notion.com/reference/property-item-object.md",
+            "https://developers.notion.com/reference/list-data-source-templates.md",
+            "https://developers.notion.com/reference/get-view-query-results.md",
+            "https://developers.notion.com/reference/get-users.md",
+            "https://developers.notion.com/reference/list-comments.md",
+            "https://developers.notion.com/reference/list-file-uploads.md",
+            "https://developers.notion.com/reference/list-custom-emojis.md",
+            "https://developers.notion.com/reference/list-views.md",
+            "https://developers.notion.com/guides/data-apis/query-large-data-sources.md"
+          ]
+        },
+        {
+          "id": "s14",
+          "url": "https://developers.notion.com/reference/retrieve-a-block.md",
+          "title": "Retrieve a block",
+          "retrievedAt": "2026-11-04T17:42:36.635Z",
+          "hash": "6cac499116891b91b5a3b37df6f2c839d06be14f2d8405fc1c9de924387205c9",
+          "links": [
+            "https://developers.notion.com/reference/get-block-children.md",
+            "https://developers.notion.com/reference/block",
+            "https://developers.notion.com/reference/capabilities.md",
+            "https://developers.notion.com/llms.txt",
+            "https://developers.notion.com/guides/data-apis/working-with-page-content.md",
+            "https://developers.notion.com/reference/request-limits.md",
+            "https://developers.notion.com/reference/status-codes.md",
+            "https://developers.notion.com/reference/versioning"
+          ]
+        }
+      ],
+      "integration": {
+        "catalogName": "Notion",
+        "docsUrl": "https://docs.composio.dev/toolkits/notion",
+        "message": "Notion appears in the dated Composio catalog. Authentication method, managed OAuth availability and coverage of your required actions still need checking. A catalog match alone does not establish compatibility."
+      },
+      "observations": [],
+      "resultState": "research-failure",
+      "researchMetrics": {
+        "navigationCalls": 1
+      }
+    },
+    "error": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation.",
+    "failure": {
+      "category": "planning",
+      "message": "Planning could not finish. Collected sources are retained; retry this planning stage or add more specific documentation."
+    },
+    "savedSources": [
+      {
+        "id": "s1",
+        "url": "https://developers.notion.com/guides/authorization/overview.md",
+        "title": "Authorization",
+        "retrievedAt": "2026-11-04T17:40:50.214Z",
+        "hash": "2c66c33083c1b4f9e4aa616958db304bec0e7482541abff660c94ba2457530dd",
+        "links": [
+          "https://developers.notion.com/guides/connections-and-tokens/oauth-integrations/overview",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://api.notion.com/v1/oauth/authorize?owner=user&client_id=463558a3-725e-4f37-b6d3-0889894f68de&redirect_uri=https%3A%2F%2Fexample.com%2Fauth%2Fnotion%2Fcallback&response_type=code",
+          "https://oauth.net/2/",
+          "https://www.oauth.com/oauth2-servers/redirect-uris/",
+          "https://api.notion.com/v1/oauth/token",
+          "https://www.notion.com/help/sharing-and-permissions",
+          "https://developers.notion.com/reference/intro.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/connections-and-tokens/internal-connections.md",
+          "https://developers.notion.com/guides/connections-and-tokens/personal-access-tokens.md",
+          "https://developers.notion.com/guides/connections-and-tokens/public-integrations/overview",
+          "https://app.notion.com/developers/connections",
+          "https://developers.notion.com/guides/authorization/credential-security.md",
+          "https://developers.notion.com/reference/versioning",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type",
+          "https://developers.notion.com/reference/status-codes.md",
+          "https://www.notion.so/developers",
+          "https://developers.notion.com/guides/authorization/overview.md",
+          "https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication",
+          "https://developers.notion.com/reference/user.md",
+          "https://developers.notion.com/reference/refresh-a-token.md"
+        ]
+      },
+      {
+        "id": "s2",
+        "url": "https://developers.notion.com/reference/page.md",
+        "title": "Page",
+        "retrievedAt": "2026-11-04T17:40:50.217Z",
+        "hash": "eff74a931c4108d81202aab161f2c519d63f24761d3a0777e8c7de7a0b730fd5",
+        "links": [
+          "https://developers.notion.com/reference/page-property-values",
+          "https://developers.notion.com/reference/page-property-values.md",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/reference/parent-object.md",
+          "https://developers.notion.com/reference/data-source.md",
+          "https://developers.notion.com/reference/property-object.md",
+          "https://developers.notion.com/reference/block.md",
+          "https://developers.notion.com/reference/get-block-children.md",
+          "https://developers.notion.com/reference/user.md",
+          "https://developers.notion.com/reference/emoji-and-icon.md",
+          "https://developers.notion.com/reference/file-object.md",
+          "https://developers.notion.com/reference/property-object"
+        ]
+      },
+      {
+        "id": "s3",
+        "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+        "title": "Retrieve a page",
+        "retrievedAt": "2026-11-04T17:40:50.217Z",
+        "hash": "4e744de9246c68af3ab694482112df80cb19d875b50ab82556cdad355ec53315",
+        "links": [
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "https://developers.notion.com/reference/page.md",
+          "https://developers.notion.com/reference/page-property-values.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/reference/get-block-children.md",
+          "https://developers.notion.com/reference/property-object.md",
+          "https://developers.notion.com/reference/property-item-object.md",
+          "https://developers.notion.com/reference/status-codes.md",
+          "https://developers.notion.com/reference/request-limits.md",
+          "https://developers.notion.com/reference/versioning"
+        ]
+      },
+      {
+        "id": "s4",
+        "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+        "title": "Retrieve a page property item",
+        "retrievedAt": "2026-11-04T17:40:50.218Z",
+        "hash": "1fb8f2f2787d3021ab8a37dabbe3dc12679a53ef0f4a67782d506596d732f675",
+        "links": [
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/reference/retrieve-a-page.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/reference/property-item-object.md",
+          "https://developers.notion.com/reference/retrieve-a-data-source.md",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values.md",
+          "https://developers.notion.com/reference/status-codes.md",
+          "https://developers.notion.com/reference/request-limits.md",
+          "https://developers.notion.com/reference/versioning"
+        ]
+      },
+      {
+        "id": "s5",
+        "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+        "title": "Retrieve a page as markdown",
+        "retrievedAt": "2026-11-04T17:40:50.219Z",
+        "hash": "152ab45d3fbb058505cfc10303f5210b8f9230fbb6cc9a11ea31791511e2b294",
+        "links": [
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/reference/get-block-children.md",
+          "https://developers.notion.com/guides/data-apis/notion-flavored-markdown.md",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content.md",
+          "https://app.notion.com/developers/connections",
+          "https://developers.notion.com/reference/retrieve-a-block.md",
+          "https://developers.notion.com/reference/request-limits.md",
+          "https://developers.notion.com/reference/status-codes.md",
+          "https://developers.notion.com/guides/data-apis/notion-flavored-markdown",
+          "https://developers.notion.com/reference/versioning"
+        ]
+      },
+      {
+        "id": "s6",
+        "url": "https://developers.notion.com/reference/get-block-children.md",
+        "title": "Retrieve block children",
+        "retrievedAt": "2026-11-04T17:40:50.219Z",
+        "hash": "adae694ac8ba29f8128f9a68a643c112a8f0c72b226a016cbac530582881b974",
+        "links": [
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content.md",
+          "https://developers.notion.com/reference/block.md",
+          "https://developers.notion.com/reference/pagination.md",
+          "https://developers.notion.com/reference/request-limits.md",
+          "https://developers.notion.com/reference/status-codes.md",
+          "https://developers.notion.com/reference/versioning"
+        ]
+      },
+      {
+        "id": "s7",
+        "url": "https://developers.notion.com/openapi-adminApi.json",
+        "title": "Notion Admin API",
+        "retrievedAt": "2026-11-04T17:40:50.220Z",
+        "hash": "1abab0afb3ea43351653bc60d5171babccbef64d165d577009b07a44a2bc38c8",
+        "links": []
+      },
+      {
+        "id": "s8",
+        "url": "https://developers.notion.com/openapi-undocumented.json",
+        "title": "Notion API (Undocumented)",
+        "retrievedAt": "2026-11-04T17:40:50.220Z",
+        "hash": "363af84fe87e5f40e5013e1439466a704c5071ad6442de53afd2c887560182c0",
+        "links": []
+      },
+      {
+        "id": "s9",
+        "url": "https://developers.notion.com/reference/page-property-values.md",
+        "title": "Page property values",
+        "retrievedAt": "2026-11-04T17:42:07.905Z",
+        "hash": "121e5564921b17ec1258f8348f8c4016bcdb673930406355bec5828885a81771",
+        "links": [
+          "https://developers.notion.com/reference/retrieve-a-page.md",
+          "https://developers.notion.com/reference/retrieve-a-page-property.md",
+          "https://developers.notion.com/reference/post-page.md",
+          "https://developers.notion.com/reference/patch-page.md",
+          "https://developers.notion.com/reference/update-data-source-properties.md",
+          "https://developers.notion.com/reference/property-object.md",
+          "https://developers.notion.com/reference/retrieve-a-data-source.md",
+          "https://developers.notion.com/reference/page-property-values.md",
+          "https://developers.notion.com/reference/property-item-object.md",
+          "https://developers.notion.com/reference/update-a-data-source.md",
+          "https://developers.notion.com/reference/rich-text.md",
+          "https://developers.notion.com/reference/page.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/reference/request-limits.md",
+          "https://developers.notion.com/reference/user.md",
+          "https://developers.notion.com/reference/file-object.md",
+          "https://developers.notion.com/guides/data-apis/uploading-small-files.md",
+          "https://developers.notion.com/guides/data-apis/query-large-data-sources.md",
+          "https://developers.notion.com/reference/block.md",
+          "https://developers.notion.com/guides/data-apis/working-with-databases.md",
+          "https://developers.notion.com/reference/emoji-and-icon.md",
+          "https://developers.notion.com/guides/data-apis/read-page-property-values.md"
+        ]
+      },
+      {
+        "id": "s10",
+        "url": "https://developers.notion.com/openapi.json",
+        "title": "Notion API",
+        "retrievedAt": "2026-11-04T17:42:07.909Z",
+        "hash": "27cbd65425a374fb94a270338cef13fa82e8bc9c4fd1dc989b75585ff7d5b15c",
+        "links": []
+      },
+      {
+        "id": "s11",
+        "url": "https://developers.notion.com/reference/versioning",
+        "title": "Versioning",
+        "retrievedAt": "2026-11-04T17:42:07.909Z",
+        "hash": "229d2d749fe811e14a0aa859dce8c65ed179a1ea84dffe30ba255268ee15d506",
+        "links": [
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11.md",
+          "https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03.md"
+        ]
+      },
+      {
+        "id": "s12",
+        "url": "https://developers.notion.com/guides/data-apis/notion-flavored-markdown.md",
+        "title": "Notion-flavored Markdown format",
+        "retrievedAt": "2026-11-04T17:42:36.634Z",
+        "hash": "45bead573e3e7f302e27c3fed41f09e25d86c322c904eb6b2fdd17437531d18f",
+        "links": [
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/data-apis/working-with-markdown-content.md",
+          "https://developers.notion.com/guides/data-apis/enhanced-markdown.md",
+          "https://developers.notion.com/guides/data-apis/migrate-to-notion-flavored-markdown.md",
+          "https://developers.notion.com/guides/data-apis/url"
+        ]
+      },
+      {
+        "id": "s13",
+        "url": "https://developers.notion.com/reference/pagination.md",
+        "title": "Pagination",
+        "retrievedAt": "2026-11-04T17:42:36.634Z",
+        "hash": "ed6da656a168b9f496dc23d457c382e309f91b2273b82b6e5f2a8bd80c04aeaf",
+        "links": [
+          "https://developers.notion.com/reference/get-block-children.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/reference/query-a-data-source.md",
+          "https://developers.notion.com/reference/property-item-object.md",
+          "https://developers.notion.com/reference/list-data-source-templates.md",
+          "https://developers.notion.com/reference/get-view-query-results.md",
+          "https://developers.notion.com/reference/get-users.md",
+          "https://developers.notion.com/reference/list-comments.md",
+          "https://developers.notion.com/reference/list-file-uploads.md",
+          "https://developers.notion.com/reference/list-custom-emojis.md",
+          "https://developers.notion.com/reference/list-views.md",
+          "https://developers.notion.com/guides/data-apis/query-large-data-sources.md"
+        ]
+      },
+      {
+        "id": "s14",
+        "url": "https://developers.notion.com/reference/retrieve-a-block.md",
+        "title": "Retrieve a block",
+        "retrievedAt": "2026-11-04T17:42:36.635Z",
+        "hash": "6cac499116891b91b5a3b37df6f2c839d06be14f2d8405fc1c9de924387205c9",
+        "links": [
+          "https://developers.notion.com/reference/get-block-children.md",
+          "https://developers.notion.com/reference/block",
+          "https://developers.notion.com/reference/capabilities.md",
+          "https://developers.notion.com/llms.txt",
+          "https://developers.notion.com/guides/data-apis/working-with-page-content.md",
+          "https://developers.notion.com/reference/request-limits.md",
+          "https://developers.notion.com/reference/status-codes.md",
+          "https://developers.notion.com/reference/versioning"
+        ]
+      }
+    ]
+  },
+  "readiness": "research-failure",
+  "requests": [
+    {
+      "stepId": "read-shared-page-title-representative",
+      "stub": {
+        "method": "GET",
+        "url": "https://api.notion.com/v1/pages/test-resource-id",
+        "headers": {
+          "authorization": "Bearer test-access-token",
+          "notion-version": "2026-03-11"
+        },
+        "body": []
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    },
+    {
+      "stepId": "read-page-content-representative",
+      "stub": {
+        "method": "GET",
+        "url": "https://api.notion.com/v1/pages/test-resource-id/markdown?markdown_version=v2",
+        "headers": {
+          "authorization": "Bearer test-access-token",
+          "notion-version": "2026-03-11"
+        },
+        "body": []
+      },
+      "syntaxChecked": true,
+      "userInputsSubstituted": true,
+      "executed": false,
+      "errors": []
+    }
+  ],
+  "planStatus": 404,
+  "share": "http://127.0.0.1:5187/plan/lg-2df15b6f-f3c5-4de7-a754-c9f714638d58",
+  "errors": [
+    "No usable guide for the declared task",
+    "No shareable plan"
+  ],
+  "speed": {
+    "kind": "automatic-recovery",
+    "budgetMs": 180000
+  },
+  "pass": false,
+  "elapsedMs": 136700
+}

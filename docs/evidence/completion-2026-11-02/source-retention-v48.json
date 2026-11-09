@@ -1,0 +1,99 @@
+{
+  "checkedAt": "2026-11-05T07:56:40.129Z",
+  "diagnosticOnly": true,
+  "modelCalls": 0,
+  "sourceCommit": "33072e6e39bad54e08977cdc167128bea8ad699a",
+  "scope": "Direct public source reading and parser/context retention only. No generated guide or acceptance pass is claimed.",
+  "sources": [
+    {
+      "url": "https://developers.notion.com/reference/retrieve-a-page.md",
+      "retrievedAt": "2026-11-05T07:48:53.993Z",
+      "parsedSnapshotSha256": "3d32ec349025dc09cd08911c2f711dd2a9d6a4e2d85bd2cd14f88a63b6ebb511",
+      "parsedSnapshotCharacters": 54101,
+      "context": {
+        "fullBudgetCharacters": 48000,
+        "boundedBudgetCharacters": 16000,
+        "fullSerializedCharacters": 118687,
+        "boundedSerializedCharacters": 34029
+      },
+      "retained": {
+        "versionConstant": true,
+        "pageTitlePath": true,
+        "propertyTitlePath": false,
+        "propertyIdProvenance": false,
+        "paginationEnd": true,
+        "returnedCursor": false,
+        "markdown": false,
+        "truncationFlag": false,
+        "unknownBlockIds": false,
+        "unknownIdFollowup": false,
+        "inaccessibleBlockHandling": true
+      },
+      "retainedCriticalPaths": [
+        "Response JSON paths for GET /v1/pages/{page_id}: $.properties.*.title[].plain_text (string)",
+        "Response JSON paths for GET /v1/pages/{page_id}: $.properties.*.rich_text[].plain_text (string)"
+      ]
+    },
+    {
+      "url": "https://developers.notion.com/reference/retrieve-a-page-property.md",
+      "retrievedAt": "2026-11-05T07:48:53.774Z",
+      "parsedSnapshotSha256": "a504ab54e37a61ac9bde5d2acafef7cf9e97b6ac49e7aba09a6d906c684f9319",
+      "parsedSnapshotCharacters": 54182,
+      "context": {
+        "fullBudgetCharacters": 48000,
+        "boundedBudgetCharacters": 16000,
+        "fullSerializedCharacters": 121659,
+        "boundedSerializedCharacters": 36955
+      },
+      "retained": {
+        "versionConstant": true,
+        "pageTitlePath": false,
+        "propertyTitlePath": true,
+        "propertyIdProvenance": true,
+        "paginationEnd": true,
+        "returnedCursor": true,
+        "markdown": false,
+        "truncationFlag": false,
+        "unknownBlockIds": false,
+        "unknownIdFollowup": false,
+        "inaccessibleBlockHandling": false
+      },
+      "retainedCriticalPaths": [
+        "Response JSON paths for GET /v1/pages/{page_id}/properties/{property_id}: $.has_more (boolean)",
+        "Response JSON paths for GET /v1/pages/{page_id}/properties/{property_id}: $.next_cursor (string,null)",
+        "Response JSON paths for GET /v1/pages/{page_id}/properties/{property_id}: $.results[].title.plain_text (string)",
+        "Response JSON paths for GET /v1/pages/{page_id}/properties/{property_id}: $.results[].rich_text.plain_text (string)"
+      ]
+    },
+    {
+      "url": "https://developers.notion.com/reference/retrieve-page-markdown.md",
+      "retrievedAt": "2026-11-05T07:48:53.623Z",
+      "parsedSnapshotSha256": "e19c1eba7de8829adfda690bc295f6885260c87a87bf52498d322af3e64a7d90",
+      "parsedSnapshotCharacters": 17572,
+      "context": {
+        "fullBudgetCharacters": 48000,
+        "boundedBudgetCharacters": 16000,
+        "fullSerializedCharacters": 33940,
+        "boundedSerializedCharacters": 31741
+      },
+      "retained": {
+        "versionConstant": true,
+        "pageTitlePath": false,
+        "propertyTitlePath": false,
+        "propertyIdProvenance": false,
+        "paginationEnd": false,
+        "returnedCursor": false,
+        "markdown": true,
+        "truncationFlag": true,
+        "unknownBlockIds": true,
+        "unknownIdFollowup": true,
+        "inaccessibleBlockHandling": true
+      },
+      "retainedCriticalPaths": [
+        "Response JSON paths for GET /v1/pages/{page_id}/markdown: $.truncated (boolean)",
+        "Response JSON paths for GET /v1/pages/{page_id}/markdown: $.unknown_block_ids[] (string)",
+        "Response JSON paths for GET /v1/pages/{page_id}/markdown: $.markdown (string)"
+      ]
+    }
+  ]
+}

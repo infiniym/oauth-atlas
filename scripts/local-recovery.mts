@@ -1,10 +1,10 @@
 // @ts-nocheck -- Real local HTTP integration recorder. No DB seeding or provider calls.
-import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {mkdirSync,writeFileSync,readFileSync,existsSync,readdirSync} from 'node:fs';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {acceptanceAnswers} from './acceptance-choices.mts';
 const origin=process.env.MATRIX_ORIGIN||'http://127.0.0.1:5187',label=process.argv[2]||'local-recovery';
-const dir='docs/evidence/completion-2026-11-02/'+label;mkdirSync(dir,{recursive:true});
+const dir='docs/evidence/completion-2026-11-02/'+label;if(existsSync(dir)&&readdirSync(dir).some(file=>file.endsWith('.json')))throw Error('Recovery evidence already exists: '+dir+'. Use a new label; never overwrite an attempt.');mkdirSync(dir,{recursive:true});
 const release=await (await fetch(origin+'/api/release')).json();
 const headers={origin,'Content-Type':'application/json'};
 const fetcher=(p,init)=>fetch(origin+p,{...init,headers:{...init?.headers,origin}});
@@ -35,11 +35,11 @@ const interruptionAt=Date.now(),ir={events:[]};try{
 // New public documentation is actually reread on an action update. The old
 // guide/plan remain byte-for-byte unchanged; no success is database-seeded.
 const updateAt=Date.now(),ur={events:[]};try{
- const old=JSON.parse(readFileSync('docs/evidence/completion-2026-11-02/local-v13-configured/notion-r1.json')).job.guide;
+ const updateRecord=process.env.RECOVERY_UPDATE_RECORD||'docs/evidence/completion-2026-11-02/local-v13-configured/notion-r1.json';ur.updateRecord=updateRecord;const old=JSON.parse(readFileSync(updateRecord)).job.guide;
  const oldResponse=await fetcher('/api/live-guide/'+old.id),oldBody=await oldResponse.text();const oldPlan=await (await fetcher('/api/plans/'+old.id)).text();
  const action=old.requestedActions.find(a=>/content/i.test(a.title));if(!action)throw Error('Content action absent');
- ur.input={...old.input,previousId:old.id,resolution:{kind:'documentation',actionId:action.id,url:'https://developers.notion.com/reference/retrieve-page-markdown',requestId:crypto.randomUUID()}};
+ ur.input={...old.input,previousId:old.id,resolution:{kind:'documentation',actionId:action.id,url:process.env.RECOVERY_UPDATE_URL||'https://developers.notion.com/reference/retrieve-page-markdown',requestId:crypto.randomUUID()}};
  ur.job=await finish(await create(ur.input),ur);ur.oldGuideUnchanged=await (await fetcher('/api/live-guide/'+old.id)).text()===oldBody;ur.oldPlanUnchanged=await (await fetcher('/api/plans/'+old.id)).text()===oldPlan;
- ur.newSourceRead=ur.events.some(e=>e.stage==='Reading documentation'&&e.detail==='developers.notion.com/reference/retrieve-page-markdown');
+ ur.newSourceRead=ur.events.some(e=>e.stage==='Reading documentation'&&e.detail===new URL(ur.input.resolution.url).hostname+new URL(ur.input.resolution.url).pathname);
  ur.pass=ur.oldGuideUnchanged&&ur.oldPlanUnchanged&&ur.newSourceRead&&ur.job.guide.id!==old.id&&ur.job.guide.previousId===old.id&&guideReadiness(ur.job.guide)==='usable-guide';
 }catch(e){ur.pass=false;ur.error=e.message;}ur.elapsedMs=Date.now()-updateAt;save('documentation-update',ur);

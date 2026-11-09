@@ -19,13 +19,13 @@ Use ignored `.dev.vars` locally and equivalent server secrets when hosting:
 ```dotenv
 AI_PROVIDER=anthropic
 ANTHROPIC_API_KEY=
-ANTHROPIC_MODEL=claude-haiku-5-5
+ANTHROPIC_MODEL=claude-sonnet-5-5
 LIVE_GUIDE_FIRECRAWL_KEY=
 ```
 
 Restart the preview after changes. Intake and research resolve the same selected key/model. Anthropic uses adaptive thinking at medium effort for intake, requirements and independent access review, and low effort for provider facts and bounded test-instruction completion. Request assembly and display/setup-field corrections disable extra reasoning; the complete result still requires independent review. Targeted action repair uses medium effort. Thinking text is never persisted; telemetry records settings and token counts, using `mixed` when stages differ. The old `LIVE_GUIDE_ANTHROPIC_*` pair remains a compatibility alias only when the shared Anthropic pair is absent. `AI_PROVIDER=none` overrides it. Partial shared pairs never borrow the other half from legacy settings.
 
-The OpenAI adapter currently supports reviewed-provider intake only. Selecting it never silently switches research to Anthropic: research returns partial evidence with an explicit adapter limitation. The current evaluated end-to-end configuration is Haiku 5.5.
+The OpenAI adapter currently supports reviewed-provider intake only. Selecting it never silently switches research to Anthropic: research returns partial evidence with an explicit adapter limitation. The current candidate pins Sonnet 5.5. The transport uses its documented `between_tools` mode for request assembly, concise review and text repair, with adaptive thinking for facts. The provider and model are reported by `/api/release`; earlier Haiku and controlled-comparison outcomes remain in the evidence.
 
 The optional Firecrawl key enables rendered search/scrape. Without it, the public HTML/Markdown reader runs directly; JS-only, login-gated and blocked documentation can remain unreadable. Credentialed Firecrawl retrieval has controlled-response coverage but has not been exercised live here.
 

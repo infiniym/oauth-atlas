@@ -1,0 +1,251 @@
+{
+  "diagnosticOnly": true,
+  "guidePass": false,
+  "scope": "Controlled review replay of the unchanged v54 candidate; not an initial journey or a substitute for it.",
+  "originalJob": "job-bfd6bed6-21ce-4ad8-b58c-44109db74dde",
+  "responses": [
+    {
+      "status": 200,
+      "stopReason": "end_turn",
+      "usage": {
+        "input_tokens": 51207,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 730,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "review": [
+        {
+          "id": "0",
+          "status": "unresolved",
+          "missingFact": "response",
+          "checks": {
+            "setup": true,
+            "grant": true,
+            "request": true,
+            "response": false,
+            "pagination": true,
+            "boundary": true
+          },
+          "affectedStepIds": [
+            "read-shared-page-metadata",
+            "read-shared-page-content-markdown",
+            "read-truncated-subtree"
+          ],
+          "reason": "The title responsePath $.properties.*.title[].plain_text yields only the first segment of a text array; the full title needs all title segments concatenated, and the markdown responsePath is correct but the title read must concatenate every title[] plain_text segment, not select element zero."
+        }
+      ],
+      "notices": [
+        {
+          "id": "0:s3-p15",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": ""
+        },
+        {
+          "id": "0:s3-p11",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": ""
+        },
+        {
+          "id": "0:s3-p13",
+          "applies": true,
+          "covered": false,
+          "stepIds": [
+            "read-shared-page-metadata"
+          ],
+          "reason": "Title may have up to 25 populated mentions; the title read must concatenate all title segments and reference the Retrieve a page property item endpoint when more are omitted."
+        },
+        {
+          "id": "0:s5-p8",
+          "applies": true,
+          "covered": true,
+          "stepIds": [
+            "read-truncated-subtree"
+          ],
+          "reason": ""
+        },
+        {
+          "id": "0:s5-p18",
+          "applies": true,
+          "covered": false,
+          "stepIds": [
+            "read-shared-page-content-markdown"
+          ],
+          "reason": "Bookmarks, embeds and link previews are unsupported in markdown; the instruction should report them as unsupported rather than claim complete content."
+        },
+        {
+          "id": "0:s5-p16",
+          "applies": true,
+          "covered": true,
+          "stepIds": [
+            "read-shared-page-content-markdown",
+            "read-truncated-subtree"
+          ],
+          "reason": ""
+        },
+        {
+          "id": "0:s4-p9",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": ""
+        },
+        {
+          "id": "0:s4-p11",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": ""
+        },
+        {
+          "id": "0:s4-p12",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "status": 200,
+      "stopReason": "end_turn",
+      "usage": {
+        "input_tokens": 51268,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 679,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "review": [
+        {
+          "id": "0",
+          "status": "supported",
+          "missingFact": "none",
+          "checks": {
+            "setup": true,
+            "grant": true,
+            "request": true,
+            "response": true,
+            "pagination": true,
+            "boundary": true
+          },
+          "affectedStepIds": [],
+          "reason": "Public OAuth setup, Read content-only grant, metadata and markdown reads with truncated-subtree follow-up, title path $.properties.*.title[].plain_text, and nonmutating boundary check are all documented."
+        }
+      ],
+      "notices": [
+        {
+          "id": "0:s3-p15",
+          "applies": true,
+          "covered": true,
+          "stepIds": [
+            "read-shared-page-metadata"
+          ],
+          "reason": ""
+        },
+        {
+          "id": "0:s3-p11",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": "Relation limit does not affect requested title or content."
+        },
+        {
+          "id": "0:s3-p13",
+          "applies": true,
+          "covered": true,
+          "stepIds": [
+            "read-shared-page-metadata"
+          ],
+          "reason": ""
+        },
+        {
+          "id": "0:s5-p8",
+          "applies": true,
+          "covered": true,
+          "stepIds": [
+            "read-truncated-subtree"
+          ],
+          "reason": ""
+        },
+        {
+          "id": "0:s5-p18",
+          "applies": true,
+          "covered": true,
+          "stepIds": [
+            "read-shared-page-content-markdown"
+          ],
+          "reason": "Unsupported block types are reported as unknown tags and must be noted as not read."
+        },
+        {
+          "id": "0:s5-p16",
+          "applies": true,
+          "covered": true,
+          "stepIds": [
+            "read-shared-page-content-markdown",
+            "read-truncated-subtree"
+          ],
+          "reason": ""
+        },
+        {
+          "id": "0:s4-p9",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": "Paginated property items are not required because title is read from the page response."
+        },
+        {
+          "id": "0:s4-p11",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": "Not applicable to this read of title and markdown content."
+        },
+        {
+          "id": "0:s4-p12",
+          "applies": false,
+          "covered": true,
+          "stepIds": [],
+          "reason": "Rollups are not requested."
+        }
+      ]
+    }
+  ],
+  "telemetry": {
+    "model": "claude-haiku-5-5",
+    "attempts": 2,
+    "elapsedMs": 10547,
+    "inputTokens": 102475,
+    "outputTokens": 1409,
+    "thinkingTokens": 0,
+    "outcome": "accepted",
+    "thinking": "mixed",
+    "effort": "low",
+    "validationIssues": [
+      "An uncovered or inapplicable source notice needs a reason.",
+      "Independent action review retried once using the same instructions and saved evidence within its original deadline."
+    ]
+  }
+}
