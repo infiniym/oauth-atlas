@@ -1,0 +1,18 @@
+{
+  "guideCodeFingerprint": "62c06da0af2cb4596ac88ca4c04928a9bf4aab23a21b1e7f00986edacc3208e9",
+  "checkedAt": "2026-11-09T10:18:25.327Z",
+  "sourceCommit": "64947bfbcd6c930635679db0451a1bdc05335895",
+  "engine": "PGlite 0.5.15 (Postgres WASM), isolated disk store",
+  "boundary": "Validates SQL semantics and persistence through the production Store adapter. Neon HTTP connectivity and deployed Vercel retention are unverified. An existing guide was used only as storage test data.",
+  "checks": {
+    "idempotentSchema": true,
+    "concurrentDuplicateJob": true,
+    "oneLeaseOwner": true,
+    "millisecondLease": true,
+    "atomicCounter": true,
+    "immutablePlan": true,
+    "reopenJob": true,
+    "reopenPlan": true
+  },
+  "reference": "https://pglite.dev/docs/api"
+}

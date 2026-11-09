@@ -295,7 +295,7 @@ export function validateInterpretation(raw: unknown, documents: Document[],reque
   for(const s of value.steps.filter(s=>s.testKind==='authorization'&&s.request?.endpoint)){
     const parts=requestExampleParts(s.request!.example);
     if(!parts.url)throw new Error('A step destination needs a concrete documented authorization or token URL. '+JSON.stringify({stepId:s.id,endpoint:s.request!.endpoint,repair:'Use the documented authorization/token endpoint and required parameters in the curl. A whole AUTH_URL placeholder cannot replace a known endpoint; keep placeholders for client credentials, callback values, tokens and instance hosts.'}));
-    if(parts.method!==s.request!.method.toUpperCase())throw new Error('A step destination authorization example uses a different method from its request metadata.');
+    if(parts.method!==s.request!.method.toUpperCase())throw new Error('A step destination authorization example uses a different method from its request metadata. '+JSON.stringify({stepId:s.id,declaredMethod:s.request!.method,parsedMethod:parts.method}));
     const target=parts.url.replace(/^<INSTANCE_BASE_URL>/,'');const grounded=endpointEvidence(target,documents);
     if(!grounded.supported)throw new Error('A step destination authorization example is not documented. '+JSON.stringify({stepId:s.id,url:parts.url,...grounded}));
   }
@@ -430,7 +430,7 @@ export function resourceDocumentScore(d:Document,action:string,app=''):number{
  return actionLinkScore(d.url,d.title,action,app)*4+(/swagger|openapi/.test(d.url)?60:0)+(matches&&/\b(?:GET|POST)\s+\/|curl\s|query\s*\{/i.test(d.text)?30:0)+Math.min(matches,5);
 }
 
-export function planningContext(passages:Passage[],document:Document,input:GuideInput,documentCount=8):Passage[]{
+export function planningContext(passages:Passage[],document:Document,input:GuideInput,documentCount=8,oauthSetup=false):Passage[]{
  // Setup references are often short complete articles. Cutting them to a few
  // keyword hits can retain token mechanics while losing app registration or
  // the applicable actor section. Keep the complete bounded article when it
@@ -439,7 +439,7 @@ export function planningContext(passages:Passage[],document:Document,input:Guide
  const objectReference=/property|(?:^|[\/-])objects?(?:[\/-]|$)|schemas?/i.test(new URL(document.url).pathname)||document.text.includes('Security definitions:');
  const operationReference=/\/(?:api-reference|reference|endpoints|collections|pagination)(?:\/|$)|\/api\/(?:rest|usage)(?:\/|$)/i.test(document.url);
  const budget=documentCount<=2?48000:objectReference||operationReference?16000:setup?24000:/versioning/i.test(document.url)?2000:/scopes?|capabilit/i.test(document.url)?6000:7000;
- return contextPassages(passages,document.id,input.useCase,budget,input.app);
+ return contextPassages(passages,document.id,input.useCase,oauthSetup?(setup?16000:/scopes?|capabilit/i.test(document.url)?8000:7000):budget,input.app);
 }
 
 // Preserve exact setup URL/parameter/response context before large API schemas.
@@ -497,7 +497,7 @@ export async function interpretEvidence(input: GuideInput, documents: Document[]
   let failure:InferenceTelemetry['outcome']='upstream-error',compactRetry=false;let acceptedFacts:Interpretation|undefined=options.facts?validateInterpretation(options.facts,documents,'',false):undefined;
   const passages=sourcePassages(documents);
   const selected=options.final?planningDocuments(documents,input,options.intent,options.oauthSetup):[...documents].sort((a,b)=>(/actor|oauth|scope|capabilit/i.test(b.url)?1:0)-(/actor|oauth|scope|capabilit/i.test(a.url)?1:0)).slice(0,4);
-  const messages:{role:string;content:unknown}[]=[{role:'user',content:JSON.stringify({request:input,confirmedRequest:options.intent,requestContext:{audience:input.audience==='customers'?'Other customer organizations/workspaces will connect.':input.audience==='internal'?'Only the developer’s own organization will connect.':'Audience is undecided.',confirmedChoices},documents:options.final?selected.map(d=>({id:d.id,url:d.url,links:[...(d.links||[])].sort((a,b)=>(linkScore(b)+actionLinkScore(b,'',input.useCase,input.app))-(linkScore(a)+actionLinkScore(a,'',input.useCase,input.app))).slice(0,8),passages:planningContext(passages,d,input,selected.length).map(({id,text,citable})=>({...(citable?{id}:{}),text,citable}))})):selected.map(d=>({id:d.id,url:d.url,links:[],passages:contextPassages(passages,d.id,input.useCase,4800,input.app).slice(0,14).map(({id,text,citable})=>({...(citable?{id}:{}),text,citable}))}))})}];
+  const messages:{role:string;content:unknown}[]=[{role:'user',content:JSON.stringify({request:input,confirmedRequest:options.intent,requestContext:{audience:input.audience==='customers'?'Other customer organizations/workspaces will connect.':input.audience==='internal'?'Only the developer’s own organization will connect.':'Audience is undecided.',confirmedChoices},documents:options.final?selected.map(d=>({id:d.id,url:d.url,links:[...(d.links||[])].sort((a,b)=>(linkScore(b)+actionLinkScore(b,'',input.useCase,input.app))-(linkScore(a)+actionLinkScore(a,'',input.useCase,input.app))).slice(0,8),passages:planningContext(passages,d,input,selected.length,options.oauthSetup).map(({id,text,citable})=>({...(citable?{id}:{}),text,citable}))})):selected.map(d=>({id:d.id,url:d.url,links:[],passages:contextPassages(passages,d.id,input.useCase,4800,input.app).slice(0,14).map(({id,text,citable})=>({...(citable?{id}:{}),text,citable}))}))})}];
   try {
     // One repair is allowed, sharing the same deadline and model. No vendor fallback.
     for(let attempt=0;attempt<2;attempt++){
@@ -532,7 +532,7 @@ export async function interpretEvidence(input: GuideInput, documents: Document[]
       if(options.final&&(acceptedFacts||Array.isArray(serialized.findings)&&Array.isArray(serialized.coverage)&&!('steps' in serialized))){
        if(!acceptedFacts){const factData=expandPartEvidence(serialized);factData.coverage=(factData.coverage||[]).map((c:any)=>({...c,action:options.intent?.requestedActions.find(a=>a.id===c.actionId)?.title||c.actionId}));const partial=expandPassageReferences(completePlan({...factData,requestedActions:options.intent?.requestedActions||[],prohibitions:options.intent?.prohibitions||[],steps:[],blockers:[]}),passages) as Record<string,unknown>;const formatted=await repairLongFields(partial,bindings,deadline,fetcher,usage=>{attempts++;inputTokens+=usage.inputTokens;outputTokens+=usage.outputTokens;thinkingTokens+=usage.thinkingTokens;validationIssues.push('Overlength provider-fact display fields corrected; evidence retained.');});acceptedFacts=validateInterpretation(formatted,documents,'',false);await options.onFacts?.(acceptedFacts);}
        const paginated=!options.oauthSetup&&paginationNeeded(acceptedFacts,input.useCase,documents);
-       const stepMessages=[{role:'user',content:JSON.stringify({documentedSetup:documentedSetup(documents),...(!options.oauthSetup?{completenessEvidence:completenessEvidence(documents,input),paginationRequired:paginated}:{}),...JSON.parse(String(messages[0].content)),verifiedFacts:acceptedFacts,repairFeedback:[...options.setupFeedback||[],...validationIssues.slice(-2)]})}];
+       const stepMessages=[{role:'user',content:JSON.stringify({documentedSetup:documentedSetup(options.oauthSetup?selected:documents),...(!options.oauthSetup?{completenessEvidence:completenessEvidence(documents,input),paginationRequired:paginated}:{}),...JSON.parse(String(messages[0].content)),verifiedFacts:acceptedFacts,repairFeedback:[...options.setupFeedback||[],...validationIssues.slice(-2)]})}];
        attempts++;const response=await fetcher('https://api.anthropic.com/v1/messages',{method:'POST',redirect:'manual',signal:deadline,headers:{'Content-Type':'application/json','x-api-key':config.key,'anthropic-version':'2026-10-21'},body:JSON.stringify({model:config.model,max_tokens:options.oauthSetup?4800:9000,thinking:noInitialThinking(config.model),output_config:{effort:'low',format:{type:'json_schema',schema:stepsSchemaForRequest(paginated)}},system:options.oauthSetup?setupStepsPrompt:stepsPrompt,messages:stepMessages})});
        if(!response.ok){await response.body?.cancel();throw new Error('Model unavailable. HTTP '+response.status+'.');}const result=JSON.parse(await boundedText(response,deadline));inputTokens+=result.usage?.input_tokens||0;outputTokens+=result.usage?.output_tokens||0;thinkingTokens+=result.usage?.output_tokens_details?.thinking_tokens||0;if(result.stop_reason!=='end_turn')throw new Error('Incomplete model result.');const named=JSON.parse(result.content.filter((c:{type:string})=>c.type==='text').map((c:{text:string})=>c.text).join(''));
        if(options.oauthSetup){

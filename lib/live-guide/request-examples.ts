@@ -25,9 +25,23 @@ export function shellSafeCurl(example:string):string{
 }
 export function requestExampleParts(example:string){
  const args=curlArguments(example),values=(...flags:string[])=>args.flatMap((a,i)=>flags.includes(a)&&args[i+1]?[args[i+1]]:[]);
- const bodies=values('-d','--data','--data-raw','--data-binary','--data-urlencode','--json'),headers=Object.fromEntries(values('-H','--header').map(h=>{const at=h.indexOf(':');return [h.slice(0,at).toLowerCase(),h.slice(at+1).trim()];}));
+ let bodies=values('-d','--data','--data-raw','--data-binary','--data-urlencode','--json');
+ const headers=Object.fromEntries(values('-H','--header').map(h=>{const at=h.indexOf(':');return [h.slice(0,at).toLowerCase(),h.slice(at+1).trim()];}));
+ let url=values('--url')[0]||args.find(a=>/^https:\/\//.test(a)||a.startsWith('<INSTANCE_BASE_URL>')||/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(a))||'';
+ const get=args.includes('-G')||args.includes('--get');
+ if(get&&bodies.length){
+  const query=args.flatMap((flag,i)=>{
+   if(!['-d','--data','--data-raw','--data-binary','--data-urlencode','--json'].includes(flag)||!args[i+1])return [];
+   const value=args[i+1];
+   if(flag!=='--data-urlencode')return [value];
+   const at=value.indexOf('=');
+   return [at<0?encodeURIComponent(value):value.slice(0,at+1)+encodeURIComponent(value.slice(at+1))];
+  }).join('&');
+  url=url.split('#')[0]+(url.includes('?')?'&':'?')+query;
+  bodies=[];
+ }
  if(bodies.length&&!headers['content-type'])headers['content-type']=args.includes('--json')?'application/json':'application/x-www-form-urlencoded';
- return {method:(values('-X','--request')[0]||(bodies.length?'POST':'GET')).toUpperCase(),url:values('--url')[0]||args.find(a=>/^https:\/\//.test(a)||a.startsWith('<INSTANCE_BASE_URL>')||/^<(?:NEXT|CONTINUATION)(?:_PAGE)?_(?:URL|LINK)>$/.test(a))||'',headers,bodies};
+ return {method:(values('-X','--request')[0]||(args.includes('-I')||args.includes('--head')?'HEAD':get?'GET':bodies.length?'POST':'GET')).toUpperCase(),url,headers,bodies};
 }
 function paginationState(example:string){
  const parts=requestExampleParts(example);

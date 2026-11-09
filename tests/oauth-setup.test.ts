@@ -8,6 +8,7 @@ import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {researchedPlan} from '../lib/plan/adapters.ts';
 import {exportPlan} from '../lib/plan/export.ts';
 import {nextFromProgress} from '../lib/plan/presentation.ts';
+import {requestExampleParts} from '../lib/live-guide/request-examples.ts';
 
 const url='https://developer.acme.com/oauth';
 const document:Document={id:'s1',url,title:'OAuth applications',hash:'fixture',retrievedAt:'2026-11-09T00:00:00Z',text:[
@@ -67,6 +68,17 @@ function network(launchGap=''){
  };
  return {fetcher,calls:()=>calls};
 }
+
+test('curl GET data parameters retain their actual method and remain available to endpoint grounding',()=>{
+ const parts=requestExampleParts("curl --get 'https://api.acme.com/oauth/authorize?response_type=code' --data-urlencode 'client_id=<CLIENT_ID>' --data-urlencode 'redirect_uri=https://app.example.com/callback?a=1&b=2' --data 'state=<STATE>'");
+ assert.equal(parts.method,'GET');
+ assert.deepEqual(parts.bodies,[]);
+ const url=new URL(parts.url);
+ assert.equal(url.searchParams.get('client_id'),'<CLIENT_ID>');
+ assert.equal(url.searchParams.get('redirect_uri'),'https://app.example.com/callback?a=1&b=2');
+ assert.equal(url.searchParams.get('state'),'<STATE>');
+ assert.equal(requestExampleParts("curl 'https://api.acme.com/oauth/token' --data 'code=<CODE>'").method,'POST');
+});
 
 test('OAuth setup generation retains a sound handoff when an optional request is unsupported',async()=>{
  const old=previous(),net=network(),checkpoints:WorkflowCheckpoint[]=[];

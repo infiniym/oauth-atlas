@@ -35,7 +35,7 @@ export async function reviewOAuthSetup(value:Interpretation,input:GuideInput,doc
   const cited=new Set([...value.steps,...value.findings,...value.coverage].flatMap(item=>item.evidence||[]).map(e=>e.sourceId));
   const selected=[...new Set([...planningDocuments(documents,input,value,true),...documents.filter(d=>cited.has(d.id))])];
   const passages=sourcePassages(selected);
-  const references=selected.map(d=>({url:d.url,title:d.title,passages:planningContext(passages,d,input,selected.length)}));
+  const references=selected.map(d=>({url:d.url,title:d.title,passages:planningContext(passages,d,input,selected.length,true)}));
   const setupSources=documentedSetup(selected);
   const evidence=new Map([...references,...setupSources].flatMap(d=>d.passages).filter(p=>p.citable).map(p=>[p.id,p]));
   const context={request:input.useCase,audience:input.audience,confirmedChoices:input.answers,actions:value.requestedActions,restrictions:value.prohibitions,providerFacts:value.findings,mappings:value.coverage,missingTopics:value.researchNeeded,blockers:value.blockers,steps:value.steps.filter(s=>!isResourceExample(s)),examples:value.steps.filter(isResourceExample),setupSources,references};

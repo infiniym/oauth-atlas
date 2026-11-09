@@ -1,4 +1,6 @@
 import {existsSync,mkdirSync,readFileSync,writeFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {guideCodeFingerprint} from './guide-fingerprint.mjs';
 import {acceptanceAnswers} from './acceptance-choices.mts';
 import {guideReadiness} from '../lib/live-guide/readiness.ts';
 import {monitorJob} from '../lib/live-guide/job-client.ts';
@@ -15,7 +17,10 @@ const cases=declaration.cases.filter((c:GuideInput)=>!requested.length||requeste
 if(!cases.length)throw new Error('Choose a declared case.');
 const directory='docs/evidence/submission-2026-11-09/'+label;
 mkdirSync(directory,{recursive:true});
-const release=await (await fetch(origin+'/api/release')).json();
+const release=await (await fetch(origin+'/api/release')).json() as {sourceCommit:string;guideCodeFingerprint:string;runtime?:{configured:boolean;storage:string|null}};
+const expected=process.env.SUBMISSION_EXPECTED_COMMIT||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+if(release.sourceCommit!==expected||release.guideCodeFingerprint!==guideCodeFingerprint())throw new Error('The running server does not match the selected source and guide fingerprint. Rebuild or restart the correct server before recording evidence.');
+if(!release.runtime?.configured||!release.runtime?.storage)throw new Error('The selected server does not have configured live generation and persistent storage.');
 for(const input of cases){
  const file=directory+'/'+input.app.toLowerCase()+'.json';
  if(existsSync(file))throw new Error('Preserve the existing attempt. Supply a new evidence label.');
