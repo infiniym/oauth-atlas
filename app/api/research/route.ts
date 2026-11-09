@@ -23,7 +23,7 @@ export async function POST(request:Request) {
   const ip=requestAddress(request,env);
   const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip+':'+hour));
   const bucket=hour+':'+Array.from(new Uint8Array(hash)).slice(0,12).map(x=>x.toString(16).padStart(2,'0')).join('');
-  const limit=await db.prepare('INSERT INTO research_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=count+1 RETURNING count').bind(bucket).first<{count:number}>();
+  const limit=await db.prepare('INSERT INTO research_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=research_limits.count+1 RETURNING count').bind(bucket).first<{count:number}>();
   if((limit?.count||0)>10)return new Response(JSON.stringify({error:'This connection has reached the preview limit of 10 research runs per hour. Try again after the hour changes.'}),{status:429,headers:{'Content-Type':'application/json','Cache-Control':'no-store','Retry-After':String(3600-Math.floor(Date.now()/1000)%3600)}});
  }catch{return json({error:'The guide store is not ready. Please try again shortly.'},503);}
  let cancelled=false;

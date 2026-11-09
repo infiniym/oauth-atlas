@@ -59,7 +59,7 @@ export default defineConfig(async ({ command }) => {
       {
         name: 'oauth-cloudflare-runtime',
         enforce: 'pre',
-        resolveId(source) {
+        resolveId(source: string) {
           // Vinext resolves tsconfig aliases before this plugin. Match the
           // resolved server module as well as its original import.
           const runtime = fileURLToPath(new URL('./lib/server/runtime', import.meta.url));

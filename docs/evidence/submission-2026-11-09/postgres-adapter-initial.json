@@ -1,0 +1,8 @@
+{
+  "sourceCommit": "389be5b",
+  "engine": "PGlite 0.5.15",
+  "pass": false,
+  "error": "Postgres error 42702. The unqualified count column in INSERT ON CONFLICT DO UPDATE is ambiguous.",
+  "completedBeforeFailure": ["idempotent schema", "concurrent duplicate job", "single lease owner", "millisecond lease"],
+  "correction": "Qualify the existing counter table on the update expression in all four production rate-limit statements. Preserve the same limits on both runtimes."
+}

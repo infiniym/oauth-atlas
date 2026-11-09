@@ -16,7 +16,7 @@ export async function POST(request:Request){
    const hour=Math.floor(Date.now()/3600000),ip=requestAddress(request,config);
    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('intent:'+hour+':'+ip));
    const bucket='intent:'+hour+':'+Array.from(new Uint8Array(digest)).slice(0,12).map(v=>v.toString(16).padStart(2,'0')).join('');
-   const row=await config.DB.prepare('INSERT INTO research_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=count+1 RETURNING count').bind(bucket).first<{count:number}>();
+   const row=await config.DB.prepare('INSERT INTO research_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=research_limits.count+1 RETURNING count').bind(bucket).first<{count:number}>();
    if((row?.count||0)>20)return Response.json({error:'AI interpretation has reached its hourly preview limit. Your structured assessment still works.'},{status:429,headers:noStore});
   }
   return Response.json(await interpret(body.description,ai),{headers:noStore});

@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-09T10:05:34.854Z",
+  "sourceCommit": "389be5bce9aa0ee547096b983e08cdd03069449d",
+  "workingTree": "SQL counter correction was uncommitted during this successful diagnostic. The final receipt identifies committed code.",
+  "engine": "PGlite 0.5.15 (Postgres WASM), isolated disk store",
+  "boundary": "Validates SQL semantics and persistence through the production Store adapter. Neon HTTP connectivity and deployed Vercel retention are unverified. An existing guide was used only as storage test data.",
+  "checks": {
+    "idempotentSchema": true,
+    "concurrentDuplicateJob": true,
+    "oneLeaseOwner": true,
+    "millisecondLease": true,
+    "atomicCounter": true,
+    "immutablePlan": true,
+    "reopenJob": true,
+    "reopenPlan": true
+  },
+  "reference": "https://pglite.dev/docs/api"
+}

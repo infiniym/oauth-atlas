@@ -39,7 +39,7 @@ export async function postGuide(request: Request, env: Environment, fetcher: typ
     const hour = Math.floor(Date.now()/3_600_000), address = requestAddress(request,env);
     const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(hour+':'+address));
     const bucket = hour+':'+Array.from(new Uint8Array(digest).slice(0,12),x=>x.toString(16).padStart(2,'0')).join('');
-    const result = await env.DB.prepare('INSERT INTO live_guide_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=count+1 RETURNING count').bind(bucket).first<{count:number}>();
+    const result = await env.DB.prepare('INSERT INTO live_guide_limits (bucket,count) VALUES (?,1) ON CONFLICT(bucket) DO UPDATE SET count=live_guide_limits.count+1 RETURNING count').bind(bucket).first<{count:number}>();
     if ((result?.count || 0)>12) return new Response(JSON.stringify({error:'This connection has reached 12 research runs this hour. Try again after the hour changes.'}),{status:429,headers:{'Content-Type':'application/json','Cache-Control':'no-store','Retry-After':String(3600-Math.floor(Date.now()/1000)%3600)}});
     if (input.previousId) { previous = await load(env.DB,input.previousId); if(!previous)return json({error:'Previous guide not found. Start fresh research.'},404); }
   } catch { return json({error:'The live-guide database is not ready. Apply the isolated migration.'},503); }
